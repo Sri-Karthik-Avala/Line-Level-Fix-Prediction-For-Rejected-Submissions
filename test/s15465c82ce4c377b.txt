@@ -1,0 +1,87 @@
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <cassert>
+#include <climits>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define chmax(a,b) (a<b?(a=b,1):0)
+#define chmin(a,b) (a>b?(a=b,1):0)
+#define valid(y,x,h,w) (0<=y&&y<h&&0<=x&&x<w)
+typedef long long ll;
+typedef pair<int,int> pii;
+const int INF = 1<<29;
+const double PI = acos(-1);
+const double EPS = 1e-8;
+
+ll dp[10][101][2][2];
+
+void odd_init() {
+  dp[0][1][0][0] = dp[1][1][1][1] = 1;
+  REP(i,9) {
+    for (int j=1; j<100; ++j) {
+      REP(k,2) {
+        dp[i][j+1][k][0] += dp[i][j][k][0] + dp[i][j][k][1];
+        dp[i+1][j+1][k][1] += dp[i][j][k][0];
+      }
+    }
+  }
+}
+
+ll dp2[10][101][3][3];
+
+void even_init() {
+  dp2[0][1][0][0] = dp2[1][1][1][1] = dp2[1][1][2][2] = 1;
+  REP(i,9) {
+    REP(j,100) {
+      REP(k,3) {  
+        dp2[i][j+1][k][0] += dp2[i][j][k][0] + dp2[i][j][k][1] + dp2[i][j][k][2];
+        dp2[i+1][j+1][k][1] += dp2[i][j][k][0] + dp2[i][j][k][2];
+        dp2[i+1][j+1][k][2] += dp2[i][j][k][0] + dp2[i][j][k][1];
+      }
+    }
+  }
+}
+
+ll solve_odd(int n) {
+  return (dp[8][n][0][0] + dp[8][n][0][1] + dp[8][n][1][0]) * 40320;
+}
+
+ll solve_even(int n) {
+  ll ans = 0;
+  REP(i,3) REP(j,3) {
+    if (i==1&&j==2 || i==2&&j==1) continue;
+    ans += dp2[8][n/2][0][i];
+  }
+  return ans * 40320;
+}
+
+int main() {
+  odd_init();
+  even_init();
+  int n;
+  while(cin>>n,n) {
+    if (n&1) {
+      cout << solve_odd(n) << endl;
+    } else {
+      cout << solve_even(n) << endl;
+    }
+  }
+}

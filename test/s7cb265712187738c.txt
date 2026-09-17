@@ -1,0 +1,34 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for (int i=0; i<n; i++)
+#define REP(i,x,n) for (int i=x; i<n; i++)
+using namespace std;
+using vi = vector<int>;
+using vvi = vector<vi>;
+using ll = long long;
+const int mod = 1e9+9;
+const int INF = 1e9;
+
+int main(){
+    string s;
+    int k;
+    cin >> s >> k;
+    int n = (int)s.size();
+
+    set<string> st;
+    rep(i,n-k+1){
+        REP(j,1,k+1){
+            st.insert(s.substr(i, j));
+        }
+    }
+
+    int m = 1;
+    for (auto ele : st){
+        if (m == k){
+            cout << ele << endl;
+            return 0;
+        }
+        m++;
+    }
+
+    return 0;
+}

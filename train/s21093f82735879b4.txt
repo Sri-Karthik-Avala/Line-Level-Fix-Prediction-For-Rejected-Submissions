@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<int(n);++i)
+#define repi(i,a,b) for(int i=int(a);i<int(b);++i)
+using namespace std;
+using ll = long long;
+using P = pair<int,int>;
+constexpr int INF = 1001001001;
+template<class T> bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T> bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    rep(i, n)
+        cin >> a[i];
+    
+    vector<P> b(n);
+    rep(i, n)
+        b[i] = make_pair(a[i], i);
+    sort(b.begin(), b.end(), greater<P>());
+    vector<vector<ll>> dp(n+1, vector<ll>(n+1, 0));
+    
+    repi(i, 1, n+1) rep(j, i+1) {
+        int x = j, y = i-j, m = x+y-1;
+        if (x == 0) {
+            int d = n - b[m].second - y;
+            dp[x][y] = (d < 0 ? -INF : dp[x][y-1] + b[m].first * d);
+            //cout << x << " " << y << " | > " << d << " | " << dp[x][y] << endl;
+            continue;
+        }
+        if (y == 0) {
+            int d = b[m].second - x + 1;
+            dp[x][y] = (d < 0 ? -INF : dp[x-1][y] + b[m].first * d);
+            //cout << x << " " << y << " | < " << d << " | " << dp[x][y] << endl;
+            continue;
+        }
+        int dl = b[m].second - x + 1, dr = n - b[m].second - y;
+        dp[x][y] = max(dp[x][y-1] + b[m].first * dr, dp[x-1][y] + b[m].first * dl);
+        //cout << x << " " << y << " | " << dl << " " << dr << " | " << dp[x][y] << endl;
+    }
+    
+    ll ans = 0;
+    rep(i, n)
+        chmax(ans, dp[i][n-i]);
+    cout << ans << endl;
+    return 0;
+}

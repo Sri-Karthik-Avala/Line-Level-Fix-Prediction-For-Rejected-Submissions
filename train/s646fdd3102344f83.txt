@@ -1,0 +1,44 @@
+#pragma GCC optimize ("O3")
+#pragma GCC optimize("unroll-loops")
+#pragma GCC target("sse4")
+#include"bits/stdc++.h"
+using namespace std;
+typedef long long ll;
+#define int ll
+#define all(x) x.begin(), x.end()
+#define trav(i,a) for(auto &i:a) 
+inline int in(){int x;scanf("%lld",&x);return x;}
+int dp[60][2];
+const int mxd=50;
+//dp[i][0] answer for ms i bits if ith is 0
+int32_t main()
+{
+	int n=in();int k=in();
+	vector<int> a(n);
+	for(int &i:a)i=in();
+	memset(dp,-1,sizeof dp);
+	dp[0][0]=0;
+	for(int d=0;d<mxd;d++)
+	{
+		int mask=1LL<<(mxd-d-1);
+		int ct=0;//ct of ones at this bit
+		for(int i:a)if(i&mask)ct++;
+		int x1=mask*(n-ct);int x0=mask*ct;
+		if(dp[d][1]!=-1)
+		dp[d+1][1]=max(dp[d+1][1],dp[d][1]+max(x0,x1));
+		
+		if(dp[d][0]!=-1)
+		{
+			if(k&mask)
+			{
+				dp[d+1][1]=max(dp[d][0]+x1,dp[d+1][1]);
+				dp[d+1][0]=max(dp[d+1][0],dp[d][0]+x1);
+			}
+			else dp[d+1][0]=max(dp[d+1][0],dp[d][0]+x0);
+		}
+	}
+	cout<<max(dp[mxd][0],dp[mxd][1]);
+	
+	
+	
+}

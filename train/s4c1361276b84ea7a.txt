@@ -1,0 +1,39 @@
+#define _USE_MATH_DEFINES
+#include  <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include<math.h>
+#include<iomanip>
+#include<stdio.h>
+#include <stdlib.h>
+#include<stdio.h>
+#include <queue>
+#include<map>
+#include <sstream>
+#include<set>
+#include<stack>
+
+//#include<bits/stdc++.h>
+
+
+using namespace std;
+
+
+
+int main() {
+	
+	int n, m;
+	cin >> n >> m;
+
+	long long int y = 1900 * n + (n - m) * 100;
+	y *= pow(2, m);
+	cout << y << endl;
+
+
+	return 0;
+
+
+}

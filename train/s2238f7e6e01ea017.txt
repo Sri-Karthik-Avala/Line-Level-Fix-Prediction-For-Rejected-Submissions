@@ -1,0 +1,49 @@
+#include<cstdio>
+#include<cmath>
+#include<algorithm>
+#include<cstdio>
+#include<cmath>
+#include<iostream>
+
+using namespace std;
+
+
+
+void Solution()
+{
+    int n = 0;
+    double a[n];
+    
+    while (cin>>a[n])
+    {
+        n++;
+    }
+    
+//    for (int i = 0; i < n - 1; i++)
+//    {
+//        for (int j = i + 1; j < n; j++)
+//        {
+//            if (a[i] < a[j])
+//            {
+//                double temp = a[i];          //swap
+//                a[i] = a[j];
+//                a[j] = temp;
+//            }
+//        }
+//    }
+    
+    sort(a, a + n); //sorting as ascedning sequence
+    
+    //cout.setf(ios::fixed); //"setf" is used for “half-adjusting”
+    //cout.precision(2);
+    
+//    cout<<a[0] - a[n - 1]<<endl;
+    cout<<a[n - 1] - a[0]<<endl;
+    
+}
+
+int main()
+{
+    Solution();
+    return 0;
+}

@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+#include<string>
+
+int solve(string T, string P, int start)
+{
+    int n = T.size(), m = P.size();
+    int k = start;
+    int x, y;
+
+    if(n < m) return -1;
+
+    while(k <= n - m){
+        for(x = m - 1; x >= 0; x--){
+            if(P[x] != T[k + x]) break;
+        }
+        if(x < 0) return k;
+        for(y = x; y >= 0; y--){
+            if(P[y] == T[k + x]) break;
+        }
+        k += x - y;
+    };
+    return -1;
+}
+
+int main()
+{
+    string T, P; cin >> T >> P;
+    int start = 0;
+
+    while(1){
+        start = solve(T, P, start);
+        if(start < 0) break;
+        cout << start << endl;
+        start += P.size();
+    };
+    return 0;
+}

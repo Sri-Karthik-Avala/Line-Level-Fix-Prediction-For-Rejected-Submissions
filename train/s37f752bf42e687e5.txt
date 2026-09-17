@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <set>
+#include <vector>
+using namespace std;
+const int N=1e4+10;
+#define PB push_back
+int abs(int n){return n>0?n:-n;}
+int main(){
+    int n,a[N],mid,temp;
+    set<int> s;
+    vector<int> v;
+    while(scanf("%d",&n)!=EOF){
+        if(n==0)return 0;
+        s.clear();
+        v.clear();
+        for(int i=1;i<n;i++)s.insert((i*i)%n);
+        mid=n>>1;
+        for(int i=1;i<=mid;i++)a[i]=0;
+        for(int i:s)v.PB(i);
+        for(int i=0;i<v.size();i++)for(int j=0;j<v.size();j++)if(i!=j){
+            temp=abs(v[j]-v[i]);
+            if(temp>mid)a[n-temp]++;
+            else a[temp]++;
+        }
+        for(int i=1;i<=mid;i++)printf("%d\n",a[i]*2);
+    }
+}

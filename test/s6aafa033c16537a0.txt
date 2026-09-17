@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+#define r(i,n) for(int i=0;i<n;i++)
+using namespace std;
+
+unsigned long long xor128() {
+    static unsigned long long rx = 123456789, ry = 362436069, rz = 521288629, rw = 88675123;
+    unsigned long long rt = (rx ^ (rx << 11));
+    rx = ry;
+    ry = rz;
+    rz = rw;
+    return (rw = (rw ^ (rw >> 19)) ^ (rt ^ (rt >> 8)));
+}
+
+std::chrono::system_clock::time_point start;
+std::chrono::system_clock::time_point owari;
+
+bool A[3003][3003];
+int T[3003];
+int n,m,k,MIN=1e9,cnt[3003];
+
+int main(){
+    start = std::chrono::system_clock::now();
+    cin>>n>>m>>k;
+    r(i,m){
+        int a,b;
+        cin>>a>>b; a--; b--;
+        A[a][b]=A[b][a]=1;
+        cnt[a]++;
+        cnt[b]++;
+    }
+    r(i,n)T[i]=cnt[i];
+    for(;;){
+        int TEMP=0;
+        for(;;){
+            int x,idx=-1,MAX=0;
+            r(i,n){
+                if(MAX<cnt[i]||(cnt[i]&&(xor128()%1881==31))){
+                    MAX=cnt[i];
+                    x=i;
+                }
+                if(cnt[i]==1) idx=i;
+            }
+            if(!MAX)break;
+            TEMP++;
+            if(idx!=-1){
+                r(i,n)if(A[idx][i]&&cnt[i]){
+                    x=i;
+                    break;
+                }
+            }
+            r(i,n)if(A[x][i]&&cnt[i])cnt[i]--;
+            cnt[x]=0;
+        }
+        MIN=min(TEMP,MIN);
+        owari = std::chrono::system_clock::now();
+        double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(owari-start).count();
+        if(elapsed>0.1)break;
+
+        r(i,n)cnt[i]=T[i];
+
+    }
+    if(MIN<=k)cout<<MIN<<endl;
+    else cout<<"Impossible"<<endl;
+}

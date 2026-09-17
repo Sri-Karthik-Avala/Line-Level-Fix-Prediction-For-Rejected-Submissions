@@ -1,0 +1,87 @@
+#include <iostream>
+#include <map>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+typedef long long ll;
+
+struct S {
+	int n;
+	char d[10];
+	S() {}
+	S(int n) : n(n) {}
+	ll hash() {
+		ll r = 0;
+		for (int i = 0; i < n; i++) {
+			r *= 16;
+			r += d[i];
+		}
+		return r;
+	}
+};
+
+typedef pair<S, int> P;
+
+int main() {
+	int n;
+	cin >> n;
+	S s(n), r(n);
+	for (int i = 0; i < n; i++) {
+		cin >> s.d[i];
+		s.d[i]--;
+		r.d[i] = i;
+	}
+	ll rh = r.hash();
+	int dist = 1, rdist = 1;
+	queue<P> q;
+	map<ll, int> u;
+	q.push(P(s, 1));
+	while (!q.empty()) {
+		S s(0); int d;
+		tie(s, d) = q.front(); q.pop();
+		if (d == 6) break;
+
+		ll sh = s.hash();
+		if (u[sh]) continue;
+		u[sh] = d;
+		dist = d;
+		if (sh == rh) {
+			break;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = i+2; j <= n; j++) {
+				S ss = s;
+				reverse(ss.d + i, ss.d + j);
+				q.push(P(ss, d+1));
+			}
+		}
+	}
+	map<ll, int> ru;
+	q = queue<P>();
+	q.push(P(r, 1));
+	while (!q.empty()) {
+		S s(0); int d;
+		tie(s, d) = q.front(); q.pop();
+		ll sh = s.hash();
+		if (d == 6) {
+			rdist = 6;
+			break;
+		}
+		if (ru[sh]) continue;
+		ru[sh] = d;
+		rdist = d;
+		if (u[sh]) {
+			break;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = i+2; j <= n; j++) {
+				S ss = s;
+				reverse(ss.d + i, ss.d + j);
+				q.push(P(ss, d+1));
+			}
+		}
+	}
+	cout << dist+rdist-2 << endl;
+	return 0;
+}

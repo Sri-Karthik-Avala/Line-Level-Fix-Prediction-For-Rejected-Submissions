@@ -1,0 +1,45 @@
+n = int(input())
+h = [int(i) for i in input().split()]
+a = [int(i) for i in input().split()]
+
+
+class Bucket:
+    def __init__(self, a, k, func=max, one=-10**18):
+        self.n = len(a)
+        self.k = k
+        self.func = func
+        self.one = one
+
+        self.a = a[:]
+        self.b = []
+        for i in range(self.n // self.k):
+            s = self.one
+            for j in range(i * self.k, i * self.k + self.k):
+                s = func(s, self.a[j])
+            self.b.append(s)
+        s = self.one
+        for i in range(self.n // self.k * self.k, self.n):
+            s = self.func(s, self.a[i])
+        self.b.append(s)
+
+    def get(self, index):
+        s = self.one
+        j = index // self.k
+        for i in range(j):
+            s = self.func(s, self.b[i])
+        for i in range(j * self.k, index + 1):
+            s = self.func(s, self.a[i])
+        return s
+
+    def update(self, index, x):
+        self.a[index] = self.func(x, self.a[index])
+        self.b[index//self.k] = self.func(self.b[index//self.k], x)
+
+
+buc = Bucket([0] * (n+1), 400)
+
+for i in range(n):
+    j = buc.get(h[i])
+    buc.update(h[i], j + a[i])
+
+print(buc.get(n))

@@ -1,0 +1,93 @@
+Problem A: 青春18きっぷ 2013 
+ Problem Statement 
+ 
+会津合宿に参加予定の高槻さんは、家が貧乏であまりお金を持っていない。そのため、青春18きっぷを使用して、お金を節約しようとしている。18きっぷは、これ1枚だけで、鈍行列車ならば1日中乗り放題、改札の出入りも自由という優れものである（詳しい利用ルールについては省略）。
+ 
+
+ 
+18きっぷの魅力は、乗り換えを行う駅で、空いている時間を使って、ご当地のお土産等を見てまわれる点である。彼女は、せっかくの機会なので、旅の途中でいろいろな駅を見て回りたいと考えている。ただし、次の電車に乗り遅れては困るため、乗り換え駅に到着した時刻から、乗り換え駅を出発する時刻までの間がT分以上のときだけ、その駅を見て回ることにした。
+ 
+
+ 
+高槻さんの18きっぷを使った乗り換え計画が与えられるので、見て回れる駅の名前と時間を出力せよ。一番最初に出発する駅と、一番最後に到着する駅は、見て回る候補には入らないことに注意してほしい。
+ 
+
+ Input 
+各データセットは、以下の形式で入力される。
+
+ N T
+st_time1 st_name1 ar_time1 ar_name1
+st_time2 st_name2 ar_time2 ar_name2
+...
+st_timeN st_nameN ar_timeN ar_nameN
+ 
+
+ 
+Nは列車に乗車する回数を表わす整数、Tは乗り換え駅を見て回れる許容時間(分)を表わす整数である。続いて、N行にわたって、列車の出発と到着のペアが与えられる。各行の入力は、st_timeiの時刻ちょうどにst_nameiの駅を高槻さんの乗る列車が出発することを、ar_timeiの時刻ちょうどにar_nameiの駅に高槻さんの乗る列車が到着することを意味する。
+ 
+
+ Constraints 
+ 
+ 1 
+ 1 
+ st_timei、ar_timei 
+ 
+ "HH:MM"により表わされ、HHには00以上23以下、MMには00以上59以下の2桁の数値が入る。HHが時間で、MMが分である。 
+ 00:00 
+ 
+ st_namei、ar_namei 
+ 
+ アルファベット大文字・小文字により表わされる文字列である。 
+ 1 
+ i番目の到着駅ar_nameiと、i+1番目の出発駅st_namei+1の名前は一致する。 
+ st_name1、ar_nameN、乗り換えの駅の名前は、それぞれ異なる文字列である。 
+ 
+ 
+
+ Output 
+ 
+各データセットについて、以下の形式で出力を行う。
+ 
+
+ M
+stay_name1 stay_time1
+stay_name2 stay_time2
+...
+stay_nameM stay_timeM
+ 
+
+ 
+M（0 
+
+ Sample Input 1 
+ 8 24
+05:30 Kyoto 06:37 Maibara
+06:50 Maibara 07:36 Tsuruga
+07:42 Tsuruga 10:03 Kanazawa
+10:58 Kanazawa 12:07 Toyama
+12:15 Toyama 14:12 Naoetsu
+14:29 Naoetsu 15:57 Nagaoka
+16:11 Nagaoka 17:14 Niitsu
+17:38 Niitsu 20:06 AizuWakamatsu
+ 
+
+ Output for the Sample Input 1 
+ 2
+Kanazawa 55
+Niitsu 24
+ 
+
+ Kanazawa駅は、10:03に到着し10:58に出発するため、乗り換えに55分の空き時間がある。Niitsu駅は、17:14に到着し17:38に出発するため、乗り換えに24分の空き時間がある。どちらも、入力で指定された24分以上の空き時間があるため、出力する。
+ 
+
+ Sample Input 2 
+ 1 180
+10:44 Koriyama 11:52 AizuWakamatsu
+ 
+
+ Output for the Sample Input 2 
+ 0
+ 
+
+ 
+乗り換え駅は1つもないため、0と出力する。

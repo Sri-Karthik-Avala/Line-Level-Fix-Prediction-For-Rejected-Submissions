@@ -1,0 +1,34 @@
+Problem C: Usagitobi 
+
+ 
+ m &times; n マスの盤がある. i 行 j 列のマスを( i , j ) (0 &le; i < m , 0 &le; j < n ) で表す.
+ 
+
+ 
+うさぎは( x , y ) にいるとき, (( x + a ) mod m , ( y + b ) mod n ) または(( x + c ) mod m , ( y + d ) mod n ) へ跳ぶことができる.
+ 
+
+ 
+いま, うさぎが(0, 0) にいる. 一度跳び立ったマスへ再び行くことはできないとするとき, うさぎは最大何回跳ぶことができるか.
+ 
+
+ Input 
+
+ 
+入力は一行に m , n , a , b , c , d がスペース区切りで与えられる. 1 &le; m , n , a , b , c , d &le; 100 000
+ 
+
+ Output 
+
+ 
+うさぎが跳べる最大回数を一行に出力せよ.
+ 
+
+ Sample Input 1 
+ 
+6 6 2 2 2 4
+ 
+
+ Sample Output 1 
+ 
+8

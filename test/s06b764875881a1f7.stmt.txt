@@ -1,0 +1,94 @@
+Problem B: Cubes Without Holes 
+
+ 
+There is a cube which consists of n &times; n &times; n small cubes. Small cubes have marks on their surfaces. An example where n = 4 is shown in the following figure.
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+Then, 
+次に、上図（右）に示すように、印のついた表面から、反対の面まで水平または垂直に貫通する穴をあける。
+ 
+
+ 
+あなたの仕事は、 n と 印の位置を読み込み、穴の空いていない小さい立方体の個数を数えるプログラムを作成することである。
+ 
+
+ Input 
+
+ 
+入力はいくつかのデータセットからなる。各データセットは以下の形式で与えられる：
+ 
+
+ 
+ n h 
+ c 1 a 1 b 1 
+ c 2 a 2 b 2 
+ .
+ .
+ .
+ c h a h b h 
+ 
+
+ 
+ h は印の数を示す整数である。これに続く h 行によって h 個の印の位置が入力される。印の位置を指定するために下図に示す座標軸を用いることにする。( x , y , z ) = (1, 1, 1) が左下奥の立方体、( x , y , z ) = ( n , n , n ) が右上手前の立方体を示す。
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ c i は i 番目の印がつけられている平面を示す文字列である。 c i は " xy " 、" xz "、 " yz "　のいづれかであり、それぞれ i 番目の印が xy 平面、 xz 平面、 yz 平面上にあることを示す。
+ 
+
+ 
+ a i , b i 　は　 c i で示された平面上の座標を示す。 xy 平面、 xz 平面、 yz 平面のとき、 a i , b i はそれぞれ平面の座標 ( x , y )、( x , z )、( y , z ) を示す。例えば、上図において、印 A, B, C の c i , a i , b i の値はそれぞれ、" xy 4 4 ", " xz 1 2 ", " yz 2 3 " となる。
+ 
+
+ 
+ n , h がともに 0 のとき、入力の終わりを示す。
+ 
+
+
+
+
+ 
+ n &le; 500, h &le; 200 と仮定してよい。
+ 
+
+
+ Output 
+
+ 
+各データセットに対して、穴の空いていない立方体の数を１行に出力せよ。
+ 
+
+
+ Sample Input 
+ 
+4 3
+xy 4 4
+xz 1 2
+yz 2 3
+4 5
+xy 1 1
+xy 3 3
+xz 3 3
+yz 2 1
+yz 3 3
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+52
+46

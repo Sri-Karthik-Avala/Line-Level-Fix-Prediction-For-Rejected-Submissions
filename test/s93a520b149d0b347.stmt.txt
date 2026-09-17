@@ -1,0 +1,83 @@
+Problem I: Riffle Shuffle 
+ 
+ There are a number of ways to shuffle a deck of cards. Riffle shuffle is one such example. The following is how to perform riffle shuffle.
+ 
+ 
+ There is a deck of n cards. First, we divide it into two decks; deck A which consists of the top half of it and deck B of the bottom half. Deck A will have one more card when n is odd. 
+ 
+ 
+ Next, c cards are pulled from bottom of deck A and are stacked on deck C, which is empty initially. Then c cards are pulled from bottom of deck B and stacked on deck C, likewise. This operation is repeated until deck A and B become empty. When the number of cards of deck A(B) is less than c , all cards are pulled.
+ Finally we obtain shuffled deck C. See an example below:
+ 
+
+ 
+ - A single riffle operation where n = 9, c = 3
+ 
+ for given deck [0 1 2 3 4 5 6 7 8] (right is top)
+
+ - Step 0
+ deck A [4 5 6 7 8]
+ deck B [0 1 2 3]
+ deck C []
+
+ - Step 1
+ deck A [7 8]
+ deck B [0 1 2 3]
+ deck C [4 5 6]
+
+ - Step 2
+ deck A [7 8]
+ deck B [3]
+ deck C [4 5 6 0 1 2]
+
+ - Step 3
+ deck A []
+ deck B [3]
+ deck C [4 5 6 0 1 2 7 8]
+
+ - Step 4
+ deck A []
+ deck B []
+ deck C [4 5 6 0 1 2 7 8 3]
+
+ shuffled deck [4 5 6 0 1 2 7 8 3]
+ 
+ 
+ This operation, called riffle operation, is repeated several times.
+ 
+
+ 
+ Write a program that simulates Riffle shuffle and answer which card will be finally placed on the top of the deck.
+ 
+
+
+ Input 
+
+ 
+ The input consists of multiple data sets. Each data set starts with a line containing two positive integers n (1 &le; n &le; 50) and r (1 &le; r &le; 50); n and r are the number of cards in the deck and the number of riffle operations, respectively.
+ 
+ 
+ r more positive integers follow, each of which represents a riffle operation. These riffle operations are performed in the listed order. Each integer represents c , which is explained above.
+ 
+ 
+ The end of the input is indicated by EOF. The number of data sets is less than 100. 
+ 
+
+ Output 
+
+ 
+ For each data set in the input, your program should print the number of the top card after the shuffle. Assume that at the beginning the cards are numbered from 0 to n -1, from the bottom to the top. Each number should be written in a sparate line without any superfluous characters such as leading or following spaces.
+ 
+
+ Sample Input 
+ 
+9 1
+3
+9 4
+1 2 3 4
+ 
+
+ Output for the Sample Input 
+ 
+3
+0

@@ -1,0 +1,57 @@
+#include<stdio.h>
+
+int main(){
+
+int p;
+char r;
+char Q;
+r='A';
+while(1){
+
+scanf("%c",&Q);
+
+if(Q=='\n')
+{
+if(r=='B')printf("Yes\n");
+else printf("No\n");
+
+r='A';
+}
+
+
+else if(r=='A')
+{if(Q=='0')r='X';
+else if(Q=='1')r='Y';
+else r='H';}
+
+else if(r=='X')
+{
+if(Q=='1')r='Z';
+else r='H';}
+
+else if(r=='Y')
+{if(Q=='0')r='X';
+else r='H';}
+
+else if(r=='Z')
+{if(Q=='0')r='W';
+else if(Q=='1')r='B';
+else r='H';}
+
+else if(r=='W')
+{if(Q=='0')r='B';
+else if(Q=='1')r='Y';
+else r='H';}
+
+else if(r=='B')
+{if(Q=='0')r='Y';
+else if(Q=='1')r='X';
+else r='H';}
+
+else if(Q=='#')break;
+
+
+}
+
+return 0;
+}

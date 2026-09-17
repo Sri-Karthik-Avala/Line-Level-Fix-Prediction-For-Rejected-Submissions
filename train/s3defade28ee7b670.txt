@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+#define r(i,n) for(int i=0;i<n;i++)
+using namespace std;
+int dp[(1<<16)];
+typedef double D;
+typedef complex<D> P;
+typedef pair<P, P> L;
+typedef vector<P> VP;
+const D EPS = 1e-9; 
+#define X real()
+#define Y imag()
+D dot(P a, P b) {return (conj(a)*b).X; }
+D cross(P a, P b) {  return (conj(a)*b).Y;}
+int ccw(P a, P b, P c) {
+  b -= a;  c -= a;
+  if (cross(b,c) >  EPS) return +1;
+  if (cross(b,c) < -EPS) return -1;
+  if (dot(b,c)   < -EPS) return +2;
+  if (norm(b) < norm(c)) return -2; 
+  return 0; 
+}
+P proj(P a1, P a2, P p) {
+  return a1 + dot(a2-a1, p-a1)/norm(a2-a1) * (a2-a1);
+}
+
+bool isecSP(P a1, P a2, P b) {
+  return !ccw(a1, a2, b);
+}
+D distSP(P a1, P a2, P p) {
+  P r = proj(a1, a2, p);
+  if (isecSP(a1, a2, r)) return abs(r-p);
+  return min(abs(a1-p), abs(a2-p));
+}
+int n,ans;
+double sy[20],sx[20],gx[20],gy[20],r[20];
+int main(){
+  cin>>n;
+  r(i,n)cin>>r[i]>>sx[i]>>sy[i]>>gx[i]>>gy[i];
+  dp[0]=1;
+  for(int i=0;i<(1<<n);i++){
+    if(dp[i]){
+      int sum=0;
+      r(j,n)if((1<<j)&i)sum++;
+      ans=max(sum,ans);
+      for(int j=0;j<n;j++){
+	if(((1<<j)&i)==0){
+	  int f=0;
+	  for(int k=0;k<n;k++)if(j!=k){
+	    if((1<<k)&i){
+	      if(distSP(P(sx[j],sy[j]),P(gx[j],gy[j]),P(gx[k],gy[k]))>r[j])f++;
+	    }
+	    else{
+	       if(distSP(P(sx[j],sy[j]),P(gx[j],gy[j]),P(sx[k],sy[k]))>r[j])f++;
+	    }
+	  }
+	  if(f==n-1)dp[i|(1<<j)]=1;
+	}
+      }
+    }
+  }
+  cout<<ans<<endl;
+}

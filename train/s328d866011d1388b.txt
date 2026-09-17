@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long
+#define rep(i, n) for (int i = 0; i < (int) (n); i++)
+#define reps(i, n) for (int i = 1; i <= (int) (n); i++)
+#define all(x) (x).begin(), (x).end()
+#define uniq(x) (x).erase(unique(all(x)), (x).end())
+#define bit(n) (1LL << (n))
+#define cdiv(a, b) (((a) - 1) / (b) + 1)
+#define dump(x) cerr << #x " = " << (x) << endl
+using vint = vector<int>;
+using vvint = vector<vint>;
+using pint = pair<int, int>;
+using vpint = vector<pint>;
+template<typename T> using priority_queue_rev = priority_queue<T, vector<T>, greater<T>>;
+constexpr double PI = 3.1415926535897932384626433832795028;
+constexpr int DY[9] = {0, 1, 0, -1, 1, 1, -1, -1, 0};
+constexpr int DX[9] = {1, 0, -1, 0, 1, -1, -1, 1, 0};
+int gcd(int a, int b) {
+    while (b) { swap(a %= b, b); }
+    return a;
+}
+int lcm(int a, int b) { return a / gcd(a, b) * b; }
+int sgn(int x) { return (x > 0) - (x < 0); }
+template<typename T> void fin(T mes) {
+    cout << mes << endl;
+    exit(0);
+}
+template<typename T, typename U> bool chmax(T &a, const U &b) {
+    if (a < b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+template<typename T, typename U> bool chmin(T &a, const U &b) {
+    if (b < a) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+template<typename T, typename U> ostream &operator<<(ostream &os, const pair<T, U> &rhs) {
+    os << "(" << rhs.first << ", " << rhs.second << ")";
+    return os;
+}
+template<typename T> ostream &operator<<(ostream &os, const vector<T> &rhs) {
+    os << "{";
+    for (auto itr = rhs.begin(); itr != rhs.end(); itr++) {
+        os << *itr << (next(itr) != rhs.end() ? ", " : "");
+    }
+    os << "}";
+    return os;
+}
+struct setup {
+    static constexpr int PREC = 20;
+
+    setup() {
+        cout << fixed << setprecision(PREC);
+        cerr << fixed << setprecision(PREC);
+    };
+} setup;
+
+int N;
+int A[5500];
+int U[5500], V[5500];
+vint G[5500];
+pair<vint, int> dfs(int cur, int par) {
+    vint x = {A[cur]};
+    int cut = 0;
+    for (int to:G[cur]) {
+        if (to == par) { continue; }
+        pair<vint, int> tmp = dfs(to, cur);
+        vint nxt = tmp.first;
+        int ccut = tmp.second;
+        vint y(x.size() + nxt.size(), LLONG_MAX);
+        if (ccut >= 0) { rep(i, x.size()) { y[i + ccut + 1] = x[i]; }}
+        rep(i, x.size()) {
+            rep(j, nxt.size()) {
+                chmin(y[i + j], x[i] + nxt[j]);
+                if (nxt[j] < 0) { chmin(y[i + j + 1], x[i]); }
+            }
+        }
+        x = y;
+        reps(i, x.size() - 1) { chmin(x[i], x[i - 1]); }
+        int pl = -1;
+        for (int i = nxt.size() - 1; i >= 0; i--) { if (nxt[i] < 0) { pl = i; }}
+        assert(pl >= 0);
+        if (ccut >= 0) { cut += min(ccut, pl + 1); }
+        else { cut += pl + 1; }
+    }
+    if (A[cur] < 0) { cut = -1; }
+    return {x, cut};
+}
+
+signed main() {
+    cin >> N;
+    rep(i, N) { cin >> A[i]; }
+    rep(i, N - 1) {
+        cin >> U[i] >> V[i];
+        U[i]--, V[i]--;
+        G[U[i]].push_back(V[i]), G[V[i]].push_back(U[i]);
+    }
+    pair<vint, int> res = dfs(0, -1);
+    int ans = N;
+    if (A[0] > 0) { ans = res.second; }
+    rep(i, res.first.size()) { if (res.first[i] < 0) { chmin(ans, i); }}
+    cout << ans << endl;
+}

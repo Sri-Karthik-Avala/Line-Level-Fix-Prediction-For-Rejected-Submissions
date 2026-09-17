@@ -1,0 +1,104 @@
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define LOG(...) printf(__VA_ARGS__)
+//#define LOG(...)
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define ALL(a) (a).begin(),(a).end()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define SORT(c) sort((c).begin(),(c).end())
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<bool> vb;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+typedef vector<vb> vvb;
+typedef vector<vi> vvi;
+typedef vector<vll> vvll;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+
+#define INF INT_MAX
+#define MAX_X 30
+#define MAX_Y 30
+
+int cost[4];
+int w, h;
+
+int dx[] = {-1,0,1,0}; int dy[] = {0,-1,0,1};
+
+struct P {
+    int cost, x, y, way;
+    bool operator >(const P& p) const {
+        if (cost != p.cost) return cost > p.cost;
+        return y < p.y;
+    }
+};
+
+int main() {
+    while (cin >> w >> h, w|h) {
+        vector<vi> field(h, vi(w));
+        REP(iy, h) REP(ix, w) {
+            cin >> field[iy][ix];
+        }
+        REP(i, 4) {
+            cin >> cost[i];
+        }
+
+        vector<vector<vi>> costs(4, vector<vi>(h, vi(w, INF)));
+        costs[2][0][0] = 0; // right
+
+        priority_queue<P, vector<P>, greater<P>> que;
+        que.push((P){0, 0, 0, 2});
+        while (!que.empty()) {
+            P p = que.top(); que.pop();
+            if (p.x == w - 1 && p.y == h - 1) {
+                cout << p.cost << endl;
+                break;
+            }
+
+            int way = (p.way + field[p.y][p.x]) % 4;
+            int sx = p.x + dx[way];
+            int sy = p.y + dy[way];
+
+            if (0 <= sx && sx < w && 0 <= sy && sy < h) {
+                if (field[p.y][p.x] != 4) {
+                    if (costs[way][sy][sx] > p.cost) {
+                        costs[way][sy][sx] = p.cost;
+                        que.push((P){p.cost, sx, sy, way});
+                    }
+                }
+            }
+
+            REP(d, 4) {
+                way = (p.way + d) % 4;
+                sx = p.x + dx[way];
+                sy = p.y + dy[way];
+
+                if (0 <= sx && sx < w && 0 <= sy && sy < h) {
+                    if (costs[way][sy][sx] > p.cost) {
+                        costs[way][sy][sx] = p.cost + cost[d];
+                        que.push((P){p.cost + cost[d], sx, sy, way});
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,92 @@
+#include <iostream>
+#include <utility>
+#include <vector>
+#define inf 100000000
+
+using namespace std;
+typedef pair<int, int> P;
+
+int N, C;
+int map[11][11];
+vector<int> G[11][11];
+bool used[11][11];
+
+int dfs(int posi, int posj, int val)
+{
+	if(posi < 0 || posj < 0 || posi + posj >= N) return 0;
+	if(map[posi][posj] == 0) return -1;
+	if(map[posi][posj] != val) return 0;
+	if(used[posi][posj]) return 0;
+	
+	used[posi][posj] = true;
+	
+	const int vx[] = {0, 1, 1, 0, -1, -1};
+	const int vy[] = {-1, -1, 0, 1, 1, 0};
+	
+	int ret = 1;
+	int ni, nj, res;
+	for(int dir = 0; dir < 6; dir++){
+		ni = posi + vx[dir], nj = posj + vy[dir];
+		res = dfs(ni, nj, val);
+		if(res == -1) return -1;
+		ret += res;
+	}
+	return ret;
+}
+
+int count()
+{
+	int ret = 0;
+	int res;
+	
+	for(int i = 0; i < N; i++){
+		for(int j = 0; j < N; j++){
+			if(i + j >= N) continue;
+			used[i][j] = false;
+		}
+	}
+	
+	for(int i = 0; i < N; i++){
+		for(int j = 0; j < N; j++){
+			if(i + j >= N) continue;
+			if(map[i][j]){
+				res = dfs(i, j, map[i][j]);
+				if(res == -1) continue;
+				if(map[i][j] == C) ret -= res;
+				else ret += res;
+			}
+		}
+	}
+	return ret;
+}
+
+int main(void)
+{
+	while(1){
+		cin >> N >> C;
+		if( N == 0 && C == 0) break;
+		
+		for(int i = 1; i <= N; i++){
+			for(int j = 0; j < i; j++){
+				cin >> map[j][i-j-1];
+			}
+		}
+		
+		int ans = -inf;
+		for(int i = 0; i < N; i++){
+			for(int j = 0; j < N; j++){
+				if(i + j >= N) continue;
+				if(map[i][j]) continue;
+				
+				map[i][j] = C;
+				ans = max(ans, count());
+				map[i][j] = 0;
+			}
+		}
+		
+		if(ans == -inf) ans = 0;
+		cout << ans << endl;
+	}
+	
+	return 0;
+}

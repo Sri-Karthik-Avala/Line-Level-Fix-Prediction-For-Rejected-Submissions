@@ -1,0 +1,54 @@
+#include <iostream>
+#include <stdio.h>
+#include <vector> 
+using namespace std;
+
+int main(void){
+    int n,m;
+    scanf("%d %d",&n,&m);
+    int a[n];
+    int b[m];
+    vector<int> dup,all;
+    
+    for(int i=0;i<n;i++){
+        scanf("%d",&a[i]);
+    }
+    for(int j=0;j<m;j++){
+        scanf("%d",&b[j]);
+    }
+
+    int ap=0;
+    int bp=0;
+    int i=1;
+    while(ap!=n or bp!=m){
+
+        if(a[ap]==i and b[bp]==i) dup.push_back(i);
+        if(a[ap]==i or b[bp]==i) all.push_back(i);
+
+        while(a[ap]<=i and ap!=n) ap++;
+        while(b[bp]<=i and bp!=m) bp++;
+
+        if(ap!=n and a[ap]<b[bp]){
+            i = a[ap];
+        }else if(bp!=n and a[ap]>=b[bp]){
+            i = b[bp];
+        }else if(ap==n){
+            i = b[bp];
+        }else{
+            i = a[ap];
+        }
+    }
+    
+    printf("%d %d\n",dup.size(),all.size());
+    
+    for(auto itr = dup.begin(); itr != dup.end(); ++itr) {
+        printf("%d\n",*itr);
+    }
+    for(auto itr = all.begin(); itr != all.end(); ++itr) {
+        printf("%d\n",*itr);
+    }
+
+
+    return 0;
+}
+

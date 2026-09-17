@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+string data[9] = {"\',.!?", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+char conv(char n, int cnt){
+  return data[n-'1'][(cnt-1)%(int)data[n-'1'].size()];
+}
+
+main(){
+  string in;
+  while(getline(cin, in)){
+    string out;
+    bool f = true;
+    char num;
+    int cnt = 0;
+    for(int i=0;i<in.size();i++){
+      if(f){
+        num = in[i];
+        cnt++;
+        f = false;
+      }else{
+        if(in[i] == '0'){
+          if(num == '0'){
+            cnt++;
+          }else{
+            out += conv(num, cnt);
+            num = in[i];
+            cnt = 0;
+          }
+        }else if(num != in[i]){
+          if(num == '0') while(cnt--) out += ' ';
+          else out += conv(num, cnt);
+          num = in[i];
+          cnt = 1;
+        }else{
+          cnt++;
+        }
+      }
+    }
+    if(num == '0') while(cnt--) out += ' ';
+    else out += conv(num, cnt);
+    cout << out << endl;
+  }
+}

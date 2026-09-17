@@ -1,0 +1,6 @@
+import sys
+p=['41412121','41212141','21414121','21214141','14141212','14121214','12141412','12121414']
+for e in sys.stdin:
+ d={}
+ for f in p:d[sum(int(s)-int(t)for s,t in zip(e.split(),f)if s>t)]=f
+ print(*list(d[min(d)]))

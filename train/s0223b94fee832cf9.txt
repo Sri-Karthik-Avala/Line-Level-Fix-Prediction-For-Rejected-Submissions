@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define _GLIBCXX_DEBUG
+int64_t MOD=1000000007;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+void YN(bool x){
+  if(x) cout<<"Yes";
+  else cout<<"No";
+}
+
+int main() {
+  int N,T; cin>>N;
+  vector<int> S(N);
+  rep(i,N){
+    cin>>S.at(i);
+    T+=S.at(i);
+  }
+  bool ok=true;
+  rep(i,N){
+    if(S[i]>=T-S[i]) ok=false;
+  }
+  YN(ok);
+}

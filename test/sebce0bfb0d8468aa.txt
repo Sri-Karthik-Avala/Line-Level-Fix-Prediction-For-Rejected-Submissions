@@ -1,0 +1,106 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+typedef vector<vector<int> > mat;
+int n,l,pos=0;
+string s;
+mat init(){
+  mat res;
+  res.resize(n,vector<int>(n));
+  for(int i=0;i<n;i++)
+    for(int j=0;j<n;j++)
+      res[i][j]=i*n+j;
+  return res;
+}
+
+mat expr();
+mat repet();
+
+mat expr(){
+  mat res=init();
+  while(pos<l){
+    //cout<<pos<<endl;
+    if(isupper(s[pos])){
+      char c=s[pos++];
+      int m=0;
+      while(isdigit(s[pos]))
+	m=m*10+s[pos++]-'0';
+      //cout<<c<<" "<<m<<endl;
+      m--;
+      if(c=='R'){
+	int tmp=res[m][n-1];
+	for(int j=n-1;j>0;j--) res[m][j]=res[m][j-1];
+	res[m][0]=tmp;
+      }
+      if(c=='L'){
+	int tmp=res[m][0];
+	for(int j=0;j<n-1;j++) res[m][j]=res[m][j+1];
+	res[m][n-1]=tmp;
+      }
+      if(c=='D'){
+	int tmp=res[n-1][m];
+	for(int j=n-1;j>0;j--) res[j][m]=res[j-1][m];
+	res[0][m]=tmp;
+      }
+      if(c=='U'){
+	int tmp=res[0][m];
+	for(int j=0;j<n-1;j++) res[j][m]=res[j+1][m];
+	res[n-1][m]=tmp;
+      }
+    }else if(s[pos]=='(') {
+      mat tmp=repet();
+       for(int i=0;i<n;i++)
+	 for(int j=0;j<n;j++)
+	   res[i][j]=tmp[res[i][j]/n][res[i][j]%n];
+    }else break;
+  }
+  return res;
+}
+
+mat repet(){
+  mat res=init();
+  assert(s[pos]=='(');
+  pos++;
+  mat tmp[100];
+  tmp[0]=expr();
+  assert(s[pos]==')');
+  pos++;
+  int m=0;
+  while(pos<l&&isdigit(s[pos]))
+    m=m*10+s[pos++]-'0';
+
+  /*
+  for(int i=0;i<n;i++)
+    for(int j=0;j<n;j++)
+      cout<<tmp[0][i][j]<<" \n"[j==n-1];
+  */
+  
+  for(int k=0;(m>>k);k++){
+    if((m>>k)&1){
+      for(int i=0;i<n;i++)
+	for(int j=0;j<n;j++)
+	  res[i][j]=tmp[k][res[i][j]/n][res[i][j]%n];
+    }
+    tmp[k+1]=init();
+    
+    for(int i=0;i<n;i++)
+      for(int j=0;j<n;j++)
+	tmp[k+1][i][j]=tmp[k][tmp[k][i][j]/n][tmp[k][i][j]%n];
+
+    /*
+    for(int i=0;i<n;i++)
+      for(int j=0;j<n;j++)
+	cout<<tmp[k+1][i][j]<<" \n"[j==n-1];
+    */
+  }
+  
+  return res;
+}
+signed main(){
+  cin>>n>>l>>s;
+  mat ans=expr();
+  for(int i=0;i<n;i++)
+    for(int j=0;j<n;j++)
+      cout<<ans[i][j]+1<<" \n"[j==n-1];
+  return 0;
+}

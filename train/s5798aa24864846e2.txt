@@ -1,0 +1,120 @@
+#pragma GCC optimize("Ofast")
+#include<bits/stdc++.h>
+
+using namespace std;
+using Int = long long;
+typedef pair<int,int> Pi; typedef pair<Int,Int> Pl;
+constexpr int mod = 1e9+7;
+constexpr int INF32 = numeric_limits<int>::max();
+constexpr Int INF64 = numeric_limits<Int>::max();
+#define END {cout<<ans<<'\n'; return 0;}
+#define ALL(v) (v).begin(),(v).end()
+#define fi first
+#define se second
+#define mp make_pair
+#define eb emplace_back
+#define Pr(t) priority_queue<t>
+#define gPr(t) priority_queue<t,vector<t>,greater<t>>
+#define V(t) vector<t>
+#define rer(i,l,r) for(int i=(l); i<(r); ++i)
+#define rep(i,n) rer(i,0,n)
+#define gnr(i,l,r) for(int i=(r)-1; i>=(l); --i)
+#define pri(a) cout<<(a)<<'\n'
+#define pri2(a,n) {rep(i,n-1)cout<<a[i]<<' '; if(n)cout<<a[n-1]<<'\n';}
+#define prip(p) cout<<(p).fi<<' '<<(p).se<<'\n'
+template<class T> inline bool cmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
+template<class T> inline bool cmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
+
+Int n,m,_,x,y,q;
+string s,sb;
+bool ok;
+char cf,cb;
+
+template<int MOD>
+struct ModInt {
+	static const int Mod = MOD;
+	unsigned x;
+	ModInt() : x(0) {}
+	ModInt(signed sig) { int sigt = sig % MOD; if(sigt < 0) sigt += MOD; x = sigt; }
+	ModInt(signed long long sig) { int sigt = sig % MOD; if(sigt < 0) sigt += MOD; x = sigt; }
+	int get() const { return (int)x; }
+
+	ModInt &operator+=(ModInt that) { if((x += that.x) >= MOD) x -= MOD; return *this; }
+	ModInt &operator-=(ModInt that) { if((x += MOD - that.x) >= MOD) x -= MOD; return *this; }
+	ModInt &operator*=(ModInt that) { x = (unsigned long long)x * that.x % MOD; return *this; }
+	ModInt &operator/=(ModInt that) { return *this *= that.inverse(); }
+  ModInt &operator%=(ModInt that) { x %= that.x; return *this; }
+
+	ModInt operator+(ModInt that) const { return ModInt(*this) += that; }
+	ModInt operator-(ModInt that) const { return ModInt(*this) -= that; }
+	ModInt operator*(ModInt that) const { return ModInt(*this) *= that; }
+	ModInt operator/(ModInt that) const { return ModInt(*this) /= that; }
+  ModInt operator%(ModInt that) const { return ModInt(*this) %= that; }
+
+	ModInt inverse() const {
+		signed a = x, b = MOD, u = 1, v = 0;
+		while(b) {
+			signed t = a / b;
+			a -= t * b; std::swap(a, b);
+			u -= t * v; std::swap(u, v);
+		}
+		if(u < 0) u += Mod;
+		ModInt res; res.x = (unsigned)u;
+		return res;
+	}
+
+	bool operator==(ModInt that) const { return x == that.x; }
+	bool operator!=(ModInt that) const { return x != that.x; }
+	ModInt operator-() const { ModInt t; t.x = x == 0 ? 0 : Mod - x; return t; }
+
+  friend ostream &operator<<(ostream &os, const ModInt &p) {
+    return os << p.x;
+  }
+
+  friend istream &operator>>(istream &is, ModInt &a) {
+    int t;
+    is >> t;
+    a = ModInt< mod >(t);
+    return (is);
+  }
+};
+template<int MOD> ModInt<MOD> operator^(ModInt<MOD> a, unsigned long long k) {
+	ModInt<MOD> r = 1;
+	while(k) {
+		if(k & 1) r *= a;
+		a *= a;
+		k >>= 1;
+	}
+	return r;
+}
+
+typedef ModInt<mod> mint;
+
+vector<mint> fact, factinv;
+
+void COMinit(int N) {
+	N = min(N, mint::Mod - 1);
+	fact.resize(N + 1); factinv.resize(N + 1);
+	fact[0] = 1;
+	for (int i = 1; i <= N; i++) fact[i] = fact[i - 1] * i;
+	factinv[N] = fact[N].inverse();
+	for(int i = N; i >= 1; i --) factinv[i - 1] = factinv[i] * i;
+}
+
+mint C(int n, int r) {
+	if(n >= mint::Mod)
+		return C(n % mint::Mod, r % mint::Mod) * C(n / mint::Mod, r / mint::Mod);
+	return r > n ? 0 : fact[n] * factinv[n - r] * factinv[r];
+}
+
+int main(){
+  cin.tie(nullptr); ios::sync_with_stdio(0);
+  //cout<<fixed<<setprecision(20);
+
+  cin>>n; x=n%50; y=n/50;
+  pri(50);
+  rep(i,50){
+    if(i<x)cout<<y+49+50<<' ';
+    else cout<<y+49-x<<' ';
+  }
+}

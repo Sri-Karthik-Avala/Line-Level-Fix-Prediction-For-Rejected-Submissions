@@ -1,0 +1,13 @@
+count = 0
+target = raw_input()
+
+while True:
+  sentence = raw_input()
+  if sentence == 'END_OF_TEXT':
+    break
+  words = sentence.split()
+  for word in words:
+    if word == target:
+      count +=1
+
+print count

@@ -1,0 +1,15 @@
+while 1:
+	r,c,q = map(int,raw_input().split())
+	if r == 0: break
+	R = [[0,0] for i in range(r)]
+	C = [[0,0] for i in range(c)]
+	for i in range(1,q+1):
+		A,B,order = map(int,raw_input().split())
+		if A == 0:
+			R[B] = [i,order]
+		else:
+			C[B] = [i,order]
+	ans = 0
+	for ri in range(r):
+		ans += sum(R[ri][1] if R[ri][0] > C[ci][0] else C[ci][1] for ci in range(c))
+	print ans

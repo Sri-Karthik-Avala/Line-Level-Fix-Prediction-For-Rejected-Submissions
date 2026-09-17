@@ -1,0 +1,10 @@
+#coding:utf-8
+'''
+a ÷ b ： d (整数)
+a ÷ b の余り ： r (整数)
+a ÷ b ： f (浮動小数点数)
+'''
+a, b = map(int, input().split())
+
+print(a//b, a%b, a/b)
+

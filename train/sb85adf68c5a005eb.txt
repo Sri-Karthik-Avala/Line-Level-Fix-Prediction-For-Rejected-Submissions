@@ -1,0 +1,32 @@
+bitcount = [bin(i).count('1') for i in range(0x10000)]
+
+def solve(a, b):
+    global bitcount
+    b = [65535 ^ bi for bi in b]
+    pdp = {a[0]:0}
+    ndp = {}
+    for ai in a[1:] + [0]:
+        for k, v in pdp.items():
+            v += bitcount[k]
+            for bi in b:
+                bi &= k
+                vb = v - bitcount[bi]
+                bi |= ai
+                try:
+                    ndp[bi] = max(ndp[bi], vb)
+                except KeyError:
+                    ndp[bi] = vb
+        pdp, ndp = ndp, {}
+        
+    return max(pdp.values())
+
+import sys
+f = sys.stdin
+
+while True:
+    n, c = map(int, f.readline().split())
+    if n == c == 0:
+        break
+    a = [int(''.join(f.readline().split()), 2) for i in range(n)]
+    b = [int(''.join(f.readline().split()), 2) for i in range(c)]
+    print(solve(a, b))

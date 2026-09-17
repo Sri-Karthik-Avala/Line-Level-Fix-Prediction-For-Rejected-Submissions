@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+using namespace std;
+
+int n,m;
+int h[100],b[100];
+vector<int> t[100],val,ans;
+
+bool check(bool *used){
+	for(int i=0;i<m;i++){
+		int hit=0, blow=0;
+		for(int j=0;j<n;j++){
+			if(val[j] == t[i][j]){
+				hit++;
+			}
+			else if(used[t[i][j]]){
+				blow++;
+			}
+		}
+		if(hit!=h[i] || blow!=b[i]) return false;
+	}
+	return true;
+}
+
+bool solve(int idx,bool *used){
+	if(idx == n){
+		if(!check(used)) return true;
+		if(!ans.empty()) return false;
+		ans = val;
+		return true;
+	}
+
+	for(int i=0;i<10;i++){
+		if(used[i]) continue;
+		used[i] = true;
+		val[idx] = i;
+		if(!solve(idx+1,used)) return false;
+		used[i] = false;
+	}
+
+	return true;
+}
+
+int main(void){
+	while(cin>>n>>m,n||m){
+		for(int i=0;i<m;i++){
+			string s;
+			cin>>s>>h[i]>>b[i];
+			t[i].clear();
+			for(int j=0;j<n;j++){
+				t[i].push_back(s[j]-'0');
+			}
+		}
+
+		bool used[10];
+		memset(used,0,sizeof(used));
+		ans.clear();
+		val = vector<int>(n);
+		bool flg = solve(0,used);
+
+		if(flg && !ans.empty()){
+			for(int i=0;i<n;i++) cout<<ans[i];
+			cout<<endl;
+		}
+		else{
+			cout<<"NO\n";
+		}
+	}
+
+	return 0;
+}

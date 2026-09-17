@@ -1,0 +1,16 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+
+	int m, f, b;
+	cin >> m >> f >> b;
+
+	// 本を購入できないとき
+	if (b > m + f) cout << "NA" << endl;
+	// 本を購入できるとき
+	else if(b <= m) cout << 0 << endl;  // 自分で購入するとき
+	else cout << f - m  << endl;  // 友達から借りたとき
+
+	return 0;
+}

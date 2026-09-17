@@ -1,0 +1,66 @@
+import sys
+sys.setrecursionlimit(100000000)
+
+moves = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+
+
+def search(dataset):
+    min_time = 0
+    mouse = 1
+    gx, gy = get_start(dataset)
+    for i in xrange(N):
+        gx, gy, min_time_tmp = bfs(dataset, (gx, gy), mouse)
+        mouse += 1
+        min_time += min_time_tmp
+    print min_time
+
+
+def bfs(dataset, start, mouse):
+    INF = 100000000000000000
+    min_time = [[INF for j in xrange(W)] for i in xrange(H)]
+    min_time[start[0]][start[1]] = 0
+    queue = [start]
+
+    while len(queue) != 0:
+        dx, dy = queue.pop(0)
+        for i, j in moves:
+            nx = dx + i
+            ny = dy + j
+            if 0 <= nx < H and 0 <= ny < W and dataset[nx][ny] != 'X' and min_time[nx][ny] == INF:
+                cell = dataset[nx][ny]
+            else:
+                continue
+            if type(cell) is int:
+                if mouse == int(cell):
+                    min_time[nx][ny] = min_time[dx][dy] + 1
+                    return nx, ny, min_time[nx][ny]
+            min_time[nx][ny] = min_time[dx][dy] + 1
+            queue.append((nx, ny))
+
+
+def get_start(dataset):
+    for i in xrange(H):
+        rows = dataset[i]
+        for j in xrange(W):
+            cell = rows[j]
+            if cell == 'S':
+                return i, j
+
+
+dataset = []
+while True:
+    line = raw_input().rstrip().split()
+    if len(line) == 3:
+        H, W, N = map(int, line)
+    else:
+        row = []
+        for e in line[0]:
+            if e.isdigit():
+                row.append(int(e))
+            else:
+                row.append(e)
+        dataset.append(row)
+    if len(dataset) == H:
+        print dataset
+        search(dataset)
+        break

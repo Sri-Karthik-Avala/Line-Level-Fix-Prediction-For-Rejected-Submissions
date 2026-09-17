@@ -1,0 +1,106 @@
+#include <iostream>
+
+using namespace std;
+
+typedef long long ll;
+
+string str;
+int pos;
+int loc;
+ll now;
+
+int number() {
+	int res = 0;
+	while ( pos < str.size() && isdigit(str[pos]) ) {
+		res = res * 10 + (int)(str[pos] - '0');
+		++pos;
+	}
+	return res;
+}
+string alp() {
+	string res = "";
+	while ( pos < str.size() && 'A' <= str[pos] && str[pos] <= 'Z' ) {
+		res += str[pos];
+		++pos;
+	}
+	return res;
+}
+string expr2() {
+	string res = "";
+	while (pos < str.size() && str[pos] != ')') {
+		int n = 1;
+		if (isdigit(str[pos])) {
+			n = number();
+		}
+
+		string a;
+		if (str[pos] == '(') {
+			++pos;
+			a = expr2();
+			++pos;
+		}
+		else {
+			a = alp();
+		}
+
+		for (int i = 0; i < n; ++i) {
+			res += a;
+		}
+	}
+	return res;
+}
+ll expr() {
+	ll res = 0;
+	while (pos < str.size() && str[pos] != ')') {
+		int n = 1;
+		if (isdigit(str[pos])) {
+			n = number();
+		}
+
+		int op = pos;
+
+		ll l;
+		if (str[pos] == '(') {
+			++pos;
+			l = expr();
+			++pos;
+			now -= l;
+		}
+		else {
+			l = alp().size();
+		}
+
+		if (now <= loc && loc < now+l*n) {
+			pos = op;
+			throw expr2()[(loc-now)%l];
+		}
+
+		now += l * n;
+		res += l * n;
+		if (now > loc+1) now = loc+1;
+		if (res > loc+1) res = loc+1;
+	}
+
+	return res;
+}
+
+
+char parse() {
+	pos = 0;
+
+	try {
+		now = 0;
+		pos = 0;
+		expr();
+	}
+	catch (char c) {
+		return c;
+	}
+	return '0';
+}
+
+int main() {
+	while (cin >> str >> loc, str != "0" || loc != 0) {
+		cout << parse() << endl;
+	}
+}

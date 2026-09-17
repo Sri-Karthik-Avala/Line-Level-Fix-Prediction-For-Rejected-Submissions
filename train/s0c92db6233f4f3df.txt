@@ -1,0 +1,74 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<iomanip>
+#include<math.h>
+#include<complex>
+#include<queue>
+#include<deque>
+#include<stack>
+#include<map>
+#include<set>
+#include<bitset>
+#include<functional>
+using namespace std;
+#define REP(i,m,n) for(int i=(int)m ; i < (int) n ; ++i )
+#define rep(i,n) REP(i,0,n)
+typedef long long ll;
+typedef pair<int,int> pint;
+typedef pair<ll,int> pli;
+const int inf=1e9+7;
+const ll longinf=1LL<<60 ;
+const ll mod=1e9+7 ;
+
+int a,b,c=~(1<<31),M=(1<<16)-1;
+
+int r(){
+    a=36969*(a&M)+(a>>16);
+    b=18000*(b&M)+(a>>16);
+    return (c&((a<<16)+b))%1000000;
+}
+
+set<pair<int,int>> st[303030];
+int main(){
+    int m,n;
+    while(cin>>m>>n>>a>>b,m+n!=0){
+        int l=m+n;
+        int x[l],y[l],z[l];
+        rep(i,m)cin>>x[i]>>y[i]>>z[i];
+        rep(i,n){
+            x[i+m]=r();
+            y[i+m]=r();
+            z[i+m]=r();
+        }
+        vector<int> ord(l);
+        rep(i,l)ord[i]=i;
+        sort(ord.begin(),ord.end(),[&](int s,int t){return x[s]==x[t] ? y[s]>y[t] : x[s]<x[t];});
+        rep(i,303030){
+            if(st[i].size()==2)continue;
+            st[i].clear();
+            st[i].insert({inf,-inf});
+            st[i].insert({-inf,inf});
+        }
+        int ans=0;
+        for(auto i:ord){
+            int left=0,right=ans+1;
+            while(right-left>1){
+                int mid=(left+right)/2;
+                auto itr=--st[mid].lower_bound({y[i],-1});
+                if(itr->second<z[i])left=mid;
+                else right=mid;
+            }
+            int ret=left+1;
+            ans=max(ret,ans);
+            auto itr=--st[ret].lower_bound({y[i],inf});
+            if(z[i]>=itr->second)continue;
+            if(itr->first<y[i])itr++;
+            while(itr->second>=z[i])itr=st[ret].erase(itr);
+            st[ret].insert({y[i],z[i]});
+        }
+        cout<<ans<<endl;
+    } 
+    return 0;
+}

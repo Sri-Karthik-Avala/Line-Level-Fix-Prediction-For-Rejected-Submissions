@@ -1,0 +1,35 @@
+class cumsum2D:
+    def __init__(self, data):
+        self.N = len(data)
+        self.M= len(data[0])
+        self.cum = [[0] * (self.M + 1) for _ in range(self.N + 1)]
+        for i in range(self.N):
+            for j in range(self.M):
+                self.cum[i + 1][j + 1] = self.cum[i][j + 1] + self.cum[i + 1][j] - self.cum[i][j] + data[i][j]
+
+    def get(self,x1,y1,x2,y2):
+        """
+        長方形の領域 [x1,x2)*[y1,y2) の範囲内にインプットされた数字の和を取る
+        """
+        return self.cum[x2][y2] - self.cum[x1][y2] - self.cum[x2][y1] + self.cum[x1][y1]
+
+########################################################################################################
+import sys
+input = sys.stdin.readline
+
+N, K = map(int, input().split())
+B = [[0]*(2*K) for _ in range(2*K)]
+W = [[0]*(2*K) for _ in range(2*K)]
+for _ in range(N):
+    x, y, c = input().split()
+    x, y = int(x), int(y)
+    if c=="B":
+        B[x%(2*K)][y%(2*K)] += 1
+    else:
+        W[x%(2*K)][y%(2*K)] += 1
+cumB, cumW = cumsum2D(B), cumsum2D(W)
+res = 0
+for i in range(K+1):
+    for j in range(K+1):
+        res = max(cumB.get(0,0,i,j) + cumB.get(i,j,i+K,j+K) + cumB.get(i+K,j+K,2*K,2*K) + cumB.get(i+K,0,2*K,j) + cumB.get(0,j+K,i,2*K) + cumW.get(i,0,i+K,j) + cumW.get(0,j,i,j+K) + cumW.get(i+K,j,2*K,j+K) + cumW.get(i,j+K,i+K,2*K), res)
+print(res)

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+using namespace std;
+typedef map<string,int> msi;
+const int INF=2<<29;
+msi p;
+int n,m,price[100];
+vector<vector<int> > recipe[100];
+int search(int x,bool used[100]){
+	int minim=price[x];
+	if(used[x])
+	return INF;
+	else
+	used[x]=true;
+	for(int i=0;i<recipe[x].size();i++){
+		int sum=0;
+		for(int j=0;j<recipe[x][i].size();j++)
+			sum+=search(recipe[x][i][j],used);
+		minim=min(minim,sum);
+	}
+	used[x]=false;
+	return minim;
+		
+}
+int main() {
+	string s,sb;
+	while(cin >> n && n!=0){
+		for(int i=0;i<n;i++){
+			cin >> s >> price[i];
+			p.insert(msi::value_type(s,i));
+		}
+		cin >> m;
+		int num;
+		for(int i=0;i<m;i++){
+			vector<int> material;
+			cin >> s >> num;
+			for(int j=0;j<num;j++){
+			cin >> sb; 
+			material.push_back(p[sb]);
+			}
+			recipe[p[s]].push_back(material);
+		}
+		cin >> s;
+		bool used[100]={};
+		cout << search(p[s],used) << endl;
+		for(int i=0;i<100;i++){
+			recipe[i].clear();
+			price[i]=0;
+		}
+	}
+	// your code goes here
+	return 0;
+}

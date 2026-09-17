@@ -1,0 +1,24 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main () {
+  int x,p;
+  double ans;
+  cin >> x >> p;
+  if (x % 2 == 0) {
+    x /= 2;
+    ans = x;
+    ans *= 100;
+    ans /= p;
+  }
+  else {
+    x /= 2;
+    ans = x*p + (x+1)*(100-p);
+    ans /= p;
+    ans += 1;
+  }
+  
+  cout << fixed << setprecision(10) << ans << endl;
+    
+  
+}

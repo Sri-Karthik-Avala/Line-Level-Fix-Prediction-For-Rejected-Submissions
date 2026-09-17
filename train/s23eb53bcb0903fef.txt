@@ -1,0 +1,72 @@
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+using namespace std;
+typedef long long i64;
+typedef long double ld;
+#define rep(i, s, e) for (int i = (s); i <= (e); i++)
+
+int H, N, P, M, K;
+
+vector<int> stick(505, -1);
+
+vector<vector<ld>> dp(505, vector<ld>(101, 0));
+
+int main() {
+  cin >> H >> N >> P >> M >> K;
+  for (int i = 0; i < M; i++) {
+    int a, b;
+    cin >> a >> b;
+    stick[a] = b;
+  }
+
+
+  dp[K][P] = 1;
+
+  for (int i = H; i >= 1; i--) {
+    if (stick[i] != -1) {
+      vector<vector<ld>> next(505,vector<ld>(101,0));
+      rep(j, 1, N) rep(k, 0, K) {
+        int st = stick[i];
+        if (st == j) next[k][j + 1] += dp[k][j];
+        else if (st + 1 == j)
+          next[k][j - 1] += dp[k][j];
+        else
+          next[k][j] += dp[k][j];
+      }
+      swap(dp,next);
+    } else {
+      vector<vector<ld>> next(101,vector<ld>(101,0));
+      rep(j,1,N) rep(k,0,K){
+          next[k][j] += dp[k][j];
+      }
+      rep(j, 1, N) rep(k, 0, K) rep(st, 1, N - 1) {
+        if (st == j) next[k][j + 1] += dp[k + 1][j];
+        else if (st + 1 == j)
+          next[k][j - 1] += dp[k + 1][j];
+        else
+          next[k][j] += dp[k + 1][j];
+      }
+      swap(dp,next);
+    }
+  }
+
+  ld result = 0;
+  ld sum = 0;
+  for (int i = 1; i <= N; i++) {
+    sum += dp[0][i];
+    result = max(result, dp[0][i]);
+  }
+
+
+  cout << fixed << setprecision(10) << result / sum << endl;
+
+  return 0;
+}
+

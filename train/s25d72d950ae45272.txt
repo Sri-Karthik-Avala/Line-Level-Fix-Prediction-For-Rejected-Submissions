@@ -1,0 +1,112 @@
+#include<bits/stdc++.h>
+#define ls (now*2)
+#define rs (now*2+1)
+#define ll long long
+using namespace std;
+const ll H=18;
+const ll N=(1<<H)+5;
+const ll mod=1e9+7;
+
+ll read()
+{
+	ll s=0;
+	char c=getchar(),lc='+';
+	while (c<'0'||'9'<c) lc=c,c=getchar();
+	while ('0'<=c&&c<='9') s=s*10+c-'0',c=getchar();
+	return lc=='-'?-s:s;
+}
+void write(ll x)
+{
+	if (x<0)
+	{
+		putchar('-');
+		x=-x;
+	}
+	if (x<10) putchar(x+'0');
+	else
+	{
+		write(x/10);
+		putchar(x%10+'0');
+	}
+}
+void print(ll x,char c='\n')
+{
+	write(x);
+	putchar(c);
+}
+ll p[N],h,l,a[N],v[N],cnt,ans=0;
+void dfs1(ll now,ll deep,ll mul)
+{
+	mul=mul*now%mod;
+	if (deep==h)
+	{
+		ll i=now-l+1;
+		now=l+p[i]-1;
+		v[++cnt]=now;
+		while (now)
+		{
+			mul=mul*now%mod;
+			a[now]=(a[now]+mul)%mod;
+			now/=2;
+		}
+		return;
+	}
+	dfs1(ls,deep+1,mul);
+	dfs1(rs,deep+1,mul);
+}
+void dfs2(ll now,ll deep,ll mul)
+{
+	mul=mul*now%mod;
+	if (deep==h)
+	{
+		ll i=now-l+1;
+		now=l+p[i]-1;
+		mul*=now%mod;
+		while (now>1)
+		{
+			mul=mul*(now/2)%mod;
+			ans=(ans+mul*a[now^1]%mod)%mod;
+			now/=2;
+		}
+		return;
+	}
+	dfs2(ls,deep+1,mul);
+	dfs2(rs,deep+1,mul);
+}
+void solve(ll now,ll deep)
+{
+	cnt=0;
+	dfs1(ls,deep+1,now);
+//	print(now);
+//	for (int i=1;i<=7;i++) print(a[i],' ');
+//	puts("");
+	dfs2(rs,deep+1,1);
+	for (ll i=1;i<=cnt;i++)
+	{
+		ll w=v[i];
+		while (w)
+		{
+			a[w]=0;
+			w/=2;
+		}
+	}
+}
+void dfs0(ll now,ll deep)
+{
+	if (deep==h) return;
+	solve(now,deep);
+	dfs0(ls,deep+1);
+	dfs0(rs,deep+1);
+}
+
+int main()
+{
+	memset(a,0,sizeof(a));
+	h=read();
+	l=1<<(h-1);
+	for (ll i=1;i<=l;i++) p[i]=read();
+	dfs0(1,1);
+	print(ans);
+
+	return 0;
+}

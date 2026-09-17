@@ -1,0 +1,34 @@
+#include "bits/stdc++.h"
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> pii;
+#define rep(i,n) for(ll i=0;i<(ll)(n);i++)
+#define all(a)  (a).begin(),(a).end()
+#define vi vector<int>
+#define pb push_back
+#define INF 999999999
+
+int main(){
+    int n,m;
+    cin>>n>>m;
+    vi player(n);
+    rep(i,m){
+        cin>>player[i];
+        player[i]--;
+    }
+
+    vi score(n,0);
+    rep(i,m){
+        int sum=0;
+        rep(j,n){
+            int a;
+            cin>>a;
+            a--;
+            if(a!=player[i])sum++;
+            else score[j]++;
+        }
+        score[player[i]] += sum;
+    }
+    
+    rep(i,n)cout<<score[i]<<endl;
+}

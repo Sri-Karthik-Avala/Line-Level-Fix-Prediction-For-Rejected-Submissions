@@ -1,0 +1,6 @@
+n = int(raw_input())
+for i in range(n):
+    a = int(raw_input())
+    b = int(raw_input())
+    if a+b >= 10**79: print 'overflow'
+    else: print a+b

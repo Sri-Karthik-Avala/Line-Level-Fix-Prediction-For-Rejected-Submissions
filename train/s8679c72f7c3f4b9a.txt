@@ -1,0 +1,7 @@
+X = int(input())
+
+if X < 1000:
+  print('ABC' + f'{X:03}')
+else:
+  X = X % 999
+  print('ABD' + f'{X:03}')

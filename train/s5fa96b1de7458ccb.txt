@@ -1,0 +1,15 @@
+for _ in [0]*input():
+  A = '012345678954321'
+  a, b = raw_input().split()
+  n = 14
+  for _ in [0]*A.count(a):
+    I = A.index(a)
+    A = A[I:]+A[:I]
+    I = A.index(b)
+    if n>I:
+      n = I
+      x = A[:I+1]
+    A = A[1:]+A[0]
+  for e in x:
+    print e,
+  print

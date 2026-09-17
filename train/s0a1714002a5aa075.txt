@@ -1,0 +1,61 @@
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+#define ref(i,x,y)for(int i=x;i<=y;++i)
+#define def(i,x,y)for(int i=x;i>=y;--i)
+const int mod=1e9+7;
+void inc(int&a,int b){
+	a+=b;if(a>=mod)a-=mod;
+}
+void dec(int&a,int b){
+	a-=b;if(a<0)a+=mod;
+}
+int n,ans,a[100],f[100][100][51][51],g[100][100][51][51],h[51][51],h1[51][51],h2[201][102][102],h3[201][102][102];bool b[100];
+int main(){
+	freopen("1.in","r",stdin);
+	scanf("%d",&n);
+	ref(i,1,2*n-1)scanf("%d",&a[i]);
+	sort(a+1,a+2*n);
+	ref(i,1,n-1)if(a[i+1]!=a[i])b[i]=1;b[n]=1;
+	ref(i,n+1,2*n-1)if(a[i-1]!=a[i])b[i]=1;
+	f[n][n][1][1]=1;
+	def(ti,n,2){
+		ref(j,0,2*n)ref(I,1,n-ti+2)ref(J,1,I)h3[j][I][J]=0;
+		def(i,2*n-1,ti){
+			ref(j,i-1,2*n-ti+1)
+				ref(I,1,n-ti+2)ref(J,1,I)
+					h2[j][I][J]=0;
+			ref(j,i,2*n-ti)if(b[i]&&b[j]){
+				ref(I,1,n-ti+2)ref(J,1,I)h[I][J]=0,h1[I][J]=0;
+				ref(t,1,n-ti+1)ref(k,1,t)if(f[i][j][t][k]){
+					int s=f[i][j][t][k];
+					inc(h[t-k+2][1],s), dec(h[t+1][k],s);
+					if(k+1<=t) inc(h1[k+1][k+1],s), dec(h1[t+1][k+1],s);
+					inc(h1[t][k],s), dec(h1[t+1][k],s);
+					inc(h3[j][t-k+2][1],s); 
+					if(j<=2*n-ti) inc(h2[j+1][k+1][k+1],s), dec(h2[2*n-ti+2][k+1][k+1],s);
+				}
+				ref(I,1,n-ti+2)ref(J,1,I){
+					inc(h[I][J],h[I-1][J-1]); inc(h1[I][J],h1[I-1][J]);
+					inc(g[i][j][I][J],h[I][J]);
+					inc(g[i][j][I][J],h1[I][J]);
+				}
+			}
+			if(b[i-1])ref(j,i,2*n-ti)
+				ref(t,1,n-ti+2)ref(k,1,t){
+					inc(g[i-1][j][t][k],h3[j][t][k]);
+				}
+			ref(j,i,2*n-ti+1)
+				ref(I,1,n-ti+2)ref(J,1,I){
+					inc(h2[j][I][J],h2[j-1][I][J]);
+					if(b[i]&&b[j])inc(g[i][j][I][J],h2[j][I][J]);
+				}
+		}
+		ref(i,1,2*n-1)ref(j,1,2*n-1)if(b[i]&&b[j])
+			ref(t,1,n-ti+2)ref(k,1,t)
+				f[i][j][t][k]=g[i][j][t][k],g[i][j][t][k]=0;
+	}
+	ref(i,1,2*n-1)ref(j,i,2*n-1)ref(t,1,n)ref(k,1,t)
+		inc(ans,f[i][j][t][k]);
+	printf("%d\n",ans);
+}

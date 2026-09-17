@@ -1,0 +1,14 @@
+#include<cstdio>
+int main(){
+	freopen("in.txt","r",stdin);
+	int N;
+	long long x,y;
+	unsigned long long X=0;
+	scanf("%d",&N);
+	while(N--){
+		scanf("%lld%lld",&x,&y);
+		for(int i=0;i<63;i++)if(y<=1ll<<i&&((1ull<<i)-y&x)==(1ull<<i)-y)X^=1ull<<i;
+	}
+	if(X>>62&1)X^=1ull<<63;
+	printf("%lld\n",(long long)X);
+}

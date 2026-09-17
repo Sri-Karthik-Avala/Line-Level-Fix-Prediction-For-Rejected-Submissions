@@ -1,0 +1,8 @@
+i = 1
+
+while True:
+	x = int(raw_input())
+	if x == 0:
+		break
+	print ("case {0}: {1}").format(i, x)
+	i += 1

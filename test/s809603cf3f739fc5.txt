@@ -1,0 +1,16 @@
+d, n = map(int, raw_input().split())
+t = [input() for i in range(d)]
+a = [map(int, raw_input().split()) for i in range(n)]
+dp = [[-1]*n for i in range(d)]
+for i in range(n):
+    if a[i][0] <= t[0] <= a[i][1]: dp[0][i] = a[i][2]
+print dp
+for i in range(1,d):
+    for j in range(n):
+        if a[j][0] <= t[i] <= a[j][1]:
+            for k in range(n):
+                if dp[i-1][k] >= 0: dp[i][j] = max(dp[i][j], dp[i-1][k] + abs(a[j][2] - a[k][2]))
+ans = 0                
+for i in range(n):
+    if ans < dp[n-1][i]: ans = dp[n-1][i]
+print ans

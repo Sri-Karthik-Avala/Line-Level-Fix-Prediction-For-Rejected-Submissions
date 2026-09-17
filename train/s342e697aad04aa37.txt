@@ -1,0 +1,101 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define rep1(i,n) for(int i=1;i<=(int)(n);i++)
+#define all(c) c.begin(),c.end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl
+#define chmin(x,y) x=min(x,y)
+#define chmax(x,y) x=max(x,y)
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> P;
+struct edge{
+	int a,b;
+	ll c;
+	int id;
+	edge(int x,int y,int z,int w):a(x),b(y),c(z),id(w){}
+};
+bool comp(const edge& x, const edge& y){
+	return x.c<y.c;
+}
+int par[100000];
+int find(int x){
+	if(x==par[x]) return x;
+	return par[x]=find(par[x]);
+}
+bool same(int x,int y){
+	return find(x)==find(y);
+}
+void unite(int x,int y){
+	par[find(x)]=find(y);
+}
+
+int N,M;
+ll sum=0;
+int o[100000];
+set<P> st[100000];		//st[v] P(es[id].c,id)
+vector<P> G[100000];
+vector<int> oG[100000];
+vector<edge> es;
+ll ans[200000];
+void dfs(int v,int p,int btw){
+	for(P pu:G[v]) if(pu.fs!=p) dfs(pu.fs,v,pu.sc);
+	for(int i:oG[v]){
+		st[v].insert(P(es[i].c,i));
+	}
+	int id=v;
+	for(P u_:G[v]) if(u_.fs!=p){
+		int u=o[u_.fs];
+		if(st[id].size()<st[u].size()) swap(id,u);
+		for(P pi:st[u]){
+			if(st[id].find(pi)!=st[id].end()) st[id].erase(pi);
+			else st[id].insert(pi);
+		}
+	}
+	o[v]=id;
+	if(v==0) return;
+	if(st[id].empty()){
+		ans[es[btw].id]=-1;
+/*		show(v);
+		show(p);
+		show(id);
+		assert(0);*/
+	}else{
+		ans[es[btw].id]=sum-es[btw].c+(*st[id].begin()).fs;
+	}
+}
+int main(){
+	cin>>N>>M;
+	rep(i,N) par[i]=i;
+	rep(i,M){
+		int a,b,c;
+		cin>>a>>b>>c;
+		a--,b--;
+		es.pb(edge(a,b,c,i));
+	}
+	sort(all(es),comp);
+	int cnt=0;
+	rep(i,M){
+		edge e=es[i];
+		if(same(e.a,e.b)){
+			oG[e.a].pb(i);
+			oG[e.b].pb(i);
+			ans[e.id]=-2;
+		}else{
+			unite(e.a,e.b);
+			sum+=e.c;
+			cnt++;
+			G[e.a].pb(P(e.b,i));
+			G[e.b].pb(P(e.a,i));
+		}
+	}
+	rep(i,M) if(ans[i]==-2) ans[i]=sum;
+	if(cnt!=N-1){
+		rep(i,M) puts("-1");
+		return 0;
+	}
+	dfs(0,-1,0);
+	rep(i,M) cout<<ans[i]<<endl;
+}

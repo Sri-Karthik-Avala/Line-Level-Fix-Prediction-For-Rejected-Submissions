@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+string s;
+int p;
+bool e;
+
+int ParseInt()
+{
+	int ret=0;
+	while(isdigit(s[p]))
+	{
+		ret*=10;
+		ret+=s[p]-'0';
+		p++;
+	}
+	
+	if(ret<0||ret>9999) e=true;
+	
+	return ret;
+}
+
+int calc(int R1, int R2, char R3)
+{
+	int ret=R1;
+	if(R3=='+') ret+=R2;
+	if(R3=='-') ret-=R2;
+	if(R3=='*') ret*=R2;
+	
+	if(ret<0||ret>9999) e=true;
+	
+	return ret;
+}
+
+int main()
+{
+	while(cin >> s)
+	{
+		e=0;
+		p=0;
+		
+		int R1=0,R2;
+		char R3='+';
+		
+		while(s[p]!='=')
+		{
+			if(isdigit(s[p])) R2=ParseInt();
+			else
+			{
+				R1=calc(R1,R2,R3);
+				R3=s[p];
+				
+				p++;
+			}
+		}
+		
+		R1=calc(R1,R2,R3);
+		
+		if(e) cout << "E" << endl;
+		else cout << R1 << endl;
+	}
+}

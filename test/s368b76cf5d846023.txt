@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define all(v) (v).begin(),(v).end()
+#define pb push_back
+#define fi first
+#define se second
+
+typedef vector<int>vint;
+typedef pair<int,int>pint;
+typedef vector<pint>vpint;
+
+template<typename A,typename B>inline void chmin(A &a,B b){if(a>b)a=b;}
+template<typename A,typename B>inline void chmax(A &a,B b){if(a<b)a=b;}
+
+int N,A,B;
+
+vpint latte[5];
+
+
+pint operator+(const pint &a,const pint &b){
+    return {a.fi+b.fi,a.se+b.se};
+}
+
+signed main(){
+    cin>>N>>A>>B;
+    rep(i,N){
+        int t,a,b;
+        cin>>t>>a>>b;
+        t--;
+        latte[t].pb({a,b});
+    }
+
+    rep(i,5)latte[i].pb({0,0});
+
+    vpint luz,izr;
+    for(auto &a:latte[0])for(auto &b:latte[1])for(auto &c:latte[2])luz.pb(a+b+c);
+    for(auto &d:latte[3])for(auto &e:latte[4])izr.pb(d+e);
+    sort(all(luz));
+    sort(all(izr));
+    reverse(all(izr));
+    multiset<int>st;
+    st.insert(1001001001001001001ll);
+
+    int l=luz.size(),r=luz.size();
+    for(auto &w:izr){
+        while(l>0&&luz[l-1].fi+w.fi>=A){
+            st.insert(luz[l-1].se);
+            l--;
+        }
+        while(r>0&&luz[r-1].fi+w.fi>B){
+            auto it=st.find(luz[r-1].se);
+            st.erase(it);
+            r--;
+        }
+
+        auto it=st.lower_bound(A-w.se);
+        if(*it+w.se<=B){
+            cout<<"Yes"<<endl;
+            return 0;
+        }
+    }
+    cout<<"No"<<endl;
+    return 0;
+}

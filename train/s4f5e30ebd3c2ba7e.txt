@@ -1,0 +1,104 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<class Weight>
+class max_flow {
+private:
+	struct edge {
+		int to;
+		Weight cap;
+		int rev;
+		edge(const int to_, const Weight cap_, const int rev_):to(to_), cap(cap_), rev(rev_){}
+	};
+
+	static constexpr Weight EPS = static_cast<Weight>(1e-7);
+	static constexpr Weight INF = numeric_limits<Weight>::max();
+
+	vector<vector<edge> > G;
+	vector<int> level;
+	vector<int> iter;
+
+public:
+	max_flow(int V):G(V), level(V), iter(V) {}
+
+	void add_edge(const int from, const int to, const Weight cap) {
+		if(from == to) return;
+		G[from].emplace_back(to, cap, G[to].size());
+		//G[to].emplace_back(from, 0, G[from].size() - 1);
+		G[to].emplace_back(from, cap, G[from].size() - 1);
+	}
+
+	void bfs(int s) {
+		queue<int> que;
+		fill(begin(level), end(level), -1);
+		que.push(s);
+		level[s] = 0;
+
+		while(!que.empty()) {
+			const int v = que.front();
+			que.pop();
+
+			for(const auto &e : G[v]) {
+				if(e.cap > EPS && level[e.to] == -1) {
+					level[e.to] = level[v] + 1;
+					que.push(e.to);
+				}
+			}
+		}
+	}
+
+	Weight dfs(int v, int t, Weight f) {
+		if(v == t) return f;
+
+		for(int &i = iter[v]; i < G[v].size(); ++i) {
+			edge &e = G[v][i];
+			if(e.cap > EPS && level[v] < level[e.to]) {
+				const Weight d = dfs(e.to, t, min(f, e.cap));
+				if(d > EPS) {
+					e.cap -= d;
+					G[e.to][e.rev].cap += d;
+					return d;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	Weight solve(int s, int t) {
+		Weight flow = 0;
+		while(true) {
+			bfs(s);
+			if(level[t] < 0) return flow;
+			fill(begin(iter), end(iter), 0);
+			for(Weight f; (f = dfs(s, t, INF)) > 0; flow += f);
+		}
+	}
+};
+
+int main() {
+	cin.tie(nullptr);
+	ios::sync_with_stdio(false);
+
+	int n;
+	cin >> n;
+
+	max_flow<int> mf(n + 1);
+	const int sink = n;
+
+	for(int i = 1; i < n; ++i) {
+		int p;
+		cin >> p;
+		if(p) mf.add_edge(i, sink, p);
+	}
+
+	for(int i = 1; i < n; ++i) {
+		int u, v, c;
+		cin >> u >> v >> c;
+		mf.add_edge(u, v, c);
+	}
+
+	cout << mf.solve(0, sink) << endl;
+
+	return EXIT_SUCCESS;
+}

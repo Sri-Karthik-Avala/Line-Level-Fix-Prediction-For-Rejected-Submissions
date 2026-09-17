@@ -1,0 +1,111 @@
+#include<iostream>
+#include<array>
+#include<utility>
+#include<set>
+#include<algorithm>
+
+using namespace std;
+
+typedef array<char,9> P;
+
+void cw(P &p){
+  P n;
+  for(int i=0;i<3;i++){
+    for(int j=0;j<3;j++){
+      n[j*3+2-i]=p[i*3+j];
+    }
+  }
+  p=n;
+}
+
+void ccw(P &p){
+  cw(p);
+  cw(p);
+  cw(p);
+}
+
+P lr(P p){
+  P n=p;
+  for(int i=0;i<3;i++){
+    swap(n[0+i*3],n[2+i*3]);
+  }
+  return n;
+}
+
+P inv(P p){
+  ccw(p);
+  ccw(p);
+  return p;
+}
+
+P nccw(P p){
+  ccw(p);
+  return p;
+}
+
+struct Dice{
+  P p[6];
+  Dice(){
+    for(int i=0;i<6;i++){
+      for(int j=0;j<9;j++){
+	cin>>p[i][j];
+      }
+    }
+  }
+  bool operator<(Dice d)const{
+    return lexicographical_compare(begin(p),end(p),begin(d.p),end(d.p));
+  }
+  Dice &u(){
+    auto t=p[4];
+    p[4]=p[0];
+    p[0]=p[5];
+    p[5]=inv(p[2]);
+    p[2]=inv(t);
+    cw(p[1]);
+    ccw(p[3]);
+    return *this;
+  }
+  Dice &d(){
+    u();
+    u();
+    u();
+    return *this;
+  }
+  Dice &l(){
+    auto t=p[4];
+    p[4]=nccw(p[1]);
+    p[1]=nccw(p[5]);
+    p[5]=nccw(lr(p[3]));
+    p[3]=lr(nccw(t));
+    cw(p[2]);
+    ccw(p[0]);
+    return *this;
+  }
+  Dice &r(){
+    l();
+    l();
+    l();
+    return *this;
+  }
+};
+
+int main(){
+  for(;;){
+    Dice d;
+    if(!cin)break;
+    set<pair<int,Dice> >s{{0,d}};
+    for(auto e:s){
+      auto cd=e.second;
+      if(count(begin(cd.p[0])+6,begin(cd.p[0])+9,'*')&&count(begin(cd.p[2])+6,begin(cd.p[2])+9,'*')){
+	cout<<e.first<<endl;
+	goto next;
+      }
+      s.insert({e.first+1,Dice(cd).u()});
+      s.insert({e.first+1,Dice(cd).r()});
+      s.insert({e.first+1,Dice(cd).d()});
+      s.insert({e.first+1,Dice(cd).l()});
+    }
+  next:
+    ;
+  }
+}

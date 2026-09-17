@@ -1,0 +1,52 @@
+#include<stdio.h>
+
+int main(void){
+	int n,k,c,cc,tmp,c_max;
+	int card[10];
+	int i,j,l,m;
+
+	while(~scanf("%d %d",&n,&k)){
+		if(n+k==0) break;
+		for(i=0;i<n;i++)
+			scanf("%d",&card[i]);
+		c_max=0;
+		cc = 0;
+		tmp = 1;
+		for(i=0;i<=n-k;i++){
+			for(j=i;j<k+i;j++){
+				tmp*=card[j];
+			}
+			if(tmp > cc)
+				cc = tmp;
+			tmp=1;
+		}
+
+		for(i=0;i<n-1;i++){
+			for(j=i+1;j<n;j++){
+				tmp = card[i];
+				card[i] = card[j];
+				card[j] = tmp;
+
+				c = 1;
+				for(l=0;l<=n-k;l++){
+					for(m=l;m<k+l;m++){
+						c*=card[m];
+					}
+					if(c > c_max)
+						c_max = c;
+					c=1;
+				}
+
+				tmp = card[i];
+				card[i] = card[j];
+				card[j] = tmp;
+			}
+		}
+	
+		if(c_max - cc >= 0)
+			printf("%d\n",c_max-cc);
+		else
+			printf("NO GAME\n");
+	}
+	return 0;
+}

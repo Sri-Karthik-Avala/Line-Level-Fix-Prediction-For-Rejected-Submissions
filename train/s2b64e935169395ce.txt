@@ -1,0 +1,76 @@
+#include <iostream>
+#include <string>
+#include <queue>
+#include <functional>
+#include <vector>
+
+using namespace std;
+
+typedef pair <int, int> P;
+
+int main() {
+	string b;
+	priority_queue< P, vector<P>, greater<P> > pq;
+	while (getline(cin, b)) {
+		if (b == "") {
+			break;
+		}
+		int a = b.find(',');
+		int n1 = 0;
+		for (int i = 0; i < a; i++) {
+			n1 *= 10;
+			n1 += (b[i]-'0');
+		}
+		int n2 = 1;
+		P p;
+		p.first = n1;
+		p.second = n2;
+		pq.push(p);
+	}
+	int v, w;
+	char c;
+	priority_queue< P, vector<P>, greater<P> > pqq;
+	while (cin >> v >> c >> w) {
+		P p;
+		p.first = v;
+		p.second = 1;
+		pqq.push(p);
+	}
+	while (!pq.empty()) {
+		P p = pq.top();
+		pq.pop();
+		while (!pq.empty() && (pq.top()).first == p.first) {
+			P pp = pq.top();
+			pq.pop();
+			p.second += pp.second;
+		}
+		if (pqq.empty()) {
+			break;
+		}
+		P q = pqq.top();
+		while (true) {
+			if (q.first > p.first) {
+				break;
+			} else {
+				pqq.pop();
+				while (!pqq.empty() && (pqq.top()).first == q.first) {
+					P qq = pqq.top();
+					pqq.pop();
+					q.second += qq.second;
+				}
+				if (p.first == q.first) {
+					cout << p.first << " " << p.second+q.second << endl;
+					break;
+				} else {
+					if (pqq.empty()) {
+						break;
+					}
+					while (!pqq.empty() && (pqq.top()).first < p.first) {
+						pqq.pop();
+					}
+				}
+			}
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,55 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
+#include<sstream>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<climits>
+#include<cmath>
+#include<string>
+#include<vector>
+#include<set>
+#include<map>
+#include<queue>
+#include<numeric>
+#include<functional>
+#include<algorithm>
+#include<bitset>
+#include<tuple>
+#include<unordered_set>
+#include<random>
+#include<array>
+#include<cassert>
+using namespace std;
+#define INF (1<<29)
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define all(v) v.begin(),v.end()
+#define uniq(v) v.erase(unique(all(v)),v.end())
+
+
+pair<int, int> s[200000];
+pair<int, int> arm[100000];
+
+int main() {
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+	rep(i, m) {
+		cin >> arm[i].first >> arm[i].second;
+	}
+	sort(arm, arm + m);
+	rep(i, n)s[i] = make_pair(i, i);
+
+	rep(i,m){
+		auto a = arm[i];
+		pair<int, int> p = make_pair(s[a.second - 1].first, s[a.second].second);
+		s[a.second - 1] = s[a.second] = p;
+	}
+	rep(i, n)cout << s[i].second - s[i].first + 1 << endl;
+
+
+
+	return 0;
+}

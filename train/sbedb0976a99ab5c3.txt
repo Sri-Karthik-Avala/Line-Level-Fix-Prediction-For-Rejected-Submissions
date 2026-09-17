@@ -1,0 +1,13 @@
+while True:
+    solid = sorted(map(int, raw_input().split()))
+    print solid
+    if solid.count(0) == 3: break
+    n = input()
+    s = (solid[0]**2+solid[1]**2)/4
+    for i in range(n):
+        r = input()
+        if r*r > s:
+            print 'OK'
+        else:
+            print 'NA'
+            

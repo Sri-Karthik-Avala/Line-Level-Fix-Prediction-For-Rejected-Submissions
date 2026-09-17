@@ -1,0 +1,59 @@
+#include <cstdio>
+#include <string>
+#include <iostream>
+using namespace std;
+
+string str[100];
+int len;
+int fie[101][101];
+int m;
+int dx[4]={1,0,-1,0};
+int dy[4]={0,1,0,-1};
+char s[4]={'R','D','L','U'};
+int main(void){
+	int n=9;
+	for(int i=0;i<10;i++)cin >> str[i];
+	m=str[0].size();
+	for(int i=0;i<n;i++){
+		for(int j=0;j<str[i].size();j++){
+			if(str[i][j]=='1'){
+				if(i%2==0)fie[j*2+2][i+1]=1;
+				if(i%2==1)fie[j*2+1][i+1]=1;
+			}
+		}
+	}
+	int x=2,y=0,dir=0;
+	while(1){
+		int nx=x+dx[(dir+1)%4],ny=y+dy[(dir+1)%4];
+		if(nx>=0 && nx<=m*2+2 && ny>=0 && ny<=n+1){
+			if(fie[nx][ny]==1)printf("%c",s[dir]);
+		}
+		nx=x+dx[dir],ny=y+dy[dir];
+		if(nx>=0 && nx<=m*2+2 && ny>=0 && ny<=n+1){
+			if(fie[nx][ny]==0){
+				x+=dx[dir]*2;
+				y+=dy[dir]*2;
+				if(fie[x+dx[(dir+1)%4]][y+dy[(dir+1)%4]]==0){
+					dir=(dir+1)%4;
+				}
+			}else{
+				if(fie[x+dx[(dir+3)%4]][y+dy[(dir+3)%4]]==0){
+					dir=(dir+3)%4;
+					x+=dx[dir]*2;
+					y+=dy[dir]*2;
+					printf("%c",s[dir]);
+				}else{
+					dir=(dir+2)%4;
+					x+=dx[dir]*2;
+					y+=dy[dir]*2;
+					printf("%c",s[(dir+1)%4]);
+					printf("%c",s[dir]);
+				}
+			}
+		}else dir=(dir+1)%4;
+		//printf("%d %d %d %d %d\n",x,y,dir,dx[dir],dy[dir]);
+		if(x==0 && y==0)break;
+	}
+	printf("\n");
+	return 0;
+}

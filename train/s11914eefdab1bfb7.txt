@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+using namespace std;
+const int M=1e5+5;
+const int N=1e9+5;
+const int mod=1e9+7;
+struct Matrix{
+	int n,m;
+	int ju[5][5];
+	Matrix(){
+		n=m=3;
+		memset(ju,0,sizeof(ju));
+		ju[1][1]=ju[2][2]=ju[0][0]=1;
+	}
+	Matrix(int n1,int m1){
+		n=n1,m=m1;
+		memset(ju,0,sizeof(ju));
+	}
+	int MUL(int a,int b){
+		int ret=0;
+		while(b){
+			if((b&1))
+				ret=(ret+a)%mod;
+			a=(a+a)%mod;
+			b>>=1;
+		}
+		return ret;
+	}
+	Matrix Se(){
+		Matrix ret(n,m);
+		for(int i=0;i<n;i++)
+			for(int j=0;j<m;j++)
+				ret.ju[i][j]=ju[i][j];
+		return ret;
+	}
+	Matrix operator*(const Matrix dd){
+		Matrix ret(n,dd.m);
+		if(dd.n!=m)
+		{
+			printf("Error\n");
+			return ret;
+		}
+		for(int i=0;i<ret.n;i++)
+			for(int j=0;j<ret.m;j++)
+				for(int k=0;k<m;k++)
+					ret.ju[i][j]=(ret.ju[i][j]+MUL(ju[i][k],dd.ju[k][j]))%mod;
+		return ret;
+	}
+	Matrix operator^(int p){
+		Matrix ret,Self=Se();
+		while(p)
+		{
+			if((p&1))
+				ret=ret*Self;
+			Self=Self*Self;
+			p>>=1;
+		}
+		return ret;
+	}
+}EM(3,3),dp(1,3),ES(3,3);
+
+int n,m;
+int Si[M],E[3][3]={{1,2,1},{0,1,1},{1,2,2}};
+
+int main()
+{
+	scanf("%d%d",&n,&m);
+	for(int i=1;i<=m;i++)
+		scanf("%d",&Si[i]);
+	for(int i=0;i<3;i++)
+		for(int j=0;j<3;j++)
+			EM.ju[i][j]=E[i][j];
+	ES=EM;
+	ES.ju[2][0]=ES.ju[2][1]=0;
+	ES.ju[2][2]=1;
+	dp.ju[0][0]=1,dp.ju[0][1]=2,dp.ju[0][2]=1;
+	for(int i=1;i<=m;i++)
+	{
+		dp=dp*(EM^(Si[i]-Si[i-1]-1));
+		dp=dp*ES;
+	}
+	dp=dp*(EM^(n-Si[m]-1));
+	cout<<dp.ju[0][2]<<endl;
+	return 0;
+}																																		

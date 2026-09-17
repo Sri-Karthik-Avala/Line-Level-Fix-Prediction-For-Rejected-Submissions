@@ -1,0 +1,79 @@
+#include<bits/stdc++.h>
+#define rep(i,a,b) for(int i=(a);i<=(b);i++)
+#define per(i,a,b) for(int i=(a);i>=(b);i--)
+#define REP(i,n) for(int i=0;i<(n);i++)
+#define fi first
+#define se second
+#define pb push_back
+#define mp make_pair
+using namespace std;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef long long ll;
+
+template<class T> inline void read(T &x){
+	int f=0;x=0;char ch=getchar();
+	for(;!isdigit(ch);ch=getchar())f|=(ch=='-');
+	for(;isdigit(ch);ch=getchar())x=x*10+ch-'0';
+	if(f)x=-x;
+}
+
+int p[20],c;
+
+int getphi(int x){
+	int res=1;
+	rep(i,1,c) if(x%p[i]==0){
+		res*=p[i]-1,x/=p[i];
+		while(x%p[i]==0) x/=p[i],res*=p[i];
+	}
+	return res;
+}
+
+int power(int x,ll p,int m){
+	int res=1;
+	for(;p;p>>=1,x=(ll)x*x%m)
+		if(p&1)res=(ll)res*x%m;
+	return res;
+}
+
+int gcd(int a,int b,int &x,int &y){
+//	cerr<<"@"<<a<<" "<<b<<endl;
+	if(!b) return x=1,y=0,a;
+	int r=gcd(b,a%b,y,x);
+	return y-=a/b*x,r;
+}
+
+ll solve(int a,int m){
+	if(m==1) return 1;
+	int n=getphi(m),g=__gcd(m,n);
+	int u=solve(a,g),v=power(a,u+n,m);
+//	cerr<<"#"<<u<<" "<<v<<endl;
+	int x,y,c=v-u,t=gcd(n,m,x,y);
+//	cerr<<a<<" "<<n<<" "<<m<<" "<<c<<" "<<t<<endl;
+	assert(c%t==0);
+	ll X=(ll)x*c/t%m,mod=(ll)m*n;
+	return (ll)(n*X+u+mod)%mod+mod;
+}
+
+void rmain(){
+	int a,m,t;
+	read(a),read(m),a%=m;
+	int g=__gcd(a,m);
+	t=m,c=0;
+	for(int i=2;i*i<=t;i++)
+		if(t%i==0){
+			p[++c]=i;
+			while(t%i==0) t/=i;
+		}
+	if(t>=2) p[++c]=t;
+	ll res=solve(a,m);
+//	cerr<<a<<" "<<m<<" "<<res<<endl;
+	assert(power(a,res,m)==res%m);
+	cout<<res<<endl;
+}
+
+int main(){
+	int T; read(T);
+	while(T--) rmain();
+	return 0;
+}

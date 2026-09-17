@@ -1,0 +1,86 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+int main() {
+	int power[10] = { 1,8,64,512,4096,32768,262144,2097152,16777216,134217728 };
+	int a[8][8];
+	int c[8][8];
+	int b[6][2];
+	int n;
+	int sum = 0;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> b[i][0] >> b[i][1];
+	}
+	for (int i = 0; i < 16777216; i++) {
+		sum = 0;
+		memset(a, 0, sizeof(a));
+		for (int j = 0; j < 8; j++) {
+			a[j][(i / power[j]) % 8] = 1;
+			sum += (i / power[j]) % 8;
+		}
+		if (sum == 28) {
+			for (int j = 0; j < 8; j++) {
+				for (int k = 0; k < 8; k++) {
+					if (a[j][k] == 1) {
+						c[j][k] = 1;
+					}
+					else {
+						c[j][k] = 0;
+					}
+				}
+			}
+			for (int j = 0; j < n; j++) {
+				if (c[b[j][0]][b[j][1]] == 0) {
+					goto Exit;
+				}
+			}
+			for (int j = 0; j < 8; j++) {
+				for (int k = 0; k < 8; k++) {
+					if (c[j][k] == 1) {
+						for (int l = 0; l < 8; l++) {
+							if (c[j][l] == 1 && k!=l) {
+								goto Exit;
+							}
+						}
+						for (int l = 0; l < 8; l++) {
+							if (c[l][k] == 1 && j!=l) {
+								goto Exit;
+							}
+						}
+						for (int l = -7; l < 8; l++) {
+							if (j + l >= 0 && k - l >= 0 && j + l < 8 && k - l < 8) {
+								if (c[j + l][k - l] == 1 && l != 0) {
+									goto Exit;
+								}
+							}
+						}
+						for (int l = -7; l < 8; l++) {
+							if (j + l >= 0 && k + l >= 0 && j + l < 8 && k + l < 8) {
+								if (c[j + l][k + l] == 1 && l != 0) {
+									goto Exit;
+								}
+							}
+						}
+					}
+				}
+			}
+			goto Exit2;
+		Exit:;
+		}
+	}
+Exit2:;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (c[i][j] == 1) {
+				cout << 'Q';
+			}
+			else {
+				cout << '.';
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}

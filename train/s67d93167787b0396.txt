@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<ll, ll> P;
+typedef pair<ll, pair<ll, ll> > P3;
+
+const ll MOD = ll(1e9 + 7);
+const ll LLINF = LLONG_MAX;
+const int IINF = INT_MAX;
+const int MAX_N = int(1e5) + 5;
+const double EPS = 1e-8;
+int dx[] = {1, 0, -1, 0}, dy[] = {0, 1, 0, -1};
+#define SORT(v) sort((v).begin(), (v).end())
+#define SORTR(v) sort((v).rbegin(), (v).rend())
+#define REP(i, n) for (int i = 0; i < n; i++)
+#define REPR(i, n) for (int i = n; i >= 0; i--)
+#define FOR(i, m, n) for (ll i = m; i < n; i++)
+
+set<P> st[2], tp[2];
+
+int main() {
+    ll n, W;
+    ll v[2][25], w[2][25];
+    cin >> n >> W;
+    ll m[] = {n / 2, n - n / 2};
+    REP(i, 2) { REP(j, m[i]) cin >> v[i][j] >> w[i][j]; }
+    REP(k, 2) {
+        REP(i, (1 << m[k])) {
+            int vt = 0, wt = 0;
+            REP(j, m[k]) {
+                if (i & (1 << j)) {
+                    vt += v[k][j];
+                    wt += w[k][j];
+                }
+            }
+            st[k].insert({wt, vt});
+        }
+    }
+    
+    REP(k, 2) {
+        ll vmax = 0, wmax = 0;
+        for (auto itr : st[k]) {
+            ll v0 = itr.second, w0 = itr.first;
+            if (w0 > W) continue;
+            if (w0 > wmax && v0 > vmax) {
+                tp[k].insert({wmax, vmax});
+                wmax = w0;
+            }
+            vmax = max(vmax, v0);
+        }
+        tp[k].insert({wmax,vmax});
+        st[k] = tp[k];
+    }
+    ll ans = 0;
+    for (auto itr : st[0]) {
+        ll v0 = itr.second, w0 = itr.first, v1, w1;
+        if (w0 > W) continue;
+        v1 = (*--st[1].upper_bound({W - w0 + 1, -1})).second;
+        ans = max(ans, v0 + v1);
+    }
+    cout << ans << endl;
+    return 0;
+}
+

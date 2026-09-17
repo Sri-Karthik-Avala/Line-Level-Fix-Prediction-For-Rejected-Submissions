@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <list>
+#include <cmath>
+#include <fstream>
+#include <algorithm>
+#include <string>
+#include <queue>
+#include <set>
+#include <map>
+#include <complex>
+#include <iterator>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
+
+using namespace std;
+
+#define EPS (1e-10)
+#define EQ(a,b) (abs((a) - (b)) < EPS)
+#define EQV(a,b) (EQ((a).real(),(b).real()) && EQ((a).imag(),(b).imag()))
+
+typedef complex<double> P;
+typedef long long ll;
+
+vector<string> split(string v,char del){
+	vector<string> numm;
+	int head=0;
+	for(int j = 0; j < v.size(); j++){
+		if(v[j]==del){
+			numm.push_back(v.substr(head,j-head));
+			head=j+1;
+		}
+		else if(j==v.size()-1){
+			numm.push_back(v.substr(head,j-head+1));
+		}
+	}
+	return numm;
+}
+
+
+void solve(){
+    string str;
+    while(getline(cin,str)&&str!="#"){
+        vector<string> ors=split(str,'|');
+        bool f=false;
+        for(int i = 0; i < ors.size(); i++){
+            vector<string> ands=split(ors[i],'&');
+            bool ok[200];
+            bool no[200];
+            bool b=true;
+            fill(ok,ok+200,false);fill(no,no+200,false);
+            for(int j = 0; j < ands.size(); j++){
+                char ch;
+                if(ands[j][0]=='~'){
+                    no[ands[j][1]]=true;
+                    ch=ands[j][1];
+                }
+                else{
+                    ok[ands[j][0]]=true;
+                    ch=ands[j][0];
+                }
+                if(ok[ch]&&no[ch]){
+                    b=false;
+                    break;
+                }
+            }
+            if(b){
+                cout<<"yes"<<endl;
+                f=true;
+                break;
+            }
+        }
+        if(!f){
+            cout<<"no"<<endl;
+        }
+    }
+}
+int main(){
+
+    solve();
+
+    return 0;
+}

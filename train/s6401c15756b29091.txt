@@ -1,0 +1,104 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define fs first
+#define sc second
+#define mp make_pair
+#define pb push_back
+#define eb emplace_back
+#define All(A) A.begin(),A.end()
+#define RAll(A) A.rbegin(),A.rend()
+typedef long long LL;
+typedef pair<LL,LL> P;
+const LL mod=1e9+7;
+const LL LINF=1LL<<62;
+const LL INF=1<<30;
+
+string u;
+
+void solve(int k,LL N,bool f){
+    LL t=0;
+    if(f){
+        string s="";
+        for(int i=0;i<k;i++){
+            int a=u[0]-'0',b=u[u.size()-1]-'0';
+            if(a<b) swap(a,b);
+            if((N-1)>>i&1) s.pb((char)(a+'0'));
+            else s.pb((char)(b+'0'));
+        }
+        reverse(All(s));
+        u=u+s;
+        return;
+    }   
+    else if(k==1){
+        int c=0;
+        for(int i=0;i<=k;i++){
+            if(i==u[0]-'0') continue;
+            c++;
+            if(c==N){
+                u.pb((char)(i+'0'));
+                return;
+            }
+        }
+    }
+    for(int i=0;i<=9;i++){
+        if(u[0]-'0'==i){
+            if(t+((1LL<<(k-1))-1)*9>N){
+                u.pb(u[0]);
+                solve(k-1,N-t,false);
+                return;
+            }
+            t+=((1LL<<(k-1))-1)*9;
+        }
+        else{
+            if(t+(1LL<<(k-1))>N){
+                u.pb((char)(i+'0'));
+                solve(k-1,N-t,true);
+                return;
+            }
+            t+=1LL<<(k-1);
+        }
+        if(N-t==0){
+            u.pb((char)(i+'0'));
+            for(int j=0;j<k-1;j++){
+                if(u[0]==u[u.size()-1]){
+                    if(u[0]=='9'&&j==k-2) u.pb('8');
+                    else u.pb('9');
+                }
+                else{
+                    if(u[0]>u[u.size()-1]) u.pb(u[0]);
+                    else u.pb(u[u.size()-1]);
+                }
+            }
+            return;
+        }
+    }
+}
+
+
+
+int main(){
+    LL N;
+    while(cin >> N){
+        if(!N) break;
+        u="";
+        LL s=0;
+        int k=2;
+        while(1){
+            if(s+81LL*((1LL<<(k-1))-1)>=N) break;
+            s+=81LL*((1LL<<(k-1))-1);
+            k++;
+        }
+        LL t=(N-s)/(9*((1LL<<(k-1))-1));
+        if((N-s)%(9*((1LL<<(k-1))-1))==0){
+            u.pb((char)(t+'0'));
+            for(int i=0;i<k-1;i++){
+                if(u[0]=='9'&&i==k-2) u.pb('8');
+                else u.pb('9');
+            }
+        }
+        else u.pb((char)(t+1+'0'));
+        solve(k-1,(N-s)%(9*((1LL<<(k-1))-1)),false);
+        cout << u << endl;
+    }
+    return 0;
+}

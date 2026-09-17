@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+def seisu(a):
+    b = str(bin(int(a//1)))[2:]
+    if len(b) > 9:
+        print "NA"
+        raise ValueError
+    else:
+        return b
+        
+def shosu(a):
+    c = a - a//1
+    f = []
+    digit = 0
+    while digit < 5:
+        new_c = 2 * c
+        seisu_part = int(new_c//1)
+        shosu_part = new_c - seisu_part      
+        f.append(seisu_part)
+        if shosu_part == 0:
+            return "".join(map(str, f)) 
+        c = shosu_part
+        digit += 1
+    else:
+        print "NA"
+        raise ValueError
+
+if __name__ == "__main__":
+    while True:
+        a = float(raw_input())
+        if a < 0: 
+            break
+        try:
+            sei = seisu(a) # ??´??°??¨???
+            sho = shosu(a) # ?°???°?????\?????¨???
+        except ValueError:
+            break 
+          
+        print sei.zfill(8) + "." + str(sho).ljust(4,"0")

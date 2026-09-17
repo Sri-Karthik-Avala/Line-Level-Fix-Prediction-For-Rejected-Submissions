@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<ll, ll> P;
+
+#define fi first
+#define se second
+#define repl(i,a,b) for(ll i=(ll)(a);i<(ll)(b);i++)
+#define rep(i,n) repl(i,0,n)
+#define all(x) (x).begin(),(x).end()
+#define dbg(x) cout<<#x"="<<x<<endl
+#define mmax(x,y) (x>y?x:y)
+#define mmin(x,y) (x<y?x:y)
+#define maxch(x,y) x=mmax(x,y)
+#define minch(x,y) x=mmin(x,y)
+#define uni(x) x.erase(unique(all(x)),x.end())
+#define exist(x,y) (find(all(x),y)!=x.end())
+#define bcnt __builtin_popcountll
+
+#define INF 9e18
+#define mod 1000000007
+
+string increment(string A) {
+  for(int i = A.size() - 1; i >= 0; --i) {
+    if(A[i] < '9') {
+      A[i]++;
+      break;
+    } else {
+      A[i] = '0';
+    }
+  }
+  if(A[0] == '0') {
+    return "1"+A;
+  } else {
+    return A;
+  }
+}
+
+int main(){
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+  while(1){
+    string S;
+    cin>>S;
+    if(S=="#")break;
+    int N=S.size();
+    ll res=INF;
+    repl(d,1,N+1){
+      repl(i,1,d+1){
+        string suf=S.substr(0,i),prf=S.substr(i,d-i);
+        bool all9=true;
+        rep(j,suf.size())if(suf[j]!='9')all9=false;
+        string ini;
+        if(all9&&(int)prf.size()>0){
+          bool plus1=true;
+          if(prf[0]!='1')plus1=false;
+          repl(j,1,prf.size()){
+            if(prf[j]!='0')plus1=false;
+          }
+          if(plus1){
+            ini=prf; rep(j,i+1)ini+='0';
+          }else{
+            ini=prf; rep(j,i)ini+='0';
+          }
+        }else{
+          ini=prf+suf; ini=increment(ini);
+        }
+        string crt=suf,con=ini;
+        while((int)crt.size()<N){
+          crt+=con; con=increment(con);
+        }
+        if(crt.substr(0,N)==S){
+          ll pos=0,num=stoll(ini);
+          repl(j,1,ini.size())pos+=j*(pow(10,j-1)*9);
+          pos+=(num-pow(10,(ll)ini.size()-1))*(ll)ini.size();
+          pos-=(ll)suf.size();
+          minch(res,pos+1);
+        }
+      }
+      if(res<INF)break;
+    }
+    cout<<res<<endl;
+  }
+
+  return 0;
+}
+

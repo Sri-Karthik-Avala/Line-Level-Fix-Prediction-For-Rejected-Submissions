@@ -1,0 +1,30 @@
+#include <cstdio>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+#include <stdlib.h>
+using namespace std;
+
+
+
+int main(){
+	int a,b,c,p,sum;
+	while( scanf("%d %d %d",&a,&b,&c) != EOF){
+		sum = a+b;
+		p=0;
+		for(int i=1;i<=10;i++){
+			if(i!=a && i!=b && i!=c){
+				if(sum+i<=20){
+					p++;
+				}
+			}
+		}
+		if(p>=0.35) printf("YES\n");
+		else printf("NO\n");
+	}
+			
+	return 0;
+}

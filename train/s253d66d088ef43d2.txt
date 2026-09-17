@@ -1,0 +1,56 @@
+from collections import namedtuple, defaultdict
+Point = namedtuple("Point", ["x", "y"])
+
+def main():
+    while True:
+        n = input()
+        if n == 0:
+            break
+        bldgs = {}
+        for _ in xrange(n):
+            b, x, y = map(int, raw_input().split())
+            bldgs[b] = Point(x, y)
+        graph = make_graph(bldgs)
+        for _ in xrange(input()):
+            sb, gb = map(int, raw_input().split())
+            res = dijkstra(graph, sb, gb)
+            if res is None:
+                print "NA"
+            else:
+                print " ".join(map(str, reversed(res)))
+        
+def make_graph(bldgs):
+    graph = defaultdict(list)
+    for b1, p1 in bldgs.items():
+        for b2, p2 in bldgs.items():
+            if b1 == b2:
+                continue
+            weight = (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2
+            if weight > 2500:
+                continue
+            graph[b1].append((weight**0.5, b2,))
+    return graph
+
+def dijkstra(graph, start, goal):
+    import heapq
+    hq = [(w, b, start) for w, b in graph[start]]
+    heapq.heapify(hq)
+    pre = dict((k, None) for k in graph.keys())
+    while len(hq) > 0:
+        w, cb, pb = heapq.heappop(hq)
+        if pre[cb] is not None:
+            continue
+        pre[cb] = pb
+        if cb == goal:
+            break
+        for nw, nb in graph[cb]:
+            heapq.heappush(hq, (nw+w, nb, cb))
+    else:
+        return None
+    ret = [goal]
+    while ret[-1] != start:
+        ret.append(pre[ret[-1]])
+    return list(reversed(ret))
+
+if __name__ == "__main__":
+    main()

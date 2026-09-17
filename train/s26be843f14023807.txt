@@ -1,0 +1,118 @@
+#include "bits/stdc++.h"
+#include<unordered_map>
+#include<unordered_set>
+#pragma warning(disable:4996)
+using namespace std;
+using ld = long double;
+const ld eps = 1e-9;
+
+//// < "d:\d_download\visual studio 2015\projects\programing_contest_c++\debug\a.txt" > "d:\d_download\visual studio 2015\projects\programing_contest_c++\debug\b.txt"
+
+
+int main() {
+	vector<string>emacs;
+	while (1) {
+		string st; cin >> st;
+		
+		if (st == "END_OF_TEXT") {
+			break;
+		}
+		else {
+			emacs.push_back(st);
+		}
+	}
+	int x = 0, y = 0;
+	vector<string>buf;
+	while (1) {
+		char c; cin >> c;
+		switch (c) {
+		case 'a':
+			x = 0;
+			break;
+		case 'e':
+			x = emacs[y].size();
+			break;
+		case 'p':
+			if (y) {
+				y--;
+			}
+			x = 0;
+			break;
+		case 'n':
+			if (y != emacs.size() - 1) {
+				y++;
+			}
+			x = 0;
+			break;
+		case 'f':
+			if (x != emacs[y].size())x++;
+			else {
+				if (y != emacs.size() - 1) {
+					y++;
+					x = 0;
+				}
+			}
+			break;
+		case 'b':
+			if (x)x--;
+			else {
+				if (y) {
+					y--;
+					x = emacs[y].size();
+				}
+			}
+			break;
+		case 'd':
+			if (x != emacs[y].size()) {
+				emacs[y].erase(emacs[y].begin() + x);
+			}
+			else {
+				if (y != emacs.size() - 1) {
+					emacs[y].insert(emacs[y].end(), emacs[y + 1].begin(), emacs[y + 1].end());
+					emacs.erase(emacs.begin() + y + 1);
+				}
+			}
+			break;
+		case 'k':
+			if (x == emacs[y].size()) {
+				if (y != emacs.size() - 1) {
+					emacs[y].insert(emacs[y].end(), emacs[y + 1].begin(), emacs[y + 1].end());
+					emacs.erase(emacs.begin() + y + 1);
+					buf = vector<string>(1);
+				}
+			}
+			else {
+				buf = vector<string>(1, emacs[y].substr(x));
+				emacs[y].erase(emacs[y].begin() + x, emacs[y].end());
+			}
+			break;
+		case 'y':
+			if (buf.empty()) {
+
+			}
+			else {
+				if (buf[0] == "") {
+					string rest = emacs[y].substr(x);
+					emacs[y].erase(emacs[y].begin() + x, emacs[y].end());
+					emacs.insert(emacs.begin() + y+1, rest);
+					y++;
+					x = 0;
+				}
+				else {
+					emacs[y].insert(emacs[y].begin() + x, buf[0].begin(), buf[0].end());
+					x += buf[0].size();
+				}
+			}
+			break;
+		}
+		if (c=='-')break;/*
+		for (auto s : emacs) {
+			cout << s << endl;
+		}
+		cout << "x: " << x << endl << "y: " << y << endl;*/
+	}
+	for (auto s : emacs) {
+		cout << s << endl;
+	}
+	return 0;
+}

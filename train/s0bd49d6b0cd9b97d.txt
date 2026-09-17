@@ -1,0 +1,100 @@
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<queue>
+#include<vector>
+#include<map>
+#include<set>
+#include<deque>
+#include<cstring>
+using namespace std;
+int a[5000];
+int bubuwa(int t);//tを省いた中で、部分和がk-a[t]以上k未満になるかどうか
+int n, k;
+bool dp[5001][5001];
+int main() {
+
+	//B
+
+
+	cin >> n >> k;
+	int i;
+	for (i = 0; i < n; i++) {
+		cin >> a[i];
+	}
+
+	sort(a, a + n);
+
+	int left, right, mid;
+	left = -1;
+	right = n;
+	mid = (left + right) / 2;
+
+	while (right - left > 1) {
+
+		if (bubuwa(mid) == 1) {
+
+			right = mid;
+
+		}
+		else {
+
+			left = mid;
+
+		}
+		mid = (right + left) / 2;
+	
+	}
+
+	cout << right << endl;
+	return 0;
+
+	//ある値が必要であれば、それ以上もすべて必要である。従って二分探索を
+	//用いて、最初に必要となる数を求める。必要かどうかの判定は部分和問題
+	//である。その数を省いた数列から部分和を取って、k未満かつその数があ
+	//ればk以上となるような値となるかを調べる
+
+
+
+
+	//A
+
+	/*int x;
+	cin >> x;
+	int i;
+	for (i = 0; i <= x; i++) {
+
+		if (((i * (i - 1)) / 2 < x) && (x <= (i * (i + 1)) / 2)) {
+			cout << i << endl;
+			return 0;
+		}
+
+	}
+	return 0;
+	*/
+}
+
+int bubuwa(int t) {
+
+	int i, j;
+	memset(dp, 0, sizeof(dp));
+	dp[0][0] = true;
+	for (i = 0; i < n; i++) {
+		//if (i != t) {
+			for (j = 0; j <= k; j++) {
+
+				dp[i + 1][j] |= dp[i][j];
+				if (j >= a[i] && i != t)dp[i + 1][j] |= dp[i][j - a[i]];
+
+			}
+		//}
+	}
+
+	for (i = k - a[t]; i < k; i++) {
+		if (dp[n][i] == true) {
+			return 1;
+		}
+	}
+	return 0;
+
+}

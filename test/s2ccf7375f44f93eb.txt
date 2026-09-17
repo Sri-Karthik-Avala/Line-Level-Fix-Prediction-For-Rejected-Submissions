@@ -1,0 +1,80 @@
+#include<bits/stdc++.h>
+#define int long long
+using namespace std;
+typedef long long ll;
+
+typedef vector<int> vec;
+typedef vector<vec> mat;
+
+mat multi(const mat& A, const mat& B, int mod) {
+  mat C(A.size(), vec(B[0].size()));
+  for(int i = 0; i < A.size(); i++) {
+    for(int j = 0; j < B.size(); j++) {
+      for(int k = 0; k < B[0].size(); k++) {
+	(C[i][k] += A[i][j]*B[j][k]) %= mod;
+      }
+    }
+  }
+  return C;
+}
+
+mat power(mat A, int n, int mod) {
+  mat B(A.size(), vec(A.size()));
+  for(int i = 0; i < A.size(); i++) B[i][i] = 1;
+  while(n > 0) {
+    if(n & 1) B = multi(B, A, mod);
+    A = multi(A, A, mod);
+    n >>= 1;
+  }
+  return B;
+}
+
+int dy[] = {-1, -1, 0, 0, 1, 1};
+int dx[] = {-1, 0, -1, 1, 0, 1};
+int xx[40], yy[40];
+int mas[40][40];
+
+signed main(){
+  int N, M, L;
+  int tt = 0;
+  while(cin >> N >> M >> L, N || M || L) {
+    tt++;
+    int num = 0;
+    int s = 0, t = N-1;
+    memset(mas, -1, sizeof(mas));
+    for(int i = 0; i < N+N-1; i++) {
+      if(i < N) t++;
+      else s++;
+      for(int j = s; j < t; j++) {
+	yy[num] = i, xx[num] = j;
+	mas[i][j] = num;
+	num++;
+      }
+    }
+    mat X(num, vec(1, 0));
+    for(int i = 0; i < num; i++){
+      cin >> X[i][0];
+    }
+
+    mat A(num, vec(num, 0));
+    for(int i = 0; i < num; i++) {
+      int x = xx[i], y = yy[i];
+      for(int j = 0; j < 6; j++) {
+	int nx = x + dx[j], ny = y + dy[j];
+	if(0 <= nx && nx < N+N-1 &&
+	   0 <= ny && ny < N+N-1 &&
+	   mas[ny][nx] != -1) {
+	  A[i][mas[ny][nx]] = 1;
+	}
+      }
+      A[i][i] = 1;
+    }
+
+    auto res = power(A, L, M);
+    auto ans = multi(res, X, M);
+    int out = 0;
+    for(int i = 0; i < ans.size(); i++) out += ans[i][0];
+    cout << "Case " << tt << ": " << out << endl;
+  }
+  return 0;
+}

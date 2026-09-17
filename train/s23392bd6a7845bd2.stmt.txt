@@ -1,0 +1,168 @@
+String Crossing 
+
+ Problem 
+ 
+ N 個の文字列{ S 1 , S 2 , ..., S N } が与えられる。
+続いて Q 個のクエリが与えられる。
+クエリの種類は以下の2つである。
+ 
+ 
+ 
+ a , b , c , d が入力され S a の b 文字目からの substring を S c の d -1文字までの substring の後に繋げる。これを新しい S c とする。
+元の S c の d 文字目からの substring を S a の b -1文字までの substring の後に繋げる。これを新しい S a とする。
+ 
+ 
+ a , b , c が入力され S a の b 文字目を c に変更する。
+ 
+ 
+ 
+
+ 
+例えば S 1 ="abcd", S 2 ="efgh"があり
+クエリの種類が1で a =1, b =2, c =2, d =3のとき
+ 
+ 
+a - -> bcd
+ X
+ef - -> gh
+ 
+ 
+ S 1 ="agh", S 2 ="efbcd"となる。
+ 
+
+ 
+全てのクエリを処理した後の文字列 S 1 から S N を全て出力せよ。
+ 
+
+
+ Input 
+ 
+入力は以下の形式で与えられる。
+ 
+
+ 
+ N Q 
+ S 1 
+ S 2 
+...
+ S N 
+ query 1 
+ query 2 
+...
+ query Q 
+ 
+
+各 query は次のいずれかである。
+
+ 
+1 a b c d 
+ 
+ or 
+ 
+2 a b c 
+ 
+
+
+ Constraints 
+
+ 
+ 1 &le; N &le; 10 5 
+ 1 &le; Q &le; 10 5 
+ N 個の文字列の長さの合計は2&times;10 6 を越えない。 
+ 文字列 S i は全て英小文字であることが保証される。 
+ クエリの種類が1のとき
+ 
+ a &ne; c 
+ 1 &le; b &le; | S a | 
+ 1 &le; d &le; | S c | 
+ 
+ 
+ クエリの種類が2のとき
+ 
+ 1 &le; b &le; | S a | 
+ c は英小文字であることが保証される。 
+ 
+ 
+ 
+ 
+高速な入出力を推奨する。
+ 
+
+ Output 
+ 
+各クエリを処理した後の文字列を S 1 から S N まで1行ずつ出力せよ。
+ 
+ 
+ S 1 
+ S 2 
+...
+ S N 
+ 
+
+ Sample Input 1 
+ 
+2 1
+abcd
+efgh
+1 1 2 2 3
+ 
+
+ Sample Output 1 
+ 
+agh
+efbcd
+ 
+
+ Sample Input 2 
+ 
+2 3
+abcd
+efgh
+1 1 2 2 3
+2 1 3 x
+2 2 4 x
+ 
+
+ Sample Output 2 
+ 
+agx
+efbxd
+ 
+
+ Sample Input 3 
+ 
+10 10
+sjcvpauokb
+fmeaowomscy
+sepeqqfcosrjmonfsv
+zapc
+aromazjzqoeiqswvcaf
+clifpa
+dusudcz
+qeqdzdtdzlkhc
+gkpsjvdvadmf
+xrtyxnkolluagwxp
+1 4 4 6 3
+1 7 1 8 1
+2 2 6 o
+1 4 4 3 7
+2 1 2 i
+1 6 3 3 2
+1 6 5 1 9
+2 10 9 j
+1 2 2 7 3
+2 3 2 b
+ 
+
+ Sample Output 3 
+ 
+sicvpauoeqqifpa
+fqdzdtdzlkhc
+sb
+zapfcosrjmonfsv
+aromazjzqoeiqswvcaf
+clepkb
+qemeaooomscy
+dusudcz
+gkpsjvdvadmf
+xrtyxnkojluagwxp

@@ -1,0 +1,118 @@
+// Template {{{
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+using namespace std;
+typedef long long LL;
+
+#ifdef LOCAL
+#include "contest.h"
+#else
+#define dump(x) 
+#endif
+
+class range {
+    struct Iterator {
+        int val, inc;
+        int operator*() {return val;}
+        bool operator!=(Iterator& rhs) {return val < rhs.val;}
+        void operator++() {val += inc;}
+    };
+    Iterator i, n;
+    public:
+    range(int e) : i({0, 1}), n({e, 1}) {}
+    range(int b, int e) : i({b, 1}), n({e, 1}) {}
+    range(int b, int e, int inc) : i({b, inc}), n({e, inc}) {}
+    Iterator& begin() {return i;}
+    Iterator& end() {return n;}
+};
+
+const int dx[4] = {1, 0, -1, 0};
+const int dy[4] = {0, 1, 0, -1};
+inline bool valid(int x, int w) { return 0 <= x && x < w; }
+
+void iostream_init() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.setf(ios::fixed);
+    cout.precision(12);
+}
+//}}}
+
+typedef vector<int> Node;
+typedef vector<Node> Graph;
+int dp[202][202];
+int size[202];
+const int MOD = 1e9 + 7;
+int memo[402][402][402];
+int ways(int a, int b, int c) {
+    assert(a <= c);
+    assert(b <= c);
+    assert(c <= a+b);
+    if(memo[a][b][c] != -1) return memo[a][b][c];
+    if(c == 0) return 1;
+    int res = 0;
+    if(a > 0 && b <= c-1){ res += ways(a-1, b, c-1); res %= MOD; }
+    if(b > 0 && a <= c-1){ res += ways(a, b-1, c-1); res %= MOD; }
+    if(a > 0 && b > 0 && c-1 <= a-1+b-1){ res += ways(a-1, b-1, c-1); res %= MOD; }
+    return memo[a][b][c] = res;
+}
+void rec(const Graph& G, int u, int p) {
+    size[u] = 1;
+    for(int v : G[u]) if(v != p) {
+        rec(G, v, u);
+        size[u] += size[v];
+    }
+    int cur[202] = {};
+    cur[0] = 1;
+    for(int v : G[u]) if(v != p) {
+        int next[202] = {};
+        for(int c = 0; c < size[u]; c++) {
+            for(int d = 1; d <= size[v]; d++) {
+                for(int e = max(c, d); e <= c + d; e++) {
+                    if(cur[c] > 0 && dp[v][d] > 0) {
+                        next[e] += (LL)ways(c, d, e) * cur[c] % MOD * dp[v][d] % MOD;
+                        next[e] %= MOD;
+                    }
+                }
+            }
+        }
+        memcpy(cur, next, sizeof(next));
+    }
+    for(int c = 0; c < size[u]; c++) {
+        dump(u);
+        dump(c+1);
+        dump(cur[c]);
+        dp[u][c+1] = cur[c];
+    }
+}
+int main(){
+    iostream_init();
+    memset(memo, -1, sizeof(memo));
+    assert(ways(1, 1, 1) == 1);
+    assert(ways(1, 1, 2) == 2);
+
+    int N;
+    while(cin >> N) {
+        Graph G(N);
+        int deg[200] = {};
+        REP(i, N-1) {
+            int a, b;
+            cin >> a >> b;
+            G[a].push_back(b);
+            deg[b]++;
+        }
+        int root = -1;
+        REP(i, N) if(deg[i] == 0) root = i;
+        rec(G, root, -1);
+
+        int ans = 0;
+        for(int c = 1; c <= N; c++) {
+            ans += dp[root][c];
+            ans %= MOD;
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}
+
+/* vim:set foldmethod=marker: */

@@ -1,0 +1,35 @@
+import math
+
+
+class Triangle:
+    def __init__(self, x1, y1, x2, y2, x3, y3):
+        self.x1 = x1
+        self.x2 = x2
+        self.x3 = x3
+        self.y1 = y1
+        self.y2 = y2
+        self.y3 = y3
+        self.a = math.sqrt((x1-x2) ** 2 + (y1 - y2) ** 2)
+        self.b = math.sqrt((x2-x3) ** 2 + (y2 - y3) ** 2)
+        self.c = math.sqrt((x1-x3) ** 2 + (y1 - y3) ** 2)
+
+    def get_acos_a(self):
+        val = (-self.a ** 2 + self.b ** 2 + self.c ** 2) / (2 * self.b * self.c)
+        return math.acos(val)
+
+
+while(1):
+
+    try:
+        x1, y1, x2, y2, x3, y3, xp, yp = list(map(float, input().split()))
+        t1 = Triangle(x1, y1, x2, y2, xp, yp)
+        t2 = Triangle(x2, y2, x3, y3, xp, yp)
+        t3 = Triangle(x3, y3, x1, y1, xp, yp)
+
+        if 6.283 <= t1.get_acos_a() + t2.get_acos_a() + t3.get_acos_a() <= 6.284:
+            print("YES")
+        else:
+            print("NO")
+
+    except:
+        break

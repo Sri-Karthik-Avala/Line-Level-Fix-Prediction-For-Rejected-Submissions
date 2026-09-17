@@ -1,0 +1,60 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+typedef complex<double> P;
+const int H = 10010 / 40;
+const int W = 10010 / 40;
+const double EPS = 1e-8;
+
+int AN, BN;
+double R;
+int my[] = {0, -1, -1, 0, 1, 1, 1, 0, -1};
+int mx[] = {0, 0, 1, 1, 1, 0, -1, -1, -1};
+
+int main() {
+  while(cin >>AN >>BN >>R && AN){
+    int ans = 0;
+    R = R * 4;
+    vector<P> v[H][W];
+    REP(b, AN){
+      int x, y; cin >>x >>y;
+      v[y / 40][x / 40].push_back(P(x, y));
+    }
+    REP(a, BN){
+      int x, y; cin >>x >>y;
+      P p = P(x, y);
+      REP(i, 9){
+        int ny = y / 40 + my[i], nx = x / 40 + mx[i];
+        if(ny >= 0 && nx >= 0 && ny < H && nx < W){
+          REP(j, v[ny][nx].size()){
+            int d2 = norm(p - v[ny][nx][j]);
+            if(d2 <= R * R) ++ans;
+          }
+        }
+      }
+    }
+    cout <<ans <<endl;
+  }
+  return 0;
+}

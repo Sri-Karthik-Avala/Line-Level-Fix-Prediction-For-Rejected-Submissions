@@ -1,0 +1,72 @@
+Articulation Points 
+
+
+ 
+Find articulation points of a given undirected graph G(V, E) .
+ 
+
+ 
+A vertex in an undirected graph is an articulation point (or cut vertex) iff removing it disconnects the graph.
+ 
+
+ Input 
+
+ 
+ |V| |E| 
+ s 0 t 0 
+ s 1 t 1 
+:
+ s |E|-1 t |E|-1 
+ 
+
+ 
+, where |V| is the number of vertices and |E| is the number of edges in the graph. The graph vertices are named with the numbers 0, 1,..., |V| -1 respectively.
+ 
+
+ 
+ s i and t i represent source and target verticess of i -th edge (undirected).
+ 
+
+ Output 
+
+ 
+A list of articulation points of the graph G ordered by name.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; |V| &le; 100,000 
+ 0 &le; |E| &le; 100,000 
+ The graph is connected 
+ There are no parallel edges 
+ There are no self-loops 
+ 
+
+ Sample Input 1 
+ 
+4 4
+0 1
+0 2
+1 2
+2 3
+ 
+ Sample Output 1 
+ 
+2
+ 
+ 
+
+ Sample Input 2 
+ 
+5 4
+0 1
+1 2
+2 3
+3 4
+ 
+ Sample Output 2 
+ 
+1
+2
+3

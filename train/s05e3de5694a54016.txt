@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+#define kane 17
+const int m[kane] = {1,4,9,16,25,36,49,64,81,100,111,144,169,196,225,256,289};
+
+int cnt =0;
+
+int search(int num){
+int maxx;
+if(num == 0 || num == 1){
+return 0;
+}
+for(maxx=0;num-m[maxx+1]>=0;maxx++);
+return maxx;
+}
+
+void func(int num,int k){
+//	cout<<num<<":"<<m[k]<<endl;
+	if(num <= 3 || k==0){
+		cnt++;
+//		cout<<"☆"<<endl;
+		return;
+	}
+	for(;k>=0;k--)
+		func(num -m[k],min(k,search(num -m[k])));
+}
+int main(){
+while(1){
+int num;
+cnt = 0;
+cin>>num;
+if(num == 0) break;
+func(num,search(num));
+cout << cnt << endl;
+//cout<<search(num)<<endl;
+}
+return 0;
+}

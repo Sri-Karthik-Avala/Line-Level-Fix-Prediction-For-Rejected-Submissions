@@ -1,0 +1,120 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <set>
+#include <numeric>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <complex>
+#include <cassert>
+#include <iomanip>
+#include <tuple>
+using namespace std;
+typedef long long LL;
+typedef double T;
+typedef pair<T,T> P;
+
+// difference
+P operator-(const P& lhs, const P& rhs)
+{
+	return P(lhs.first-rhs.first,lhs.second-rhs.second);
+}
+
+P operator+(const P& lhs, const P& rhs)
+{
+	return P(lhs.first+rhs.first, lhs.second+rhs.second);
+}
+
+// scalar product
+P operator*(T t, P p){
+	return P(t*p.first,t*p.second);
+}
+
+// cross product
+T Cross(const P& lhs, const P& rhs)
+{
+	return lhs.first*rhs.second-lhs.second*rhs.first;
+}
+
+// inner product 
+T Dot(const P& lhs, const P& rhs)
+{
+	return lhs.first*rhs.first+lhs.second*rhs.second;
+}
+
+// square of distance
+T Dist2(const P& lhs, const P& rhs){
+	return Dot(lhs-rhs,lhs-rhs);
+}
+
+// intersection of line
+bool IntersectParam(P s0, P e0, P s1, P e1, T& t0, T& t1)
+{
+	P a=s1-s0;
+	P v=e0-s0;
+	P w=s1-e1;
+	T det=Cross(v,w);
+	if(det == 0){
+		return false;
+	}
+	t0=Cross(a,w)/det;
+	t1=Cross(v,a)/det;
+	return true;
+}
+
+
+P Interpolate(P s, P e, T t)
+{
+	return (1-t)*s+t*e;
+}
+
+int N;
+P p0[100];
+P p1[100];
+void exec()
+{
+	cin >> N;
+	if(N==0)exit(0);
+	int ret=1;
+	for(int i=0;i<N;i++){
+		cin >> p0[i].first >> p0[i].second >> p1[i].first >> p1[i].second;
+		ret++;
+		vector<P> ps;
+		for(int j=0;j<i;j++){
+			double t0,t1;
+			if(IntersectParam(p0[i],p1[i],p0[j],p1[j],t0,t1))
+			{
+				if(0<t0&&t0<1){
+					P p=Interpolate(p0[i],p1[i],t0);
+					bool ng=false;
+					for(auto q:ps){
+						if(Dist2(p,q)<1e-5){
+							ng=true;
+							break;
+						}
+					}
+					if(!ng){
+						ps.push_back(p);
+						ret++;
+					}
+				}
+			}
+		}
+	}
+	cout << ret << endl;
+}
+int main() {
+	while(1)exec();
+}

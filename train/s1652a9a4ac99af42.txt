@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+
+	int W = 0;
+	int H = 0;
+	int N = 0;
+	int nowx,nowy;//現在位置
+	int x = 0, y = 0;//次の目的地
+	int ans = 0;
+
+	scanf("%d %d %d",&W,&H,&N);//W,Hは使わない
+
+	scanf("%d %d", &nowx, &nowy);//入力の最初は現座標に
+
+
+	for (W = 1; W < N; W++){
+
+		scanf("%d %d", &x, &y);//次の座標
+
+			//ななめ移動
+
+			//右上
+			while ((nowx - x) < 0 && (nowy - y) < 0)
+			{
+				nowx++;
+				nowy++;
+				ans++;
+			}
+			//左下
+			while ((nowx - x) > 0 && (nowy - y) > 0)
+			{
+				nowx--;
+				nowy--;
+				ans++;
+			}
+
+			//上下左右に調整
+			ans += abs(nowx - x);
+			nowx -= nowx - x;
+			ans += abs(nowx - x);
+			nowy -= nowy - y;
+		
+	}
+	printf("%d\n", ans);
+	return 0;
+}

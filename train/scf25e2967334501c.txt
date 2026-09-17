@@ -1,0 +1,9 @@
+s = raw_input()
+count = [0] * 26
+for i in range(len(s)):
+    if('a' <= s[i] <= 'z'):
+        count[ord(s[i]) - ord('a')] += 1
+    elif('A' <= s[i] <= 'Z'):
+        count[ord(s[i]) - ord('A')] += 1
+for i in range(len(count)):
+    print("%c : %d" % (chr(i + ord('a')), count[i]))

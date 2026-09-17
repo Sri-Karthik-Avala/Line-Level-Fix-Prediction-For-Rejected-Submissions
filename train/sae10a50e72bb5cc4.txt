@@ -1,0 +1,63 @@
+import numpy as np
+import math
+import scipy as sp
+import queue
+import collections
+
+MOD = 10 ** 9 + 7
+INF = 10 ** 9
+
+def main(kwargs):
+    n = kwargs["n"]
+    arr = factorization(n)
+
+    res = 0
+
+    for i in arr:
+        res += sankaku(i[1])
+
+    if n == 1:
+        res = 0
+
+    return res
+
+def factorization(n):
+    arr = []
+    temp = n
+    for i in range(2, int(-(-n**0.5//1))+1):
+        if temp%i==0:
+            cnt=0
+            while temp%i==0:
+                cnt+=1
+                temp //= i
+            arr.append([i, cnt])
+
+    if temp!=1:
+        arr.append([temp, 1])
+
+    if arr==[]:
+        arr.append([n, 1])
+
+    return arr
+
+def sankaku(n):
+    res = 1
+
+    while True:
+        n -= res
+
+        if n <= 0:
+            break
+
+        res += 1
+
+    return res
+
+if __name__ == "__main__":
+    kwargs = {}
+
+    cin = input().split()
+    kwargs["n"] = [int(i) for i in cin][0]
+
+    cout = main(kwargs)
+    print(cout)

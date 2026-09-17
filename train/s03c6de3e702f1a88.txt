@@ -1,0 +1,81 @@
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <valarray>
+#include <vector>
+
+#define EPS 1e-9
+#define INF 1070000000LL
+#define MOD 1000000007LL
+#define fir first
+#define foreach(it,X) for(__typeof((X).begin()) it=(X).begin();it!=(X).end();it++)
+#define ite iterator
+#define mp make_pair
+#define rep(i,n) rep2(i,0,n)
+#define rep2(i,m,n) for(int i=m;i<(n);i++)
+#define pb push_back
+#define sec second
+#define sz(x) ((int)x.size())
+
+using namespace std;
+
+struct timer{
+	time_t start;
+	timer(){start=clock();}
+	~timer(){cerr<<1.*(clock()-start)/CLOCKS_PER_SEC<<" secs"<<endl;}
+};
+
+typedef istringstream iss;
+typedef long long ll;
+typedef pair<int,int> pi;
+typedef stringstream sst;
+typedef vector<int> vi;
+
+int N,W,w;
+vi d[100010];
+
+int main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(0);
+	
+	cin>>N>>W;
+	w=W/2;
+	vi ans;
+	rep2(i,1,w+2){
+		ans.pb(i+W-1);
+	}
+	rep2(i,w+1,W){
+		for(int j=i;j<=N;j+=i){
+			d[j].pb(i);
+		}
+	}
+	int res=ans[sz(ans)-1];
+	rep2(i,w+2,N-W+2){
+		int in=i+W-1,out=i-1;
+		int hi=min(i-1,W-1);
+		rep(j,sz(d[in]))if(d[in][j]<=hi)res++;
+		rep(j,sz(d[out]))if(d[out][j]<=hi)res--;
+		if(out<W)res++;
+		ans.pb(res);
+	}
+	rep(i,sz(ans))cout<<ans[i]<<(i==sz(ans)-1?"\n":" ");
+}

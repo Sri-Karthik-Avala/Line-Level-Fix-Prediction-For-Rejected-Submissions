@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <map>
+#include <cmath>
+using namespace std;
+typedef long long i64;
+typedef long double ld;
+typedef pair<i64,i64> P;
+#define rep(i,s,e) for(int i = (s);i <= (e);i++)
+
+int n;
+int m;
+int s;
+int t;
+
+int a[101010];
+int b[101010];
+int c[101010];
+i64 d[101010];
+
+struct edge{
+    int to;
+    i64 cost;
+};
+
+int main(){
+    cin >> n >> m >> s >> t;
+    for(int i = 0;i < m;i++){
+        cin >> a[i] >> b[i] >> c[i] >> d[i];
+    }
+
+    vector<vector<edge>> edges(n + 1,vector<edge>());
+
+    for(int i = 0;i < m;i++){
+        edges[a[i]].push_back({b[i],d[i]});
+        edges[b[i]].push_back({a[i],d[i]});
+        edges[a[i]].push_back({c[i],d[i]});
+        edges[c[i]].push_back({a[i],d[i]});
+        edges[b[i]].push_back({c[i],d[i]});
+        edges[c[i]].push_back({b[i],d[i]});
+    }
+
+    priority_queue<P,vector<P>,greater<P>> que;
+
+    vector<i64> dist(n + 1,1e9);
+    que.push({0,s});
+    dist[s] = 0;
+
+    while(!que.empty()){
+        int v = que.top().second;
+        i64 di = que.top().first;
+        que.pop();
+
+        if(dist[v] < di) continue;
+
+        for(auto & e : edges[v]){
+            if(dist[e.to] > di + e.cost){
+                dist[e.to] = di + e.cost;
+                que.push({dist[e.to] , e.to});
+            }
+        }
+    }
+
+    cout << dist[t] << endl;
+}

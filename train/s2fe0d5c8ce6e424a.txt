@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+using namespace std;
+long double x[110];
+long double y[110];
+long double r[110];
+const long double EPS = 1e-20;
+const long double INF = 1e+20;
+const long double PI = acos(-1);
+int sig(long double r) { return (r < -EPS) ? -1 : (r > +EPS) ? +1 : 0; }
+inline long double ABS(long double a){return max(a,-a);}
+struct Pt {
+	long double x, y;
+	Pt() {}
+	Pt(long double x, long double y) : x(x), y(y) {}
+	Pt operator+(const Pt &a) const { return Pt(x + a.x, y + a.y); }
+	Pt operator-(const Pt &a) const { return Pt(x - a.x, y - a.y); }
+	Pt operator*(const Pt &a) const { return Pt(x * a.x - y * a.y, x * a.y + y * a.x); }
+	Pt operator-() const { return Pt(-x, -y); }
+	Pt operator*(const long double &k) const { return Pt(x * k, y * k); }
+	Pt operator/(const long double &k) const { return Pt(x / k, y / k); }
+	long double ABS() const { return sqrt(x * x + y * y); }
+	long double abs2() const { return x * x + y * y; }
+	long double arg() const { return atan2(y, x); }
+	long double dot(const Pt &a) const { return x * a.x + y * a.y; }
+	long double det(const Pt &a) const { return x * a.y - y * a.x; }
+};
+long double tri(const Pt &a, const Pt &b, const Pt &c) { return (b - a).det(c - a); }
+
+pair<Pt,Pt> pCC(Pt a,long double r, Pt b,long double s) {
+	long double d = (b - a).ABS();
+	long double x = (d * d + r * r - s * s) / (d * 2);
+	//printf("%.20Lf %.20Lf\n",d,r*r-x*x);
+	Pt e = (b - a) / d, w = e * Pt(0, 1) * sqrt(max(r * r - x * x, 0.0L));
+	return make_pair(a + e * x - w, a + e * x + w);
+}
+Pt p[110];
+bool oth;
+int n;
+bool chk(int a,int b,int c,Pt d){
+	if(a!=b&&a!=c&&(p[a]-d).ABS()>r[a])return false;
+	oth=true;
+	for(int i=a+1;i<n;i++){
+		if(i==b||i==c)continue;
+		if((p[i]-d).ABS()<r[i])return false;
+	}
+//	printf("%d %d %d %Lf %Lf\n",a,b,c,d.x,d.y);
+	return true;
+}
+int main(){
+	int a;
+	while(scanf("%d",&a),a){
+		n=a;
+		for(int i=0;i<a;i++)scanf("%Lf%Lf%Lf",x+i,y+i,r+i);
+		for(int i=0;i<a;i++)p[i]=Pt(x[i],y[i]);
+		int ret=0;
+		vector<Pt> v;
+		for(int i=0;i<a;i++)for(int j=i+1;j<a;j++){
+			long double d=sqrt((x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j]));
+			if(d>r[i]-r[j]&&d<r[i]+r[j]){
+				pair<Pt,Pt> tmp=pCC(p[i],r[i],p[j],r[j]);
+				v.push_back(tmp.first);
+				v.push_back(tmp.second);
+			}
+		}
+		for(int i=0;i<a;i++){
+			bool dame=false;
+			
+			for(int j=i+1;j<a;j++){
+				if(i==j)continue;
+				long double d=sqrt((x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j]));
+				if(d<r[j]-r[i])dame=true;
+			}
+			if(dame)continue;
+		//	printf("%d ",i);
+			oth=false;
+			for(int j=i;j<a;j++)for(int k=j+1;k<a;k++){
+				long double d=(p[k]-p[j]).ABS();
+			//	printf("%d %d %d: %.20Lf\n",i,j,k,d);
+				if(d>r[k]-r[j]&&d<r[k]+r[j]){
+					pair<Pt,Pt> tmp=pCC(p[j],r[j],p[k],r[k]);
+					if(chk(i,j,k,tmp.first)||chk(i,j,k,tmp.second)){
+					//	printf("%d: %d %d %Lf %Lf %Lf %Lf\n",i,j,k,tm);
+						ret++;break;
+					}
+				}
+			}
+			if(!oth)ret++;
+		}
+		printf("%d\n",ret);
+	}
+}

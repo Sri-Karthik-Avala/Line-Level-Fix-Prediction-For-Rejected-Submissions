@@ -1,0 +1,61 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+template <class Type>
+class BIT {
+private:
+	size_t size_; std::vector<Type> v;
+	Type sum(size_t r) { Type ret = 0; while (r > 0) ret += v[r], r -= r & (-r); return ret; }
+public:
+	BIT() {};
+	BIT(size_t size__) {
+		for (size_ = 1; size_ < size__;) size_ <<= 1;
+		v.resize(size_ + 1, 0);
+	}
+	inline void add(size_t i, Type x) { i++; while (i <= size_) v[i] += x, i += i & -i; }
+	inline Type sum(size_t l, size_t r) { return sum(r) - sum(l); }
+	bool operator[](size_t x) { return sum(x, x + 1); }
+};
+
+int n, xa[111111], ya[111111], xb[111111], yb[111111], xc[222222], yc[222222], cx, cy;
+vector<int> q1[222222], q2[222222], q3[222222], q4[222222];
+int main() {
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> xa[i] >> ya[i] >> xb[i] >> yb[i];
+		if (xa[i] > xb[i]) swap(xa[i], xb[i]);
+		if (ya[i] > yb[i]) swap(ya[i], yb[i]);
+		xc[cx++] = xa[i]; xc[cx++] = xb[i];
+		yc[cy++] = ya[i]; yc[cy++] = yb[i];
+	}
+	sort(xc, xc + cx);
+	cx = unique(xc, xc + cx) - xc;
+	sort(yc, yc + cy);
+	cy = unique(yc, yc + cy) - yc;
+	for (int i = 0; i < n; i++) {
+		xa[i] = lower_bound(xc, xc + cx, xa[i]) - xc;
+		ya[i] = lower_bound(yc, yc + cy, ya[i]) - yc;
+		xb[i] = lower_bound(xc, xc + cx, xb[i]) - xc;
+		yb[i] = lower_bound(yc, yc + cy, yb[i]) - yc;
+	}
+	for (int i = 0; i < n; i++) {
+		if (ya[i] == yb[i]) {
+			q1[ya[i]].push_back(xa[i]); // yoko - left
+			q2[yb[i]].push_back(xb[i]); // yoko - right
+		}
+		else {
+			q3[ya[i]].push_back(xa[i]); // tate - in
+			q4[yb[i]].push_back(xb[i]); // tate - out
+		}
+	}
+	BIT<int> b(cx);
+	long long ret = 0;
+	for (int i = 0; i < cy; i++) {
+		for (int j = 0; j < q3[i].size(); j++) b.add(q3[i][j], 1);
+		for (int j = 0; j < q1[i].size(); j++) ret += b.sum(q1[i][j], q2[i][j]);
+		for (int j = 0; j < q4[i].size(); j++) b.add(q4[i][j], -1);
+	}
+	cout << ret << endl;
+	return 0;
+}

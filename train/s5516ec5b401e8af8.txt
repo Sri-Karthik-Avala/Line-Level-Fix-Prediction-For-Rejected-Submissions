@@ -1,0 +1,25 @@
+import itertools,math
+def isOverlapped(x1,y1,x2,y2,r1,r2):        
+    return ((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))**0.5<=r1+r2+0.000009
+while True:
+    n=input()
+    if n==0:
+        break
+    li=[]
+    for i in xrange(n):
+        li.append(map(float,raw_input().split(",")))
+    ma=0
+    for i,j in itertools.combinations(xrange(n),2):
+        if isOverlapped(li[i][0],li[i][1],li[j][0],li[j][1],1,1):
+            L=((li[i][0]-li[j][0])**2+(li[i][1]-li[j][1])**2)**0.5
+            t=math.atan2(li[j][1]-li[i][1],li[j][0]-li[i][0])
+            al=math.acos(L/2)
+            node=[[li[i][0]+math.cos(t+al),li[i][1]+math.sin(t+al)],
+                  [li[i][0]+math.cos(t-al),li[i][1]+math.sin(t-al)]]
+            for p in xrange(2):
+                c=0
+                for q in xrange(n):
+                    if isOverlapped(node[p][0],node[p][1],li[q][0],li[q][1],0,1):
+                        c+=1
+                ma=max(c,ma)
+    print ma

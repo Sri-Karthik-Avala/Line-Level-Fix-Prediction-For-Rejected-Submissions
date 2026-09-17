@@ -1,0 +1,115 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+#include <ctime>
+#include <list>
+#include <numeric>
+#include <iomanip>
+
+
+using namespace std;
+static const double EPS = 1e-6;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> PI;
+#ifndef M_PI
+const double M_PI=acos(-1);
+#endif
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define mp(a,b) make_pair(a,b)
+#define pb(a) push_back(a)
+#define SZ(a) (int((a).size()))
+#define F first
+#define S second
+int dx[]={0,1,0,-1,1,1,-1,-1},dy[]={1,0,-1,0,1,-1,1,-1};
+
+char in[10][10];
+
+ll MOD = 100000007;
+ll dp[2][1<<22];
+
+vector<int> state;
+int r,c;
+void dfs(int dep,int cu){
+  if(dep==c+1){
+    state.pb(cu);
+    return;
+  }
+
+  rep(i,3)
+    dfs(dep+1,cu*4+i);
+}
+
+main(){
+
+  cin >> r >> c;
+  rep(i,r)rep(j,c){
+    cin >> in[i][j];
+    if(isdigit(in[i][j])) in[i][j]-='0';
+    else in[i][j]=0;
+  }
+
+  dfs(0,0);
+  
+  int p=0;
+  dp[0][0] = 1;
+  rep(i,r)rep(j,c){
+    //memset(dp[!p],0,sizoef(dp[!p]));
+    FOR(it,state) dp[!p][*it]=0;
+    p=!p;
+    FOR(it,state){
+      //cout << i << ' ' << j << ' ' << ' ' << *it << ' ' << dp[!p][*it] << endl;
+      int up=(*it>>(2*c))&3;
+      int left=(*it)&3;
+      int ed=in[i][j];
+      int cst = *it;
+      if(j==0 && left) continue;
+      if(ed && up+left>ed) continue;
+      if(ed==0){
+        if(up && left) continue;
+        cst <<= 2;
+        cst &= (1<<(c+1)*2)-1;
+        cst &= ~15;        
+        if(up) cst |= up<<2;
+        else cst |= left;
+        dp[p][cst] =(dp[p][cst]+dp[!p][*it])%MOD;
+      }else{
+        if(ed>4) continue;
+        ed -= up+left;
+        cst <<= 2;
+        cst &= (1<<(c+1)*2)-1;
+        cst &= ~15;
+        for(int nleft=0;nleft<=min(2,ed);++nleft){
+          if(ed-nleft>2) continue;
+          int nst=cst;
+          nst |= nleft|((ed-nleft)<<2);
+          dp[p][nst] =(dp[p][nst]+dp[!p][*it])%MOD;
+        }
+      }
+      
+    }
+  }
+
+  cout << dp[p][0] << endl;
+}

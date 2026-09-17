@@ -1,0 +1,13 @@
+S = input()
+S = sorted(set(S))
+A = "abcdefghijklmnopqrstuvwxyz"
+for i in range(len(A)):
+  if len(A) == len(S):
+    print("None")
+    break
+  if A[i] != S[i]:
+    print(A[i])
+    break
+  if i == len(S):
+    print(A[i + 1])
+    break

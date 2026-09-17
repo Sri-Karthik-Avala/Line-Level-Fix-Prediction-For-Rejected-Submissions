@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+
+#ifdef ONLINE_JUDGE
+#define freopen \
+  if (0) freopen
+#define cerr \
+  if (0) cerr
+#endif
+
+#define fi first
+#define se second
+
+#define pb push_back
+#define pp pop_back
+#define mp make_pair
+
+#define rep(i, a, b) for (int i = (a); i <= (b); i++)
+#define per(i, a, b) for (int i = (a); i >= (b); i--)
+
+#define sqr(a) ((a)*1ll * (a))
+#define sz(a) (int)a.size()
+#define len(a) (int)a.length()
+#define all(a) a.begin(), a.end()
+#define nl '\n'
+
+using namespace std;
+
+typedef long long ll;
+typedef long double ld;
+typedef unsigned long long ull;
+
+typedef vector<int> vi;
+typedef vector<vector<int> > vvi;
+typedef pair<int, int> pi;
+
+const int inf = (int)1e9 + 7;
+const int mod = (int)1e9 + 7;
+const ll linf = (ll)1e18 + 7;
+
+vector<int> z_func(string &s) {
+  vector<int> z(len(s), 0);
+  int l = 0, r = 1;
+
+  rep(i, 1, sz(z) - 1) {
+    if (i >= r) {
+      l = r = i;
+      while (i + z[i] < len(s) && s[z[i]] == s[i + z[i]]) z[i]++, r++;
+    } else if (z[i - l] < r - i) {
+      z[i] = z[i - l];
+    } else {
+      z[i] = r - i;
+      l = i;
+      while (i + z[i] < len(s) && s[z[i]] == s[i + z[i]]) z[i]++, r++;
+    }
+  }
+
+  return z;
+}
+
+bool is_good(string s) {
+  auto z = z_func(s);
+  rep(i, 1, len(s) / 2) {
+    bool can_divide = len(s) % i == 0 && z[i] == i * (len(s) / i - 1);
+    if (can_divide) return false;
+  }
+  return true;
+}
+
+void solve() {
+  string s;
+  cin >> s;
+
+  auto z = z_func(s);
+
+  rep(i, 1, len(s) / 2) {
+    bool can_divide = len(s) % i == 0 && z[i] == i * (len(s) / i - 1);
+    if (!can_divide) continue;
+
+    if (i == 1) {
+      cout << len(s) << nl << 1;
+      return;
+    } 
+
+    int res = 0;
+
+    rep(j, 1, len(s) - 1) {
+      bool is_good_left = is_good(s.substr(0, j));
+      bool is_good_right = is_good(s.substr(j));
+      if (is_good_left && is_good_right) {
+        res++;
+      }
+    }
+
+    cout << 2 << nl << res;
+    return;
+  }
+
+  cout << 1 << nl << 1;
+}
+
+int main() {
+  ios::sync_with_stdio(0);
+  cin.tie(0);
+  cout.tie(0);
+
+  freopen(".in", "r", stdin);
+
+  solve();
+
+  return 0;
+}

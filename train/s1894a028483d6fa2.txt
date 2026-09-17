@@ -1,0 +1,57 @@
+#include<iostream>
+#include<cmath>
+#include<stdio.h>
+using namespace std;
+
+struct point{
+    int x,y;
+};
+
+struct line{
+    point s,t;
+};
+struct bec{
+    int x,y;
+};
+struct circle{
+    point p;
+    int r;
+};
+
+void solve(circle c1,circle c2){
+    bec p;
+    double dp,cost,sint,qx, qy,ansx1,ansx2,ansy1,ansy2,cosa,sina;
+    p.x = c2.p.x-c1.p.x;
+    p.y = c2.p.y-c1.p.y;
+
+    dp = sqrt((double)p.x*(double)p.x+(double)p.y*(double)p.y);
+    cost = p.x/dp;
+    sint = p.y/dp;
+    cosa = ((double)dp/2)/c1.r;
+    sina = sqrt(1-cosa*cosa);
+
+    ansx1 = c1.p.x + (double)c1.r*(cosa*cost - sint*sina);
+    ansy1 = c1.p.y + (double)c1.r*(sint*cosa + cost*sina);
+    ansx2 = c1.p.x + (double)c1.r*(cosa*cost + sint*sina);
+    ansy2 = c1.p.y + (double)c1.r*(sint*cosa - cost*sina);
+
+    if(ansx1<ansx2) printf("%.8f %.8f %.8f %.8f\n",ansx1,ansy1,ansx2,ansy2);
+    else if(ansx1==ansx2){
+        if(ansy1<ansy2) printf("%.8f %.8f %.8f %.8f\n",ansx1,ansy1,ansx2,ansy2);
+        else printf("%.8f %.8f %.8f %.8f\n",ansx2,ansy2,ansx1,ansy1);
+    }
+    else printf("%.8f %.8f %.8f %.8f\n",ansx2,ansy2,ansx1,ansy1);
+    
+
+}
+
+int main(){
+    circle c1,c2;
+    int c1x,c2x,c1y,c2y,c1r,c2r;
+    cin>>c1x>>c1y>>c1r;
+    c1.p.x =c1x; c1.p.y = c1y; c1.r = c1r;
+    cin>>c2x>>c2y>>c2r;
+    c2.p.x =c2x; c2.p.y = c2y; c2.r = c2r;
+    solve(c1,c2);
+    return 0;
+}

@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+int n,m,q;
+ll b[1010];
+
+inline void output(int arg){
+	if(__builtin_popcount(b[arg])!=1)
+		cout << '?';
+	else{
+		int bit;
+		for(bit=0;bit<n;bit++)
+			if(b[arg]&(1LL<<bit))
+				break;
+		if(bit>=10)
+			cout << (char)(bit-10+'A');
+		else
+			cout << bit;
+	}
+}
+
+int main(void){
+	while(cin >> n >> m >> q){
+		if(n==0)
+			break;
+		ll sw=0LL;
+		rep(i,m) b[i]=((1LL<<n)-1LL);
+		rep(i,q){
+			ll nsw=0;
+			string tmp;
+			cin >> tmp;
+			rep(j,n){
+				if(tmp[j]=='1')
+					nsw|=(1LL<<j);
+			}
+			sw^=nsw;
+			cin >> tmp;
+			rep(j,m){
+				if(tmp[j]=='1')
+					b[j]&=sw;
+				else
+					b[j]&=(~sw);
+			}
+		}
+		rep(i,m) output(i);
+		cout << endl;
+	}
+
+	return 0;
+}

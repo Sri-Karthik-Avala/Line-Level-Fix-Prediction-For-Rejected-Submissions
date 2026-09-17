@@ -1,0 +1,86 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+using namespace std;
+
+char chair[128];
+int n, m;
+const int M = 2;
+
+void A() {
+	for(int i = 0; i < n; i++) {
+		if(chair[i+M] == 'N') {
+			chair[i+M] = 'A';
+			break;
+		}
+	}
+}
+
+void B() {
+	for(int i = n-1; i >= 0; i--) {
+		if(chair[i+M] == 'N' && chair[i+1+M] != 'A' && chair[i-1+M] != 'A') {
+			chair[i+M] = 'B';
+			return;
+		}
+	}
+	for(int i = 0; i < n; i++) {
+		if(chair[i+M] == 'N') {
+			chair[i+M] = 'B';
+			return;
+		}
+	}
+}
+
+void C() {
+	for(int i = 0; i < n; i++) {
+		if(chair[i+M] == 'N' && (chair[i-1+M] != 'N' || chair[i+1+M] != 'N')) {
+			chair[i+M] = 'C';
+			return;
+		}
+	}
+	chair[(n+1)/2+M] = 'C';
+}
+
+void D() {
+	int mx = 0;
+	int indx = 0;
+	for(int i = 0; i < n; i++) {
+		if(chair[i+M] == 'N') {
+			int mn = 1000;
+			for(int j = 0; j < n; j++) {
+				if(chair[j+M] != 'N') {
+					if(mn > abs(j - i))
+						mn = abs(j - i);
+				}
+			}
+			if(mn > mx) {
+				mx = mn;
+				indx = i;
+			}
+		}
+	}
+	chair[indx+M] = 'D';
+}
+
+int main() {
+	while(cin >> n >> m, n || m) {
+		for(int i = 0; i < 128; i++)
+			chair[i] = 'N';
+		for(int i = 0; i < m; i++) {
+			string s;
+			cin >> s;
+			if(s[0] == 'A')
+				A();
+			else if(s[0] == 'B')
+				B();
+			else if(s[0] == 'C')
+				C();
+			else
+				D();
+		}
+		for(int i = 0; i < n; i++) {
+			cout << (chair[i+M] == 'N' ? '#' : chair[i+M]);
+		}
+		cout << endl;
+	}
+}

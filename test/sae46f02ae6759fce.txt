@@ -1,0 +1,20 @@
+k, q = map(int, input().split())
+d = list(map(int, input().split()))
+for _ in range(q):
+    n, x, m = map(int, input().split())
+    a = list(map(lambda y: y % m, d))
+    c = 0
+    s = 0
+    c2 = 0
+    s2 = 0
+    for x in a:
+        if x == 0:
+            c += 1
+        s += x
+    for x in a[:(n - 1) % k]:
+        if x == 0:
+            c2 += 1
+        s2 += x
+    t = s * ((n - 1) // k) + s2 + x % m
+    ans = n - 1 - t // m - c * ((n - 1) // k) - c2
+    print(ans)

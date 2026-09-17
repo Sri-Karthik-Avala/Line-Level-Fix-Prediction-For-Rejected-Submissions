@@ -1,0 +1,5 @@
+n = int(input())
+s = input()
+ss = s.replace('()', '')
+left, right = ss.count('('), ss.count(')')
+print('(' * right + s + ')' * left)

@@ -1,0 +1,43 @@
+Pair of Primes 
+
+ 
+ We arrange the numbers between 1 and N (1 
+ 
+1 2 3 4 5 6 7 8 9 . . . N
+N . . . 9 8 7 6 5 4 3 2 1
+ 
+
+ 
+Two numbers faced each other form a pair. Your task is to compute the number of pairs P such that both
+numbers in the pairs are prime.
+
+ 
+
+ Input 
+
+ 
+Input contains several test cases. Each test case consists of an integer N in
+one line.
+
+ 
+
+ Output 
+
+ 
+For each line of input, output P .
+ 
+
+ Sample Input 
+ 
+1
+4
+7
+51
+ 
+
+ Output for the Sample Input 
+ 
+0
+2
+2
+6

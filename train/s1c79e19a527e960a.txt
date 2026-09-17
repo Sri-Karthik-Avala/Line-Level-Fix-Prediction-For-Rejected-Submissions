@@ -1,0 +1,18 @@
+n=int(input())
+
+dp=[set([0]) for i in range(101)]
+dp[0]=set([0])
+for i in range(n):
+    s=int(input())
+    for l in dp[i]:
+        dp[i+1].add(l+s)
+A=sorted(dp[n],reverse=1)
+#print(A)
+#print(dp)
+for i in A:
+    if i%10!=0:
+        print(i);exit()
+else:
+    print(0)
+
+

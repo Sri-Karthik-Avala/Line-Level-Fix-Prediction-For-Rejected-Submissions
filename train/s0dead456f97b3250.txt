@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define max(a,b) ((a)>(b)?(a):(b))
+#define min(a,b) ((a)<(b)?(a):(b))
+#define abs(a) max((a),-(a))
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define repe(i,n) rep(i,(n)+1)
+#define per(i,n) for(int i=(int)(n)-1;i>=0;i--)
+#define pere(i,n) rep(i,(n)+1)
+#define all(x) (x).begin(),(x).end()
+#define SP <<" "<<
+#define RET return 0
+#define MOD 1000000007
+#define INF 1000000000000000000
+
+typedef long long LL;
+typedef long double LD;
+
+int main(){
+  while(1){
+    string s;
+    cin >> s;
+    if(s=="#") return 0;
+    set<pair<string,int>> se;
+    se.insert({s,0});
+    string u;
+    bool okflag,henflag;
+    int pos;
+    for(char i='a';i<='z';i++){
+      // cout << i << endl;
+      list<pair<string,int>> add;
+      for(auto t:se){
+        // cout << t.first << endl;
+        pos=-1;
+        okflag=false,henflag=false;
+        if(i=='a') okflag=true;
+        for(int j=0;j<s.length();j++){
+          if(t.first[j]==i){
+            if(t.second&(1<<j)){
+              if(pos==-1) okflag=true,pos=j;
+            }else{
+              if(!okflag){
+                if(!henflag){
+                  if(i=='z') goto next;
+                  t.first[j]=i+1;
+                  t.second|=(1<<j);
+                  henflag=true;
+                }else{
+                  goto next;
+                }
+              }
+            }
+          }
+        }
+        // cout << t.first << endl;
+        add.push_back(t);
+        if((!henflag)&&okflag){
+          for(int j=pos+1;j<s.length();j++){
+            if(t.first[j]==i){
+              u=t.first;
+              u[j]=i+1;
+              add.push_back({u,t.second|(1<<j)});
+            }
+          }
+        }
+        next:
+        continue;
+      }
+      se.clear();
+      for(auto t:add){
+        se.insert(t);
+      }
+    }
+    cout << se.size() << endl;
+    if(se.size()<=10){
+      for(auto t:se){
+        cout << t.first << endl;
+      }
+    }else{
+      int c=0;
+      for(auto t=se.begin();t!=se.end();t++,c++){
+        cout << t->first << endl;
+        if(c>=4) break;
+      }
+      for(auto t=next(se.end(),-5);t!=se.end();t++){
+        cout << t->first << endl;
+      }
+    }
+  }
+  return 0;
+}
+

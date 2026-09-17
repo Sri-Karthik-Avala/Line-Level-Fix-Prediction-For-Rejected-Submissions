@@ -1,0 +1,15 @@
+def get_float():
+    while True:
+        try:
+            yield float(raw_input())
+        except EOFError:
+            break
+        
+v_lis = list(get_float())
+
+for v in v_lis:
+    t = v / 9.8
+    y = 4.9 * (t**2)
+    _N = (y + 5) / 5
+    N = int(round(_N))
+    print N

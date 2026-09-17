@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long;
+/*
+12    34
+  abcd
+12-ab cd-34は自由　2*2=4
+→にあるなら順番とわないみたいな
+
+1 2 3 4
+ a b c d
+ 
+1   2 3 4
+ a b c d
+1  2  3 4
+  a bc d
+  
+ 1  2  34
+a  b cd
+123
+    abc
+3*2=6
+
+12 3
+  a bc
+順番どおりにとるのが最短ではある
+12...3
+    a bc
+4+5+2=11
+*/
+int main(){
+  ll N; cin>>N;
+  ll MOD=1e9+7;
+  vector<pair<ll,ll>>C;
+  for(ll i=0; i<N; i++){
+    ll a; cin>>a;
+    C.push_back({a,1LL});
+  }
+  for(ll i=0; i<N; i++){
+    ll a; cin>>a;
+    C.push_back({a,-1LL});
+  }
+  sort(C.begin(), C.end(), [](auto& x, auto& y){return x.first < y.first;});
+  ll N2=N*2, ans=1, tmp=0, cnt=0;
+  for(ll i=0; i<N2; i++){
+    ll c2=C[i].second;
+    cnt+=c2;
+    if(cnt!=0) (ans*=abs(cnt))%=MOD;
+//cout<<"i:"<<i<<" tmp:"<<tmp<<" ans:"<<ans<<endl;    
+  }
+  cout<<ans<<endl;
+}

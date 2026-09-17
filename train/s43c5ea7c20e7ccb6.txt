@@ -1,0 +1,12 @@
+while 1:
+	n, k, s = map(int,raw_input().split())
+	if (n, k, s) == (0, 0, 0):
+		break
+	dp = [[0 for i in range(s)] for j in range(k)]
+	for x in range(1,n+1):
+		for j in range(k-1):
+			for i in range(s-x):
+				if dp[j+1][i] >= 1:
+					dp[j][i+x] += dp[j+1][i]
+		dp[k-1][x-1] = 1
+	print dp[0][s-1]

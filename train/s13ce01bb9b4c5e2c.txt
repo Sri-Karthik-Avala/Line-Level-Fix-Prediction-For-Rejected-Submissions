@@ -1,0 +1,111 @@
+#include <iostream>
+#include <cstdio>
+#include <cassert>
+#include <cstring>
+#include <vector>
+#include <valarray>
+#include <array>
+#include <queue>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+#include <algorithm>
+#include <cmath>
+#include <complex>
+#include <random>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> P;
+
+const ll MD = 1e9+7;
+
+int n;
+string st;
+
+
+P expr(int &s);
+
+P numb(int &s) {
+//    printf("numb %d\n", s);
+    while (isdigit(st[s])) s++;
+    return P(1, 1);
+}
+
+P fact(int &s) {
+//    printf("fact %d\n", s);
+    P a;
+    switch (st[s]) {
+    case 'x':
+        s++;
+        a = numb(s);
+        break;
+    case '~':
+        s++;
+        a = fact(s);
+        swap(a.first, a.second);
+        break;
+    case '(':
+        s++;
+        a = expr(s);
+        s++;
+        break;
+    }
+    return a;
+}
+
+P term(int &s) {
+//    printf("term %d\n", s);
+    P p = P(0, 1);
+    while (true) {
+        P d = fact(s);
+//        printf("term_res %lld %lld\n", d.first, d.second);
+        p.first = (ll)(p.first+p.second)*(d.first+d.second) % MD;
+        p.first -= (ll)p.second*d.second % MD;
+        p.first = (p.first % MD + MD) % MD;
+        p.second = (ll)p.second*d.second % MD;
+        if (s >= n) break;
+        if (st[s] != '&') break;
+        s++;
+    }
+    return p;
+}
+
+P expr(int &s) {
+//    printf("expr %d\n", s);
+    P p = P(1, 0);
+    while (true) {
+        P d = term(s);
+        p.second = (ll)(p.first+p.second) * (d.first+d.second) % MD;
+        p.second -= (ll)p.first * d.first % MD;
+        p.second = (p.second % MD + MD) % MD;
+        p.first = (ll)p.first*d.first % MD;
+        if (s >= n) break;
+        if (st[s] != '|') break;
+        s++;
+    }
+    return p;
+}
+
+
+void main2() {
+    cin >> st;
+    n = st.size();
+    int s = 0;
+    cout << expr(s).second << endl;
+}
+
+ll eord, enew;
+int main() {
+    const int SZ = 55*1024*1024;
+    void *p = malloc(SZ);
+    enew = (long long)p + SZ - 1;
+
+    __asm__("mov %rsp, eord");
+    __asm__("mov enew, %rsp");
+
+    main2();
+
+    __asm__("mov eord, %rsp");
+}

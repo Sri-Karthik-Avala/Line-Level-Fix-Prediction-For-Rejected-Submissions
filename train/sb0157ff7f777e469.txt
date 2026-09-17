@@ -1,0 +1,14 @@
+A=[]
+while True:
+	try:
+		x,y=map(int,input().split(','))
+		A.append((x,y))
+	except EOFError:
+		break
+amount_of_sales=0
+sales_number=0
+for i in A:
+	amount_of_sales+=i[0]*i[1]
+	sales_number+=i[1]
+print(amount_of_sales)
+print(int(sales_number/3+0.5))

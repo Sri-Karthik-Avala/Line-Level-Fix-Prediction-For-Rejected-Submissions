@@ -1,0 +1,24 @@
+n,m=map(int,input().split())
+E=[[] for _ in range(n)]
+for i in range(m):
+  a,b=map(int,input().split())
+  a-=1
+  b-=1
+  E[a].append(b)
+  E[b].append(a)
+dist=[10**7]*n
+dist[0]=0
+seen=[0]*n
+seen[0]=1
+stack=[0]
+while stack:
+  u=stack.pop(-1)
+  for v in E[u]:
+    if seen[v]!=1:
+      dist[v]=min(dist[u]+1,dist[v])
+      seen[v]=1
+      stack.append(v)
+if dist[n-1]==2:
+  print('POSSIBLE')
+else:
+  print('IMPOSSIBLE')

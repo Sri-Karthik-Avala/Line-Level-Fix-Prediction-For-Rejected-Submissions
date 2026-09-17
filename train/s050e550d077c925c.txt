@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define dump(...) cout<<"# "<<#__VA_ARGS__<<'='<<(__VA_ARGS__)<<endl
+#define repi(i,a,b) for(int i=int(a);i<int(b);i++)
+#define peri(i,a,b) for(int i=int(b);i-->int(a);)
+#define rep(i,n) repi(i,0,n)
+#define per(i,n) peri(i,0,n)
+#define all(c) begin(c),end(c)
+#define mp make_pair
+#define mt make_tuple
+
+typedef unsigned int uint;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<string> vs;
+
+constexpr int INF=1e9;
+constexpr int MOD=1e9+7;
+constexpr double EPS=1e-9;
+
+template<typename T1,typename T2>
+ostream& operator<<(ostream& os,const pair<T1,T2>& p){
+	return os<<'('<<p.first<<','<<p.second<<')';
+}
+template<typename Ostream,typename Container>
+Ostream& operator<<(Ostream& os,const Container& c){
+	os<<'[';
+	for(auto i=begin(c);i!=end(c);++i)
+		os<<(i==begin(c)?"":" ")<<*i;
+	return os<<']';
+}
+
+struct UnionFind{
+	vi data;
+	UnionFind(int n):data(n,-1){}
+	int Find(int i){
+		return data[i]<0?i:(data[i]=Find(data[i]));
+	}
+	bool Unite(int a,int b){
+		a=Find(a),b=Find(b);
+		if(a==b) return false;
+		if(-data[a]<-data[b]) swap(a,b);
+		data[a]+=data[b];
+		data[b]=a;
+		return true;
+	}
+	int Size(int i){
+		return -data[Find(i)];
+	}
+};
+
+int ModPow(int a,int r,int m)
+{
+	ll x=1;
+	per(i,32){
+		x=x*x%m;
+		if(r>>i&1)
+			x=x*a%m;
+	}
+	return x;
+}
+
+int main()
+{
+	dump(ModPow(3,5,MOD));
+	for(int n,m;cin>>n>>m && n|m;){
+		UnionFind uf(n);
+		int cc=n;
+		rep(i,m){
+			int a,b; cin>>a>>b; a--,b--;
+			cc-=uf.Unite(a,b);
+		}
+		int one=0; // サイズ1の連結成分の数
+		rep(i,n) one+=uf.data[i]==-1;
+		int two=cc-one; // サイズ2以上の連結成分の数
+		
+		ll res=ModPow(2,one,MOD);
+		if(two) res=(res*ModPow(2,two,MOD)+1)%MOD;
+		cout<<res<<endl;
+	}
+}

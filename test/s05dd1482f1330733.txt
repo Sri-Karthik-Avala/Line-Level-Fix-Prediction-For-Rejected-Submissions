@@ -1,0 +1,91 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>	
+#include<map>
+#include<set>
+#include<utility>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<stack>
+#include<cstdio>
+#include<sstream>
+#include<iomanip>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb push_back
+#define all(in) in.begin(),in.end()
+#define shosu(x) fixed<<setprecision(x)
+using namespace std;
+//kaewasuretyuui
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<pii> vp;
+typedef vector<vp> vvp;
+typedef vector<string> vs;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef pair<int,pii> pip;
+typedef vector<pip>vip;
+const double PI=acos(-1);
+const double EPS=1e-7;
+const int inf=1e8;
+int dx[4]={0,1,0,-1};
+int dy[4]={1,0,-1,0};
+int main(){
+	int n;
+	cin>>n;
+	string s;cin>>s;
+	
+	set<pii>se;
+	rep(i,n)if(s[i]=='1'){
+		pii t;t.second=i;
+		while(i!=n&&s[i]=='1')i++;
+		t.first=i;
+		se.insert(t);
+	}
+	int q;
+	cin>>q;
+	while(q--){
+		int a,b,c;cin>>a>>b>>c;
+		a--;
+		set<pii>::iterator it=se.upper_bound(pii(a,-inf));
+		if(it==se.end()){
+			if(c)se.insert(pii(b,a));
+		}else if(c){
+			if(it->second<a)a=it->second;
+			while(1){
+				if(it==se.end()||b<it->second)break;
+				if(b<it->first){
+					b=it->first;
+					se.erase(it);
+					break;
+				}
+				set<pii>::iterator it_t=it;
+				it++;
+				se.erase(it_t);
+			}
+			se.insert(pii(b,a));
+		}else{
+			if(it->second<a)se.insert(pii(a,it->second));
+			while(1){
+				if(it==se.end()||b<=it->second)break;
+				if(b<it->first){
+					se.insert(pii(it->first,b));
+					se.erase(it);
+					break;
+				}
+				set<pii>::iterator it_t=it;
+				it++;
+				se.erase(it_t);
+			}
+		}
+//		for(set<pii>::iterator ite=se.begin();ite!=se.end();ite++)
+//			cout<<ite->first<<" "<<ite->second<<endl;
+//		cout<<endl;
+		cout<<se.size()<<endl;
+	}
+}

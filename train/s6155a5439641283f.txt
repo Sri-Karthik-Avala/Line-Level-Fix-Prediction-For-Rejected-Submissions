@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define N 100000 + 5
+#define rep(i, l, r) for(int i = l; i <= r; ++i)
+struct node1{
+    int p, x, y;
+    bool operator < (const node1 &a) const{
+        return x == a.x ? y < a.y : x < a.x;
+    }
+}a[N];
+struct node2{
+    int p, x, y;
+    bool operator < (const node2 &a) const{
+        return y == a.y ? x < a.x : y < a.y;
+    }
+}b[N];
+int n, S, E, D, X, Y, ans, top, x[N], y[N], st[N];
+multiset <node1> S1; 
+multiset <node1> :: iterator it;
+multiset <node2> S2; 
+multiset <node2> :: iterator It;
+queue <int> Q;
+int read(){
+    char c; int x = 0, f = 1;
+    c = getchar();
+    while(c > '9' || c < '0'){ if(c == '-') f = -1; c = getchar();}
+    while(c >= '0' && c <= '9') x = x * 10 + c - '0', c = getchar();
+    return x * f;
+}
+void solve1(int X, int Y, int XX, int YY){
+    int last = 0;
+    int Fi = lower_bound(a + 1, a + n + 1, node1{1, X, Y}) - a;
+    int En = upper_bound(a + 1, a + n + 1, node1{1, XX, YY}) - a;
+    if(En > Fi) ans += En - Fi;
+    multiset <node1> :: iterator fi = S1.lower_bound(node1{1, X, Y}); if((*fi).x != X || fi == S1.end()) return;
+    multiset <node1> :: iterator en = S1.upper_bound(node1{1, XX, YY}); if(en == S1.begin()) return;
+    for(it = fi; it != en; ++it) st[++top] = (*it).p;
+    while(top){
+        Q.push(st[top]);
+        it = S1.lower_bound(node1{st[top], x[st[top]], y[st[top]]}); S1.erase(it);
+        It = S2.lower_bound(node2{st[top], x[st[top]], y[st[top]]}); S2.erase(It);
+        --top;
+    }
+}
+void solve2(int X, int Y, int XX, int YY){
+    int last = 0;
+    int Fi = lower_bound(b + 1, b + n + 1, node2{1, X + 1, Y}) - b;
+    int En = upper_bound(b + 1, b + n + 1, node2{1, XX - 1, YY}) - b;
+    if(En > Fi) ans += En - Fi;
+    multiset <node2> :: iterator fi = S2.lower_bound(node2{1, X, Y}); if((*fi).y != Y || fi == S2.end()) return;
+    multiset <node2> :: iterator en = S2.upper_bound(node2{1, XX, YY}); if(en == S2.begin()) return;
+    for(It = fi; It != en; ++It) st[++top] = (*It).p;
+    while(top){
+        Q.push(st[top]);
+        it = S1.lower_bound(node1{st[top], x[st[top]], y[st[top]]}); S1.erase(it);
+        It = S2.lower_bound(node2{st[top], x[st[top]], y[st[top]]}); S2.erase(It);
+        --top;
+    }
+}
+int main(){
+    n = read(), S = read(), E = read();
+    rep(i, 1, n) x[i] = read(), y[i] = read();
+    D = abs(x[S] - x[E]) + abs(y[S] - y[E]);
+    rep(i, 1, n) X = x[i], Y = y[i], x[i] = X - Y, y[i] = X + Y;
+    rep(i, 1, n) a[i].p = i, a[i].x = x[i], a[i].y = y[i], b[i].p = i, b[i].x = x[i], b[i].y = y[i];
+    rep(i, 1, n) if(i != S && i != E) S1.insert(node1{i, x[i], y[i]}), S2.insert(node2{i, x[i], y[i]});
+    sort(a + 1, a + n + 1), sort(b + 1, b + n + 1);
+    Q.push(S), Q.push(E);
+    while(!Q.empty()){
+        int u = Q.front(); Q.pop(); 
+        solve1(x[u] - D, y[u] - D, x[u] - D, y[u] + D); 
+        solve1(x[u] + D, y[u] - D, x[u] + D, y[u] + D); 
+        solve2(x[u] - D, y[u] - D, x[u] + D, y[u] - D); 
+        solve2(x[u] - D, y[u] + D, x[u] + D, y[u] + D); 
+    }
+    printf("%d", ans / 2);
+    return 0; 
+}

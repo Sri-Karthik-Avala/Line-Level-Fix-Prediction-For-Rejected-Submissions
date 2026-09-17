@@ -1,0 +1,181 @@
+Max Score: $1400$ Points 
+ 
+ Problem Statement 
+ E869120 defined a sequence $a$ like this: 
+ 
+ $a_1=a_2=1$, $a_{k+2}=a_{k+1}+a_k \ (k \ge 1)$ 
+ 
+ 
+ He also defined sequences $d_1, d_2, d_3, \dots , d_n$, as the following recurrence relation : 
+ 
+ $d_{1, j} = a_j$ 
+ $d_{i, j} = \sum_{k = 1}^j d_{i - 1, k} \ (i \ge 2)$ 
+ 
+ 
+ You are given integers $n$ and $m$. Please calculate the value of $d_{n, m}$. 
+ Since the answer can be large number, print the answer modulo $998,244,353$. 
+ Can you solve this problem??? 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input 
+ The input is given from standard input in the following format. 
+ 
+ $n \quad m$
+ 
+ 
+ 
+ 
+ 
+ Output 
+ 
+ Print $d_{n, m}$ modulo $998,244,353$. 
+ 
+ 
+ 
+ Constraints 
+ 
+ $1 \le n \le 200,000$ 
+ $1 \le m \le 10^{18}$ 
+ 
+ 
+ 
+ Subtasks 
+ Subtask 1 [ $100$ points ] 
+ 
+ The testcase in this subtask satisfies $1 \le n, m \le 3,000$. 
+ 
+ Subtask 2 [ $170$ points ] 
+ 
+ The testcase in this subtask satisfies $1 \le m \le 200,000$. 
+ 
+ Subtask 3 [ $230$ points ] 
+ 
+ The testcase in this subtask satisfies $1 \le n \le 3$. 
+ 
+ Subtask 4 [ $420$ points ] 
+ 
+ The testcase in this subtask satisfies $1 \le n \le 1000$. 
+ 
+ Subtask 5 [ $480$ points ] 
+ 
+ There are no additional constraints. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 
+ 
+4 7
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 
+ 
+176
+ 
+ The sequence is following: 
+ 
+ 
+ 
+ $d_{i, 1}$ 
+ $d_{i, 2}$ 
+ $d_{i, 3}$ 
+ $d_{i, 4}$ 
+ $d_{i, 5}$ 
+ $d_{i, 6}$ 
+ $d_{i, 7}$ 
+ 
+ 
+ $d_1$ 
+ 1 
+ 1 
+ 2 
+ 3 
+ 5 
+ 8 
+ 13 
+ 
+ 
+ $d_2$ 
+ 1 
+ 2 
+ 4 
+ 7 
+ 12 
+ 20 
+ 33 
+ 
+ 
+ $d_3$ 
+ 1 
+ 3 
+ 7 
+ 14 
+ 26 
+ 46 
+ 79 
+ 
+ 
+ $d_4$ 
+ 1 
+ 4 
+ 11 
+ 25 
+ 51 
+ 97 
+ 176 
+ 
+ 
+ 
+ As a result, the answer is $d_{4, 7} = 176$. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 
+ 
+12 20
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 
+ 
+174174144
+ 
+ 
+ Interesting number. It only contains $1$, $4$ and $7$. 
+ 
+ 
+ 
+ 
+ Sample Input 3 
+ 
+16 30
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 
+ 
+102292850
+ 
+ You can calculate that $d_{16, 30} = 1,193,004,294,685$. 
+ Please don't forget printing the answer mod $998,244,353$.
+ 
+ 
+ 
+ 
+ Writer：square1001

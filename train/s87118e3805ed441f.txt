@@ -1,0 +1,19 @@
+import string
+import sys
+
+alpha = string.ascii_lowercase
+
+for line in sys.stdin:
+    for i in range(len(alpha)):
+        cipher_str = ""
+        for s in line:
+            if s in alpha:
+                cipher_str += alpha[(alpha.index(s)+i) % len(alpha)]
+            else:
+                cipher_str += s
+
+        if ("the" or "this" or "that") in cipher_str:
+            print(cipher_str, end="")
+            break
+    else:
+        print(line, end="")

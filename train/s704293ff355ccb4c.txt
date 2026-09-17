@@ -1,0 +1,58 @@
+import copy
+import numpy as np
+
+def det(p, q):
+    return p[0]*q[1] - p[1]*q[0]
+def sub(p, q):
+    return (p[0]-q[0], p[1]-q[1])
+def get_convex_hull(points):
+    n = len(points)
+    points.sort()
+    size_convex_hull = 0
+    ch = []
+    for i in range(n):
+        while size_convex_hull > 1:
+            v_cur = sub(ch[-1], ch[-2])
+            v_new = sub(points[i], ch[-2])
+            if det(v_cur, v_new) > 0:
+                break
+            size_convex_hull -= 1
+            ch.pop()
+        ch.append(points[i])
+        size_convex_hull += 1
+
+    t = size_convex_hull
+    for i in range(n-2, -1, -1):
+        while size_convex_hull > t:
+            v_cur = sub(ch[-1], ch[-2])
+            v_new = sub(points[i], ch[-2])
+            if det(v_cur, v_new) > 0:
+                break
+            size_convex_hull -= 1
+            ch.pop()
+        ch.append(points[i])
+        size_convex_hull += 1
+
+    return ch[:-1]
+
+N,*xyf = map(int, open(0).read().split())
+xy = [(xyf[i*2],xyf[i*2+1]) for i in range(N)]
+xyc = copy.deepcopy(xy)
+ans = [0] * (N)
+ch = get_convex_hull(xyc)
+ch.sort(key=lambda x:(x[0],x[1]))
+chs = set(ch)
+l = len(ch)
+for i in range(N):
+    if xy[i] in chs:
+        ind = ch.index(xy[i])
+        a = (ch[ind-1],ch[ind])
+        b = (ch[ind],ch[(ind+1)%l])
+        u = np.array([a[0][0]-a[1][0],a[1][1]-a[0][1]])
+        v = np.array([b[0][0]-b[1][0],b[1][1]-b[0][1]])
+        inn = np.inner(u,v)
+        nor = np.linalg.norm(u) * np.linalg.norm(v)
+        cos = inn / nor
+        ans[i] = (np.arccos(np.clip(cos, -1.0, 1.0))/(2*np.pi))
+for x in ans:
+    print(x)

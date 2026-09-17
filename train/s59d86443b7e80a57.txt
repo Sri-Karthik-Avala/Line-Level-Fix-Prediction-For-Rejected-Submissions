@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+typedef long double ld;
+typedef vector<vector<int>> Graph;
+const int dx[4] = {1, 0, -1, 0};
+const int dy[4] = {0, 1, 0, -1};
+#define pi 3.14159265359
+#define inf 2147483647
+#define INF 9223372036854775807
+#define mod 1000000007
+#define mod2 998244353
+
+int modPow(long long a, long long n, long long p) {
+    if (n == 0) return 1;
+    if (n == 1) return a % p;
+    if (n % 2 == 1) return (a * modPow(a, n - 1, p)) % p;
+    long long t = modPow(a, n / 2, p);
+    return (t * t) % p;
+}
+
+int main() {
+	string S; cin >> S;
+	int size = S.size();
+	vector<ll> right(size);
+	map<int, int> m;
+	for(int i = size - 1; i >= 0; i--) {
+		if(i == size - 1) {
+			right[size - 1] = S[size - 1] - '0';
+			m[right[size - 1]] = 1;
+			continue;
+		}
+		right[i] = (right[i + 1] + (S[i] - '0') * modPow(10, size - 1 - i, 2019)) % 2019;
+		if(!m.count(right[i])) m[right[i]] = 1;
+		else m[right[i]]++;
+	}
+	int ans = 0;
+	for(auto p: m) {
+		ans += (p.second * (p.second - 1)) / 2;
+		if(p.first == 0) ans++;
+	}
+	cout << ans << endl;
+	return 0;
+}

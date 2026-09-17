@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+	char input[21];
+	char po;
+	int i = 0;
+	int b = 0;
+	int check = 0;
+
+	while(cin >> input){
+			i = 0; b = 0; check = 0;
+		while(1){
+			if(b == 0 && input[i] == 'A'){
+				po = input[i];
+				b = 1;
+				check = 1;
+			}else if(b == 1 && input[i] == 'Z'){
+				cout << po << input[i];
+				b = 0;
+			}
+			if(input[i] == '\0') break;
+			i++;
+			
+		}
+		if(check == 0) cout << -1;
+		cout << endl;
+	}
+
+}

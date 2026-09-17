@@ -1,0 +1,85 @@
+#include <iostream>
+#include <cstdio>
+#include <fstream>
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <deque>
+#include <vector>
+#include <queue>
+#include <string>
+#include <cstring>
+#include <map>
+#include <stack>
+#include <set>
+#include <sstream>
+#define IOS ios_base::sync_with_stdio(0); cin.tie(0);
+#define mod 1000000007
+#define eps 1e-6
+#define ll long long
+#define INF 0x3f3f3f3f
+#define MEM(x,y) memset(x,y,sizeof(x))
+#define pb push_back
+#define mk make_pair
+#define pi pair<int, int>
+#define rep(i, a, b) for (int i = (a); i <= (b); ++i)
+#define per(i,a,b) for(int i=a;i>=(b);--i)
+using namespace std;
+int dt[][2]= {{1,0},{-1,0},{0,1},{0,-1},{0,0}};
+//typedef pair<int, int> P;
+//priority_queue<int, vector<int>, greater<int> > q;
+
+const int N = 3e5+5;
+int n,m;
+int tr[N];
+struct node
+{
+   int l,r,len;
+   bool operator < (const node& b)const
+   {
+      return len < b.len;
+   }
+}s[N];
+vector<int>v[N];
+
+int lowbit(int x)
+{
+   return x&-x;
+}
+
+void add(int x,int c)
+{
+   for(int i=x;i<=n;i+=lowbit(i))tr[i]+=c;
+}
+
+int sum(int x)
+{
+   int res = 0;
+   for(int i=x;i;i-=lowbit(i))res += tr[i];
+   return res;
+}
+
+int main()
+{
+   IOS;
+   cin >> n >> m;
+   rep(i,1,n)
+   {
+      int l,r;
+      cin >> l >> r;
+      s[i] = {l,r,r-l+1};
+   }
+   sort(s+1,s+1+n);//区间长度从小到大排序
+   for(int i=1,j=1;i<=m;++i)//m种停车间隔
+   {
+      while(j<=n&&s[j].len<i)
+      {
+         add(s[j].l,1);
+         add(s[j].r+1,-1);
+         ++j;
+      }
+      int ans = n-j+1;
+      for(int k=i;k<=m;k+=i)ans += sum(k);
+      cout << ans <<endl;
+   }
+}

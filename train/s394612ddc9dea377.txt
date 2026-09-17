@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int N, M;
+int A[200010], dp[1000010];
+deque<int> dq;
+
+int main() {
+    scanf("%d", &N);
+
+    int sum = 0;
+    for(int i = 0; i < N - 1; i++) {
+        scanf("%d", &A[i]);
+        if(i >= 2) sum += A[i];
+    }
+
+    for(int i = 0; i < sum; i++) {
+        dq.push_back(i);
+    }
+    for(int i = 3; i < N; i++) {
+        for(int j = 0; j < A[i - 1]; j++) {
+            dq.push_front(dq[2*j + 1]);
+        }
+    }
+
+    scanf("%d", &M);
+
+    for(int i = 0; i < M; i++) {
+        int x; scanf("%d", &x);
+
+        if(x >= dq.size()) {
+            printf("%d\n", A[0] - A[1] + x - sum);
+        }
+        else printf("%d\n", A[0] - A[1] + dq[x]);
+    }
+}

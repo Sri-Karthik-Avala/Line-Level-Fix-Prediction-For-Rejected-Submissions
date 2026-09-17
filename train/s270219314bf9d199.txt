@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+//#define int long long
+#define all(v) begin(v), end(v)
+#define rep(i, n) for(int i = 0; i < (int)(n); i++)
+#define reps(i, s, n) for(int i = (int)(s); i < (int)(n); i++)
+
+const int inf = 1<<25;//1LL << 55;
+const int mod = 1e9 + 7;
+
+struct edge {
+  int to, cost;
+  edge(){}
+  edge(int to, int cost):to(to), cost(cost){}
+};
+
+struct state {
+  int v, cost, rt, te;
+  state(){}
+  state(int v, int cost, int rt, int te):v(v), cost(cost), rt(rt), te(te){}
+  bool operator < (const state& r) const {
+    return cost > r.cost;
+  }
+};
+
+int N, M, X;
+int T[10010];
+
+vector<edge> G[10010];
+int mincost[2][202][10010];
+
+int dijkstra()
+{
+  rep(i, 2) rep(j, 202) rep(k, 10010) mincost[i][j][k] = inf;
+  priority_queue<state> que;
+  que.emplace(0, 0, 0, 0);
+  mincost[0][0][0] = 0;
+  while(!que.empty()) {
+    state s = que.top(); que.pop();
+    if(s.v == N-1) return s.cost;
+    if(s.cost > mincost[s.rt/2][s.te][s.v]) continue;
+    for(edge& e : G[s.v]) {
+      if(abs(s.rt - T[e.to]) == 2 && s.te + e.cost < X) continue;
+      int nrt = s.rt, nte = max(s.te + e.cost, X);
+      if(T[e.to] != 1) nrt = T[e.to], nte = 0;
+      if(s.cost + e.cost < mincost[nrt/2][nte][e.to]) {
+	mincost[nrt/2][nte][e.to] = s.cost + e.cost;
+	que.emplace(e.to, s.cost + e.cost, nrt, nte);
+      }
+    }
+  }
+  return -1;
+}
+
+signed main()
+{
+  cin.tie(0);
+  ios_base::sync_with_stdio(0);
+  cout << fixed << setprecision(12);
+
+  cin >> N >> M >> X;
+  rep(i, N) cin >> T[i];
+  rep(i, M) {
+    int A, B, D;
+    cin >> A >> B >> D; A--, B--;
+    G[A].emplace_back(B, D);
+    G[B].emplace_back(A, D);
+  }
+
+  cout << dijkstra() << endl;
+
+  return 0;
+}

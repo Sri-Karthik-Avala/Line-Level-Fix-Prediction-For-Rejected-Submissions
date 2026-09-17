@@ -1,0 +1,88 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+#include<cstdio>
+long long pow10[25];
+long long keep[25];
+long long way[25][2];
+//way[i]: number of pair (a,b) that a-b+offset = i
+//0: a[0,9] 1: a[1,9]
+
+void preWork(){
+	int offset = 10;
+	for(int i = -9; i <= 9; i++) way[i+offset][0] = way[i+offset][1] = 0;
+	for(int a = 0; a <= 9; a++){
+		for(int b = 0; b <= 9; b++){
+			int u = a-b;
+			way[u+offset][0]++;
+			if(b!=0) way[u+offset][1]++;
+		}
+	}
+	pow10[0] = 1;
+	for(int i = 1; i <= 20; i++) pow10[i] = pow10[i-1]*10ll;
+}
+
+long long getWay(int n){
+	int offset = 10;
+	long long res = 1;
+	for(int i = n; i >= 1; i--){
+		int j = n-i+1;
+		if(i<j) break;
+		if(i==n) res *= way[keep[i]+offset][1];
+		else res *= way[keep[i]+offset][0];
+	}
+	return res;
+}
+//reduce the constant
+int main(){
+	preWork();
+	long long d;
+	scanf("%lld",&d);
+	long long ans = 0;
+	for(int bit = 0; bit <= 20; bit++){
+		//0 for positive, 1 for neg
+		for(int mask = 0; mask < (1<<bit); mask++){
+			int u = mask; long long sum = 0;
+			//printf("mask = %d\n",mask);
+			long long add = 1ll;
+			for(int i = 1; i <= bit; i++){
+				long long mod = pow10[i], need = d%pow10[i];
+				int s = 0, t = 9;
+				if(u%2) s = -9, t = -1;
+				u /= 2;
+				long long find = -111;
+				for(long long j = s; j <= t; j++){
+					long long left = (j*pow10[i-1]%mod+sum%mod)%mod; if(left<0) left += mod;
+					if(left==need){
+						find = j;
+						break;
+					}
+				}
+				if(find==-111){
+					 add = 0;
+					 break;
+				 }
+				else{
+					keep[i] = find;
+					sum += find*pow10[i-1];
+					int j = bit-i+1;
+					if(i>=j){
+						if(keep[i]+keep[j]!=0){
+							add = 0;
+							break;
+						} 
+						else{
+							int offset = 10;
+							if(i==bit) add *= way[keep[i]+offset][1];
+							else add *= way[keep[i]+offset][0];
+						}
+					}
+				}
+			}
+			if(sum!=d) add = 0;
+			ans += add;
+		}
+		//printf("ans = %lld\n",ans);
+	}
+	printf("%lld\n",ans);
+	return 0;
+}

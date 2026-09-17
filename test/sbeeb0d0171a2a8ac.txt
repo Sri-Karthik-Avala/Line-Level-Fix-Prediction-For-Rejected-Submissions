@@ -1,0 +1,5 @@
+n, m = list(map(int, input()))
+if n*n == m*n:
+  print('Yes')
+else:
+  print('No')

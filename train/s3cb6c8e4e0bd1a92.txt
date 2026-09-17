@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define pb push_back
+#define fr first
+#define sc second
+typedef vector<int> vi;
+typedef pair<int,int> pii;
+typedef pair<int,pii> pip; 
+const int INF = (1<<25);
+const int dx[]={1,0,-1,0},dy[]={0,-1,0,1};
+
+int main(){
+  int y1,m1,d1,y2,m2,d2;
+  while(cin>>y1 >>m1 >>d1 >>y2 >>m2 >>d2){
+    if(y1<0 || m1<0 ||  d1<0 ||  y2<0 || m2<0 ||  d2<0) break;
+    long long int total1=0,total2=0;
+    for(int i=0;i<y1;i++){
+      if(i%400==0 || (i%100!=0 && i%4==0)){
+	total1+=366;
+	 
+      }else {
+	total1+=365;
+      }
+    }
+
+    for(int i=0;i<y2;i++){
+      if(i%400==0 || (i%100!=0 && i%4==0)){
+	total2+=366;
+	  
+      }else {
+	total2+=365;
+      }
+    }
+
+    for(int i=1;i<m1;i++){
+      if(i==2){
+	if(y1%400==0 || ( y1%100!=0 || y1%4==0)){
+	  total1+=29;
+	  
+	}
+	else total1+=28;
+      }
+      else if(i==4 || i==6 || i==9 || i==11){
+	total1+=30;
+      }
+      else total1+=31;
+    }
+    
+    for(int i=1;i<m2;i++){
+      if(i==2){
+	if(y2%400==0 || ( y2%100!=0 && y2%4==0)){
+	    total2+=29;
+	  
+	}
+	else total2+=28;
+      }
+      else if(i==4 || i==6 || i==9 || i==11){
+	total2+=30;
+      }
+      else total2+=31;
+    }
+
+    total1+=d1;
+    total2+=d2;
+    cout<< total2-total1<< endl;
+  }
+}

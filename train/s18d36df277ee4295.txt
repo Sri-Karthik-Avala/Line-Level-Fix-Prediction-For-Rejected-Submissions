@@ -1,0 +1,64 @@
+#include<iomanip>
+#include<limits>
+#include<thread>
+#include<utility>
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<vector>
+#include<stack>
+#include<queue>
+#include<cmath>
+#include<numeric>
+#include<cassert>
+#include<random>
+#include<chrono>
+#include<unordered_set>
+#include<unordered_map>
+#include<fstream>
+#include<list>
+#include<functional>
+#include<bitset>
+#include<complex>
+#include<tuple>
+using namespace std;
+typedef unsigned long long int ull;
+typedef long long int ll;
+typedef pair<ll,ll> pll;
+typedef pair<int,int> pi;
+typedef pair<double,double> pd;
+typedef pair<double,ll> pdl;
+#define F first
+#define S second
+const ll E=1e18+7;
+const ll MOD=1000000007;
+
+int main(){
+    ll n,w;
+    cin>>n>>w;
+    vector<ll> a(n);
+    for(auto &I:a){cin>>I;}
+    sort(a.begin(),a.end());
+    vector<ll> A(n,0);
+    A[0]=a[0];
+    for(int i=1;i<n;i++){A[i]=A[i-1]; A[i]+=a[i];}
+    vector<ll> dp(w+1,0);
+    dp[0]=1;
+    ll ans=0;
+    if(A.back()<=w){ans++;}
+    for(ll i=n-1;i>0;i--){
+        for(ll t=w;t>=0;t--){
+            if(t+a[i]<=w){dp[t+a[i]]+=dp[t]; dp[t+a[i]]%=MOD;}
+        }
+        for(ll t=0;t<=w;t++){
+            if(t+(i==1?0LL:A[i-2])<=w && t+A[i-1]>w){ans+=dp[t]; ans%=MOD;}
+        }
+    }
+    cout<<ans<<endl;
+    
+    
+    return 0;
+}
+

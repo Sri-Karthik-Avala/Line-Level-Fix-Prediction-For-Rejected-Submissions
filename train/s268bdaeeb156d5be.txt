@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#define ll long long
+using namespace std;
+
+/*
+	a[i] + b[j] + c[k] + d[l] = V
+		???	a[i] = V - b[j] - c[k] - d[l]	(	O(N) + O(N^3) ?? )
+		???	a[i] + b[j] = V - c[k] - d[l]	(	O(N^2) + O(N^2)	???)
+
+*/
+
+int main() {
+	cin.tie(0);ios::sync_with_stdio(false);
+	ll N, V, ans = 0; cin >> N >> V;
+	vector<ll> a(N), b(N), c(N), d(N);
+	map<ll, ll> sum_cnt;
+	for (int i = 0; i < N; i++) cin >> a[i];
+	for (int i = 0; i < N; i++) cin >> b[i];
+	for (int i = 0; i < N; i++) cin >> c[i];
+	for (int i = 0; i < N; i++) cin >> d[i];
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			sum_cnt[a[i] + b[i]]++;
+		}
+	}
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			ans += sum_cnt[V - c[i] - d[j]];
+		}
+	}
+	cout << ans << endl;
+}

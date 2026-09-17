@@ -1,0 +1,66 @@
+Diameter of a Convex Polygon 
+ 
+
+ 
+Find the diameter of a convex polygon g . In other words, find a pair of points that have maximum distance between them.
+ 
+
+ Input 
+
+ 
+ n 
+ x 1 y 1 
+ x 2 y 2 
+:
+ x n y n 
+ 
+
+ 
+The first integer n is the number of points in g . 
+ 
+
+ 
+In the following lines, the coordinate of the i -th point p i is given by two real numbers x i and y i . The coordinates of points are given in the order of counter-clockwise visit of them. Each value is a real number with at most 6 digits after the decimal point.
+ 
+
+ Output 
+
+ 
+Print the diameter of g in a line. The output values should be in a decimal fraction with an error less than 0.000001.
+ 
+
+ Constraints 
+
+ 
+ 
+3 &le; n &le; 80000
+ 
+ 
+-100 &le; x i , y i &le; 100
+ 
+ No point in the g will occur more than once. 
+ 
+
+ Sample Input 1 
+ 
+3
+0.0 0.0
+4.0 0.0
+2.0 2.0
+ 
+ Sample Output 1 
+ 
+4.00
+ 
+
+ Sample Input 2 
+ 
+4
+0.0 0.0
+1.0 0.0
+1.0 1.0
+0.0 1.0
+ 
+ Sample Output 2 
+ 
+1.414213562373

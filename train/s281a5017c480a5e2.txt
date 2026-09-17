@@ -1,0 +1,17 @@
+N = int(input())
+for i in range(N):
+    x,y,b,p = list(map(int,input().split()))
+
+
+    def calc(x,y,b,p):
+        m = min(p//2,b//5)
+        return 0.8*(5*m*x + 2*m*y) + (b-5*m)*x + (p-2*m)*y
+    
+    v = []
+    v.append(calc(x,y,b,p))
+    add_p = 2 - p % 2
+    add_b = 5 - b % 5
+    v.append(calc(x,y,b+add_b,p))
+    v.append(calc(x,y,b,p+add_p))
+    v.append(calc(x,y,b+add_b,p+add_p))
+    print(int(min(v)))

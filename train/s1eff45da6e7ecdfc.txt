@@ -1,0 +1,114 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> pii;
+
+const ll INF = 1000000000000000000ll;
+
+ll dist;
+int n, m;
+vector<ll> S, D;
+
+bool check(int a, ll t, const vector<int> &order, vector<int> &used, const vector<ll> &stime){
+	bool valid = true;
+	for(int i = 0; valid && i < a; ++i){
+		ll g0 = stime[order[i]] + S[order[i]] * dist;
+		ll g1 = t + S[order[a]] * dist;
+		bool crossing = false;
+		if(order[i] < order[a]){
+			if(stime[order[i]] >= t){ valid = false; }
+			if(g0 > g1){ crossing = true; }
+		}else{
+			if(stime[order[i]] <= t){ valid = false; }
+			if(g0 < g1){ crossing = true; }
+		}
+		if(crossing){
+			int pos = -1;
+			for(int j = 0; pos < 0 && j < m; ++j){
+				if(used[order[i]] & (1 << j)){ continue; }
+				ll ta = D[j] * S[order[i]] + stime[order[i]];
+				ll tb = D[j] * S[order[a]] + t;
+				if(ta == tb){ pos = j; }
+			}
+			if(pos < 0){
+				valid = false;
+			}else{
+				used[order[i]] |= (1 << pos);
+				used[order[a]] |= (1 << pos);
+			}
+		}
+	}
+	return valid;
+}
+
+ll solve(int a, const vector<int> &order, const vector<int> &used, vector<ll> &stime){
+	if(a == 0){
+		int index = order[a];
+		stime[index] = 0;
+		return solve(1, order, used, stime);
+	}else if(a == n){
+		ll start = INF, goal = -INF;
+		for(int i = 0; i < n; ++i){
+			start = min(start, stime[i]);
+			goal = max(goal, stime[i] + S[i] * dist);
+		}
+		return goal - start;
+	}else{
+		ll result = INF;
+		int index = order[a];
+		for(int i = 0; i < a; ++i){
+			int c = order[i];
+			for(int j = 0; j <= m; ++j){
+				if(used[c] & (1 << j)){ continue; }
+				ll d = (j == m ? dist : D[j]);
+				ll t = d * S[c] + stime[c] - d * S[index];
+				vector<int> next_used(used);
+				if(!check(a, t, order, next_used, stime)){ continue; }
+				stime[order[a]] = t;
+				result = min(solve(a + 1, order, next_used, stime), result);
+			}
+		}
+		ll t = -INF;
+		for(int i = 0; i < a; ++i){
+			if(order[i] < order[a]){
+				t = max(t, order[a] - order[i] + stime[order[i]]);
+			}
+		}
+		if(t <= -INF){
+			for(int i = 0; i < a; ++i){
+				if(order[i] > order[a]){
+					t = max(t, stime[order[i]] - (order[a] - order[i]));
+				}
+			}
+		}
+		vector<int> next_used(used);
+		if(check(a, t, order, next_used, stime)){
+			stime[order[a]] = t;
+			result = min(solve(a + 1, order, next_used, stime), result);
+		}
+		return result;
+	}
+}
+
+int main(){
+	cin >> dist >> n;
+	S.resize(n);
+	for(int i = 0; i < n; ++i){ cin >> S[i]; }
+	cin >> m;
+	D.resize(m);
+	for(int i = 0; i < m; ++i){ cin >> D[i]; }
+	vector<int> order(n);
+	for(int i = 0; i < n; ++i){ order[i] = i; }
+	ll answer = INF;
+	do {
+		vector<int> used(n);
+		vector<ll> stime(n);
+		answer = min(answer, solve(0, order, used, stime));
+	} while(!next_permutation(order.begin(), order.end()));
+	cout << answer << endl;
+	return 0;
+}

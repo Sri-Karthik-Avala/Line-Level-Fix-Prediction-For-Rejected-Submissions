@@ -1,0 +1,63 @@
+Problem H: Squid Multiplication 
+ 
+Squid Eiko loves mathematics.
+Especially she loves to think about integer.
+One day, Eiko found a math problem from a website.
+ 
+
+ 
+"A sequence b ={ a i + a j | i &lt j } is generated from a sequence a ={ a 0 , ... , a n | a i is even if i is 0, otherwise a i is odd}. Given the sequence b , find the sequence a ."
+ 
+
+ 
+This problem is easy for Eiko and she feels boring. So, she made a new problem by modifying this problem .
+ 
+
+ 
+"A sequence b ={ a i * a j | i < j } is generated from a sequence a ={ a 0 , ... , a n | a i is even if i is 0, otherwise a i is odd}. Given the sequence b , find the sequence a ."
+ 
+
+ 
+Your task is to solve the problem made by Eiko.
+ 
+
+ Input 
+ 
+Input consists of multiple datasets. 
+Each dataset is given by following formats.
+ 
+ 
+ n 
+ b 0 b 1 ... b n*(n+1)/2-1 
+ 
+
+ 
+ n is the number of odd integers in the sequence a . The range of n is 2 &le; n &le; 250.
+ b i is separated by a space.
+Each b i is 1 &le; b i &le; 2 63 -1.
+The end of the input consists of a single 0.
+ 
+
+ Output 
+ 
+For each dataset, you should output two lines.
+First line contains a 0 , an even number in the sequence a .
+The second line contains n odd elements separated by a space. The odd elements are sorted by increasing order.
+You can assume that the result is greater than or equal to 1 and less than or equal to 2 31 -1.
+ 
+
+ Sample input 
+ 
+3
+6 10 14 15 21 35
+2
+30 42 35
+0
+ 
+
+ Sample output 
+ 
+2
+3 5 7
+6
+5 7

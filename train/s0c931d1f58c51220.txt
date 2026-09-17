@@ -1,0 +1,9 @@
+N = int(input())
+S = input().strip()
+cmax = 0
+for i in range(1,N//2+1):
+    A = set(list(S[:i]))
+    B = set(list(S[i:]))
+    C = A&B
+    cmax = max(cmax,len(C))
+print(cmax)

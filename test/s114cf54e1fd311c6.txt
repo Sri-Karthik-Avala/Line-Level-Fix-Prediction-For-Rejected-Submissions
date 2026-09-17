@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+int n;
+int ax[5000],ay[5000];
+int bx[5000],by[5000];
+
+vector< ll > X,Y;
+
+vector< int > Ga[5000];
+vector< int > Gb[5000];
+
+int main(){
+  cin>>n;
+  for(int i=0;i<n;i++){
+    cin>>ax[i]>>ay[i]>>bx[i]>>by[i];
+    X.push_back(ax[i]);
+    Y.push_back(ay[i]);
+    X.push_back(bx[i]);
+    Y.push_back(by[i]);
+  }
+  sort(X.begin(),X.end());
+  sort(Y.begin(),Y.end());
+  X.erase( unique( X.begin(), X.end()) , X.end() );
+  Y.erase( unique( Y.begin(), Y.end()) , Y.end() );
+  
+  for(int i=0;i<n;i++){
+    ax[i]=lower_bound(X.begin(),X.end(),ax[i])-X.begin();
+    ay[i]=lower_bound(Y.begin(),Y.end(),ay[i])-Y.begin();
+    bx[i]=lower_bound(X.begin(),X.end(),bx[i])-X.begin();
+    by[i]=lower_bound(Y.begin(),Y.end(),by[i])-Y.begin();
+
+    Ga[ ay[i] ].push_back( ax[i] );
+    Ga[ ay[i] ].push_back( bx[i] );
+    Gb[ by[i] ].push_back( ax[i] );
+    Gb[ by[i] ].push_back( bx[i] );
+  }
+  ll ans=0;
+  int f[3000]={};
+  for(int y=0;y+1<(int)Y.size();y++){
+    for(int i=0;i<(int)Ga[y].size();i+=2){
+      int si=Ga[y][i];
+      int ti=Ga[y][i+1];
+      for(int x=si;x<ti;x++)f[x]++;
+    }
+    for(int i=0;i<(int)Gb[y].size();i+=2){
+      int si=Gb[y][i];
+      int ti=Gb[y][i+1];
+      for(int x=si;x<ti;x++)f[x]--;
+    }
+    for(int x=0;x+1<(int)X.size();x++){
+      if(f[x]==0)continue;
+      ans+=(Y[y+1]-Y[y])*(X[x+1]-X[x]);
+    }
+  }
+  cout<<ans<<endl;
+  return 0;
+}

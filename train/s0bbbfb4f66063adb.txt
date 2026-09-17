@@ -1,0 +1,78 @@
+#include <algorithm>
+#include <climits>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+typedef long long ll;
+ll MOD = 1000000007;
+
+struct bit {
+	vector<ll> v;
+	bit(int n) : v(n + 1) {}
+	ll sum(int i) {
+		ll res = 0;
+		for (; i > 0; i -= i & -i) res += v[i];
+		return res;
+	}
+	void add(int i, ll x) {
+		for (i++; i < v.size(); i += i & -i) v[i] += x;
+	}
+};
+
+int B = 1000;
+
+int main() {
+	int N; cin >> N;
+	vector<int> p(N);
+	for (int i = 0; i < N; i++) {
+		scanf("%d", &p[i]);
+		p[i]--;
+	}
+	int Q; cin >> Q;
+	vector<vector<int> > query(N);
+	vector<int> l(Q), r(Q);
+	for (int q = 0; q < Q; q++) {
+		scanf("%d%d", &l[q], &r[q]);
+		l[q]--; r[q]--;
+		query[r[q]].push_back(q);
+	}
+	vector<int> index(N, -1);
+	bit bt(N);
+	vector<int> A(N / B + 1);
+	vector<vector<int> > v(N / B + 1);
+	vector<vector<ll> > sum(N / B + 1, vector<ll>(1));
+	ll cur = 0;
+	vector<ll> ans(Q);
+	for (int i = 0; i < N; i++) {
+		for (int x = N - 1; x > p[i];) {
+			if (x % B == B - 1) {
+				A[x / B]++;
+				cur += v[x / B].size();
+				x -= B;
+			}
+			else {
+				if (index[x] != -1) {
+					bt.add(index[x], 1);
+					cur++;
+				}
+				x--;
+			}
+		}
+		int x = p[i];
+		index[x] = i;
+		ll prev = sum[x / B].back();
+		v[x / B].push_back(i);
+		sum[x / B].push_back(prev + A[x / B]);
+		for (int k = 0; k < query[i].size(); k++) {
+			int q = query[i][k];
+			ans[q] = cur - bt.sum(l[q]);
+			for (int i = 0; i <= N / B; i++) {
+				int j = lower_bound(v[i].begin(), v[i].end(), l[q]) - v[i].begin();
+				ans[q] -= (ll)j * A[i] - sum[i][j];
+			}
+		}
+	}
+	for (int q = 0; q < Q; q++)
+		printf("%lld\n", ans[q]);
+}

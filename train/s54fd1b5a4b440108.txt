@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+using ll = long long;
+
+class Dijkstra {
+  using QItem = pair<int, int>;
+
+ public:
+  vector<ll> minDistance(vector<vector<pair<int, ll>>> &distances, int n,
+                         int src) {
+    vector<ll> costs(n, -1);
+    costs[src] = 0;
+
+    vector<bool> used(n, false);
+    priority_queue<QItem, vector<QItem>, greater<QItem>> q;
+    q.push({0, src});
+
+    while (!q.empty()) {
+      // 未確定で，コストの一番低いノードを選択する
+      auto [min_cost, min_idx] = q.top();
+      q.pop();
+
+      // 選択したノードは確定とする
+      used[min_idx] = true;
+
+      // 選択したノードの隣接ノードについて，そのコストを再計算する
+      for (auto &p : distances[min_idx]) {
+        ll new_cost = min_cost + p.second;
+        if (costs[p.first] < 0 || costs[p.first] > new_cost) {
+          costs[p.first] = new_cost;
+          q.push({new_cost, p.first});
+        }
+      }
+    }
+
+    return costs;
+  }
+};
+
+int main(int argc, const char *argv[]) {
+  int n, m, s;
+  cin >> n >> m >> s;
+
+  // costs[i][j]: (移動先，運賃，時間)
+  vector<vector<array<ll, 3>>> costs(n);
+  ll max_a = 0;
+  for (int i = 0; i < m; i++) {
+    ll u, v, a, b;
+    cin >> u >> v >> a >> b;
+    u--;
+    v--;
+    max_a = max(max_a, a);
+    costs[u].push_back({v, a, b});
+    costs[v].push_back({u, a, b});
+  }
+
+  // (枚数，交換にかかる時間)
+  vector<pair<ll, ll>> rates(n);
+  for (auto &r : rates) {
+    cin >> r.first >> r.second;
+  }
+
+  // 銀貨の必要最大枚数
+  int max_s = max_a * m;
+  s = min(s, max_s);
+
+  auto calc_key = [&](int i, int s) { return (max_s + 1) * i + min(s, max_s); };
+
+  // 頂点と辺を増やす
+  // distances[i][j] = (繋がっている先，コスト)
+  vector<vector<pair<int, ll>>> distances(n * (max_s + 1));
+  for (int i = 0; i < n; ++i) {
+    // それぞれの都市について処理する
+    // j枚銀貨を持っている時，コストを払うことで銀貨を増やせる
+    for (int j = 0; j <= max_s; ++j) {
+      int idx = calc_key(i, j);
+      if (j != max_s) {
+        auto [r_amount, r_cost] = rates[i];
+        distances[idx].push_back({calc_key(i, j + r_amount), r_cost});
+      }
+
+      for (auto &c : costs[i]) {
+        if (j >= c[1]) {
+          distances[idx].push_back({calc_key(c[0], j - c[1]), c[2]});
+        }
+      }
+    }
+  }
+
+  Dijkstra d;
+  vector<ll> dists = d.minDistance(distances, distances.size(), s);
+  vector<ll> ans(n);
+  for (int i = 1; i < n; ++i) {
+    ans[i] = dists[calc_key(i, 0)];
+    for (int j = 0; j <= max_s; ++j) {
+      ans[i] = min(ans[i], dists[calc_key(i, j)]);
+    }
+  }
+
+  for (int i = 1; i < ans.size(); ++i) {
+    cout << ans[i] << '\n';
+  }
+
+  return 0;
+}

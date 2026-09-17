@@ -1,0 +1,11 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);++i)
+double PI = acos(-1);
+int main() {
+  double a,b,c; cin >> a >> b >> c;
+  c *= PI/180;
+  cout << (a*b/2.0*sin(c)) << endl;
+  cout << sqrt(a*a+b*b-2*a*b*cos(c))+a+b << endl;
+  cout << (b*sin(c)) << endl;
+}

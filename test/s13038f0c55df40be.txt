@@ -1,0 +1,109 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 24;
+
+constexpr int kMaxXY = 1e5 + 1;
+constexpr int kN = 1e5 * 4;
+
+int memox[kMaxXY];
+int memoy[kMaxXY];
+int p[kN];
+
+int root(int idx){
+    if(p[idx] == idx) return idx;
+
+    return p[idx] = root(p[idx]);
+}
+
+int main(void){
+    for(int n, w, h; cin >> n >> w >> h;){
+        int numIdx = 0;
+        vi cnt(n);
+
+        // x = 0, x = w - 1, y = 0, y = h - 1
+        vvi cntSumi(n, vi(4));
+
+        fill(memox, memox + kMaxXY, -1);
+        fill(memoy, memoy + kMaxXY, -1);
+
+        rep(loop, n){
+            int x, y; cin >> x >> y; x--, y--;
+            int idx; //root
+            
+            if(memox[x] != -1 && memoy[y] != -1){
+                idx = root(memox[x]);
+
+                if(root(memox[x]) != root(memoy[y])){
+                    //union r2 -> r1(new root)
+                    int r1 = idx, r2 = root(memoy[y]);
+
+                    cnt[r1] += cnt[r2]; cnt[r2] = 0;
+                    rep(i, 4) cntSumi[r1][i] += cntSumi[r2][i], cntSumi[r2][i] = 0;
+
+                    p[r2] = root(memoy[y]);
+                }
+            }
+            else if(memox[x] != -1){
+                idx = memoy[y] = root(memox[x]);
+            }
+            else if(memoy[y] != -1){
+                idx = memox[x] = root(memoy[y]);
+            }
+            else {
+                p[numIdx] = numIdx;
+                idx = memox[x] = memoy[y] = numIdx++;
+            }
+
+            if(x ==   0) cntSumi[idx][0]++;
+            if(x == w-1) cntSumi[idx][1]++;
+            if(y ==   0) cntSumi[idx][2]++;
+            if(y == h-1) cntSumi[idx][3]++;
+
+            cnt[idx]++;
+        }
+
+        int res = 0, numS = 0;
+        vi numSumi(4);
+        rep(i, numIdx){
+            if(cnt[i] != 0) res += cnt[i] - 1, numS++;
+
+            rep(j, 4){
+                if(cntSumi[i][j] != 0){
+                    numSumi[j]++;
+                }
+            }
+        }
+        if(numS != 1) res += (numS - *max_element(all(numSumi))) + numS - 1;
+
+        cout << res << endl;
+    }
+
+	return 0;
+}

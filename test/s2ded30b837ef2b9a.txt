@@ -1,0 +1,20 @@
+#include<cstdio>
+using namespace std;
+int main(void)
+{
+	int s,s1,s2,s3,i,j,x,y,a,b;
+	scanf("%d",&s);
+	scanf("%d",&s1);
+	scanf("%d",&s2);
+	scanf("%d",&s3);
+	a=s+s1+s2+s3;
+	if(a>60){
+		x=a/60;
+		y=a%60;
+		printf("%d\n%d\n",x,y);
+	}
+	else{
+		printf("%d\n",a);
+	}
+	return 0;
+}

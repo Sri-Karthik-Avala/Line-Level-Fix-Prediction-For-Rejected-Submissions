@@ -1,0 +1,13 @@
+n=input()
+a=raw_input()
+count=0
+for r in range(n):
+	b=raw_input()
+	l=len(b)
+	for s in range(l):
+		for i in range(len(b)-(s+1)*(len(a)-1)):
+			if b[i:i+(s+1)*len(a):s+1]==a:
+				count+=1
+				break
+print count
+	

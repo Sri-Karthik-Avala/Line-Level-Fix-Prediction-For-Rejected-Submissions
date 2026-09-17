@@ -1,0 +1,22 @@
+#include<iostream>
+using namespace std;
+int solve(int p1, int p2, int p3, int p4) {
+	if (p1 >= 5)p1 = 0; if (p2 >= 5)p2 = 0; if (p3 >= 5)p3 = 0; if (p4 >= 5)p4 = 0;
+	if (p1 == 0 && p2 == 0)return 0;
+	if (p3 == 0 && p4 == 0)return 0;
+	int G[6] = { 0,0,0,0,0,0 };
+	if (p1 != 0 && p3 != 0) { G[solve(p3 + p1, p4, p1, p2)] = 1; }
+	if (p1 != 0 && p4 != 0) { G[solve(p3, p4 + p1, p1, p2)] = 1; }
+	if (p2 != 0 && p3 != 0) { G[solve(p3 + p2, p4, p1, p2)] = 1; }
+	if (p2 != 0 && p4 != 0) { G[solve(p3, p4 + p2, p1, p2)] = 1; }
+	for (int i = 0; i < 6; i++) {
+		if (G[i] == 0) { cout << p1 << ' ' << p2 << ' ' << p3 << ' ' << p4 << ' ' << i << endl; return i; }
+	}
+}
+int main() {
+	int v1, v2, v3, v4; cin >> v1 >> v2 >> v3 >> v4;
+	int res = solve(v1, v2, v3, v4);
+	if (res == 0)cout << "NAKAJIMA" << endl;
+	else cout << "ISONO" << endl;
+	return 0;
+}

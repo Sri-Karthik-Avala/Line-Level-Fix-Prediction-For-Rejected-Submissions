@@ -1,0 +1,95 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+ll w,h,v,t,x,y,p,q;
+
+inline ll xget(ll i){
+	ll res=p;
+	if(i&1){
+		res+=2*(w-p);
+		res+=w*(i-1);
+	}else{
+		res+=w*i;
+	}
+	return res;
+}
+
+inline ll yget(ll i){
+	ll res=q;
+	if(i&1){
+		res+=2*(h-q);
+		res+=h*(i-1);
+	}else{
+		res+=h*i;
+	}
+	return res;
+}
+
+
+int main(void){
+	cin >> w >> h >> v >> t >> x >> y >> p >> q;
+	ll ans=0;
+	ll d=(v*t)*(v*t);
+	int dmax=(v*t)/w+10;
+	for(int i=-dmax;i<=dmax;++i){
+		ll xcur=xget(i)-x;
+		ll ycursq=d-xcur*xcur;
+		if(ycursq<0) continue;
+		ll ylimit=sqrt(ycursq);
+		ll l=-1,r=ylimit+10;
+		while(r-l>1){
+			ll m=(r+l)/2;
+			ll ycur=yget(m)-y;
+			if(ycur*ycur<=ycursq)
+				l=m;
+			else
+				r=m;
+		}
+		ll upper=l;
+		l=-ylimit-10,r=1;
+		while(r-l>1){
+			ll m=(r+l)/2;
+			ll ycur=yget(m)-y;
+			if(ycur*ycur<=ycursq)
+				r=m;
+			else
+				l=m;
+		}
+		ll lower=r;
+		ll cur=0;
+		if(lower<=0) cur-=lower;
+		if(0<=upper) cur+=upper;
+		if(lower<=upper) cur++;
+		ans+=cur;
+	}
+	cout << ans << endl;
+	return 0;
+}

@@ -1,0 +1,10 @@
+#include<iostream>
+
+int main(){
+  int sum=0, i;
+  for(int j=0; j<=10; j++){
+    std::cin >> i;
+    sum=sum+i;
+  }
+  std::cout << sum << std::endl;
+}

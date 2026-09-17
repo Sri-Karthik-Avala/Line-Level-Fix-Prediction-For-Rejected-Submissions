@@ -1,0 +1,107 @@
+/*
+___mennat khoday ra azz o va jall ke taatash mojebe ghorbat ast o be shokr andarash mazide nemat.
+___har nafasi ke foro miravad momedde hayatast o chon bar miayad mofarrahe zat.
+___pas dar har nafasi 2 nemat mojod ast o bar har nematy shokry vajeb.
+
+___az dast o zabane ke barayad ?
+___kaz ohdeye shokrash be dar ayad !
+
+
+___man be to dami gharar natvanam kard
+___va ehsane to ra shomar natvanam kard
+####################
+___gar bar tane man zaban shavad har moyee
+___yek shokre to az hezar natvanam kard
+
+*/
+
+#include <bits/stdc++.h>
+
+#define pb push_back
+#define SALI main
+#define left(x) ((x)*2)
+#define right(x) (((x)*2)+1)
+#define fuck(x) cout << #x << " : " << x << endl;
+#define findLowVec(v,x) (lower_bound(v.begin(), v.end(), x) - v.begin())
+#define findUpVec(v,x) (upper_bound(v.begin(), v.end(), x) - v.begin())
+#define findLowArr(a,n,x) (lower_bound(a, a+n, x) - a)
+#define findUpArr(a,n,x) (upper_bound(a, a+n, x) - a)
+#define int long long
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef long double ld;
+
+template<class A, class B> ostream& operator <<(ostream& out, const pair<A, B> &p)
+{return out << "(" << p.first << ", " << p.second << ")";}
+
+template<class A> ostream& operator <<(ostream& out, const vector<A> &v)
+{out << "[";for(int i = 0; i < v.size(); i++) {if(i) out << ", ";out << v[i];}return out << "]";}
+
+template<class A,class B> ostream& operator <<(ostream& out, const set<A,B> &s)
+{out << "[";for(auto i = s.begin(); i != s.end(); i++) {out << ", ";out << *i;}return out << "]";}
+
+template<class A> ostream& operator <<(ostream& out, const set<A> &s)
+{out << "[";for(auto i = s.begin(); i != s.end(); i++) {out << ", ";out << *i;}return out << "]";}
+
+const int N = 2e5 + 10;
+const int K = 3e3 + 10;
+const int mod = 1e9 + 7;
+int f[N];
+int vf[N];
+int dp[K];
+vector<pii> v;
+int h,w,n;
+
+
+int power(int n, int k)
+{
+    if(k == 0) return 1;
+    int tmp = power(n,k/2); tmp *= tmp; tmp %= mod;
+    return (k&1 ? (tmp*n)%mod : tmp);
+}
+
+int binomial(int n,int k){
+    return ((f[n]*vf[k] % mod)*vf[n - k]) % mod;
+}
+
+int invoker(int n, int m)
+{
+    return binomial(n+m-2,m-1);
+}
+
+int bad_path(int id, int i) //
+{
+    int a = v[id].first; int b = v[id].second;
+    int x = v[i].first; int y = v[i].second;
+    return (invoker(a-x+1,b-y+1) * dp[i]) % mod;
+}
+
+void calc(int id)
+{
+    int tmp = 0;
+    for(int i = 0; i < id; i++){
+        tmp += bad_path(id,i);
+        tmp %= mod;
+    }
+    int ans = invoker(v[id].first, v[id].second);
+    ans -= tmp; ans %= mod; ans += mod; ans %= mod;
+    dp[id] = ans;
+}
+int32_t SALI()
+{
+    ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+    cin >> h >> w >> n; f[0] = vf[0] = 1;
+    for(int i = 1; i < N; i++){f[i] = (f[i-1] * i) % mod; vf[i] = power(f[i] , mod-2);}
+    for(int i = 0; i < n; i++){int x,y; cin >> x >> y; v.pb(pii(x,y));}
+    v.pb(pii(h,w)); sort(v.begin(),v.end());
+    for(int i = 0; i <= n; i++) calc(i);
+    cout << (((dp[n]%mod)+mod)%mod);
+}
+
+
+
+/**< WRITEN BY ALI ADELKHAH */
+

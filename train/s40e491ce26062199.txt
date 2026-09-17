@@ -1,0 +1,66 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <map>
+#include <algorithm>
+
+const int LIM = 1e5 + 5;
+
+int n, dsu[LIM], a[LIM], b[LIM];
+long long ans;
+std::map<int, int> map;
+std::queue<int> q;
+
+int root(int x)
+{
+	if (dsu[x] <= 0) return x;
+	else return dsu[x] = root(dsu[x]);
+}
+
+void merge(int x, int y)
+{
+	x = root(x); y = root(y);
+	if (x != y)
+	{
+		if (dsu[x] < dsu[y])
+			std::swap(x, y);
+		dsu[y] += dsu[x];
+		dsu[x] = y;	
+	}
+}
+
+int main()
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; ++i)
+	{
+		scanf("%d", &a[i]);
+		b[i] = a[i];
+	}
+	
+	std::sort(b + 1, b + n + 1);
+	for (int i = 1; i <= n; ++i)
+		map[b[i]] = i;
+	for (int i = 1; i <= n; ++i)
+		a[i] = map[a[i]];
+	a[n + 1] = n + 1;
+	
+	memset(dsu, 0xff, sizeof(dsu));
+	for (int i = 1; i <= n; ++i)
+		q.push(a[i]);
+		
+	for (int i = 1; i <= n; ++i)
+	{
+		int s = root(q.front()); q.pop();
+		while (root(i) != root(s))
+		{
+			merge(s, q.front());
+			q.pop();
+		}
+		ans -= ++dsu[root(s)];
+//		printf("%d -> %d\n", i, -dsu[root(s)]);
+		q.push(root(s));
+	}
+	printf("%lld\n", ans);
+}

@@ -1,0 +1,7 @@
+n=input()
+m=len(n)
+
+cnt=0
+for i in range(m):
+    cnt +=n[i+1:].count(n[i])
+print(m*(m-1)//2-cnt+1)

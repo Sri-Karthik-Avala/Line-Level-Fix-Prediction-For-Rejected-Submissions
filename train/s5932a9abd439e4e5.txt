@@ -1,0 +1,30 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n,m,dr[19][190][190][190],td[190][190],nw;
+char mp[200][200];
+int main(){
+	scanf("%d%d",&n,&m);
+	for(int i=1;i<=n;++i)scanf("%s",mp[i]+1);
+	for(int i=n;i>=1;--i)for(int j=m;j>=1;--j)td[i][j]=(mp[i][j]==mp[i+1][j]?td[i+1][j]:i);
+	for(int i=1;i<=n;++i)for(int j=1;j<=m;++j){
+		nw=1e6;
+		for(int k=j;k<=m;++k){
+			if(mp[i][k]!=mp[i][j])nw=i-1;
+			nw=min(nw,td[i][k]);
+			dr[0][i][j][k]=nw;
+		}
+	}
+	if(dr[0][1][1][m]==n)return puts("0"),0;
+	for(int t=1;;++t){
+		for(int i=1;i<=n;++i)for(int j=1;j<=m;++j)for(int k=j;k<=m;++k)dr[t][i][j][k]=max(dr[t-1][i][j][k],dr[t-1][dr[t-1][i][j][k]+1][j][k]);
+		for(int i=1;i<=n;++i)for(int j=1;j<=m;++j){
+			nw=j;
+			for(int k=j+1;k<=m;++k){
+				while(nw<k-1&&dr[t-1][i][j][nw+1]>=dr[t-1][i][nw+2][k])++nw;
+				dr[t][i][j][k]=max(dr[t][i][j][k],max(min(dr[t-1][i][j][nw-1],dr[t-1][i][nw][k]),min(dr[t-1][i][j][nw],dr[t-1][i][nw+1][k])));
+			}
+		}
+		if(dr[t][1][1][m]==n)return printf("%d",t),0;
+	}
+	return 0;
+}

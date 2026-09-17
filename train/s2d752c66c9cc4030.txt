@@ -1,0 +1,106 @@
+#define _USE_MATH_DEFINES
+#include <algorithm>
+#include <cstdio>
+#include <functional>
+#include <iostream>
+#include <cfloat>
+#include <climits>
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <time.h>
+#include <vector>
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> i_i;
+typedef pair<ll, int> ll_i;
+typedef pair<double, int> d_i;
+typedef pair<ll, ll> ll_ll;
+typedef pair<double, double> d_d;
+struct edge { int u, v; ll w; };
+
+ll MOD = 1000000007;
+ll _MOD = 1000000009;
+double EPS = 1e-10;
+
+vector<string> split(string s) {
+	int n = s.length();
+	if (s[n - 1] == '/') s += "unko";
+	s += '/';
+	s.erase(s.begin());
+	vector<string> v;
+	while (!s.empty()) {
+		int i = s.find('/');
+		v.push_back(s.substr(0, i));
+		s.erase(0, i + 1);
+	}
+	return v;
+}
+
+struct node {
+	bool leaf;
+	int par;
+	map<string, int> ch;
+};
+
+int main() {
+	for (;;) {
+		int N, M; cin >> N >> M;
+		if (N == 0 && M == 0) break;
+		vector<node> v(2);
+		v[1].leaf = true; v[1].par = 0;
+		while (N--) {
+			string s; cin >> s;
+			vector<string> w = split(s);
+			int k = 1;
+			for (int j = 0; j < w.size(); j++) {
+				string& t = w[j];
+				if (!v[k].ch[t]) {
+					v[k].leaf = false;
+					v[k].ch[t] = v.size();
+					node n; n.leaf = true; n.par = k;
+					v.push_back(n);
+				}
+				k = v[k].ch[t];
+			}
+		}
+		while (M--) {
+			int a[2];
+			for (int i = 0; i < 2; i++) {
+				string s; cin >> s;
+				if (s == "") {
+					a[i] = 0;
+					continue;
+				}
+				vector<string> w = split(s);
+				int& k = a[i];
+				k = 1;
+				for (int j = 0; j < w.size(); j++) {
+					string& t = w[j];
+					if (t == "unko") k = v[k].ch["index.html"];
+					else if (t == ".");
+					else if (t == "..") {
+						if (v[k].leaf) k = 0;
+						else k = v[k].par;
+					}
+					else k = v[k].ch[t];
+					if (k == 0) break;
+				}
+				int n = w.size();
+				if (w[n - 1] != "unko" && w[n - 1] != "..")
+					if (!v[k].leaf)
+						k = v[k].ch["index.html"];
+				if (!v[k].leaf) k = 0;
+			}
+			if (a[0] && a[1]) cout << (a[0] == a[1] ? "yes" : "no") << endl;
+			else cout << "not found" << endl;
+		}
+	}
+}

@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<n;i++)
+#define INF 1000000007
+using namespace std;
+
+int main(){
+  long n,m;
+  cin >> n >> m;
+  vector<vector<long>> edge(n);
+  vector<vector<long>> w(n);
+  long maxc = 0;
+  rep(i,m){
+    long a,b,c;
+    cin >> a >> b >> c;
+    a--;b--;
+    edge[a].push_back(b);
+    w[a].push_back(c);
+    c = max(labs(c),maxc);
+  }
+  vector<long> score(n,-n*maxc);
+  vector<long> flag(n,0);
+  score[0] = 0;
+  flag[0] = 0;
+  vector<bool> update(n);
+  rep(ii,n){
+    rep(i,n) update[i] = false;
+    rep(i,n){
+      if(score[i] == -n*maxc)continue;
+      rep(j,int(edge[i].size())){
+        if(score[i] + w[i][j] > score[edge[i][j]] || flag[edge[i][j]] == 0){
+          update[edge[i][j]] = true;
+          flag[edge[i][j]] = 1;
+          score[edge[i][j]] = score[i] + w[i][j];
+        }
+      }
+    }
+  }
+  /*
+  long ans = score[n-1];
+  rep(i,n)update[i] = false;
+  rep(i,n){
+    rep(j,n){
+      rep(k,int(edge[j].size())){
+        if(score[j] + w[j][k] > score[edge[j][k]]){
+          score[edge[j][k]] = score[j] + w[j][k];
+          update[edge[j][k]] = true;
+        }
+      }
+    }
+  }
+  */
+  if(update[n-1] == true){
+    cout << "inf\n";
+  }else cout << score[n-1] << endl;
+  return 0;
+}

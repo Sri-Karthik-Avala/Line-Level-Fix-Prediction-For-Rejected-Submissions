@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+using namespace std;
+#define INF 1000000000
+
+int memo[50][860][860];
+int N;
+int sum = 0;
+vector<int> t;
+
+int dfs(int i, int x, int y){
+	if(i == N){
+		int z = sum - x - y;
+		return max({x,y,z});
+	}
+	if(memo[i][x][y]>=0) return memo[i][x][y];
+	int ans = INF;
+	if(x+t[i]<860) ans = min(ans,dfs(i+1,x+t[i],y));
+	if(y+t[i]<860) ans = min(ans,dfs(i+1,x,y+t[i]));
+	if(sum-x-y+t[i]<860) ans = min(ans,dfs(i+1,x,y));
+	memo[i][x][y] = ans;
+	return ans;
+}
+
+int main(void){
+	memset(memo,-1,sizeof(memo));
+	cin >> N;
+	t.resize(N);
+	for(int i = 0; i < N; ++i){
+		cin >> t[i];
+		sum += t[i];
+	}
+	cout << dfs(0,0,0) << endl;
+	return 0;
+}

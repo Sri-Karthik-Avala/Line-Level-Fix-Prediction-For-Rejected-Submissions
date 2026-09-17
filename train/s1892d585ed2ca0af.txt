@@ -1,0 +1,43 @@
+#include<iostream>
+using namespace std;
+typedef long long ll;
+int main(){
+  ll q1,b,c1,c2,q2;
+  cin >> q1;
+  while(q1!=0){
+    cin >> b >> c1 >> c2 >> q2;
+    ll x1=0,x2=0,m=min(c1,c2);
+    bool f=false;
+    //cout << b-min(c1,c2)*q1 << endl;
+    if(b<m*q1) f=true;
+    
+    if(c1<=c2){
+      while(b>=c1*(x1+1)&&x1<q2) x1++;
+      while(b>=c1*x1+c2*(x2+1)) x2++;
+      if(x1==0) f=true;
+      if(f) cout << "NA" << endl;
+      else cout << x1 << " " << x2 << endl;
+      cin >> q1;
+    }else{
+      ll s=c1-c2,sum=0;
+      sum=q1*m;
+      while(b-sum>=s*(x1+1)&&x1<q1&&x1<q2) {
+        x1++; 
+        //cout << b-sum<<":"<<s*x1<<endl;
+        //cout << x1<<":"<<c1*x1<<endl;
+      }
+      if(x1==q1)
+        while(b>=c1*(x1+1)&&x1 + 1<=q2) x1++;
+      //while(b>=c1*x1+c2*(x2+1)) x2++;
+      
+      if(x1==0) f=true;
+      x2=0;
+      while(b>=c1*x1+c2*(x2+1)) x2++;
+      if(f) cout << "NA" << endl;
+      else cout << x1 << " " << x2 << endl;
+      //cout << c1*x1+c2*x2 << endl;
+      cin >> q1;
+    }
+  }
+  return 0;
+}

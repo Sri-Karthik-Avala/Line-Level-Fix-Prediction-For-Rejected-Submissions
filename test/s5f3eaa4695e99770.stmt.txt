@@ -1,0 +1,47 @@
+Pattern Search 
+
+ 
+Find places where a R &times C pattern is found within a H &times; W region. Print top-left coordinates ( i , j ) of sub-regions where the pattern found. The top-left and bottom-right coordinates of the region is (0, 0) and ( H -1, W -1) respectively.
+ 
+
+ Input 
+
+ 
+ In the first line, two integers H and W are given. In the following H lines, i -th lines of the region are given.
+ 
+
+ 
+ In the next line, two integers R and C are given. In the following R lines, i -th lines of the pattern are given.
+ 
+
+ output 
+
+ 
+ For each sub-region found, print a coordinate i and j separated by a space character in a line. Print the coordinates in ascending order of the row numbers ( i ), or the column numbers ( j ) in case of a tie.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; H, W &le; 1000 
+ 1 &le; R, C &le; 1000 
+ The input consists of alphabetical characters and digits 
+ 
+
+ Sample Input 1 
+ 
+4 5
+00010
+00101
+00010
+00100
+3 2
+10
+01
+10
+ 
+
+ Sample Output 1 
+ 
+0 3
+1 2

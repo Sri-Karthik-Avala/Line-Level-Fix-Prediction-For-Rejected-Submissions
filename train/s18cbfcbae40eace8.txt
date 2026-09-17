@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+#define FOR(i,k,n) for(int i = (k); i < (n); i++)
+#define REP(i,n) FOR(i,0,n)
+#define ALL(a) begin(a),end(a)
+#define MS(m,v) memset(m,v,sizeof(m))
+#define D10  fixed<<setprecision(10)
+typedef vector<int> vi;
+typedef vector<string> vs;
+typedef pair<int, int> P;
+typedef long long ll;
+const ll INF = 114514810;
+const ll MOD = 1000000007;
+const double EPS = 1e-8;
+const double PI = acos(-1.0);
+struct edge
+{
+	int from, to, cost;
+	bool operator < (const edge& e) const { return cost < e.cost; }
+	bool operator >(const edge& e) const { return cost > e.cost; }
+};
+int dx[] = { -1, 0, 0, 1 }; int dy[] = { 0, -1, 1, 0 };
+bool valid(int x, int y, int h, int w) { return (x >= 0 && y >= 0 && x < h&&y < w); }
+///*************************************************************************************///
+///*************************************************************************************///
+///*************************************************************************************///
+
+int main()
+{
+	int n;
+	int d[101][101];
+	REP(i, 101)REP(j, 101) d[i][j] = (i == j ? 0 : INF);
+	cin >> n;
+	REP(i, n)
+	{
+		int a, b;
+		cin >> a >> b;
+		REP(j, b)
+		{
+			int k;
+			cin >> k;
+			k--;
+			d[i][k] = 1;
+		}
+	}
+	REP(k, 101)REP(i, 101)REP(j, 101) d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+	int q;
+	cin >> q;
+	while (q--)
+	{
+		int a, b, c;
+		cin >> a >> b >> c;
+		a--; b--;
+		if (d[a][b] < c) cout << d[a][b]+1 << endl;
+		else puts("NA");
+	}
+	return 0;
+}

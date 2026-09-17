@@ -1,0 +1,10 @@
+def solve():
+    n = int(input())
+    A = map(int, input().split())
+    W = [0] * (n + 1)
+    for a_i in A:
+        W[a_i] = max(W[:a_i]) + a_i
+    ans = n * (n + 1) // 2 - max(W)
+    print(ans)
+
+solve()

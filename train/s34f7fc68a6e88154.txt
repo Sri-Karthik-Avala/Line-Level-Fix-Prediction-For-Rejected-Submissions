@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+const int IINF = INT_MAX;
+typedef pair<string,string> s2;
+int n,d;
+string name[210];
+unordered_set<string> memo;
+
+void dfs(int cur,string s,const string &target,int cost,int &mini){
+  if( cost >= mini ) return;
+  if( cost > d ) return;
+  //cout << s << endl;
+  if( cur >= target.size() ) {
+    rep(i,s.size()) if( i >= target.size() && s[i] != ' ' ) ++cost;
+    mini = min(mini,cost);
+
+    return;
+  }
+  if( s[cur] == target[cur] ) {
+    dfs(cur+1,s,target,cost,mini);
+    return;
+  }
+
+  if( memo.count(s) ) return;
+
+  string ns;
+  //  Delete
+  if( s[cur] != ' ' ) {
+    ns = s.substr(0,cur) + s.substr(cur+1) + " ";
+    dfs(cur,ns,target,cost+1,mini);
+  }
+
+  // Insert
+  ns = s.substr(0,cur) + target[cur] + s.substr(cur);
+  dfs(cur+1,ns,target,cost+1,mini);
+
+  // Replace
+  if( s[cur] != ' ' ) {
+    ns = s;
+    ns[cur] = target[cur];
+    dfs(cur+1,ns,target,cost+1,mini);
+  }
+
+  // Swap
+  ns = s;
+  if( ns[cur+1] == target[cur] ) {
+    swap(ns[cur+1],ns[cur]);
+    dfs(cur+1,ns,target,cost+1,mini);
+    swap(ns[cur+1],ns[cur]);
+  }
+  memo.insert(s);
+}
+
+int compute(string a,string b){
+  if( (int)a.size() > (int)b.size() ) swap(a,b);
+  a = a + string((int)b.size()-(int)a.size(),' ');
+  memo.clear();
+  int mini = b.size();
+  dfs(0,a,b,0,mini);
+  return mini;
+}
+
+int main(){
+
+  while( cin >> n,n ){
+    cin >> d;
+    rep(i,n) cin >> name[i];
+    vector<s2> vec;
+    rep(i,n) REP(j,i+1,n){
+      int dist = compute(name[i],name[j]);
+      string a = name[i], b = name[j];
+      if( a > b ) swap(a,b);
+      if( dist <= d ) vec.push_back(s2(a,b));
+    }
+    sort(vec.begin(),vec.end());    
+    rep(i,vec.size()) cout << vec[i].first << "," << vec[i].second << endl;
+    cout << (int)vec.size() << endl;
+  }
+  return 0;
+}

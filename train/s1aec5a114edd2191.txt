@@ -1,0 +1,88 @@
+#include <bits/stdc++.h>
+using namespace std;
+const double PI = acos(-1);
+
+// convex hull
+vector<pair<int,int>> convex_hull(vector<pair<int,int>> point){
+    sort(point.begin(), point.end());
+    int n = point.size();
+    int vertices = 0;
+    vector<pair<int,int>> conv(2 * n);
+
+    // lower half
+    for(int i=0; i<n; i++){
+        while(vertices >= 2){
+            long long int dx1 = conv[vertices-1].first  - conv[vertices-2].first;
+            long long int dy1 = conv[vertices-1].second - conv[vertices-2].second;
+            long long int dx2 = point[i].first  - conv[vertices-1].first;
+            long long int dy2 = point[i].second - conv[vertices-1].second;
+
+            long long int det = dx1 * dy2 - dx2 * dy1;
+            if(det < 0) vertices -= 1;// remove conv[vertices-1]
+            else break;
+        }
+        conv[vertices] = point[i];
+        vertices += 1;
+    }
+
+    int memo = vertices;
+
+    // upper half
+    for(int i=n-2; i>=0; i--){
+        while(vertices > memo){
+            long long int dx1 = conv[vertices-1].first  - conv[vertices-2].first;
+            long long int dy1 = conv[vertices-1].second - conv[vertices-2].second;
+            long long int dx2 = point[i].first  - conv[vertices-1].first;
+            long long int dy2 = point[i].second - conv[vertices-1].second;
+
+            long long int det = dx1 * dy2 - dx2 * dy1;
+            if(det < 0) vertices -= 1;// remove conv[vertices-1]
+            else break;
+        }
+        conv[vertices] = point[i];
+        vertices += 1;
+    }
+    vertices -= 1;
+    conv.resize(vertices);
+    return conv;
+}
+
+int main(){
+    int n;
+    cin >> n;
+
+    vector<pair<int, int>> hole(n);
+    map<pair<int,int>, int> id;
+    for(int i=0; i<n; i++){
+        int x, y;
+        cin >> x >> y;
+        hole[i] = {x, y};
+        id[{x,y}] = i;
+    }
+    sort(hole.begin(),hole.end());
+    vector<pair<int, int>> ch = convex_hull(hole);
+    ch.push_back(ch[0]);
+    ch.push_back(ch[1]);
+    int v = ch.size();
+
+    vector<double> ans(n);
+    for(int p=1; p+1<v; p++){
+        //cout << ch[p].first << " " << ch[p].second << endl;
+        int i = id[ch[p]];
+
+        int dx1 = ch[p-1].first  - ch[p].first;
+        int dy1 = ch[p-1].second - ch[p].second;
+        int dx2 = ch[p+1].first  - ch[p].first;
+        int dy2 = ch[p+1].second - ch[p].second;
+        double theta1 = atan2(dy1,dx1);
+        double theta2 = atan2(dy2,dx2);
+
+        ans[i] = (theta2 + PI - theta1) / (2 * PI);
+        if(ans[i] > 1) ans[i] -= 1;
+    }
+
+    for(int i=0; i<n; i++){
+        cout << fixed << setprecision(10) << ans[i] << endl;
+    }
+    return 0;
+}

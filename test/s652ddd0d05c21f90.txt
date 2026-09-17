@@ -1,0 +1,11 @@
+n = int(input())
+l = list(list(map(int,input().split())) for _in range(n))
+x = input()
+bit = 0
+su = 0
+for j,k in l:
+  if j==x:
+    bit = 1
+  if bit==1:
+    su += k
+print(su)

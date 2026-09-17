@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const string musei = "ksthp";
+const string boin = "aiueo";
+enum phoneme : int {
+    MUSEI,
+    KITSU,
+    SOKU,
+    BOIN,
+    SIIN,
+};
+
+int main() {
+    string s;
+    while (cin >> s, s != "#") {
+        vector<pair<int, string>> cls;
+        for (int i = 0; i < s.size(); i++) {
+            if (boin.find(s[i]) != string::npos) {
+                if (i > 0 && s[i] == s[i-1]) cls.push_back({SOKU, string(1, s[i])});
+                else cls.push_back({BOIN, string(1, s[i])});
+            } else {
+                if (i < (s.size() - 1) && s[i] == s[i + 1]) cls.push_back({KITSU, string(1, s[i])});
+                else if (musei.find(s[i]) != string::npos) {
+                    if (i < (s.size() - 1) && s[i + 1] == 'y') {
+                        cls.push_back({MUSEI, s.substr(i, 2)});
+                        i++;
+                    } else {
+                        cls.push_back({MUSEI, string(1, s[i])});
+                    }
+                } else {
+                    cls.push_back({SIIN, string(1, s[i])});
+                }
+            }
+        }
+
+        // for (auto x : cls) {
+        //     cerr << "{" << x.second << " " << x.first << "}" << " ";
+        // }
+        // cerr << endl;
+
+        string ans = "";
+        bool before_musei = false;
+        for (int i = 0; i < cls.size(); i++) {
+            if (cls[i].first != BOIN) {
+                ans += cls[i].second;
+                continue;
+            }
+
+            bool is_musei = false;
+            if (i > 0 && cls[i - 1].first == MUSEI) { // prev subword is musei ?
+                // rule 1
+                if ("iu"s.find(cls[i].second) != string::npos &&
+                        ((i == cls.size() - 1) ||
+                         (i < cls.size() - 1 && musei.find(cls[i + 1].second) != string::npos))) {
+                    is_musei = true;
+                }
+
+                // rule 2
+                else if ("ao"s.find(cls[i].second) != string::npos &&
+                        (i + 2 < cls.size() && cls[i + 1].first == MUSEI && cls[i + 2].second == cls[i].second)) {
+                    is_musei = true;
+                }
+            }
+
+            if (is_musei && !before_musei) {
+                ans += "(" + cls[i].second + ")";
+                before_musei = true;
+            } else {
+                ans += cls[i].second;
+                before_musei = false;
+            }
+        }
+        cout << ans << endl;
+    }
+}
+

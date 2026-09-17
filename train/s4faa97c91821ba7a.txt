@@ -1,0 +1,62 @@
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <complex>
+#include <vector>
+#include <string>
+#include <numeric>
+#include <cstdio>
+
+#define REP(i,m,n) for(int i=int(m);i<int(n);i++)
+#define EACH(i,c) for (auto &(i): c)
+#define all(c) begin(c),end(c)
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define SORT(c) sort(begin(c),end(c))
+#define pb emplace_back
+#define MP make_pair
+#define SZ(a) int((a).size())
+
+#ifdef LOCAL
+#define DEBUG(s) cout << (s) << endl;
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define BR cout << endl;
+#else
+#define DEBUG(s) 
+#define dump(x)  
+#define BR 
+#endif
+using namespace std;
+
+typedef unsigned int   UI;
+typedef unsigned long  UL;
+typedef long long      LL;
+typedef unsigned long long ULL;
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef vector<LL> VLL;
+typedef vector<string> VS;
+typedef pair<int, int> PII;
+
+const double EPS = 1e-10;
+const double PI  = acos(-1.0);
+
+template<class T> inline T sqr(T x) {return x*x;}
+
+int main() {
+	int ans[26] = {};
+	char c;
+	while ((c = getchar()) != '\0') {
+		if (c >= 'a' && c <= 'z') ans[c-'a']++;
+		else if (c >= 'A' && c <= 'Z') ans[c-'A']++;
+	}
+	REP(i,0,26) {
+		cout << (char)(i + 'a') << " : " << ans[i] << endl;
+	}
+	
+	return 0;
+}

@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <algorithm>	// require sort next_permutation count etc.
+#include <cstdlib>	// require abs
+#include <cstdio>	// require printf
+#include <functional>
+#include <numeric>	// require accumulate
+#include <cmath>
+#include <climits>
+#include <limits>
+#include <cfloat>
+#include <iomanip>	// require setw
+#include <sstream>	// require stringstream 
+#include <cstring>	// require memset
+#include <cctype>	// require tolower, toupper
+#include <fstream>	// require freopen
+
+using namespace std;
+
+int main()
+{
+//	cut here before submit 
+//	freopen ("testcase.alicsfarsight", "r", stdin );
+	int n;
+
+	while (cin >> n && n ){
+		for (int i = 0; i < n; ++i){
+			double x1, y1, z1, x2, y2, z2;	
+			cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2;
+			double res = sqrt ( (x1 - x2)*(x1 - x2) + (y1 -y2)*(y1 - y2) + (z1 - z2) );
+			printf ("%.11lf\n", res );
+		} // end for 
+
+	} // end loop
+		
+	return 0;
+}

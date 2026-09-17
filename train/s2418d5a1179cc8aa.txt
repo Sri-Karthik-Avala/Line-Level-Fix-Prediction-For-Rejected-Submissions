@@ -1,0 +1,112 @@
+#include<bits/stdc++.h>
+using namespace std;
+using Int = long long;
+struct edge{
+  int from,to;
+  edge(){}
+  edge(int from,int to):from(from),to(to){}
+};
+
+  
+const int MAX = 333;
+using BS=bitset<MAX>;
+vector<BS> G(MAX);
+vector<vector<int> > rG(MAX);
+vector<int> vis(MAX);
+
+void dfs(int v,int r){
+  if(vis[v]) return;
+  vis[v]=1;
+  G[v]|=G[r];
+  for(int u:rG[v]) if(!vis[u]) dfs(u,r);
+}; 
+
+signed main(){
+  cin.tie(0);
+  ios::sync_with_stdio(0);
+  auto D=G;
+  map<string, int> R;
+  int sz=0;
+
+  {
+    string p,q;
+    cin>>p>>q;
+    R[p]=sz++;
+    R[q]=sz++;
+  }
+  
+  int n;
+  cin>>n;
+  vector<vector<edge> > sG(n);
+  vector<map<int,set<int> > > M(MAX);
+  
+  for(int i=0;i<n;i++){
+    int m;
+    cin>>m;
+    for(int j=0;j<m;j++){
+      string s,t;
+      cin>>s>>t;
+      if(!R.count(s)) R[s]=sz++;
+      if(!R.count(t)) R[t]=sz++;
+      sG[i].emplace_back(R[s],R[t]);
+      M[R[s]][R[t]].insert(i);
+    }
+  }
+
+  vector<int> used(n, 0);
+  queue<edge> q;
+
+  auto WF=[sz](){
+    for(int k=0;k<sz;k++)
+      for(int i=0;i<sz;i++)
+	for(int j=0;j<sz;j++)
+	  G[i][j]=G[i][j]||(G[i][k]&&G[k][j]);
+  };
+  
+  for(int i=0;i<sz;i++) G[i][i]=1;
+  auto add_edge=[&](int from, int to){
+    rG[to].push_back(from);
+    fill(vis.begin(),vis.end(),0);
+    dfs(to,to);
+  };
+  auto add=[&](int x){
+    for(edge e:sG[x])
+      if(!D[e.from][e.to])
+	add_edge(e.from, e.to);
+  };
+  
+  q.emplace(0,1);
+  add_edge(0,1);
+  
+  while(!q.empty()){
+    edge e=q.front();q.pop();
+    if(D[e.from][e.to]) continue;
+    D[e.from][e.to]=1;
+    for(int i:M[e.from][e.to]){
+      if(used[i]) continue;
+      used[i]=1;
+      add(i);
+    }
+    if(q.empty()){
+      WF();
+      for(int i=0;i<sz;i++)
+	for(int j=0;j<sz;j++)
+	  if(i!=j&&!D[i][j]&&G[i][j])
+	    q.emplace(i,j);
+    }
+  }
+  
+  for(int i=0;i<sz;i++)
+    G[i][i]=0;
+
+  WF();
+
+  for(int i=0;i<sz;i++){
+    if(!G[i][i]) continue;
+    cout<<"No"<<endl;
+    return 0;
+  }
+  
+  cout<<"Yes"<<endl;
+  return 0;
+}

@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define repl(i,a,b) for(int i=(int)(a);i<(int)(b);i++)
+#define rep(i,n) repl(i,0,n)
+#define mp(a,b) make_pair((a),(b))
+#define pb(a) push_back((a))
+#define all(x) (x).begin(),(x).end()
+#define uniq(x) sort(all(x)),(x).erase(unique(all(x)),end(x))
+#define fi first
+#define se second
+#define dbg(x) cout<<#x" = "<<((x))<<endl
+template<class T,class U> ostream& operator<<(ostream& o, const pair<T,U> &p){o<<"("<<p.fi<<","<<p.se<<")";return o;}
+template<class T> ostream& operator<<(ostream& o, const vector<T> &v){o<<"[";for(T t:v){o<<t<<",";}o<<"]";return o;}
+
+#define INF 2147483600
+
+int main(){
+  int h,w,n;
+  cin>>h>>w>>n;
+  vector<int> vec(h*w);
+  rep(i,h)rep(j,w){
+    int a,b;
+    scanf("%d %d", &a, &b);
+    vec[i*w+j] = a*h+b;
+  }
+  vector<int> p(n);
+  rep(i,n){
+    int a,b;
+    scanf("%d %d", &a, &b);
+    p[i] = a*w+b;
+  }
+
+  vector<vector<int>> mat(20, vector<int>(h*w));
+  rep(i,h*w) mat[0][i] = vec[i];
+  repl(i,1,20) rep(j,h*w){
+    mat[i][j] = mat[i-1][mat[i-1][j]];
+  }
+
+  int l=0, r=2*h*w;
+  while(r-l>1){
+    int m = (l+r)/2;
+    auto exe = [&](int x){
+      vector<bool> vis(h*w,false);
+      vector<int> v(p);
+      int q=0;
+      while(x>0){
+        if(x%2){
+          rep(i,n) v[i] = mat[q][v[i]];
+        }
+        x /= 2;
+        q++;
+      }
+      rep(i,n){
+        if(vis[v[i]]) return true;
+        vis[v[i]]=true;
+      }
+      return false;
+    };
+
+    if(exe(m)) r = m;
+    else l = m;
+  }
+
+  if(r==2*h*w) r=-1;
+  cout << r << endl;
+
+  return 0;
+}

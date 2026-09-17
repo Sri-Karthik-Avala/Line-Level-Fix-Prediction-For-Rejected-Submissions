@@ -1,0 +1,73 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <set>
+#include <algorithm>
+#define INF 1001001001001001001
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> pa;
+typedef pair<ll,pa > ppa;
+
+vector<pa> ve[2][100010];
+int swi[2][200010];
+ll res[2][200010],kar[2][200010];
+int main(){
+	int M,N,K;
+	cin>>M>>N>>K;
+	int a,b,aa=0;
+	bool fla=false,fla2=false;
+	for(int i=1;i<=K;i++){
+		cin>>a>>b;
+		ve[1][a].push_back(pa(i,b));
+		ve[0][b].push_back(pa(i,a));
+		swi[0][i]=a;swi[1][i]=b;
+		if(a==1&&b==1){
+			fla=true;
+			aa=i;
+		}
+		if(a==M&&b==N){
+			fla2=true;
+		}
+	}
+	for(int i=0;i<2;i++){
+		fill(res[i],res[i]+2+K,INF);
+		fill(kar[i],kar[i]+2+K,INF);
+	}
+
+	priority_queue<ppa,vector<ppa>,greater<ppa> > que;
+	for(vector<pa>::iterator it=ve[1][1].begin();it!=ve[1][1].end();it++){
+		que.push(ppa(it->second-1,pa(1,it->first)));
+	}
+	if(fla){
+		res[0][aa]=0;
+	}
+	int cnt=0;
+	while(!que.empty()){
+		ll dis=que.top().first;
+		int yota=que.top().second.first;
+		int ten=que.top().second.second;
+		que.pop();
+		if(res[yota][ten]<INF) continue;
+		res[yota][ten]=dis;
+		res[1-yota][ten]=dis+1;
+		for(vector<pa>::iterator it=ve[1-yota][swi[yota][ten]].begin();it!=ve[1-yota][swi[yota][ten]].end();it++){
+			int saki=it->first;int ba=it->second;
+			int hog=dis+1+abs(swi[1-yota][ten]-ba);
+			if(kar[1-yota][saki]>hog&&res[1-yota][saki]==INF){
+				que.push(ppa(hog,pa(1-yota,saki)));
+				kar[1-yota][saki]=hog;
+			}
+		}
+	}
+	ll ress=INF;
+	for(vector<pa>::iterator it=ve[0][N].begin();it!=ve[0][N].end();it++){
+		ress=min(ress,res[1][it->first]+1+abs(M-it->second));
+	}
+	for(vector<pa>::iterator it=ve[1][M].begin();it!=ve[1][M].end();it++){
+		ress=min(ress,res[0][it->first]+1+abs(N-it->second));
+	}
+	if(ress<INF) cout<<ress<<endl;
+	else cout<<-1<<endl;
+	return 0;
+}

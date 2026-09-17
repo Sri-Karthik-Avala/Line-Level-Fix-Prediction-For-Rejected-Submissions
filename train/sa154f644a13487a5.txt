@@ -1,0 +1,19 @@
+T=int(input())
+for TT in range(T):
+	a,b,c,d=map(int,input().split(' '))
+	l,x,y=(a+b)//(min(a,b)+1),0,0
+	if a*l<=b:
+		y=a+b
+	elif b*l<=a:
+		x=a+b
+	else:
+		x,y=(a*l-b)//(l-1),(b*l-a)//(l-1)
+	out=""
+	for i in range(c,d+1):
+		if i<=x:
+			out+="AB"[i%(l+1)==0]
+		elif a+b-i-1<=y:
+			out+="BA"[(a+b-i+1)%(l+1)==0]
+		else:
+			out+="AB"[a-x+x//(l+1)-y//(l+1)==0]
+	print(out)

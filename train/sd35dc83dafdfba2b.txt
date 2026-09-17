@@ -1,0 +1,9 @@
+n = int(input())
+a = [int(x) for x in input().split()]
+a.sort()
+m = max(a) // 2
+res = 0
+for i in range(n-1):
+  if abs(m - a[i]) < abs(res - a[i]):
+    res = a[i]
+print(max(a),res)

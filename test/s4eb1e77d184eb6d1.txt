@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+#include <atcoder/convolution>
+using namespace std;
+using namespace atcoder;
+
+int64_t jyo(int64_t x,int64_t y,int64_t z){
+  int64_t H=y; //ここから
+       int64_t a=1,b=x,c=1;
+       while(H>0){
+         a*=2;
+         if(H%a!=0){
+           H-=a/2;
+           c*=b;
+           c%=z;
+         }
+        b*=b;
+         b%=z;
+      } //ここまで
+ return c;
+}
+
+int64_t Q=998244353;
+  
+
+int main(){
+  vector<int64_t> p={1};
+  int N;
+  cin>>N;
+  map<int,int64_t> m;
+  for(int i=0;i<N*2;i++){
+    int a;
+    cin>>a;
+    m[a]++;
+  }
+  for(auto x:m){
+    int64_t A=x.second;
+    int64_t B=1,C=2;
+    vector<int64_t> q={1};
+    int64_t K=1;
+    while(A>1){
+      K*=A;
+      K%=Q;
+      A--;
+      K*=A;
+      K%=Q;
+      A--;
+      K*=(Q+1)/2;
+      K%=Q;
+      K*=jyo(B,Q-2,Q);
+      B++;
+      q.push_back(K);
+    }
+    p=convolution<998244353>(p,q);
+  }
+  int L=p.size();
+  int64_t Z=0,A=1,a=-1,M=N;
+  for(int64_t i=N+1;i<=2*N;i++){
+    A*=i;
+    A%=Q;
+  }
+  A*=jyo(jyo(2,N,Q),Q-2,Q);
+  A%=Q;
+  for(int i=0;i<L;i++){
+    a*=-1;
+    int64_t D=(p[i]*A)%Q;
+    Z+=((Q+D*a)%Q);
+    Z%=Q;
+    A*=2;
+    A*=M;
+    A%=Q;
+    int64_t E=(2*M*(2*M-1))%Q;
+    A*=jyo(E,Q-2,Q);
+    A%=Q;
+    M--;
+  }
+  cout<<Z<<endl;
+}

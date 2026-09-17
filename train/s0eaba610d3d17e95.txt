@@ -1,0 +1,27 @@
+#include<iostream>
+#include<vector>
+#include<string>
+
+int main(){
+	std::string a;
+	std::cin >> a ;
+	char b;
+	for(int i=0 ; i<a.size() ; i++){
+		if(a[i]>='A' && a[i]<='Z'){
+			//std::cout<<1;
+			b=a[i]+('a'-'A');
+			std::cout<<b;
+		}else{
+			if(a[i]>='a' && a[i]<='z'){
+				//std::cout<<2;
+				b=a[i]-('a'-'A');
+				std::cout<<b;
+			}else{
+				std::cout<<a[i];
+			}
+		}
+	}
+	std::cout << std::endl ;
+	
+	return 0;
+}

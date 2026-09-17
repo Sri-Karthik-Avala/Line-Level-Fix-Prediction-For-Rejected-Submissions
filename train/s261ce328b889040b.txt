@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(0);
+  cout << setprecision(20) << fixed;
+  string s;
+  cin >> s;
+  int mid = s.size()/2;
+  int i = 1;
+  int zure = mid;
+  while(mid - i >= 0 || mid + i < s.size()){  
+    if(mid - i >= 0){  
+      if(s[mid] != s[mid-i]){  
+        zure = mid-i; 
+        break;
+      }
+    }
+    if(mid + i < s.size()){  
+      if(s[mid] != s[mid+i]){  
+        zure = mid+i; 
+        break;
+      }
+    }
+    i++;
+  }
+  if(zure == mid) cout << s.size() <<endl;
+  else cout << max((int)s.size()-zure-1, zure-1) <<endl;
+}

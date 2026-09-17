@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+  string order, color;
+  string o[100],stac[100],removed[100];
+  int i,j,k,size;
+
+  while(cin >> order) {
+    o[i] = order;
+    i++;
+  }
+  size = i;
+  i=0;
+  j=0;
+
+  for(k=0;k<size;k++) {
+
+    if (o[k] == "push") {
+      color = o[k+1];
+      stac[i] = color;
+      i++;
+    }
+    else if (o[k] == "pop") {
+      removed[j] = stac[i-1];
+      j++;
+      stac[i-1] = " ";
+      i--;
+    }
+    else if (o[k] == "quit") {
+      for(i=0;i<j;i++)
+        cout << removed[i] << endl;
+    }
+  }
+  return 0;
+}

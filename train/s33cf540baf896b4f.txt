@@ -1,0 +1,18 @@
+N=int(input())
+A=list(map(int,input().split()))
+B=[]
+for i in range(N):
+  B.append(A[i]-(i+1))
+B.sort()
+if N%2==0:
+  a=N/2
+  b=int((B[int(a)]+B[int(a-1)])/2)
+else:
+  a=(N+1)/2
+  b=B[int(a-1)]
+for i in range(N):
+  B[N-1]=abs(B[N-1]-b)
+print(sum(B))
+ 
+  
+  

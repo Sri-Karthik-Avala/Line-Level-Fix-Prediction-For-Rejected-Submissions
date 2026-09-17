@@ -1,0 +1,39 @@
+n = int(input())
+s = input()
+mod = 998244353
+pr = []
+for i in range(2,n+1):
+  if n%i == 0:
+    pr.append((i,n//i))
+num = []
+pr = pr[::-1]
+for p,q in pr:
+  if p%2 == 0:
+    continue
+  ntmp = 0
+  x = s[:q]
+  y = ""
+  for i in x:
+    if i == "0":
+      y += "1"
+    else:
+      y += "0"
+  for i in range(q):
+    if x[i] == "1":
+      ntmp = (ntmp+pow(2,q-1-i,mod))%mod
+  k = (x+y)*((p-1)//2)+x
+  if s >= k:
+    ntmp += 1
+  num.append((p,2*q,ntmp))
+ans = 2*n
+for i in range(n-1,-1,-1):
+  if s[i] == "1":
+    ans = (ans+pow(2,n-1-i,mod)*2*n)%mod
+for p1,x,number in num:
+  for p2,y,number2 in num:
+    if x == y:
+      continue
+    elif p2%p1 == 0 and (p2//p1)%2 == 1:
+      number -= number2
+  ans = (ans-(2*n-x)*number)%mod
+print(ans)

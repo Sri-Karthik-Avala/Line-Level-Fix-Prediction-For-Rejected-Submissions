@@ -1,0 +1,35 @@
+import sys
+def I(): return int(sys.stdin.readline().rstrip())
+def MI(): return map(int,sys.stdin.readline().rstrip().split())
+
+N = I()
+xy = [tuple(MI()) for i in range(N)]
+
+from math import gcd,sqrt
+
+ans = 0
+for i in range(N):  # xy[i] から反時計・時計回りに π 以内の点たちを考える
+    x,y = xy[i]
+    X1,Y1 = 0,0
+    X2,Y2 = 0,0
+    if x == 0 and y == 0:
+        continue
+    else:
+        for j in range(N):
+            a,b = xy[j]
+            if a == 0 and b == 0:
+                continue
+            elif x//gcd(x,y) == a//gcd(a,b) and y//gcd(x,y) == b//gcd(a,b):
+                X1 += a
+                Y1 += b
+                X2 += a
+                Y2 += b
+            elif (-y)*a + x*b > 0:
+                X1 += a
+                Y1 += b
+            elif y*a + (-x)*b > 0:
+                X2 += a
+                Y2 += b
+        ans = max(ans,X1**2+Y1**2,X2**2+Y2**2)
+
+print(sqrt(ans))

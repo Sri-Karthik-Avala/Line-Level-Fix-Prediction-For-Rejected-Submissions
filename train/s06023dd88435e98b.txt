@@ -1,0 +1,109 @@
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <numeric>
+#include <cassert>
+#include <vector>
+#include <cmath>
+#include <queue>
+#include <set>
+#include <map>
+#define syosu(x) fixed<<setprecision(x)
+using namespace std;
+typedef long long ll;
+typedef unsigned int uint;
+typedef unsigned long long ull;
+typedef pair<int,int> P;
+typedef pair<double,double> pdd;
+typedef pair<ll,ll> pll;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<string> vs;
+typedef vector<P> vp;
+typedef vector<vp> vvp;
+typedef vector<pll> vpll;
+typedef pair<int,P> pip;
+typedef vector<pip> vip;
+const int inf=1<<28;
+const ll INF=1ll<<60;
+const double pi=acos(-1);
+const double eps=1e-8;
+const ll mod=998244353;
+const int dx[4]={-1,0,1,0},dy[4]={0,-1,0,1};
+
+const int M=500001;
+int n;
+vi x,y,a;
+map<char,int> mp={
+	{'U',0},
+	{'R',1},
+	{'D',2},
+	{'L',3},
+};
+
+int main(){
+	cin>>n;
+	int res=inf;
+	x=y=a=vi(n);
+	for(int i=0;i<n;i++){
+		char c;
+		cin>>x[i]>>y[i]>>c;
+		a[i]=mp[c];
+	}
+	vvp b(M);
+	for(int i=0;i<n;i++) if(a[i]%2==0) b[x[i]].push_back({y[i],a[i]});
+	for(int i=0;i<M;i++) if(!b[i].empty()){
+		sort(b[i].begin(),b[i].end());
+		int tmp=-inf;
+		for(auto p:b[i]){
+			if(p.second==0) tmp=p.first;
+			else res=min(res,p.first-tmp);
+		}
+	}
+	b=vvp(M);
+	for(int i=0;i<n;i++) if(a[i]%2==1) b[y[i]].push_back({x[i],a[i]});
+	for(int i=0;i<M;i++) if(!b[i].empty()){
+		sort(b[i].begin(),b[i].end());
+		int tmp=-inf;
+		for(auto p:b[i]){
+			if(p.second==1) tmp=p.first;
+			else res=min(res,p.first-tmp);
+		}
+	}
+	b=vvp(M);
+	for(int i=0;i<n;i++) b[x[i]+y[i]].push_back({x[i],a[i]});
+	for(int i=0;i<M;i++) if(!b[i].empty()){
+		sort(b[i].begin(),b[i].end());
+		int tmp=-inf;
+		for(auto p:b[i]){
+			if(p.second==1) tmp=p.first;
+			if(p.second==0) res=min(res,(p.first-tmp)*2);
+		}
+		tmp=-inf;
+		for(auto p:b[i]){
+			if(p.second==2) tmp=p.first;
+			if(p.second==3) res=min(res,(p.first-tmp)*2);
+		}
+	}
+	b=vvp(M);
+	for(int i=0;i<n;i++) b[x[i]-y[i]+M].push_back({x[i],a[i]});
+	for(int i=0;i<M;i++) if(!b[i].empty()){
+		sort(b[i].begin(),b[i].end());
+		int tmp=-inf;
+		for(auto p:b[i]){
+			if(p.second==0) tmp=p.first;
+			if(p.second==3) res=min(res,(p.first-tmp)*2);
+		}
+		tmp=-inf;
+		for(auto p:b[i]){
+			if(p.second==1) tmp=p.first;
+			if(p.second==2) res=min(res,(p.first-tmp)*2);
+		}
+	}
+	if(res==inf) cout<<"SAFE"<<endl;
+	else cout<<res*5<<endl;
+}

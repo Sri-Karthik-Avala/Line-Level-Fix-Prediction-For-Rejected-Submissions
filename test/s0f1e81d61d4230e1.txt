@@ -1,0 +1,100 @@
+#include<iostream>
+using namespace std;
+#define REP(i,b,n) for(int i=b;i<n;i++)
+#define rep(i,n)   REP(i,0,n)
+typedef unsigned long long ull;
+
+int tmp_cost(int p){
+  if( p==1)return 0;
+  int ret=tmp_cost(p/2)+1+p%2;
+  return ret;
+}
+
+ull expect(int p,int n,ull tar){
+  ull ret=n;
+  while(p--&&ret<tar)ret+=ret;
+  return ret;
+}
+
+int ans;
+bool solve(int cnt,int limit,int now,int tar,int num,int *made,bool *visited){
+  if (cnt>limit)return false;
+  if ( now>=tar*2)return false;//may not be need?
+  
+  if (now == tar ){
+    ans=min(ans,cnt);
+    return true;
+  }
+  if ( cnt==limit)return false;
+
+  int findmax=0;
+  REP(i,0,num)findmax=max(findmax,made[i]);
+  if( expect(limit-cnt,findmax,(ull)tar)<(ull)tar){
+    return false;
+  }
+
+
+
+  for(int i=num-1;i>=0;i--){
+    //mul
+    if ( visited[now+made[i]]==false){
+      visited[now+made[i]]=true;
+      made[num]=now+made[i];
+      if (solve(cnt+1,limit,now+made[i],tar,num+1,made,visited)){
+	visited[now+made[i]]=false;
+	return true;
+      }
+      visited[now+made[i]]=false;
+    }
+
+
+    //div
+    if( now-made[i]>0 && visited[now-made[i]]==false){
+      visited[now-made[i]]=true;
+      made[num]=now-made[i];
+      if (solve(cnt+1,limit,now-made[i],tar,num+1,made,visited)){
+	visited[now-made[i]]=false;
+	return true;
+      }
+      visited[now-made[i]]=false;
+    }
+
+
+  }
+
+  return false;
+}
+
+main(){
+  int n;
+  while(cin>>n&&n){
+    int upper=tmp_cost(n);
+    bool visited[3002]={false};
+    int  made[30];
+    visited[1]=true;
+    visited[2]=true;
+    made[0]=1;
+    made[1]=2;
+        
+    
+    int lower=0,tmp=1;
+    while(tmp<n){
+      tmp*=2;
+      lower++;
+    }
+    
+    for(int i=upper-1;i>=lower;i--){
+      ans=i;
+      if (solve(1,i,2,n,2,made,visited) ){
+	//cout << "solved at " <<i<<" with " << ans << endl;
+	upper=ans;
+	i=ans;
+      }
+      //else cout << "unsolved at " <<i<<endl;
+
+    }
+    cout << upper << endl;
+
+  }
+  return false;
+}

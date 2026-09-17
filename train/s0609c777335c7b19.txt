@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+#define int long long
+#define rep(i,n) for(int i=0;i<n;i++)
+#define Rep(i,a,b) for(int i=a;i<b;i++)
+#define REP(i,a,b) for(int i=a;i<=b;i++)
+#define rev(i,n) for(int i=n-1;i>=0;i--)
+#define vi vector<int>
+#define pb push_back
+#define pi pair<int,int>
+#define vp vector<pair<int,int> >
+#define mp make_pair
+#define all(v) (v).begin(),(v).end()
+using namespace std;
+
+signed main(){
+    multimap<string,int> map;
+    int q;
+    cin>>q;
+    while(q--){
+        int y;
+        string k;
+        cin>>y>>k;
+        if(y==0){
+            int x;
+            cin>>x;
+            map.insert(pair<string,int>(k,x));
+        }
+        else if(y==1){
+            for(auto it=map.find(k);it->first==k;it++){            
+                cout<<it->second<<endl;
+            }
+        }
+        else if(y==2){
+            map.erase(k);
+        }
+        else{
+            string z;
+            cin>>z;
+            for(auto it=map.lower_bound(k);it!=map.upper_bound(z);it++){
+                cout<<it->first<<" "<<it->second<<endl;
+            }
+        }
+    }
+    return 0;
+}

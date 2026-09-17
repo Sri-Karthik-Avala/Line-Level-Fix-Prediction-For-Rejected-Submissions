@@ -1,0 +1,107 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <map>
+#include <cassert>
+using namespace std;
+
+double ways(int c, int e, int r,
+	    vector<vector<int> > &g,
+	    vector<vector<int> > &h,
+	    vector<double> &tbl
+	    )
+{
+  if (c==e) return 1;
+  if (g[c][e]>r) return 0;
+  assert(g[c][e]==r);
+
+  int n=g.size();
+  double &ret=tbl[c];
+  if (ret>=0) return ret;
+
+  ret=0;
+  for (int i=0; i<n; i++){
+    if (h[c][i]==0) continue;
+    ret+=ways(i, e, r-h[c][i], g, h, tbl);
+  }
+  return ret;
+}
+
+int main()
+{
+  cout<<setiosflags(ios::fixed)<<setprecision(10);
+  for (int n, m, q; cin>>n>>m>>q, !(n==0); ){
+    vector<vector<int> > g(n, vector<int>(n, 0));
+    for (int i=0; i<m; i++){
+      int f, t, c; cin>>f>>t>>c;
+      assert(g[f][t]==0);
+      assert(g[t][f]==0);
+      assert(f!=t);
+      g[f][t]=c;
+      g[t][f]=c;
+    }
+
+    vector<vector<int> > p=g;
+
+    for (int k=0; k<n; k++){
+      for (int i=0; i<n; i++){
+	for (int j=0; j<n; j++){
+	  if (p[i][k]==0 ||
+	      p[k][j]==0) continue;
+	  int d=p[i][k]+p[k][j];
+	  if (p[i][j]==0 || d<p[i][j])
+	    p[i][j]=d;
+	}
+      }
+    }
+
+    vector<double> tbl(n, -1);
+    double tot_way=ways(0, n-1, p[0][n-1], p, g, tbl);
+    assert(tot_way>0);
+
+    /*
+    for (int i=0; i<n; i++){
+      for (int j=0; j<n; j++)
+	{
+	  vector<double> tbl(n, -1);
+	  double w=ways(i, j, p[i][j], p, g, tbl);
+	  cout<<p[i][j]<<","<<w<<" ";
+	}
+      cout<<endl;
+    }
+    */
+
+    for (int i=0; i<q; i++){
+      int c; cin>>c;
+
+      if (c==0 || c==n-1){
+	cout<<1.0<<endl;
+	continue;
+      }
+
+      assert(p[0][c]+p[c][n-1]>=p[0][n-1]);
+      if (p[0][c]==0 || p[c][n-1]==0 || p[0][c]+p[c][n-1]>p[0][n-1]){
+	cout<<0.0<<endl;
+	continue;
+      }
+
+      double bef_way, aft_way;
+      {
+	vector<double> tbl(n, -1);
+	bef_way=ways(0, c, p[0][c], p, g, tbl);
+      }
+      {
+	vector<double> tbl(n, -1);
+	aft_way=ways(c, n-1, p[c][n-1], p, g, tbl);
+      }
+
+      assert(bef_way>0);
+      assert(aft_way>0);
+
+      cout<<(bef_way*aft_way/tot_way)<<endl;
+    }
+    cout<<endl;
+  }
+
+  return 0;
+}

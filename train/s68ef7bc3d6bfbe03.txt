@@ -1,0 +1,83 @@
+#define _USE_MATH_DEFINES
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <limits>
+#include <climits>
+#include <cfloat>
+#include <functional>
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> x(3);
+    for(int i=0; i<n; ++i){
+        int a;
+        cin >> a;
+        ++ x[a%3];
+    }
+
+    if(x[1] == 0 && x[2] == 0){
+        cout << 1 << endl;
+        return 0;
+    }
+
+    int ans = 0;
+    for(int i=1; i<3; ++i){
+        int sum = x[0];
+        int mod = 0;
+        int p = x[1];
+        int q = x[2];
+        if(i == 1){
+            ++ sum;
+            mod = 1;
+            -- p;
+        }
+        else{
+            ++ sum;
+            mod = 2;
+            -- q;
+        }
+
+        for(;;){
+            if(mod == 1){
+                if(p == 0){
+                    sum += min(1, q);
+                    break;
+                }
+                ++ sum;
+                mod = 2;
+                -- p;
+            }
+            else{
+                if(q == 0){
+                    sum += min(q, p);
+                    break;
+                }
+                ++ sum;
+                mod = 1;
+                -- q;
+            }
+        }
+        ans = max(ans, sum);
+    }
+    cout << ans << endl;
+
+    return 0;
+}

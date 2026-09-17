@@ -1,0 +1,46 @@
+
+"""
+
+https://atcoder.jp/contests/agc021/tasks/agc021_d
+
+ある部分でcutしたとする。
+前半と後半のLCSを求めたとすると、交差した後のLCSの長さも同じ
+→左からindex iまでと右からindex jまでのLCSを求めればいい (i < j)
+あとは、普通のLCSと同様のdpでいける
+
+dp[i][j][k] = 左からi番目の文字までと、右からindex jの文字までのk回替えた際のLCS長さ
+あとは2倍すれば大体行ける？
+i+1 == jでは、2倍すればおk
+i+1 < j では、真ん中の文字を使えるので、2倍して1足す
+
+"""
+
+S = input()
+S = " "+S
+K = int(input())
+N = len(S)-1
+
+dp = [[[0] * (K+1) for i in range(N+2)] for j in range(N+2)]
+ans = 0
+
+for i in range(1,N+1):
+
+    for j in range(N,i,-1):
+
+        for k in range(K+1):
+
+            #同じ場合、どっちも進める
+            if S[i] == S[j]:
+                dp[i][j][k] = max( dp[i][j][k] , dp[i-1][j+1][k] + 1)
+            else:
+                dp[i][j][k] = max( dp[i][j][k] , dp[i-1][j][k] , dp[i][j+1][k] )
+                if k != 0:
+                    dp[i][j][k] = max(dp[i][j][k] , dp[i-1][j+1][k-1] + 1)
+
+            if i+1 == j:
+                ans = max(ans , dp[i][j][k] * 2)
+            else:
+                ans = max(ans , dp[i][j][k] * 2 + 1)
+
+print (ans)
+                

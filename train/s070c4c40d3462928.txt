@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+#include <atcoder/all>
+
+typedef long long ll;
+typedef std::pair<ll, ll> P;
+
+constexpr ll INF = 1e15;
+constexpr ll mod = 1e9+7;
+
+#define rep(i,n) for(int i = 0; i < int(n); i++)
+using namespace std;
+
+template<class T> inline bool chmax(T& a, const T& b) { if (a < b) { a = b; return 1; } return 0; }
+template<class T> inline bool chmin(T& a, const T& b) { if (b < a) { a = b; return 1; } return 0; }
+
+int main() {
+    ll n, d;
+    cin >> n >> d;
+    vector<P> ps(n);
+    rep(i, n) {
+        cin >> ps[i].first >> ps[i].second;
+    }
+    auto graph = atcoder::two_sat(n);
+    rep(i, n) {
+        rep(j, n) {
+            if (i == j) continue;
+            //条件を満たさない場合にノードをつなぐ
+            if (abs(ps[i].first - ps[j].first) < d) {
+                graph.add_clause(i, true, j, true);
+            }
+            if (abs(ps[i].first - ps[j].second) < d) {
+                graph.add_clause(i, true, j, false);
+            }
+            if (abs(ps[i].second - ps[j].first) < d) {
+                graph.add_clause(i, false, j, true);
+            }
+            if (abs(ps[i].second - ps[j].second) < d) {
+                graph.add_clause(i, false, j, false);
+            }
+        }
+    }
+    if (graph.satisfiable()) {
+        cout << "Yes" << endl;
+        auto ans = graph.answer();
+        rep(i, n) {
+            if (ans[i]) {
+                cout << ps[i].first << endl;
+            }
+            else {
+                cout << ps[i].second << endl;
+            }
+        }
+        return 0;
+    }
+    cout << "No" << endl;
+    return 0;
+}

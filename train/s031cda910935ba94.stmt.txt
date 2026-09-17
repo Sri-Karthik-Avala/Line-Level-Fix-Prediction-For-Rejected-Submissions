@@ -1,0 +1,66 @@
+Problem C: Find the Point 
+
+ 
+We understand that reading English is a great pain to many of you. So we’ll keep this problem statememt
+simple. Write a program that reports the point equally distant from a set of lines given as the input. In
+case of no solutions or multiple solutions, your program should report as such.
+
+ 
+
+ Input 
+
+ 
+The input consists of multiple datasets. Each dataset is given in the following format:
+ 
+ 
+ n 
+ x 1,1 y 1,1 x 1,2 y 1,2 
+ x 2,1 y 2,1 x 2,2 y 2,2 
+ ... 
+ x n ,1 y n ,1 x n ,2 y n ,2 
+ 
+
+ 
+ n is the number of lines (1 &le; n &le; 100); ( x i ,1 , y i ,1 ) and ( x i ,2 , y i ,2 ) denote the different points the i -th line passes through. The lines do not coincide each other. The coordinates are all integers between -10000
+and 10000.
+ 
+
+ 
+The last dataset is followed by a line containing one zero. This line is not a part of any dataset and should not be processed.
+ 
+
+
+ Output 
+
+ 
+For each dataset, print a line as follows. If there is exactly one point equally distant from all the given lines, print the x - and y -coordinates in this order with a single space between them. If there is more than one such point,
+just print " Many " (without quotes). If there is none, just print " None " (without quotes).
+ 
+ 
+The coordinates may be printed with any number of digits after the decimal point, but should be accurate
+to 10 -4 .
+ 
+
+ Sample Input 
+ 
+2
+-35 -35 100 100
+-49 49 2000 -2000
+4
+0 0 0 3
+0 0 3 0
+0 3 3 3
+3 0 3 3
+4
+0 3 -4 6
+3 0 6 -4
+2 3 6 6
+-1 2 -4 6
+0
+ 
+
+ Output for the Sample Input 
+ 
+Many
+1.5000 1.5000
+1.000 1.000

@@ -1,0 +1,99 @@
+#include <vector>
+#include <iostream>
+struct Coord {
+	Coord(const int &a = 0, const int &b = 0) :x{ a }, y{ b } {};
+	int x, y;
+	bool is_valid() const {
+		return x >= 0 && 10 > x && y >= 0 && 10 > y;
+	}
+	void set_val(const int &a, const int &b) { x = a; y = b; }
+};
+class Map {
+public:
+	Map(const int &s) :map(10, std::vector<int>(10, 0)), position(s + 1), size{ s } {};
+	void set_start(const int &x, const int &y) {
+		position.at(0).set_val(x, y);
+		map.at(x).at(y) |= 1;
+	}
+	void set_sprinter(const int &i, const int &x, const int &y) {
+		position.at(i).set_val(x, y);
+		for (const auto &neigh : neighbor(x, y)) {
+			map.at(neigh.x).at(neigh.y) |= (1 << i);
+		}
+	}
+	bool can_move() {
+		return search(0).size() != 0;
+	}
+private:
+	std::vector<Coord> next(const int &x, const int &y) const {
+		std::vector<Coord> res{ Coord(x, y) };
+		for (auto i = -1; i < 2; ++i) {
+			for (const auto &j : { 2, -2 }) {
+				if (Coord(i + x, j + y).is_valid()) {
+					res.push_back(Coord(i + x, j + y));
+				}
+				if (Coord(j + x, i + y).is_valid()) {
+					res.push_back(Coord(j + x, i + y));
+				}
+			}
+		}
+		return res;
+	}
+	std::vector<Coord> next(const Coord &c) const {
+		return next(c.x, c.y);
+	}
+	std::vector<Coord> neighbor(const int &x, const int &y) const {
+		std::vector<Coord> res;
+		for (auto i = -1; i < 2; ++i) {
+			for (auto j = -1; j < 2; ++j) {
+				if (Coord(i + x, j + y).is_valid()) {
+					res.push_back(Coord(x + i, y + j));
+				}
+			}
+		}
+		return res;
+	}
+	std::vector<Coord> neighbor(const Coord &c) const {
+		return neighbor(c.x, c.y);
+	}
+	std::vector<Coord> search(const int &i) {
+		if (i == size) {
+			return neighbor(position.at(i));
+		}
+		else {
+			std::vector<Coord> res;
+			for (const auto &c : search(i + 1)) {
+				for (const auto &n : next(c)) {
+					if ((map.at(n.x).at(n.y) & (1 << i)) != 0) {
+						map.at(n.x).at(n.y) -= (1 << i);
+						res.push_back(n);
+					}
+				}
+			}
+			return res;
+		}
+	}
+	std::vector<std::vector<int>> map;
+	std::vector<Coord> position;
+	const int size;
+};
+int main() {
+	int x, y;
+	while (std::cin >> x && std::cin >> y && x != 0 && y != 0) {
+		int s;
+		std::cin >> s;
+		Map map(s);
+		map.set_start(x, y);
+		for (auto i = 1; i <= s; ++i) {
+			std::cin >> x >> y;
+			map.set_sprinter(i, x, y);
+		}
+		if (map.can_move()) {
+			std::cout << "OK\n";
+		}
+		else {
+			std::cout << "NA\n";
+		}
+	}
+	return 0;
+}

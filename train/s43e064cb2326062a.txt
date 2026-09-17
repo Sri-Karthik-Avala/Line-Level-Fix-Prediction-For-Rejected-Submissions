@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef pair<int,int> P;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<P> vp;
+typedef vector<vp> vvp;
+
+int n;
+vi r;
+vvp a;
+
+int main(){
+	cin>>n;
+	r=vi(n);
+	a=vvp(3,vp(n));
+	for(int i=0;i<n;i++) cin>>r[i];
+	for(int i=0;i<n;i++) cin>>a[0][i].first>>a[1][i].first>>a[2][i].first;
+	for(int i=0;i<n;i++) for(int j=0;j<3;j++) a[j][i].second=i;
+	bool flag=0;
+	int res=(1<<29);
+	for(int i=0;i<3;i++) for(int j=0;j<=100;j++){
+		vvp b=a;
+		b[i][0].first+=j;
+		for(int k=0;k<3;k++) sort(b[k].rbegin(),b[k].rend());
+		vp sum(n,{0,0});/*
+		vvi num(3,vi(n));
+		for(int k=0;k<3;k++){
+			num[i][0]
+			for(int l=1;l<n;l++) 
+		}*/
+		for(int k=0;k<n;k++) sum[k].second=k;
+		for(int k=0;k<3;k++){
+			int I=0;
+			sum[b[k][0].second].first+=r[0];
+			for(int l=1;l<n;l++){
+				if(b[k][l].first==b[k][l-1].first) sum[b[k][l].second].first+=r[I];
+				else{
+					sum[b[k][l].second].first+=r[l];
+					I=l;
+				}
+			}
+		}
+		sort(sum.begin(),sum.end(),[](P p,P q){
+			if(p.first==q.second) return p.second<q.second;
+			return p.first>q.first;
+		});
+/*		if(i==0&&j==2){
+			for(int k=0;k<3;k++){
+				for(int l=0;l<n;l++) cout<<b[k][l].second<<' ';
+				cout<<endl;
+			}
+		}*/
+/*		if(i==0&&j==2) for(int k=0;k<n;k++) cout<<sum[k].first<<' '<<sum[k].second<<endl;*/
+		for(int k=0;k<8;k++) if(!sum[k].second){
+			res=min(res,j);
+			flag=1;
+		}
+	}
+	if(!flag) cout<<"Saiko"<<endl;
+	else cout<<res<<endl;
+}

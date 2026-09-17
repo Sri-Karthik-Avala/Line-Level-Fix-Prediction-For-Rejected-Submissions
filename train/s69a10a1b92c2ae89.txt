@@ -1,0 +1,18 @@
+N = int(input())
+MAXP = 100010
+
+imos = [0 for i in range(MAXP)]
+for i in range(N):
+    a,b = map(int,input().split())
+    imos[a-1] += 1
+    imos[b] -= 1
+nums = [0]
+for im in imos:
+    nums.append(nums[-1] + im)
+
+for i,p in enumerate(reversed(nums)):
+    n = MAXP - 1 - i
+    if p-1 >= n and n >= 0:
+        print(n)
+        exit()
+print(0)

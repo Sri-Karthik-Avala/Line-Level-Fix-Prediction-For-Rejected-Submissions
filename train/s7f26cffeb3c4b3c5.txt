@@ -1,0 +1,31 @@
+d = int(input())
+n = input()
+t = len(n)
+mod = 10**9 + 7
+dp1 = [[0 for i in range(d)] for j in range(t)]
+dp2 = [[0 for i in range(d)] for j in range(t)]
+
+dp1[0][int(n[0])%d] += 1
+for i in range(int(n[0])):
+    dp2[0][i%d] += 1
+    
+for i in range(1,t):
+    now = int(n[i])
+    for j in range(10):
+        if j == now:
+            for k in range(d):
+                dp1[i][(k+j)%d] += dp1[i-1][k]
+                dp2[i][(k+j)%d] += dp2[i-1][k]
+                dp1[i][(k+j)%d] %= mod
+                dp2[i][(k+j)%d] %= mod
+        elif j < now:
+            for k in range(d):
+                dp2[i][(k+j)%d] += dp1[i-1][k]
+                dp2[i][(k+j)%d] += dp2[i-1][k]
+                dp2[i][(k+j)%d] %= mod
+        else:
+            for k in range(d):
+                dp2[i][(k+j)%d] += dp2[i-1][k]
+                dp2[i][(k+j)%d] %= mod
+
+print((dp1[-1][0]+dp2[-1][0]-1)%mod)

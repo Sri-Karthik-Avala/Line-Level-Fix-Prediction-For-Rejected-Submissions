@@ -1,0 +1,20 @@
+def solve(bfo2, bfo1):
+    ans = [bfo2, bfo1]
+    for i in s[1:]:
+        if ((bfo1 == 'S' and i == 'o')
+                or (bfo1 == 'W' and i == 'x')):
+            ans.append(bfo2)
+        else:
+            ans.append('S' if bfo2 == 'W' else 'W')
+        bfo1, bfo2 = ans[-1], bfo1
+    if ans[0] == ans[-1]:
+        print(*ans[:n], sep='')
+        exit()
+
+
+n, s = int(input()), input()
+
+for i in ['S', 'W']:
+    for j in ['S', 'W']:
+        solve(i, j)
+print(-1)

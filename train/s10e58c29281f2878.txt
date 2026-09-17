@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+
+int W,H;
+int dx[4] = {-1,1,0,0},dy[4] = {0,0,1,-1};
+int visited[70][20] = {},field[70][20] = {};
+vector<double> G(200,0),L(200,0),R(200,0);
+vector<vector<pair<int,int>>> list(200);
+char P[70][20];
+double eps = 1e-9;
+
+bool in(int x,int y){
+    return 0<=x && x<H && 0<=y && y<W;
+}
+
+void dfs(int x,int y,int ti,char c){
+    visited[x][y] = 1;
+    field[x][y] = ti;
+    list[ti].push_back({x,y});
+    G[ti] += y+0.5;
+    if(x==0 || (x!=0 && P[x-1][y]!='.' && P[x-1][y]!=c)) L[ti] = min((double) y,L[ti]);
+    if(x==0 || (x!=0 && P[x-1][y]!='.' && P[x-1][y]!=c)) R[ti] = max((double) y+1,R[ti]);
+    for(int i=0;i<4;i++){
+        int nx = x+dx[i],ny = y+dy[i];
+        if(in(nx,ny) && visited[nx][ny]==0 && P[nx][ny]==c) dfs(nx,ny,ti,c);
+    }
+}
+
+void dfs2(int x,int y,int ti,set<int>& s){
+    visited[x][y] = 1;
+    s.insert(field[x][y]);
+    for(int i=0;i<4;i++){
+        int nx = x+dx[i],ny = y+dy[i];
+        if(in(nx,ny) && visited[nx][ny]==0 && field[nx][ny]!=0 && field[nx][ny]!=ti) dfs2(nx,ny,ti,s);
+    }
+}
+
+int main(){
+    while(cin >> W >> H && H>0){
+        for(int i=H-1;i>=0;i--) for(int j=0;j<W;j++) cin >> P[i][j];
+        int cnt = 1;
+        for(int i=1;i<200;i++){
+            G[i] = 0;
+            L[i] = 100;
+            R[i] = -1;
+            list[i].clear();
+        }
+        for(int i=0;i<H;i++) for(int j=0;j<W;j++) visited[i][j] = 0;
+        for(int i=0;i<H;i++) for(int j=0;j<W;j++) field[i][j] = 0;
+        for(int i=0;i<H;i++){
+            for(int j=0;j<W;j++){
+                if(P[i][j]!='.' && visited[i][j]==0){
+                    dfs(i,j,cnt,P[i][j]);
+                    G[cnt] /= 4;
+                    cnt++;
+                }
+            }
+        }
+        bool stable = true;
+        for(int t=1;t<cnt;t++){
+            double g = 0,l = L[t],r = R[t];
+            for(int i=0;i<H;i++) for(int j=0;j<W;j++) visited[i][j] = 0;
+            set<int> s;
+            s.insert(t);
+            for(auto x:list[t]){
+                if(in(x.first+1,x.second) && field[x.first+1][x.second]!=0 && field[x.first+1][x.second]!=t) dfs2(x.first+1,x.second,t,s);
+            }
+            for(auto x:s){
+                g += G[x];
+            }
+            g /= (double) s.size();
+ //           cerr << s.size() << " " << t << " l:" << l << " r:" << r << " g:" << g << endl;
+            if(!(l+eps<g && g<r-eps)) stable = false;
+        }
+        cout << (stable? "STABLE":"UNSTABLE") << endl;
+    }
+}

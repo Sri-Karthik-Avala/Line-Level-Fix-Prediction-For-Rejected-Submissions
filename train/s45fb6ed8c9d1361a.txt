@@ -1,0 +1,59 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<queue>
+#include<set>
+#include<unordered_map>
+using namespace std;
+typedef long long ll;
+#define chmax(a,b) a=max(a,b)
+#define chmin(a,b) a=min(a,b)
+#define mod 1000000007
+#define mad(a,b) a=(a+b)%mod
+#define N 210
+int h,w,a[N][N];
+ll dp[N][N][N];
+int main(){
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin>>h>>w;
+    for(int i=0;i<h;i++){
+	for(int j=0;j<w;j++){
+	    cin>>a[i][j];
+	}
+    }
+    if(h>w){
+	ll cop[N][N];
+	for(int i=0;i<h;i++)for(int j=0;j<w;j++){
+	    cop[j][i]=a[i][j];
+	}
+	swap(h,w);
+	for(int i=0;i<h;i++)for(int j=0;j<w;j++){
+	    a[i][j]=cop[i][j];
+	}
+    }
+    if(h<=2){
+	ll ans=0;
+	for(int i=0;i<h;i++)for(int j=0;j<w;j++)ans+=a[i][j];
+	cout<<ans<<endl;
+	return 0;
+    }
+    for(int i=0;i<N;i++)for(int j=0;j<N;j++)for(int k=0;k<N;k++)dp[i][j][k]=0;
+    dp[1][0][1]=a[0][1]+a[1][0]+a[0][0]+a[h-1][w-1];
+    for(int i=1;i<h+w;i++){
+	for(int x=0;x<h;x++)for(int y=x+1;y<h;y++){
+	    if(i-x<0||w<=i-x)continue;
+	    if(i-y<0||w<=i-y)continue;
+	    //cout<<i<<" "<<x<<" "<<y<<" "<<dp[i][x][y]<<endl;
+	    for(int xx=x;xx<=x+1;xx++)for(int yy=y;yy<=y+1;yy++){
+		if(xx==yy)continue;
+		if(i+1-xx<0||w<=i+1-xx)continue;
+		if(i+1-yy<0||w<=i+1-yy)continue;
+		chmax(dp[i+1][xx][yy],dp[i][x][y]+a[xx][i+1-xx]+a[yy][i+1-yy]);
+	    }
+	}
+    }
+    cout<<dp[h+w-3][h-2][h-1]<<endl;
+}
+
+

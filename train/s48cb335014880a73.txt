@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<n;i++)
+#define INF 100000000
+using namespace std;
+
+int T,N;
+int t[30],ti[101];
+int dp[101][30];
+
+int main(){
+	while(cin>>T,T){
+		rep(i,T)cin>>t[i];
+		rep(i,101)ti[i]=INF;
+		rep(i,101)rep(j,30)dp[i][j]=INF;
+		dp[1][1]=1;
+		cin>>N;
+		rep(i,N){
+			int d,m;
+			cin>>d>>m;
+			ti[d]=min(ti[d],m);
+		}
+		int ans=INF;
+		for(int i=2;i<=100;i++){
+			if(ti[i]==INF){
+				rep(j,T)dp[i][(j+1)%T]=dp[i-1][j];
+				rep(j,T)dp[i][0]=min(dp[i][0],dp[i-1][j]+1);
+				continue;
+			}
+			rep(j,T){
+				dp[i][0]=min(dp[i][0],dp[i-1][j]+1);
+				if(ti[i]>=t[(j+1)%T]){
+					dp[i][(j+1)%T]=min(dp[i][(j+1)%T],dp[i-1][j]);
+				}
+			}
+		}
+		rep(i,T)ans=min(ans,dp[100][i]);
+		cout<<ans<<endl;
+	}
+}

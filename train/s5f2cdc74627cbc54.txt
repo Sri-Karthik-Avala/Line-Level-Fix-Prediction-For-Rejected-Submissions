@@ -1,0 +1,29 @@
+ef search(l,r) :
+    counter =0;
+    j=0
+    i=0
+    while j < len(r):
+        while i < len(l):
+            if r[j] > l[i]:
+                i+=1
+            elif r[j]==l[i]:
+                counter +=1
+                break
+            elif r[j] < l[i]:
+                break
+        j+=1
+
+    return  counter
+
+
+input()
+list1 = list(map(lambda  x : int(x),input().split(' ')))
+input()
+list2 =  list(map(lambda  x : int(x),input().split(' ')))
+list1.sort()
+list2.sort()
+
+#print(list1)
+#print(list2)
+ans = search(list1,list2)
+print(ans)

@@ -1,0 +1,109 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+const double EPS = 1e-8;
+const int INF = 100000000;
+
+using namespace std;
+
+struct Point{
+    int x, y, z;
+    double dx, dy, dz;
+    Point() : x(INF), y(INF), z(INF) {}
+    bool operator < (const Point& p) const {
+        if(x != p.x) return x < p.x;
+        if(y != p.y) return y < p.y;
+        return z < p.z;
+    }
+    bool operator == (const Point& p) const {
+        return x == p.x && y == p.y && z == p.z;
+    }
+};
+
+void produce(int N, int S, int W, vector<Point>& ps){
+    int g = S;
+    for(int i = 0; i < N; i++){
+        Point p;
+        p.x = (g/7)    %100 + 1;
+        p.y = (g/700)  %100 + 1;
+        p.z = (g/70000)%100 + 1;
+        if( g%2 == 0 ) { g = (g/2); }
+        else           { g = (g/2) ^ W; }
+        ps.push_back(p);
+    }
+}
+
+double dist(double x, double y, double z){
+    return sqrt(x * x + y * y + z * z);
+}
+
+double dist(const Point& p, const Point& q){
+    return dist(p.dx - q.dx, p.dy - q.dy, p.dz - q.dz);
+}
+
+void normlize(vector<Point>& ps){
+    for(int i = 0; i < ps.size(); i++){
+        int x = ps[i].x, y = ps[i].y, z = ps[i].z;
+        double l = dist(x, y, z);
+        ps[i].dx = 1.0 * x / l;
+        ps[i].dy = 1.0 * y / l;
+        ps[i].dz = 1.0 * z / l;
+    }
+}
+
+pair<Point, Point> make(Point a, Point b){
+    if(b < a) swap(a, b);
+    return make_pair(a, b);
+}
+
+void output(pair<Point, Point> p){
+    printf("%d %d %d %d %d %d\n", p.first.x, p.first.y, p.first.z, p.second.x, p.second.y, p.second.z);
+}
+
+int main(){
+    int M, N, S, W;
+    while(cin >> M >> N >> S >> W){
+        if(M + N < 2) break;
+
+        vector<Point> ps(M);
+        REP(i, M){
+            cin >> ps[i].x >> ps[i].y >> ps[i].z;
+        }
+        produce(N, S, W, ps);
+        normlize(ps);
+
+        sort(ps.begin(), ps.end(), [](const Point& a, const Point& b){
+                if(a.dx != b.dx) return a.dx < b.dx;
+                if(a.dy != b.dy) return a.dy < b.dy;
+                return a.dz < b.dz;
+                });
+
+        double min_dist = dist(ps[0], ps[1]);
+
+        for(int i = 0; i < ps.size(); i++){
+            for(int j = i + 1; j < ps.size(); j++){
+                if(ps[j].dx - ps[i].dx > min_dist + EPS) break;
+                double d = dist(ps[i], ps[j]);
+                if(d < EPS) continue;
+                min_dist = min(min_dist, d);
+            }
+        }
+
+        pair<Point, Point> answer = make_pair(Point(), Point());
+        for(int i = 0; i < ps.size(); i++){
+            for(int j = i + 1; j < ps.size(); j++){
+                if(ps[j].dx - ps[i].dx > min_dist + EPS) break;
+                double d = dist(ps[i], ps[j]);
+                if(d < EPS) continue;
+                if(abs(d - min_dist) < EPS){
+                    answer = min(answer, make(ps[i], ps[j]));
+                }
+            }
+        }
+        //assert(answer.first.x < INF);
+
+        output(answer);
+
+    }
+    return 0;
+}

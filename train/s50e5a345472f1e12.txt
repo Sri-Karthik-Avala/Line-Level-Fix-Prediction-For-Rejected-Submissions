@@ -1,0 +1,58 @@
+     
+
+#include<bits/stdc++.h>
+using namespace std;
+using Int = long long;
+
+struct UnionFind{
+  Int n;
+  vector<Int> r,p;
+  UnionFind(Int n):n(n),r(n,1),p(n){iota(p.begin(),p.end(),0);}
+  Int find(Int x){
+    if(x==p[x]) return x;
+    return p[x]=find(p[x]);
+  }
+  void unite(Int x,Int y){
+    x=find(x);y=find(y);
+    if(x==y) return;
+    if(r[x]<r[y]) swap(x,y);
+    r[x]+=r[y];
+    p[y]=x;
+  }
+};
+
+
+signed main(){  
+  cin.tie(0);
+  ios::sync_with_stdio(0);
+  Int n;
+  while(cin>>n,n){
+    UnionFind uf(n);
+    vector<Int> a(n),x(n),b(n),y(n);
+    for(Int i=0;i<n;i++){
+      cin>>a[i]>>x[i]>>b[i]>>y[i];
+      uf.unite(i,a[i]);
+      uf.unite(i,b[i]);
+    }
+    vector<vector<Int> > v(n);
+    for(Int i=0;i<n;i++){
+      Int k=uf.find(i);
+      v[k].emplace_back(x[i]);
+      v[k].emplace_back(y[i]);
+    }
+    Int ans=1;
+    for(Int i=0;i<n;i++){
+      if(v[i].empty()) continue;
+      auto &u=v[i];
+      sort(u.begin(),u.end());
+      Int k=0;
+      while(k<(Int)u.size()&&u[0]==u[k]) k++;
+      k/=2;
+      ans*=k;
+      ans%=10007;
+      //cout<<k<<endl;
+    }
+    cout<<ans<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int M = 924844033, N = 2010;
+long long dp[N][N][4];
+long long ways[N][N];
+long long dp2[N];
+long long fac[N];
+
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    dp[0][0][0] = 1;
+    for (int i=1; i+5<N; i++) {
+        for (int p=0; p<=i+1; p++) {
+            dp[i][p][0] = (dp[i-1][p][0]+dp[i-1][p][1]+dp[i-1][p][2]+dp[i-1][p][3])%M;
+            dp[i][p+1][1] = (dp[i-1][p][0]+dp[i-1][p][1])%M;
+            dp[i][p+1][2] = (dp[i-1][p][0]+dp[i-1][p][2])%M;
+            dp[i][p+2][3] = dp[i-1][p][0];
+        }
+    }
+
+    for (int i=0; i+5<N; i++) {
+        for (int j=0; j<=i+2; j++) {
+            ways[i][j] = (dp[i][j][0] + dp[i][j][1] + dp[i][j][2] + dp[i][j][3])%M;
+        }
+    }
+
+    fac[0] = 1;
+    for (int i=1; i<N; i++)     fac[i] = (fac[i-1]*i)%M;
+
+    int n, k;
+    cin>>n>>k;
+
+    dp2[0] = 1;
+    for (int i=0; i<k; i++) {
+        int cnt = n/k + (i<n%k);
+        for (int cur=n; cur>=0; cur--) {
+            long long vv = 0;
+            for (int j=0; j<=cur; j++)
+                vv = (vv + dp2[cur-j]*ways[cnt-1][j])%M;
+            dp2[cur] = vv;
+        }
+    }
+
+    long long ans = 0;
+
+    for (int i=0; i<=n; i++) {
+        if (i%2==0) ans = (ans + dp2[i]*fac[n-i])%M;
+        else        ans = (ans - dp2[i]*fac[n-i])%M;
+    }
+    ans = (ans%M+M)%M;
+    cout<<ans<<endl;
+}

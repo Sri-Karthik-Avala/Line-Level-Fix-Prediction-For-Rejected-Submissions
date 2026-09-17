@@ -1,0 +1,19 @@
+string = input()
+for i in range(len(string)):
+    if i % 2 == 0:
+        if string[i] == 'h':
+            continue
+        else:
+            print('No')
+            break
+    elif i % 2 == 1:
+        if string[i] == 'i':
+            continue
+        else:
+            print('No')
+            break
+else:
+    if len(string) == 1:
+        print('No')
+    else:
+        print('Yes')

@@ -1,0 +1,6 @@
+import random
+
+S = input()
+for i in range(100):
+  x = random.randrange(len(S)-2)
+  print(S[x] + S[x + 1] + S[x + 2])

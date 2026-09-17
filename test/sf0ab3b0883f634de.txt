@@ -1,0 +1,94 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define rep1(i,n) for(int i=1;i<=(int)(n);i++)
+#define all(c) c.begin(),c.end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl
+using namespace std;
+template<class S,class T> ostream& operator<<(ostream& o,const pair<S,T> &p){return o<<"("<<p.fs<<","<<p.sc<<")";}
+template<class T> ostream& operator<<(ostream& o,const vector<T> &vc){o<<"sz = "<<vc.size()<<endl<<"[";for(const T& v:vc) o<<v<<",";o<<"]";return o;}
+template<class S,class T> bool chmax(S& x,T y){
+	if(x<y){x=y;return 1;}
+	return 0;
+}
+template<class S,class T> bool chmin(S& x,T y){
+	if(x>y){x=y;return 1;}
+	return 0;
+}
+const int MAX_N=600,MAX_S=180000;
+int N,K,A,B,a[MAX_N];
+short inf=1000;
+short dp0[MAX_N+1][MAX_S+1],a0[MAX_N+1][MAX_S+1];
+short dp1[MAX_N+1][MAX_S+1],a1[MAX_N+1][MAX_S+1];
+int l[MAX_S+1],r[MAX_S+1];
+bool can[MAX_S+1];
+bool sel[MAX_N];
+int main(){
+	cin>>N>>K>>A>>B;
+	rep(i,N) cin>>a[i];
+	int S=accumulate(a,a+N,0);
+	for(int j=K;j<=N;j++) rep(s,S+1) dp0[j][s]=dp1[j][s]=inf;
+	dp0[K][accumulate(a,a+K,0)]=0;
+	for(int j=K;j<=N;j++){
+		rep(s,S+1){
+			if(dp1[j][s]==inf) continue;
+			if(chmin(dp1[j+1][s],dp1[j][s])) a1[j+1][s]=-1;
+			int l=dp1[j][s],r=K;
+			if(j>K) chmin(r,dp1[j-1][s]);
+			for(int i=l;i<r;i++) if(chmin(dp0[j][s-a[i]],i+1)) a0[j][s-a[i]]=i;
+		}
+		rep(s,S+1){
+			if(dp0[j][s]==inf) continue;
+			if(chmin(dp0[j+1][s],dp0[j][s])) a0[j+1][s]=-1;
+			if(chmin(dp1[j+1][s+a[j]],dp0[j][s])) a1[j+1][s+a[j]]=-2;
+		}
+	}
+	rep(s,S+1) can[s]=(dp0[N][s]!=inf);
+	rep(i,MAX_S+1){
+		l[i]=1e9;
+		if(can[i]) l[i]=0;
+		if(i>0) chmin(l[i],l[i-1]+1);
+	}
+	rep(i,MAX_S+1){
+		r[MAX_S-i]=1e9;
+		if(can[MAX_S-i]) r[MAX_S-i]=0;
+		if(i>0) chmin(r[MAX_S-i],r[MAX_S-i+1]+1);
+	}
+	int ans=-1,x;
+	for(int i=A;i<=B;i++){
+		if(chmax(ans,min(l[i],r[i]))) x=i;
+	}
+	cout<<x<<endl;
+	int s=x-ans;
+	if(s<0||!can[s]) s=x+ans;
+//	assert(can[s]);
+	rep(i,K) sel[i]=1;
+	int t=0,j=N;
+	while(!(t==0&&j==K&&s==accumulate(a,a+K,0))){
+//		printf("t,j,s=%d,%d,%d\n",t,j,s);
+		if(t==0){
+			short x=a0[j][s];
+			if(x==-1) j--;
+			else{
+//				assert(x>=0);
+				s+=a[x];
+				t=1;
+				sel[x]=0;
+			}
+		}else{
+			short x=a1[j][s];
+			if(x==-1) j--;
+			else{
+//				assert(x==-2);
+				j--;
+				s-=a[j];
+				t=0;
+				sel[j]=1;
+			}
+		}
+	}
+	rep(i,N) if(sel[i]) cout<<i+1<<" ";
+	puts("");
+}

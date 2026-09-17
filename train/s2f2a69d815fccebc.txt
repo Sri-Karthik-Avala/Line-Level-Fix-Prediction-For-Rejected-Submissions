@@ -1,0 +1,34 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+struct point { int d; long long vl; };
+int N, M, K, A, B, C, S[3009]; long long T;
+int main() {
+	cin >> N >> M >> K >> A >> B >> C >> T;
+	for (int i = 0; i < M; i++) cin >> S[i], S[i]--;
+	vector<point> v;
+	for (int i = 0; i < M - 1; i++) {
+		int pl = S[i] + (T - 1LL * i * B >= 0 ? (T - 1LL * S[i] * B) / A : 0) + 1, pr = (T - 1LL * S[i + 1] * B >= 0 ? S[i + 1] : S[i + 1] + 1);
+		if (pl < pr) v.push_back(point{ pr - pl, T - 1LL * S[i] * B - (1LL * (T - 1LL * S[i] * B) / A + 1) * C });
+	}
+	for (int i = 0; i < K - M; i++) {
+		int cost = 0, pos = -1;
+		for (int j = 0; j < v.size(); j++) {
+			if (v[j].vl >= 0) {
+				int res = min((long long)v[j].d, v[j].vl / A + 1);
+				if (cost < res) {
+					pos = j;
+					cost = res;
+				}
+			}
+		}
+		if (pos == -1) break;
+		v[pos].d = max(v[pos].d - v[pos].vl / A - 1, 0LL);
+		v[pos].vl -= (v[pos].vl / A + 1) * C;
+	}
+	int ret = N - 1;
+	for (point i : v) ret -= i.d;
+	cout << ret << endl;
+	return 0;
+}

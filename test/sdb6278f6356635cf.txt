@@ -1,0 +1,15 @@
+while 1:
+    a,b=map(int,raw_input().split())
+    if a==b==0:break
+    n=input()
+    c=[map(int,raw_input().split()) for _ in xrange(n)]
+    dp=[[0]*(b+1) for _ in range(a+1)]
+    for i in xrange(a):
+        dp[i+1][1]=1
+    for i in xrange(b):
+        dp[1][i+1]=1
+    for i in xrange(1,a):
+        for j in xrange(1,b):
+            if [i+1,j+1] in c: continue
+            dp[i+1][j+1]=dp[i+1][j]+dp[i][j+1]
+    print(dp[a][b])

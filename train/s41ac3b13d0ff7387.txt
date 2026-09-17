@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+#define all(x) (x).begin(),(x).end()
+const int mod=1000000007,MAX=700003,INF=1<<30;
+vector<vector<int>> state(MAX,vector<int>(7,0));
+
+vector<int> dx={-1,0,0,1},dy={0,-1,1,0};
+
+void DFS(int u,int v,int goal,int when){
+    stack<pair<int,int>> ST;
+    ST.push(make_pair(u,v));
+    state[u][v]=when;
+    
+    while(!ST.empty()){
+        int a=ST.top().first,b=ST.top().second;
+        ST.pop();
+        for(int i=0;i<4;i++){
+            int c=a+dx[i],d=b+dy[i];
+            if(c<0||c>=goal||d<0||d>=7) continue;
+            if(state[c][d]==0){
+                ST.push(make_pair(c,d));
+                state[c][d]=when;
+            }
+        }
+    }
+}
+
+int main(){
+    
+    ll N;
+    int M,Q;cin>>N>>M>>Q;
+    vector<int> A(Q);
+    for(int i=0;i<Q;i++){
+        cin>>A[i];
+    }
+    if(M%7==0){
+        for(int i=0;i<Q;i++){
+            int a=A[i]/7,b=A[i]%7;
+            state[a][b]=-1;
+        }
+        int now=0;
+        for(int i=0;i<M/7;i++){
+            for(int j=0;j<7;j++){
+                if(state[i][j]==0){
+                    now++;
+                    DFS(i,j,M/7,now);
+                }
+            }
+        }
+        set<pair<int,int>> se;
+        for(int j=0;j<7;j++){
+            if(state[0][j]>=0&&state[M/7-1][j]>=0) se.insert(make_pair(state[0][j],state[M/7-1][j]));
+        }
+        
+        cout<<7*N/M*now-(7*N/M-1)*se.size()<<endl;
+    }
+}
+
+

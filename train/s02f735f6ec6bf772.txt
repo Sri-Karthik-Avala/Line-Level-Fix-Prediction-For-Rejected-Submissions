@@ -1,0 +1,21 @@
+def check():
+    count1 = 0
+    for i in range(4):
+        if A[i] == B[i]:
+            count1 += 1
+    count2 = 0
+    for v in B:
+        if v in A:
+            count2 += 1
+    Hit = count1
+    Blow = count2 - count1
+    
+    print Hit, Blow
+    
+while True:
+    try:
+        A = list(raw_input().split())
+        B = list(raw_input().split())
+        check()
+    except EOFError:
+        pass

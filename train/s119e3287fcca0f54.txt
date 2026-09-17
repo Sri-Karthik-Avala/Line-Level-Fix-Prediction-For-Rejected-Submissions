@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const long long N = 1e5+7;
+long long a[N], ans[N];
+long long p[N];
+bool vis[N];
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    long long n;
+    cin>>n;
+
+    for (long long i=0; i<n; i++) cin>>a[i];
+    for (long long i=n-1; i>0; i--) a[i] -= a[i-1];
+
+    long long m;
+    long long k;
+    cin>>m>>k;
+
+    for (long long i=1; i<n; i++) p[i] = i;
+
+    while (m--) {
+        long long x;
+        cin>>x;
+        swap(p[x-1], p[x]);
+    }
+//
+//    for (long long i=1; i<n; i++) cout<<a[i]<<" - "; cout<<endl;
+//    for (long long i=1; i<n; i++) cout<<p[i]<<" - "; cout<<endl;
+
+    for (long long i=1; i<n; i++) {
+        if (vis[i]) continue;
+        vector<long long> cycle;
+
+        long long u = i;
+        while (!vis[u]) {
+            cycle.push_back(u);
+            vis[u] = 1;
+            u = p[u];
+        }
+
+        long long sz = cycle.size();
+        for (long long i=0; i<cycle.size(); i++) {
+            long long frm = cycle[i];
+            long long to = cycle[(i+k)%sz];
+            ans[to] = a[frm];
+        }
+    }
+    ans[0] = a[0];
+    for (long long i=1; i<n; i++)     ans[i] += ans[i-1];
+    for (long long i=0; i<n; i++)     cout<<ans[i]<<" ";
+
+}

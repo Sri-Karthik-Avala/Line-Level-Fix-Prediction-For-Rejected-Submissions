@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+#define fastio ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define Vi vector<int>
+#define Vll vector<long long>
+#define Pii pair<int,int>
+#define Pll pair<long long, long long>
+#define VVi vector<vector<int>>
+#define fori(i,a,b) for(int i=a;i<b; i++)
+#define MOD 1000000007
+#define pb push_back
+#define mp make_pair
+typedef long long int ll;
+typedef double dl;
+using namespace std;
+ 
+ 
+void soln(){
+    ll n;cin>>n;
+  	Vll v(n);
+  	unordered_map<ll,ll> freq;
+  	fori(i,0,n){
+    	cin>>v[i];
+      	freq[v[i]]++;
+    }
+  	ll count = 0;
+  	for(auto i:freq){
+     	if(i.first>i.second){
+        	count+=i.first;
+        }else if(i.first<i.second){
+        	count+=(i.second-i.first);
+        }
+    }
+    cout<<count<<"\n";
+    
+	return;
+}
+ 
+int main() {
+	// your code goes here
+	fastio;
+	int t=1 ;//cin>>t;
+	while(t--){
+		soln();
+	}
+	return 0;
+}

@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+#define int long long
+using pii=std::pair<int,int>;
+using namespace std;
+
+const int maxn = 2e5 + 5;
+
+int n, k, l, u, v, visited[maxn], comp[maxn], sz[maxn];
+vector<int> adj[2][maxn];   // adj[road / rail]
+
+void dfs(int x, int type, int compid, vector<int>& cities)
+{
+    visited[x] = 1;
+    if(type == 0)
+        comp[x] = compid;
+    else
+        cities.push_back(x);
+    for(auto v : adj[type][x])
+        if(!visited[v])
+            dfs(v, type, compid, cities);
+}
+
+int32_t main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cin >> n >> k >> l;
+    for(int i = 0; i < k; i++)
+    {
+        cin >> u >> v;
+        u--; v--;
+        adj[0][u].push_back(v);
+        adj[0][v].push_back(u);
+    }
+    for(int i = 0; i < l; i++)
+    {
+        cin >> u >> v;
+        u--; v--;
+        adj[1][u].push_back(v);
+        adj[1][v].push_back(u);
+    }
+    for(int i = 0; i < n; i++)
+    {
+        visited[i] = 0;
+        comp[i] = -1;
+        sz[i] = 0;
+    }
+    int curcomp = 0;
+    vector<int> cities;
+    for(int i = 0; i < n; i++)
+        if(!visited[i])
+        {
+            dfs(i, 0, curcomp, cities);
+            curcomp++;
+        }
+    assert(cities.empty());
+    for(int i = 0; i < n; i++)
+        visited[i] = 0;
+    for(int i = 0; i < n; i++)
+        if(!visited[i])
+        {
+            dfs(i, 1, -1, cities);
+            vector<pii> order;
+            for(auto x : cities)
+                order.push_back({comp[x], x});
+            sort(order.begin(), order.end());
+            for(int i = 0; i < order.size(); )
+            {
+                int j = i;
+                while(j < n && order[j].first == order[i].first)
+                    j++;
+                int compsz = (j - i);
+                for(int cur = i; cur < j; cur++)
+                    sz[order[cur].second] += compsz;
+                i = j;
+            }
+            cities.clear();
+        }
+    for(int i = 0; i < n; i++)
+        assert(comp[i] != -1 && sz[i] != 0);
+    for(int i = 0; i < n; i++)
+        cout << sz[i] << " ";
+    cout << "\n";
+    return 0;
+}

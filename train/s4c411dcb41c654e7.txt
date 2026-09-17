@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<ll, ll> l_l;
+typedef pair<int, int> i_i;
+
+#define EPS (1e-7)
+#define INF (1e9)
+#define PI (acos(-1))
+//const ll mod = 1000000007;
+int num = 0;
+vector<int> children[200];
+int parent[200];
+set<string> subtree[200];
+string tree[200];
+double val[200];
+int win(int a, int b);
+void dfs(int from) {
+    //cerr << "DFS: " << from << endl;
+    subtree[from].clear();
+    tree[from].clear();
+    val[from] = 0;
+    if(children[from].empty()) {
+        tree[from] = "()";
+        subtree[from].insert("()");
+        return;
+    }
+    vector<string> now;
+    for(int i = 0; i < children[from].size(); i++) {
+        int to = children[from][i];
+        dfs(to);
+        now.push_back(tree[to]);
+        for(auto itr = subtree[to].begin(); itr != subtree[to].end(); itr++) {
+            subtree[from].insert(*itr);
+        }
+    }
+    sort(now.begin(), now.end());
+    tree[from] = "(" + now[0] + now[1] + ")";
+    subtree[from].insert(tree[from]);
+    set<string> uni;
+    set_intersection(subtree[children[from][0]].begin(), subtree[children[from][0]].end(), subtree[children[from][1]].begin(), subtree[children[from][1]].end(), inserter(uni, uni.end()));
+    val[from] = (double)uni.size() / (double)subtree[from].size();
+    if(win(children[from][1], children[from][0]) == 1) swap(children[from][0], children[from][1]);
+    //cerr << from << endl << tree[from] << endl << val[from] << endl;
+}
+
+void dfs2(int from, bool isleft) {
+    if(children[from].empty()) return;
+    if(!isleft) swap(children[from][0], children[from][1]);
+    dfs2(children[from][0], true);
+    dfs2(children[from][1], false);
+}
+
+int win(int a, int b) {
+    if(val[a] + EPS < val[b]) return 1;
+    if(val[a] > val[b] + EPS) return -1;
+    if(children[a].empty()) return 0;
+    int l = children[a][0];
+    int r = children[b][0];
+    int tmp = win(l, r);
+    if(tmp != 0) return tmp;
+    return win(children[a][1], children[b][1]);
+}
+
+void f(int from, string::iterator &itr) {
+    num++;
+    //cerr << num << " " << from << " " << *itr << endl;
+    int now = num;
+    children[now].clear();
+    children[from].push_back(num);
+    parent[num] = from;
+    if(*itr == 'x') {
+        itr++;
+        return;
+    }
+    itr++;
+    f(now, itr);
+    itr++;
+    f(now, itr);
+    itr++;
+    return;
+}
+
+void print(int from) {
+    if(children[from].empty()) {
+        cout << "x";
+        return;
+    }
+    cout << "(";
+    print(children[from][0]);
+    cout << " ";
+    print(children[from][1]);
+    cout << ")";
+}
+
+int main() {
+    //cout.precision(10);
+    while(true) {
+        string S;
+        getline(cin, S);
+        if(S == "0") break;
+        num = 0;
+        auto itr = S.begin();
+        f(0, itr);
+        dfs(1);
+        dfs2(1, true);
+        print(1);
+        cout << endl;
+    }
+    return 0;
+}

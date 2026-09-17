@@ -1,0 +1,91 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define cs const
+#define re register
+#define pb push_back
+#define pii pair<int,int>
+#define ll long long
+#define y1 shinkle
+#define fi first
+#define se second
+#define bg begin
+cs int RLEN=1<<20|1;
+inline char gc(){
+    static char ibuf[RLEN],*ib,*ob;
+    (ib==ob)&&(ob=(ib=ibuf)+fread(ibuf,1,RLEN,stdin));
+    return (ib==ob)?EOF:*ib++;
+}
+inline int read(){
+    char ch=gc();
+    int res=0;bool f=1;
+    while(!isdigit(ch))f^=ch=='-',ch=gc();
+    while(isdigit(ch))res=(res*10)+(ch^48),ch=gc();
+    return f?res:-res;
+}
+inline ll readll(){
+    char ch=gc();
+    ll res=0;bool f=1;
+    while(!isdigit(ch))f^=ch=='-',ch=gc();
+    while(isdigit(ch))res=(res*10)+(ch^48),ch=gc();
+    return f?res:-res;
+}
+inline char readchar(){
+	char ch=gc();
+	while(isspace(ch))ch=gc();
+	return ch;
+}
+inline int readstring(char *s){
+	int top=0;char ch=gc();
+	while(isspace(ch))ch=gc();
+	while(!isspace(ch)&&ch!=EOF)s[++top]=ch,ch=gc();
+	s[top+1]='\0';return top;
+}
+template<typename tp>inline void chemx(tp &a,tp b){a=max(a,b);}
+template<typename tp>inline void chemn(tp &a,tp b){a=min(a,b);}
+cs int mod=998244353;
+inline int add(int a,int b){return (a+b)>=mod?(a+b-mod):(a+b);}
+inline int dec(int a,int b){return (a<b)?(a-b+mod):(a-b);}
+inline int mul(int a,int b){static ll r;r=(ll)a*b;return (r>=mod)?(r%mod):r;}
+inline void Add(int &a,int b){a=(a+b)>=mod?(a+b-mod):(a+b);}
+inline void Dec(int &a,int b){a=(a<b)?(a-b+mod):(a-b);}
+inline void Mul(int &a,int b){static ll r;r=(ll)a*b;a=(r>=mod)?(r%mod):r;}
+inline int ksm(int a,int b,int res=1){for(;b;b>>=1,Mul(a,a))(b&1)&&(Mul(res,a),1);return res;}
+inline int Inv(int x){return ksm(x,mod-2);}
+inline int fix(ll x){x%=mod;return (x<0)?x+mod:x;}
+cs int N=300005;
+int l[N],r[N],vis[N],t[N],n,L,x[N];
+int main(){
+	#ifdef Stargazer
+	freopen("lx.in","r",stdin);
+	#endif
+	n=read(),L=read();
+	int res=n+1;
+	for(int i=1;i<=n;i++)
+		x[i]=read();
+	for(int i=1;i<=n;i++){
+		t[i]=read();
+		res+=t[i]/(L*2),t[i]%=L*2;
+		if(!t[i]){
+			res--,vis[i]=1;
+			continue;
+		}
+		l[i]=((2*(L-x[i]))>=t[i]),r[i]=(2*x[i]>=t[i]);
+		if(!l[i]&&!r[i])vis[i]=1;
+	}res-=l[n];
+	int cnt=0,sum=0,ps=n;
+	for(int i=1;i<n;i++)if(!vis[i]&&(!l[i]||r[i])){ps=i;break;}
+	for(int i=1;i<ps;i++)if(!vis[i]){
+		if(r[i])cnt++;
+		else if(cnt)cnt--,res--;
+	}
+	sum+=cnt,cnt=0;
+	for(int i=n-1;i>=ps;i--)if(!vis[i]){
+		if(!r[i])break;
+		if(l[i])cnt++;
+		else if(cnt)cnt--,res--;
+	}
+	sum+=cnt,cnt=0;
+	res-=sum/2;
+	cout<<2ll*L*res<<'\n';
+	return 0;
+}

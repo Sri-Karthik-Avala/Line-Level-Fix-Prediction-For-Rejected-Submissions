@@ -1,0 +1,8 @@
+while 1:
+    w,d = map(int,raw_input().split())
+    if w == 0: break
+    front = map(int,raw_input().split())
+    side = map(int,raw_input().split())
+    
+    ans = sum(front)+sum(i for i in side if i not in front)
+    print ans

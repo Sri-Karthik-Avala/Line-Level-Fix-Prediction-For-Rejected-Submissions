@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+#define ll long long
+#define PI acos(-1)
+using namespace std;
+const ll N = 1e5+100;
+const ll MOD = 1e9+7;
+
+ll n,m,T;
+ll X,K,D;
+int main()
+{
+	/*scanf("%d",&T);
+	while(T--)
+	{
+	
+	 } 
+	 */
+	cin >> X >> K >> D;
+	if(X > D&&K)	
+	{
+		ll M = X/D;
+		if(M <=K)
+		{
+			X = X%D;
+			K -= M;
+		}	
+		else
+		{
+			 X -= K*D;
+			 K = 0;
+		}
+	}
+	if(X<-D&&K)
+	{
+		ll M = X/D;
+		if(M <=K)
+		{
+			X = X%D;
+			K -= M;
+		}	
+		else 
+		{
+			X += K*D;
+			K = 0;
+		}
+	}
+	if(K%2==0)	cout << abs(X) << endl;
+	else
+	{
+		if(X<0)	cout << D+X << endl;
+		else cout << D-X << endl;
+	}
+	
+	return 0;
+}

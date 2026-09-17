@@ -1,0 +1,15 @@
+import math
+now_r=0
+now_x=0
+now_y=0
+
+while True:
+    n,r=map(int,raw_input().split(","))
+    if n==0 and r==0:
+        break
+    now_x+=n*math.sin((now_r/180.0)*math.pi)
+    now_y+=n*math.cos((now_r/180.0)*math.pi)
+    now_r+=r
+
+print math.floor(now_x)
+print math.floor(now_y)

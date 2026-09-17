@@ -1,0 +1,119 @@
+Score : 700 points 
+ 
+ 
+ Problem Statement There are N cats.
+We number them from 1 through N . 
+ Each of the cats wears a hat.
+Cat i says: "there are exactly a_i different colors among the N - 1 hats worn by the cats except me." 
+ Determine whether there exists a sequence of colors of the hats that is consistent with the remarks of the cats. 
+ 
+ 
+ 
+ 
+ Constraints 
+ 2 ≤ N ≤ 10^5 
+ 1 ≤ a_i ≤ N-1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ N 
+ a_1 a_2 ... a_N 
+ 
+ 
+ 
+ 
+ 
+ Output Print Yes if there exists a sequence of colors of the hats that is consistent with the remarks of the cats; print No otherwise. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 3
+1 2 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 Yes
+ 
+ For example, if cat 1 , 2 and 3 wears red, blue and blue hats, respectively, it is consistent with the remarks of the cats. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 3
+1 1 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 No
+ 
+ From the remark of cat 1 , we can see that cat 2 and 3 wear hats of the same color.
+Also, from the remark of cat 2 , we can see that cat 1 and 3 wear hats of the same color.
+Therefore, cat 1 and 2 wear hats of the same color, which contradicts the remark of cat 3 . 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 5
+4 3 4 3 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 No
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 4 3
+2 2 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 4 Yes
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 5 4
+2 2 2 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 5 Yes
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 6 5
+3 3 3 3 3
+ 
+ 
+ 
+ 
+ 
+ Sample Output 6 No

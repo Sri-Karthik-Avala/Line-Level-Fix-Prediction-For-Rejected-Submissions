@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+	int n,w,h;
+	cin>>n>>w>>h;
+	int a[10005]={},b[100005]={};
+	for (int i = 0; i < n; ++i)
+	{
+		int x,y,z;
+		cin>>x>>y>>z;
+		if(x-z>=0) ++a[x-z];
+		else ++a[0];
+		if(x+z<=w) --a[x+z];
+		else --a[w];;
+		if(y-z>=0) ++b[y-z];
+		else ++b[0];
+		if(y+z<=h) --b[y+z];
+		else --b[h];
+	}
+	bool f1=1,f2=1;
+	int now=0;
+	for (int i = 0; i < w; ++i)
+	{
+		now+=a[i];
+		if(now<=0) f1=0;
+	}
+	now=0;
+	for (int i = 0; i < h; ++i)
+	{
+		now+=b[i];
+		if(now<=0) f2=0;
+	}
+	cout<<((f1||f2)?"Yes\n":"No\n");
+	return 0;
+}
+

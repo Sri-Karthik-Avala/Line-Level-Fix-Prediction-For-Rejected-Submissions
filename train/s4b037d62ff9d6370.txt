@@ -1,0 +1,8 @@
+def fact(a): return a and a*fact(a-1) or 1
+
+n,m,r = map(int,input().split())
+r-=n*m
+if r < 0:
+    print(0)
+else:
+    print(fact(r+n-1)//fact(n-1)//fact(r))

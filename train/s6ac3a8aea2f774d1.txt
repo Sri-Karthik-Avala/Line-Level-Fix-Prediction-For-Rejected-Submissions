@@ -1,0 +1,46 @@
+import copy
+
+def main():
+    _data = copy.deepcopy(data)
+    while 1 < len(_data):
+        d1, v1 = _data[0]
+        d2, v2 = _data[1]
+        l = f1(v1, v2)
+        v = l
+        m1, m2 = list(f2(l, v1, v2))
+        d = f1(d1*m1, d2*m2)
+        for i in range(2): del _data[0]
+        _data.append([d, v])
+    else:
+        f3(_data[0])
+
+def f1(a, b):
+    x, y = (a, b) if a >= b else (b, a)
+    g = gcd(x, y)
+    return lcm(x, y, g)
+    
+def f2(l, *s):
+    for v in s:
+        yield l/v
+        
+def f3(_data):
+    d1, v1 = _data
+    for d2, v2 in data:
+        ans = str((float(d1)/v1)/(float(d2)/v2))
+        print int(ans[:-2])
+        
+def gcd(x, y):
+    while y != 0:
+        x = x-(x/y)*y
+        x, y = y, x
+    else:
+        return x
+    
+def lcm(x, y, g):
+    return (x*y)/g
+
+while True:
+    n = int(raw_input())
+    if n == 0: break
+    data = [map(int, line.rstrip().split()) for line in open('s.txt')]
+    main()

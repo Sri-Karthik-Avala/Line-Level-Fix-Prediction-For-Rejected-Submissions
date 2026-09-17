@@ -1,0 +1,30 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+#define rep(i,n) for(int i=0;i<n;i++)
+
+int N, K;
+int A[200010];
+set<int> S;
+
+signed main()
+{
+    cin >> N >> K;
+    rep(i, N)cin >> A[i];
+
+    int ans = 1;
+
+    rep(i, K)S.insert(A[i]);
+
+    rep(i, N - K)
+    {
+        S.insert(A[K + i]);
+        if(!(*(S.begin()) == A[i] && *(S.end()--) == A[K + i]))ans++;
+        S.erase(A[i]);
+    }
+
+    cout << ans << endl;
+
+    return 0;
+}

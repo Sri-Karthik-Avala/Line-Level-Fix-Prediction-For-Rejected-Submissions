@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int n;
+	int a, b;
+	string c;
+	int hyou[100][2];
+	string abc = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
+	while (cin >> n) {
+		if (n == 0) {
+			break;
+		}
+		cin >> c;
+		for (int i = 0; i < n; i++) {
+			cin >> hyou[i][0] >> hyou[i][1];
+			hyou[i][0] -= 1;
+			hyou[i][1] -= 1;
+		}
+		for (int i = n-1; i >= 0; i--) {
+			for (int j = 0; j < 26; j++) {
+				if (c[hyou[i][0]] == abc[j]) {
+					a = j;
+					break;
+				}
+			}
+			for (int j = 0; j < 26; j++) {
+				if (c[hyou[i][1]] == abc[j]) {
+					b = j;
+					break;
+				}
+			}
+			int sa = abs(hyou[i][0]-hyou[i][1]);
+			c[hyou[i][0]] = abc[a+sa];
+			c[hyou[i][1]] = abc[b+sa];
+			swap(c[hyou[i][0]], c[hyou[i][1]]);
+		}
+		cout << c << endl;
+	}
+	return 0;
+}

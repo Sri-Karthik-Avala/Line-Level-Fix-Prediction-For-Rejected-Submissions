@@ -1,0 +1,25 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main(){
+	int k,n,m,p,dat[15000],cnt;
+	double ans=0;
+	cin>>k>>n>>m>>p;
+	for(int i=0;i<k;i++){
+		cin>>dat[i];
+	}
+	sort(dat,dat+n,greater<int>());
+	ans=p/n;
+	for(int i=0;i<k;i++){
+		cnt+=dat[i];
+		if((cnt+p)/(n+(i+1)*m)>ans){
+			ans=(cnt+p)/(n+(i+1)*m);
+		}
+		else{
+			break;
+		}
+		}
+		cnt=ans;
+		cout<<cnt<<endl;
+		return 0;
+	}

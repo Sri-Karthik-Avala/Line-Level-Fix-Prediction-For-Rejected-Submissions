@@ -1,0 +1,87 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define N 100000 + 5
+#define Mod 1000000007
+#define rep(i, l, r) for(int i = l; i <= r; ++i)
+bool cir[N];
+int n, ans, a[N], f[N], p[N], in[N], deg[N], vis[N], sum[N], inv[N], invp[N];
+int read(){
+    char c; int x = 0, f = 1;
+    c = getchar();
+    while(c > '9' || c < '0'){ if(c == '-') f = -1; c = getchar();}
+    while(c >= '0' && c <= '9') x = x * 10 + c - '0', c = getchar();
+    return x * f;
+}
+int Inc(int a, int b){ return (a += b) >= Mod ? a - Mod : a;}
+int Mul(int a, int b){ return 1ll * a * b % Mod;}
+int Qpow(int a, int b){
+    int ans = 1;
+    while(b){
+        if(b & 1) ans = Mul(ans, a);
+        a = Mul(a, a), b >>= 1;
+    }
+    return ans;
+}
+int C(int n, int m){
+    if(m > n) return 0;
+    return Mul(f[n], Mul(inv[m], inv[n - m]));
+}
+void solve(int p){
+    int x = p, fi = 0, fl = 0, last = 0, llen = 0, now = 0, nlen = 0, cnt = 0;
+    while(cir[x]){
+        cir[x] = false, cnt++; if(!in[x]){ x = a[x]; continue;}
+        if(!last) last = fi = cnt, llen = fl = in[x];
+        else{
+            if(!now) now = cnt, nlen = in[x];
+            else last = now, llen = nlen, now = cnt, nlen = in[x];
+            if(cnt - nlen < last) ans = 0;
+            if(cnt - nlen > last) ans = Mul(ans, 2); 
+        }
+        x = a[x];
+    }
+    if(!fi) sum[cnt]++;
+    else{
+        if(!now) now = fi;
+        int len = cnt - (now - fi);
+        if(len < fl) ans = 0;
+        if(len > fl) ans = Mul(ans, 2);
+    }
+}
+int main(){
+    n = read();
+    rep(i, 1, n) a[i] = read(), deg[a[i]]++;
+    f[0] = inv[0] = p[0] = invp[0] = 1;
+    rep(i, 1, n){
+        f[i] = Mul(f[i - 1], i), inv[i] = Qpow(f[i], Mod - 2);
+        p[i] = Mul(p[i - 1], 2), invp[i] = Qpow(p[i], Mod - 2);
+    }
+    rep(i, 1, n) if(!vis[i]){
+        int x = i;
+        while(!vis[x]) vis[x] = i, x = a[x];
+        if(vis[x] == i) while(!cir[x]) cir[x] = true, x = a[x];
+    }
+    rep(i, 1, n) if((cir[i] && deg[i] >= 3) || (!cir[i] && deg[i] >= 2)){ puts("0"); return 0;}
+    rep(i, 1, n) if(!cir[i]){
+        int x = i, cnt = 0;
+        while(!cir[x]) x = a[x], cnt++;
+        in[x] = cnt;
+    }
+    ans = 1;
+    rep(i, 1, n) if(cir[i]) solve(i);
+    rep(i, 1, n) if(sum[i]){
+        int res = 0;
+        rep(j, 0, sum[i] / 2){
+            int cnt = 0;
+            cnt = C(sum[i], 2 * j);
+            cnt = Mul(cnt, C(2 * j, j));
+            cnt = Mul(cnt, f[j]);
+            cnt = Mul(cnt, invp[j]);
+            cnt = Mul(cnt, Qpow(i, j));
+            if((i & 1) && i != 1) cnt = Mul(cnt, p[sum[i] - 2 * j]);
+            res = Inc(res, cnt);
+        }
+        ans = Mul(ans, res);
+    }
+    printf("%d", ans);
+    return 0;
+}

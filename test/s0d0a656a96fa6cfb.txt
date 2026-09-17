@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+#define PB push_back
+#define MP make_pair
+#define F first
+#define S second
+#define int long long int
+using namespace std;
+typedef vector<int> VI;
+typedef pair<int, int> PII;
+typedef vector<PII> VP;
+
+int n, m;
+int a[200010], b[200010], c[200010];
+int ans = -1;
+VP node[100010];
+
+priority_queue<PII, VP, greater<PII> > q;
+int visited[100010];
+
+void dijk()
+{
+  memset(visited, -1, sizeof visited);
+  q.push(MP(0, 1));
+
+  while(!q.empty()){
+    PII now = q.top();
+    q.pop();
+    if(now.S == n){
+      ans = max(ans, now.F);
+    }
+    else if(visited[now.S] == -1){
+      visited[now.S] = now.F;
+
+      for(int i = 0; i < node[now.S].size(); i++){
+	if(node[now.S][i].F >= now.F){
+	  q.push(node[now.S][i]);
+	}
+      }
+    }
+  }  
+}
+
+signed main()
+{
+  scanf("%lld%lld", &n, &m);
+  for(int i = 0; i < m; i++){
+    scanf("%lld%lld%lld", &a[i], &b[i], &c[i]);
+    
+    node[a[i]].PB(MP(c[i], b[i]));
+    node[b[i]].PB(MP(c[i], a[i]));
+  }
+  
+  dijk();
+
+  cout << ans << endl;
+  return 0;
+}

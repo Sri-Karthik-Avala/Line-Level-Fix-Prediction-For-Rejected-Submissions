@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn = 1e5 + 10;
+typedef long long ll;
+int n, x, l[maxn], r[maxn];
+ll ans1, ans2;
+struct cmpl { bool operator () (const int & i, const int & j) const { return l[i] > l[j] || (l[i] == l[j] && i < j);}};
+struct cmpr { bool operator () (const int & i, const int & j) const { return r[i] < r[j] || (r[i] == r[j] && i < j);}};
+set<int, cmpl> sl;
+set<int, cmpr> sr;
+int main()
+{
+	scanf("%d", &n);
+	for(int i = 1; i <= n; ++i)
+	{
+		scanf("%d%d", &l[i], &r[i]);
+		sl.insert(i); sr.insert(i);
+	}
+	int cur = 0;
+	for(int i = 1; i <= n; ++i)
+	{
+		if(i & 1) x = *sl.begin();
+		else x = *sr.begin();
+		sl.erase(x); sr.erase(x);
+		if(l[x] <= cur && cur <= r[x]) continue;
+		else if(cur < l[x]) { ans1 += l[x] - cur; cur = l[x];}
+		else { ans1 += cur - r[x]; cur = r[x];}
+	}
+	ans1 += abs(cur);
+	
+	for(int i = 1; i <= n; ++i) sl.insert(i), sr.insert(i);
+	cur = 0;
+	for(int i = 1; i <= n; ++i)
+	{
+		if(i & 1) x = *sl.begin();
+		else x = *sr.begin();
+		sl.erase(x); sr.erase(x);
+		if(l[x] <= cur && cur <= r[x]) continue;
+		else if(cur < l[x]) { ans2 += l[x] - cur; cur = l[x];}
+		else { ans2 += cur - r[x]; cur = r[x];}
+	}
+	ans2 += abs(cur);
+	
+	cout << max(ans1, ans2) << endl;
+	return 0;
+}

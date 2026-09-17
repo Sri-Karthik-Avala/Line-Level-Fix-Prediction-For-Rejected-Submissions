@@ -1,0 +1,35 @@
+#while 1:
+    #n=map(int,raw_input().split())
+
+def chang(x):
+    h = x / 100
+    m= x%100
+    return h * 60 + m
+
+while 1:
+    (ch,st,en) = map(int, raw_input().split())
+    if(ch==0 and st ==0 and en ==0):break
+    hours = [0]*(chang(2400)+1)
+    for i in range(ch):
+        line = raw_input()
+        tms = map(int, raw_input().split())
+        for ti in tms[0::2]:
+            hours[chang(ti)] += 1
+            #print ti,hours[chang(ti)]            
+        for tim in tms[1::2]:
+            hours[chang(tim)] -=1
+            #print tim,hours[chang(tim)]
+    #end imos
+    spn = 0
+    checker = 0
+    maxspn = 0
+    for t in range(chang(st),chang(en)+1):
+        if(checker < ch and hours[t] + checker >= ch):
+            if(spn > maxspn):maxspn = spn
+            spn=0
+        checker += hours[t]
+        if(checker < ch):spn+=1
+    if(spn > maxspn):maxspn = spn
+    
+    print maxspn-1
+            

@@ -1,0 +1,17 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long int ll;
+#define FOR(i,L,R) for(i=L;i<R;i++)
+#define REP(i,N) FOR(i,0,N)
+int main(){
+  ll A,B,C,D,E,F,i,j,k,p=1,q=0;cin>>A>>B>>C>>D>>E>>F;
+  REP(i,F/(100*A)+1)REP(j,(F-100*A*i)/(100*B)+1){
+    ll W=A*i+B*j,L=min(F-100*W,W*E);
+    REP(k,L/C+1){
+      ll S=C*k+(L-C*k)/D*D;
+      if(q*(100*W+S)<p*S)p=100*W+S,q=S;
+    }
+  }
+  cout<<p<<" "<<q<<endl;
+  return 0;
+}

@@ -1,0 +1,32 @@
+import heapq
+n, m = map(int, input().split())
+work = [list(map(int, input().split())) for _ in range(n)]
+work.sort(key=lambda x:x[0])
+
+cd = []
+heapq.heapify(cd)
+cnt = 0
+ans = 0
+# b, a
+# aの条件
+for k in range(m+1):
+    # a = kの仕事をheappush
+    
+    for i in range(cnt, n):
+        a, b = work[i]
+
+        if a <= k:
+            heapq.heappush(cd, [-b, a])
+        else:
+            cnt = i
+            break
+        
+        if i == n-1:
+            cnt = n-1
+
+    if not cd:
+        continue
+    ans -= heapq.heappop(cd)[0]
+print(ans)
+
+

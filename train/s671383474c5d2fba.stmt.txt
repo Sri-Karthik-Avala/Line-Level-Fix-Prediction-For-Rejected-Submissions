@@ -1,0 +1,47 @@
+Three-way Branch 
+
+ 
+There is a grid that consists of W \times H cells. The upper-left-most cell is (1, 1) .
+You are standing on the cell of (1,1) and you are going to move to cell of (W, H) .
+You can only move to adjacent lower-left, lower or lower-right cells.
+ 
+
+ 
+There are obstructions on several cells. You can not move to it. You cannot move out the grid, either.
+Write a program that outputs the number of ways to reach (W,H) modulo 1,000,000,009.
+You can assume that there is no obstruction at (1,1) .
+ 
+
+ Input 
+
+ 
+The first line contains three integers, the width W , the height H , and the number of obstructions N . 
+( 1 \leq W \leq 75 , 2 \leq H \leq 10^{18} , 0 \leq N \leq 30 )
+Each of following N lines contains 2 integers, denoting the position of an obstruction (x_i, y_i) .
+ 
+
+ 
+The last test case is followed by a line containing three zeros.
+ 
+
+ Output 
+
+ 
+For each test case, print its case number and the number of ways to reach (W,H) modulo 1,000,000,009.
+ 
+
+ Sample Input 
+
+ 
+2 4 1
+2 1
+2 2 1
+2 2
+0 0 0
+ 
+
+ Output for the Sample Input 
+
+ 
+Case 1: 4
+Case 2: 0

@@ -1,0 +1,63 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+#define LL long long
+#define fgx cerr<<"--------------"<<endl;
+#define dgx cerr<<"=============="<<endl;
+
+inline int read(){
+	int x=0,f=1;char c=getchar();
+	for(;!isdigit(c);c=getchar()) if(c=='-') f=-1;
+	for(;isdigit(c);c=getchar()) x=x*10+c-'0';
+	return x*f;
+}
+const int MAXN = 1000010;
+const int INF = 2147483600;
+
+int N,M,Q,Mod; int fa[MAXN+1]; bool f[2][MAXN+1];
+int a[MAXN+1],b[MAXN+1],c[MAXN+1];
+inline int gcd(int a,int b){ if(!b) return a; return gcd(b,a%b); }
+inline int Id(int x,int y,int z){ return x*6+y*2+z; }
+inline int find(int x){ return (fa[x]==x?fa[x]:(fa[x]=find(fa[x]))); }
+inline void link(int u,int v){ if(find(u)==find(v)) return ;fa[find(v)]=find(u); }
+
+int main(){
+	//freopen(".in","r",stdin);
+	//freopen(".out","w",stdout);
+	N=read(),M=read(),Q=read(),Mod=read(); int g=0;
+	for(int i=1;i<=M;i++) {
+		a[i]=read(),b[i]=read(),c[i]=read();
+		g=gcd(g,abs(c[i]-c[1]));
+	} 
+	if(!g) g=Mod; Mod=gcd(Mod,3*g); LL z=c[1]%Mod;
+	for(int i=0;i<6*N;i++) fa[i]=i;
+	for(int i=1;i<=M;i++){
+		int u=a[i]-1,v=b[i]-1,w=((c[i]-z)/g)%3;
+		for(int x=0;x<3;x++){
+			link(Id(u,x,0),Id(v,(x*2+w)%3,1));
+			link(Id(u,x,1),Id(v,(x*2+w)%3,0));
+			link(Id(v,x,0),Id(u,(x*2+w)%3,1));
+			link(Id(v,x,1),Id(u,(x*2+w)%3,0));
+		}
+	} 
+	for(int i=0,nw=z;i<(Mod<<1);nw=(nw<<1)%Mod,i++) f[i&1][nw]=1;
+	while(Q--){
+		bool can=0;
+		int u=read(),v=read(),r=read(); --u; --v;
+		for(int j=0;j<2;j++)
+			for(int k=0;k<3;k++){
+				if(find(Id(v,0,0))==find(Id(u,k,j))){
+					can|=f[j][(r+z+(3-k)*g)%Mod];
+				}
+			}
+		if(can) puts("YES"); else puts("NO");
+	}
+	return 0;
+}
+
+

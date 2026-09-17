@@ -1,0 +1,73 @@
+#include <iostream>
+#include <algorithm>
+#define MAX_R 10000
+#define MAX_C 30
+#define INF 100000
+using namespace std;
+typedef pair<int, int> coordinate;
+char field[MAX_R][MAX_C + 1];
+bool used[MAX_R][MAX_C + 1];
+int d[MAX_R][MAX_C + 1];
+int dx[4] = { 1, 0, -1, 0 }, dy[4] = { 0, 1, 0, -1 };
+int R, C;
+coordinate start, goal;
+
+void dijkstra(coordinate s) {
+	d[s.second][s.first] = 0;
+
+	while (1) {
+		coordinate v(-1, -1);
+		for (int i = 0; i < R; ++i) {
+			for (int j = 0; j < C; ++j) {
+				if (!used[i][j] && (v == coordinate(-1, -1) || d[i][j] < d[v.second][v.first])) {
+					v = coordinate(j, i);
+				}
+			}
+		}
+
+		if (v == coordinate(-1, -1)) break;
+		used[v.second][v.first] = true;
+
+		for (int i = 0; i < R; ++i) {
+			int nx = v.first + dx[i]; int ny = v.second + dy[i];
+			if (0 <= nx && nx < C && 0 <= ny && ny < R && field[ny][nx] != '#') {
+				if (field[ny][nx] == 'o') d[ny][nx] = min(d[ny][nx], d[v.second][v.first] + 1);
+				else if (field[ny][nx] == 'x') d[ny][nx] = min(d[ny][nx], d[v.second][v.first] + 3);
+				else d[ny][nx] = min(d[ny][nx], d[v.second][v.first] + 2);
+
+				int nnx = nx + dx[i]; int nny = ny + dy[i];
+				if (0 <= nnx && nnx < C && 0 <= nny && nny < R && field[nny][nnx] != '#') {
+					d[nny][nnx] = min(d[nny][nnx], d[v.second][v.first] + 4);
+
+					int nnnx = nnx + dx[i]; int nnny = nny + dy[i];
+					if (0 <= nnnx && nnnx < C && 0 <= nnny && nnny < R && field[nnny][nnnx] != '#') {
+						d[nnny][nnnx] = min(d[nnny][nnnx], d[v.second][v.first] + 5);
+					}
+				}
+
+			}
+		}
+	}
+}
+
+
+int main() {
+	char tmp;
+	cin >> R >> C;
+	for (int i = 0; i < R; ++i) {
+		fill(d[i], d[i] + C, INF);
+		fill(used[i], used[i] + C, false);
+	}
+	for (int i = 0; i < R; ++i) {
+		for (int j = 0; j < C; ++j) {
+			cin >> tmp;
+			if (tmp == 'S') start = coordinate(j, i);
+			if (tmp == 'G') goal = coordinate(j, i);
+			if (tmp == '#') used[i][j] = true;
+			field[i][j] = tmp;
+		}
+	}
+	dijkstra(start);
+	cout << d[goal.second][goal.first] << endl;
+	return 0;
+}

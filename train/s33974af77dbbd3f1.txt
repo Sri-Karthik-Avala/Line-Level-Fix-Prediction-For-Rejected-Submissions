@@ -1,0 +1,69 @@
+#include "bits/stdc++.h"
+using namespace std;
+using ll = long long;
+using vi = vector<int>;
+using vii = vector<vector<int>>;
+using vl = vector<ll>;
+using vll = vector<vector<ll>>;
+using pii = pair<int,int>;
+#define FOR(i,a,b) for(ll i = (a); i < (b); i++)
+#define REP(i,n) FOR(i,0,n)
+#define ALL(obj) (obj).begin(), (obj).end()
+#define pb push_back
+#define fst first
+
+string s;
+int id;
+void eat(char c){
+  assert(s[id] == c);
+  id++;
+}
+char peek(){
+  return s[id];
+}
+char pop(){
+  return s[id++];
+}
+bool left(){
+  return id < s.size();
+}
+int number(){
+  int res = 0;
+  while (isdigit(peek())) {
+    res = res * 10 + pop() - '0';
+  }
+  return res;
+}
+int solve(){
+  eat('[');
+  int res = 0;
+  vi vec;
+  if (isdigit(peek())) {
+    res = number() / 2 + 1;
+    eat(']');
+  } else {
+    while (peek() != ']') {
+      vec.pb(solve());
+    }
+    sort(ALL(vec));
+    eat(']');
+    REP(i,vec.size() / 2){
+      res += vec[i];
+    }
+  }
+  return res;
+}
+
+
+int main(){
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+  int n;
+  cin >> n;
+  REP(i,n){
+    id = 0;
+    cin >> s;
+    cout << solve() << endl;
+  }
+  return 0;
+}

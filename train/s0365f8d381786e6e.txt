@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+int main(void){
+    double r,a;
+    
+    cin>>r;
+    r*2;
+    a=r*3.141592;
+    a*=1000000;
+    a=(int)a;
+    a/=1000000;
+    cout<<a<<endl;
+    
+}

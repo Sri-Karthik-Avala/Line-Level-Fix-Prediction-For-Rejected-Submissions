@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<typename T, typename U> void cmax(T &a, U b) { if (a < b) a = b; }
+template<typename T, typename U> void cmin(T &a, U b) { if (a > b) a = b; }
+
+signed main() {
+  cin.tie(nullptr);
+  ios_base::sync_with_stdio(false);
+
+  long N;
+  cin >> N;
+  vector<tuple<long, long, long>> V(N);
+  sort(V.rbegin(), V.rend());
+  for (long i = 0; i < N; i++) {
+    long A, B;
+    cin >> A >> B;
+    V.at(i) = {A + B, A, B};
+  }
+  long T = 0, A = 0;
+  for (long i = 0; i < N; i++) {
+    auto [a, b, c] = V.at(i);
+    if (i % 2) A += c;
+    else T += b;
+  }
+  cout << T - A << "\n";
+}

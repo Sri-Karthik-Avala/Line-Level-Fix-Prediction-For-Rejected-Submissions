@@ -1,0 +1,47 @@
+import sys
+input = sys.stdin.readline
+import numpy as np
+
+"""
+ax + by + c という距離をたくさん作れる
+全ての(a,b)に対して作るとしてよい（cを大きくすれば無視できるので）
+悪さをしない範囲の最小のcを選ぶ
+それで上手くいっているかを検証
+"""
+
+U = 2
+A,B = map(int,input().split())
+D = np.array([input().rstrip().split() for _ in range(A)], dtype=np.int64)
+
+ax = np.arange(U+1)[:,None] * np.arange(1,A+1)[None,:] # (U+1, A)
+by = np.arange(U+1)[:,None] * np.arange(1,B+1)[None,:] # (U+1, B)
+axby = ax[:,:,None,None] + by[None,None,:,:] # (U+1,A,U+1,B)
+
+c = (D[None,:,None,:] - axby).max(axis = 3).max(axis = 1) # (U+1,U+1)
+c *= (c > 0)
+
+D2 = (axby + c[:,None,:,None]).min(axis = 2).min(axis = 0) # (A,B)
+
+if (D != D2).any():
+    print('Impossible')
+    exit()
+
+# ax + by + c[a,b] という1次式が距離になるようなグラフを作成
+
+graph = []
+for a in range(U+1):
+    for b in range(U+1):
+        graph.append((1+a, (U+2) + b, c[a,b]))
+for a in range(U):
+    graph.append((a+1,a+2,'X'))
+for b in range(U,0,-1):
+    graph.append((U+2+b,U+1+b,'Y'))
+
+start = 1
+goal = U+2
+
+print('Possible')
+print(2*(U+1), len(graph))
+for e in graph:
+    print(*e)
+print(start,goal)

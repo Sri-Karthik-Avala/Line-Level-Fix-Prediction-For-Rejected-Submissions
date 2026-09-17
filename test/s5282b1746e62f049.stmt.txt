@@ -1,0 +1,65 @@
+Problem Statement 
+
+ You have just arrived in a small country. Unfortunately a huge hurricane swept across the country a few days ago.
+ 
+ The country is made up of $n$ islands, numbered $1$ through $n$. Many bridges connected the islands, but all the bridges were washed away by a flood. People in the islands need new bridges to travel among the islands again.
+ 
+ The problem is cost. The country is not very wealthy. The government has to keep spending down. They asked you, a great programmer, to calculate the minimum cost to rebuild bridges. Write a program to calculate it!
+ 
+ Each bridge connects two islands bidirectionally. Each island $i$ has two parameters $d_i$ and $p_i$. An island $i$ can have at most $d_i$ bridges connected. The cost to build a bridge between an island $i$ and another island $j$ is calculated by $|p_i - p_j|$. Note that it may be impossible to rebuild new bridges within given limitations although people need to travel between any pair of islands over (a sequence of) bridges. 
+ 
+ Input 
+
+ The input is a sequence of datasets.
+The number of datasets is less than or equal to $60$.
+Each dataset is formatted as follows.
+ 
+ $n$ $p_1$ $d_1$ $p_2$ $d_2$ : : $p_n$ $d_n$ 
+
+ Everything in the input is an integer.
+$n$ ($2 \leq n \leq 4{,}000$) on the first line indicates the number of islands.
+Then $n$ lines follow, which contain the parameters of the islands.
+$p_i$ ($1 \leq p_i \leq 10^9$) and $d_i$ ($1 \leq d_i \leq n$) denote the parameters of the island $i$.
+ 
+ The end of the input is indicated by a line with a single zero.
+ 
+
+ Output 
+ For each dataset, output the minimum cost in a line if it is possible to rebuild bridges within given limitations in the dataset. Otherwise, output $-1$ in a line.
+ 
+
+ Sample Input 
+
+ 4
+1 1
+8 2
+9 1
+14 2
+4
+181 4
+815 4
+634 4
+370 4
+4
+52 1
+40 1
+81 2
+73 1
+10
+330 1
+665 3
+260 1
+287 2
+196 3
+243 1
+815 1
+287 3
+330 1
+473 4
+0 
+ Output for the Sample Input 
+
+ 18
+634
+-1
+916

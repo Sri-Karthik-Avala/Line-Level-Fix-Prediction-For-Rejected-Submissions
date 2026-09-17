@@ -1,0 +1,54 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement Compute A \times B . 
+ 
+ 
+ 
+ 
+ Constraints 
+ 1 \leq A \leq 100 
+ 1 \leq B \leq 100 
+ All values in input are integers. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ A B 
+ 
+ 
+ 
+ 
+ 
+ Output Print the value A \times B as an integer. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 2 5
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 10
+ 
+ We have 2 \times 5 = 10 . 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 100 100
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 10000

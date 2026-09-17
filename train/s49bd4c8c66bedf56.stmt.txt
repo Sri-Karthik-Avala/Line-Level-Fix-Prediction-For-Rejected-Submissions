@@ -1,0 +1,101 @@
+String in String 
+
+ Problem 
+ 
+文字列 S と Q 個のクエリが与えられる。 
+ i 番目のクエリ(0 &le; i &le; Q -1)には閉区間[ l i , r i ]と文字列 M i が与えられる。
+ S の l i 文字目から r i 文字目までの部分文字列の中に文字列 M i はいくつ存在するか出力せよ。
+ 
+ Input 
+ 入力は以下の形式で与えられる。 
+ 
+ S Q 
+ l 0 r 0 M 0 
+ l 1 r 1 M 1 
+.
+.
+.
+ l Q&minus;1 r Q&minus;1 M Q&minus;1 
+ 
+ 
+ 1行目に文字列 S とクエリの数 Q が空白区切りで与えられる。 
+ 続く Q 行に整数 l i , r i , M i が空白区切りで与えられる。
+ 
+
+ Constraints 
+
+ 
+ 1 &le;| S | &le; 100000 
+ 1 &le; Q &le; 100000 
+ 1 &le; | M i | &le; 100000 (0 &le; i &le; Q -1) 
+ 0 &le; l i &le; r i < | S | (0 &le; i &le; Q -1) 
+ 文字はすべて英小文字である 
+ 文字列 M の合計文字数は2000000を越えない 
+ 
+
+ Output 
+ 
+出力は Q 行からなる。各クエリに対する答えを順番に1行に出力せよ。
+ 
+
+ Sample Input 1 
+ 
+rupcrupc 5
+0 3 rupc
+0 7 rupc
+2 7 ru
+2 7 pc
+1 5 u
+ 
+
+ Sample Output 1 
+ 
+1
+2
+1
+2
+2
+ 
+
+ Sample Input 2 
+ 
+abatagaadbura 8
+0 6 a
+6 12 a
+0 6 aa
+0 3 a
+3 5 a
+5 9 a
+1 8 b
+1 12 b
+ 
+
+ Sample Output 2 
+ 
+4
+3
+0
+2
+1
+2
+1
+2
+ 
+
+ Sample Input 3 
+ 
+aaaaaaaaaa 5
+0 9 aaa
+0 9 aa
+5 9 aaaa
+2 8 aa
+1 2 a
+ 
+
+ Sample Output 3 
+ 
+8
+9
+2
+6
+2

@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+typedef long long ll;
+
+int N;
+int R;
+const int m = 1e9+7;
+vector<int> factorial;
+vector<int> word;
+
+int bit[100010];
+int sum(int i) {
+	int s = 0;
+	while(i > 0) {
+		s += bit[i];
+		i -= i & -i;
+	}
+	return s;
+}
+void add(int i, int x) {
+	while(i <= N) {
+		bit[i] += x;
+		i += i & -i;
+	}
+}
+
+int main() {
+	while(cin >> N, N) {
+		cin >> R;
+		factorial.resize(N+10);
+		word.resize(N);
+		for(int i = 0; i < 100010; i++) bit[i] = 0;
+		for(int i = 0; i < word.size(); i++)
+			word[i] = i;
+		factorial[0] = 1;
+		for(int i = 1; i < factorial.size(); i++) {
+			factorial[i] = ((ll)factorial[i-1] * i) % m;
+		}
+		for(int i = 0; i < R; i++) {
+			int s, t;
+			cin >> s >> t;
+			s--; t--;
+			swap(word[s], word[t]);
+		}
+		long long res;
+		res = 0;
+		for(int i = 0; i < word.size(); i++) {
+			res = (res + factorial[word.size()-1-i] * (word[i] - sum(word[i]+1))) % m;
+			add(word[i]+1, 1);
+		}
+		cout << res << endl;
+	}
+}

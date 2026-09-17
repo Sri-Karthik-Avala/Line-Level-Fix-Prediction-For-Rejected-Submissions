@@ -1,0 +1,102 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <cstdlib>
+#include <vector>
+using namespace std;
+const int N = 55, M = 110;
+const int mod = 1e9 + 7;
+
+inline int ksm(int a, int b = mod - 2) {
+	int ans = 1; 
+	for (; b; b >>= 1, a = 1ll * a * a % mod) 
+		if (b & 1) ans = 1ll * ans * a % mod;
+	return ans;
+}
+
+int gcd(int a, int b) {return !b ? a : gcd(b, a % b);}
+
+vector<int> D[N];
+int dfn[N], low[N], cnt, num, c[N], sta[N], top, fac[M], inv[M], ifac[M], root;
+struct edge{int y, next;} a[M << 1]; int len, last[N];
+void ins(int x, int y) {a[++len] = (edge){y, last[x]}; last[x] = len;}
+
+void tarjan(int x) {
+	dfn[x] = low[x] = ++cnt; sta[++top] = x; int flag = 0;
+	for (int k = last[x], y; k; k = a[k].next) {
+		++flag;
+		if (!dfn[y = a[k].y]) {
+			tarjan(y);
+			low[x] = min(low[x], low[y]);
+			if (low[y] == dfn[x]) {
+				++num; int z;
+				do {
+					z = sta[top--];
+					D[num].push_back(z);
+				} while (z != y);
+				D[num].push_back(x);
+			}
+		}
+		else low[x] = min(low[x], dfn[y]);
+	}
+}
+
+int K;
+
+int check(int u) {
+	if (D[u].size() == 1) return -1;
+	if (D[u].size() == 2) return 0;
+	int siz = 0;
+	for (int x : D[u]) c[x] = u;
+	for (int x : D[u]) {
+		for (int k = last[x], y; k; k = a[k].next) {
+			if (c[y = a[k].y] == u) ++siz;
+		}
+	}
+	siz /= 2;
+	return siz;
+}
+ 
+int calc1(int n) {
+	int ans = ksm(K, n);
+	for (int i = 1; i < n; ++i) 
+		ans = (ans + ksm(K, gcd(n, i))) % mod;
+	ans = 1ll * ans * ksm(n) % mod;
+	return ans;
+}
+
+
+int binom(int n, int m) {
+	if (n < m || n < 0 || m < 0) return 0;
+	if (n == m || m == 0) return 1;
+	return 1ll * fac[n] * ifac[n - m] % mod * ifac[m] % mod;
+}
+
+int main() {
+	len = 1; memset(last, 0, sizeof last);
+	int n, m; scanf("%d%d%d", &n, &m, &K);
+	for (int i = 1; i <= m; ++i) {
+		int x, y; scanf("%d%d", &x, &y);
+		ins(x, y); ins(y, x);
+	}
+	fac[0] = ifac[0] = inv[0] = fac[1] = ifac[1] = inv[1] = 1;
+	for (int i = 2; i <= K + m; ++i) {
+		fac[i] = 1ll * fac[i - 1] * i % mod;
+		inv[i] = 1ll * inv[mod % i] * (mod - mod / i) % mod;
+		ifac[i] = 1ll * ifac[i - 1] * inv[i] % mod;
+	}
+	for (int i = 1; i <= n; ++i) if (!dfn[i]) 
+		tarjan(i);
+	int ans = 1;
+	for (int i = 1; i <= num; ++i) {
+		int flag = check(i);
+		if (flag == -1) continue;
+		if (!flag) {ans = 1ll * ans * K % mod; continue;}
+		int siz = D[i].size();
+		if (flag == siz) ans = 1ll * ans * calc1(siz) % mod;
+		else ans = 1ll * ans * binom(flag + K - 1, K - 1) % mod;
+	}
+	printf("%d\n", ans);
+	return 0;
+}

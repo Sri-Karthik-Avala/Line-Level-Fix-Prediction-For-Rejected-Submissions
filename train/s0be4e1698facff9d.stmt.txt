@@ -1,0 +1,220 @@
+Nets of Dice
+ 
+
+
+ 
+In mathematics, some plain words have special meanings.
+The word " net " is one of such technical terms.
+In mathematics, the word " net " is sometimes used to
+mean a plane shape 
+which can be folded into some solid shape.
+ 
+
+ 
+The following are a solid shape (Figure 1) and one of its net (Figure 2).
+ 
+
+
+ 
+ 
+ Figure 1: a prism Figure 2: a net of a prism 
+ 
+
+ 
+Nets corresponding to a solid shape are not unique.
+For example, Figure 3 shows three of the nets of a cube.
+ 
+
+ 
+ 
+ Figure 3: examples of nets of a cube 
+ 
+
+ 
+In this problem, we consider nets of dice.
+The definition of a die is as follows.
+ 
+ A die is a cube, each face marked with a number between one and six.
+ Numbers on faces of a die are different from each other.
+ The sum of two numbers on the opposite faces is always 7.
+ 
+ 
+Usually, a die is used in pair with another die.
+The plural form of the word "die" is "dice".
+ 
+
+ 
+Some examples of proper nets of dice are shown in Figure 4,
+and those of improper ones are shown in Figure 5.
+ 
+
+ 
+
+ 
+ Figure 4: examples of proper nets of dice 
+ 
+
+ 
+ 
+ Figure 5: examples of improper nets 
+ 
+
+ 
+The reasons why each example in Figure 5 is improper are as follows.
+ 
+ (a) The sum of two numbers on the opposite faces is not always 7.
+ (b) Some faces are marked with the same number.
+ (c) This is not a net of a cube. Some faces overlap each other.
+ (d) This is not a net of a cube.
+Some faces overlap each other and one face of a cube is not covered.
+ (e) This is not a net of a cube. 
+The plane shape is cut off into two parts.
+The face marked with '2' is isolated.
+ (f) This is not a net of a cube.
+The plane shape is cut off into two parts.
+ (g) There is an extra face marked with '5'.
+ 
+ 
+
+ 
+Notice that there are two kinds of dice.
+For example, the solid shapes formed from 
+the first two examples in Figure 4 
+are mirror images of each other.
+ 
+
+
+ 
+Any net of a die can be expressed on a sheet of 5x5 mesh like the one in Figure 6.
+In the figure, gray squares are the parts to be cut off.
+When we represent the sheet of mesh by numbers as in Figure 7,
+squares cut off are marked with zeros.
+ 
+
+ 
+ 
+ Figure 6: 5x5 mesh Figure 7: representation by numbers 
+ 
+
+ 
+Your job is to write a program which tells
+the proper nets of a die from the improper ones automatically.
+ 
+
+
+ Input 
+
+ 
+The input consists of multiple sheets of 5x5 mesh.
+ 
+
+ 
+ N 
+ Mesh 0 
+ Mesh 1 
+ ... 
+ Mesh N -1 
+ 
+
+ 
+ N is the number of sheets of mesh.
+Each Mesh i gives a sheet of mesh
+on which a net of a die is expressed.
+ Mesh i is in the following format.
+ 
+
+ 
+ 
+ F 00 
+ F 01 
+ F 02 
+ F 03 
+ F 04 
+ 
+ 
+ F 10 
+ F 11 
+ F 12 
+ F 13 
+ F 14 
+ 
+ 
+ F 20 
+ F 21 
+ F 22 
+ F 23 
+ F 24 
+ 
+ 
+ F 30 
+ F 31 
+ F 32 
+ F 33 
+ F 34 
+ 
+ 
+ F 40 
+ F 41 
+ F 42 
+ F 43 
+ F 44 
+ 
+ 
+
+ 
+Each F ij is an integer between 0 and 6.
+They are separated by a space character.
+ 
+
+ Output 
+ 
+For each Mesh i , 
+the truth value, true or false , 
+should be output, each in a separate line.
+When the net of a die expressed on the Mesh i is proper, 
+output "true".
+Otherwise, output "false".
+ 
+ Sample Input 
+ 
+6
+0 0 0 0 0
+0 0 0 0 6
+0 2 4 5 3
+0 0 1 0 0
+0 0 0 0 0
+0 0 3 0 0
+0 0 2 0 0
+0 0 4 1 0
+0 0 0 5 0
+0 0 0 6 0
+0 0 0 3 0
+0 0 2 5 0
+0 4 1 0 0
+0 0 6 0 0
+0 0 0 0 0
+0 6 2 0 0
+0 0 4 0 0
+0 1 5 0 0
+0 0 3 0 0
+0 0 0 0 0
+0 0 0 0 6
+0 2 4 5 3
+0 0 1 0 0
+0 0 0 0 0
+0 0 0 1 0
+0 0 0 0 6
+0 2 4 5 3
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 1 0
+ 
+
+ Output for the Sample Input 
+ 
+true
+true
+false
+false
+false
+false

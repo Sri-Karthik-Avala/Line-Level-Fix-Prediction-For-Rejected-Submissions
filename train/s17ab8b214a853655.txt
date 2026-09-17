@@ -1,0 +1,59 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+const int nMax=3*1e5+10;
+const int Mod=1e9+7;
+int jc[3*nMax],_jc[3*nMax],bin[3*nMax];
+int power(int a,int b)
+{
+	if(b==0)
+		return 1;
+	int c=power(a,b>>1);
+	c=(long long)c*c%Mod;
+	if(b%2)
+		c=(long long)c*a%Mod;
+	return c;
+}
+void work()
+{
+	jc[0]=1;
+	for(int i=1;i<3*nMax;i++)
+		jc[i]=(long long)jc[i-1]*i%Mod;
+	_jc[3*nMax-1]=power(jc[3*nMax-1],Mod-2);
+	for(int i=3*nMax-2;i>=0;i--)
+		_jc[i]=(long long)_jc[i+1]*(i+1)%Mod;
+	bin[0]=1;
+	for(int i=1;i<3*nMax;i++)
+		bin[i]=(bin[i-1]<<1)%Mod;
+}
+int _c(int a,int b)
+{
+	if(b==0)
+		return 1;
+	int ans=jc[b];
+	ans=(long long)ans*_jc[b-a]%Mod;
+	ans=(long long)ans*_jc[a]%Mod;
+	return ans;
+}
+int n,m,k,ans;
+int main()
+{
+	scanf("%d%d%d",&n,&m,&k);
+	work();
+	if(m>k)
+		swap(m,k);
+	for(int i=0;i<=m;i++)
+		ans=(ans+((long long)bin[i]*_c(i,i+n-1)%Mod*power(3,n+m+k-i-n))%Mod)%Mod;
+	int last=bin[m];
+	for(int i=m+1;i<=m+k;i++)
+	{
+		last=(last<<1)%Mod;
+		last-=2*_c(m,i-1);
+		last=(last%Mod+Mod)%Mod;
+		ans=(ans+(long long)last*_c(i,i+n-1)%Mod*power(3,n+m+k-i-n)%Mod)%Mod;
+	}
+	printf("%d\n",ans);
+	return 0;
+}

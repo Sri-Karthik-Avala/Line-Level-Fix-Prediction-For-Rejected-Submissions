@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int i, j, k;
+  int w, h;
+  char s[30][30], c;
+
+  cin>>w>>h>>c;
+
+  for(i = 1; i <= w; i++){
+
+    if(i != 1 && i != w)s[1][i] = '-';
+    else s[1][i] = '+';
+    if(i != 1 && i != w)s[h][i] = '-';
+    else s[h][i] = '+';
+  }
+
+  for(i = 1; i <= h; i++){
+
+    if(i != 1 && i != h)s[i][1] = '|';
+    else s[i][1] = '+';
+    if(i != 1 && i != h)s[i][w] = '|';
+    else s[i][w] = '+';
+  }
+
+  for(i = 1; i <= h; i++ ){
+    for(j = 1; j <= w; j++){
+      if(s[i][j] != '+' && s[i][j] != '-' && s[i][j] != '|') s[i][j] = '.';
+    }
+  }
+
+  s[(h + 1)/2][(w + 1)/2] = c;
+
+    for(i = 1; i <= h; i++){
+      for(j = 1; j <= w; j++){
+	cout<<s[i][j];
+      }cout<<endl;
+    }
+  
+  return 0;
+}
+

@@ -1,0 +1,51 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int MOD = 1e9 + 7 , INV9 = (MOD + 1) / 9;
+int dp[12][1 << 15 | 1] , val[1 << 15 | 1] , val0[1 << 15 | 1] , N , Q , l[20] , r[20];
+vector < int > lsh , coef;
+
+int poww(long long a , int b){
+	int times = 1;
+	while(b){
+		if(b & 1) times = times * a % MOD;
+		a = a * a % MOD; b >>= 1;
+	}
+	return times;
+}
+
+int main(){
+	cin >> N >> Q; int mx = 0 , tms = 1;
+	for(int i = 0; i < Q ; ++i){cin >> l[i] >> r[i]; lsh.push_back(--l[i]); lsh.push_back(r[i]); mx = max(mx , r[i]);}
+	sort(lsh.begin() , lsh.end()); lsh.resize(unique(lsh.begin() , lsh.end()) - lsh.begin()); coef.resize(lsh.size());
+	for(int i = 0 ; i < coef.size() ; ++i){
+		int t = (poww(10 , lsh[i] - (i ? lsh[i - 1] : 0)) - 1ll) * INV9 % MOD;
+		coef[i] = (t + 1ll) * poww(t , MOD - 2) % MOD; if(i) tms = 1ll * tms * t % MOD;
+	}
+	for(int i = 0 ; i < Q ; ++i){
+		l[i] = lower_bound(lsh.begin() , lsh.end() , l[i]) - lsh.begin();
+		r[i] = lower_bound(lsh.begin() , lsh.end() , r[i]) - lsh.begin();
+	}
+	for(int i = 0 ; i < 1 << Q ; ++i){
+		bool vis[40] = {}; val[i] = 1;
+		for(int j = 0 ; j < Q ; ++j){vis[l[j]] |= i >> j & 1; vis[r[j]] |= i >> j & 1;}
+		for(int j = 0 ; j < Q ; ++j) val[i] &= !(vis[l[j]] ^ vis[r[j]]);
+		for(int j = 1 ; j < coef.size() ; ++j)
+			if(vis[j] && vis[j - 1]) val[i] = 1ll * val[i] * coef[j] % MOD;
+		if(lsh[0] == 0) val0[i] = !vis[0] ? 0 : val[i];
+		else val0[i] = !vis[0] ? val[i] : 1ll * val[i] * coef[0] % MOD;
+	}
+	dp[0][0] = 1;
+	for(int i = 0 ; i < 9 ; ++i)
+		for(int j = 0 ; j < 1 << Q ; ++j)
+			if(dp[i][j]){
+				int k = ((1 << Q) - 1) ^ j , s = k;
+				while(1){
+					dp[i + 1][j | s] = (dp[i + 1][j | s] + 1ll * dp[i][j] * (i ? val[s] : val0[s])) % MOD;
+					if(!s) break;
+					s = (s - 1) & k;
+				}
+			}
+	int ans = dp[9][(1 << Q) - 1]; tms = 1ll * tms * poww(10 , N - mx) % MOD;
+	cout << 1ll * ans * tms % MOD; return 0;
+}

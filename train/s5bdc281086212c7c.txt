@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int n, m, k, p;
+int s[6], t[6];
+ 
+struct edge{
+  int to, cost;
+};
+typedef vector< vector< edge > > Graph;
+typedef long long int64;
+int64 min_cost[1005][1 << 6][1 << 6];
+int flag[1005], tour[1005];
+const int64 INF = 1LL << 55;
+ 
+int64 Dijkstra(Graph& info, int s, int g) { //s??????g???????????????
+  typedef pair< int64, int64 > Pi;
+  typedef pair< Pi, Pi > Piii;
+  priority_queue< Piii, vector< Piii >, greater< Piii > > que;
+  fill_n( **min_cost, (1 << 6) * (1 << 6) * 1005, INF);
+  que.push( Piii(Pi(0, s), Pi(0, 0)));
+  min_cost[s][0][0] = 0;
+  while(!que.empty()){
+    Piii p = que.top(); que.pop();
+    if(p.second == Pi((1LL << k) - 1, (1LL << k) - 1)) return p.first.first;
+    if(p.first.first > min_cost[p.first.second][p.second.first][p.second.second]) continue;
+    for(int i = 0; i < info[p.first.second].size(); i++){
+      edge& e = info[p.first.second][i];
+      int nextf = p.second.first, nexts = p.second.second;
+      if(flag[e.to] >= 0) nextf |= 1LL << flag[e.to];
+      else if(tour[e.to] >= 0) nexts |= (1LL << tour[e.to]) & (p.second.first << tour[e.to]);
+      if(p.first.first + e.cost < min_cost[e.to][nextf][nexts]) {
+        min_cost[e.to][nextf][nexts] = p.first.first + e.cost;
+        que.push( Piii(Pi( min_cost[e.to][nextf][nexts], e.to), Pi(nextf, nexts)));
+      }
+    }
+  }
+  return -1;
+}
+ 
+int main() {
+  cin >> n >> m >> k >> p;
+  --p;
+  fill_n( flag, 1005, -1);
+  fill_n( tour, 1005, -1);
+ 
+  Graph graph(n);
+  for(int i = 0; i < m; i++) {
+    int x, y, A;
+    cin >> x >> y >> A;
+    --x, --y;
+    graph[x].push_back((edge){y, A});
+    graph[y].push_back((edge){x, A});
+  }
+  for(int i = 0; i < k; i++) {
+    cin >> s[i] >> t[i];
+    --s[i], --t[i];
+    assert(flag[s[i]] < 0);
+    assert(tour[t[i]] < 0);
+    flag[s[i]] = i;
+    tour[t[i]] = i;
+  }
+  int64 ret = Dijkstra(graph, p, -1);
+  if(~ret) cout << ret << endl;
+  else cout << "Cannot deliver" << endl;
+}

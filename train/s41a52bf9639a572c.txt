@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+#define f first
+#define s second
+using namespace std;
+typedef pair<int,int> P;
+map <string,int> M;
+vector <P> e[301];
+int C[301],used[301];
+
+bool check(int ima,int cost){
+  int size=e[ima].size();
+  if(used[ima])return (cost-C[ima])==0;
+  used[ima]=1,C[ima]=cost;
+  for(int i=0;i<size;i++)
+    if(!check(e[ima][i].f,cost+e[ima][i].s))return 0;
+  return 1;
+}
+
+int main(){
+  int n;
+  while(cin>>n,n){;
+    for(int i=0;i<100;i++)e[i].clear();
+    M.clear();
+
+    int N=0;
+    for(int i=0;i<n;i++){
+      string a,b,c,d,E;
+      cin>>a>>b>>c>>d>>E;
+      if(!M.count(b))M[b]=N++;
+      if(!M.count(E))M[E]=N++;
+      int num=0,j=3,flg=1;
+      if(d[3]=='-')flg=-1,j=4;
+      while(j<d.size())num=num*10+d[j++]-'0';
+      e[M[b]].push_back(P(M[E],num*flg));
+      e[M[E]].push_back(P(M[b],-num*flg));
+    }
+
+    int ans=1;
+    for(int i=0;i<N;i++){
+      memset(used,0,sizeof(used));
+      memset(C,0,sizeof(C));
+      ans*=check(i,0);
+    }
+    cout <<(ans? "Yes":"No")<<endl;
+  }
+  return 0;
+}

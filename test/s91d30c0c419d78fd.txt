@@ -1,0 +1,115 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<ll, ll> P;
+
+#define each(i,a) for (auto&& i : a)
+#define FOR(i,a,b) for (ll i=(a),__last_##i=(b);i<__last_##i;i++)
+#define RFOR(i,a,b) for (ll i=(b)-1,__last_##i=(a);i>=__last_##i;i--)
+#define REP(i,n) FOR(i,0,n)
+#define RREP(i,n) RFOR(i,0,n)
+#define __GET_MACRO3(_1, _2, _3, NAME, ...) NAME
+#define rep(...) __GET_MACRO3(__VA_ARGS__, FOR, REP)(__VA_ARGS__)
+#define rrep(...) __GET_MACRO3(__VA_ARGS__, RFOR, RREP)(__VA_ARGS__)
+#define pb push_back
+#define all(a) (a).begin(),(a).end()
+#define chmin(x,v) x = min(x, v)
+#define chmax(x,v) x = max(x, v)
+
+const ll linf = 1e18;
+const int inf = 1e9;
+const double eps = 1e-12;
+const double pi = acos(-1);
+
+template<typename T>
+istream& operator>>(istream& is, vector<T>& vec) {
+    each(x,vec) is >> x;
+    return is;
+}
+template<typename T>
+ostream& operator<<(ostream& os, const vector<T>& vec) {
+    rep(i,vec.size()) {
+        if (i) os << " ";
+        os << vec[i];
+    }
+    return os;
+}
+template<typename T>
+ostream& operator<<(ostream& os, const vector< vector<T> >& vec) {
+    rep(i,vec.size()) {
+        if (i) os << endl;
+        os << vec[i];
+    }
+    return os;
+}
+vector<ll> bfs(const vector<vector<ll>>& G, const vector<ll>& s, vector<ll>& m) {
+    const ll n = G.size();
+    vector<ll> dist(n, linf);
+    queue<ll> Q;
+    each(v, s) {
+        Q.push(v);
+        dist[v] = 0;
+    }
+    m.resize(n);
+    rep(i, n) m[i] = i;
+    while ( !Q.empty() ) {
+        ll v = Q.front(); Q.pop();
+        each(to, G[v]) {
+            if (dist[v]+1 <= dist[to]) {
+                assert(dist[v]+1 == dist[to] || dist[to] == linf);
+                chmin(m[to], m[v]);
+            }
+            if (dist[v]+1 < dist[to]) {
+                dist[to] = dist[v]+1;
+                Q.push(to);
+            }
+        }
+    }
+    return dist;
+}
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    ll n, A, B, C; cin >> n >> A >> B >> C;
+    vector<ll> av(A), bv(B), cv(C); cin >> av >> bv >> cv;
+    each(v, av) --v;
+    each(v, bv) --v;
+    each(v, cv) --v;
+    ll m; cin >> m;
+    vector<vector<ll>> G(n);
+    rep(i, m) {
+        ll a, b; cin >> a >> b; --a, --b;
+        G[a].pb(b);
+        G[b].pb(a);
+    }
+    vector<ll> mia, mib, mic;
+    vector<ll> da = bfs(G, av, mia);
+    vector<ll> db = bfs(G, bv, mib);
+    vector<ll> dc = bfs(G, cv, mic);
+    ll ma = *min_element(all(av));
+    ll mb = *min_element(all(av));
+    ll mc = *min_element(all(av));
+    ll mi = min(ma, min(mb, mc));
+    P ans(linf, linf);
+    // cout << mia << endl;
+    {
+        vector<P> v(3, P(linf, linf));
+        rep(i, n) {
+            chmin(v[0], P(da[i] + db[i], i));
+            chmin(v[1], P(db[i] + dc[i], i));
+            chmin(v[2], P(dc[i] + da[i], i));
+        }
+        sort(all(v));
+        chmin(ans, P(v[0].first + v[1].first, min(mi, min(v[0].second, v[1].second))));
+    }
+    {
+        rep(i, n) {
+            ll d = da[i] + db[i] + dc[i];
+            ll mid = min(mi, min(mia[i], min(mib[i], mic[i])));
+            chmin(ans, P(d, mid));
+        }
+    }
+    cout << ans.first << " " << ans.second+1 << endl;
+}

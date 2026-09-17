@@ -1,0 +1,15 @@
+#E
+N,T=map(int,input().split())
+A=[0 for i in range(N+1)]
+B=[0 for i in range(N+1)]
+for i in range(1,N+1):
+    A[i],B[i]=map(int,input().split())
+    
+dp=[[0 for i in range(6001)] for j in range(N+1)]
+
+for i in range(1,N+1):
+    for j in range(T):
+        dp[i][j+A[i]]=max(dp[i-1][j+A[i]],dp[i-1][j]+B[i])
+
+ans=max(dp[N])
+print(ans)

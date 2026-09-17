@@ -1,0 +1,65 @@
+import sys
+input = sys.stdin.buffer.readline
+
+#sys.setrecursionlimit(10**9)
+#from functools import lru_cache
+
+def RD(): return input().rstrip().decode()
+def II(): return int(input())
+def FI(): return int(input())
+def MI(): return map(int,input().split())
+def MF(): return map(float,input().split())
+def LI(): return list(map(int,input().split()))
+def LF(): return list(map(float,input().split()))
+def TI(): return tuple(map(int,input().split()))
+# rstrip().decode()
+
+
+
+def main():
+	n=II()
+	A=LI()
+
+
+	A.sort()
+
+	a=A[0]
+	b=A[-1]
+
+	ans="No"
+
+	if b-a==0:
+		if n==a+1 or n>=a*2:
+			ans="Yes"
+
+	elif b-a==1:
+		aa=A.count(a)
+		if 2*a-aa+2<=n:
+			ans="Yes"
+
+
+
+
+	print(ans)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+	main()

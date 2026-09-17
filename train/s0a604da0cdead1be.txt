@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define MP make_pair
+#define PB push_back
+#define F first
+#define S second
+#define INF 1 << 30
+#define EPS 1e-10
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int n, b[2][128];
+
+int rec1(int x, int y){
+  if(b[x][y+1] == 1) return rec1(x, y+1);
+  return y;
+}
+
+int rec2(int x, int y){
+  if(b[x][y] == 2) return rec2(x, y-1);
+  return y;
+}
+
+int main(){
+  while(scanf("%d", &n) && n){
+    rep(i, 2) rep(j, n) scanf("%d", &b[i][j]);
+
+    queue<pii>q;
+    q.push(MP(0, MP(0, 0)));
+    q.push(MP(1, MP(0, 0)));
+    map<pi, int>m;
+    m[MP(0, 0)] = 1; m[MP(1, 0)] = 0;
+
+    int res = -1;
+    while(!q.empty()){
+      pii now = q.front(); q.pop();
+      //      printf("%d %d %d\n", now.F, now.S.F, now.S.S);
+      if(b[now.F][now.S.F] == 1) now.S.F = rec1(now.F, now.S.F);
+      else if(b[now.F][now.S.F] == 2) now.S.F = rec2(now.F, now.S.F);
+
+      if(now.S.F == n-1){
+	res = now.S.S;
+	break;
+      }
+
+      rep(i, 3){
+	pii next = now;
+	next.F = (next.F+1)%2;
+	next.S.F += i;
+	next.S.S++;
+	if(m.count(MP(next.F, next.S.F))) continue;
+	m[MP(next.F, next.S.F)] = next.S.S;
+	q.push(next);
+      }
+    }
+    if(res < 0) puts("NA");
+    else printf("%d\n", res);
+  }
+  return 0;
+}

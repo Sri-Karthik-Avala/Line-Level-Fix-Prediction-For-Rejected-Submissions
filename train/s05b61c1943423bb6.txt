@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+int main(void){
+
+  int i,L,M,N,bank=0,min=99;
+
+  while(1){
+    bank = 0;  
+    cin >> L;
+    if(L == 0) break;
+
+    for(i = 1; i <= 12; i++){
+      cin >> M >> N;
+      bank += M - N;
+      if(bank >= L){
+	if(i < min) min = i;
+      }
+    }
+    
+    if(bank >= L) cout << min << endl;
+    else cout << "NA" << endl;
+    bank = 0;
+  }
+  
+  
+  return 0;
+}

@@ -1,0 +1,33 @@
+#include<iostream>
+#include<iomanip>
+#include<cstring>
+#include<cmath>
+#include<cstdio>
+#include<queue>
+#include<algorithm>
+using namespace std;
+long long A,B,l,r,L,R;
+int main()
+{
+	scanf("%lld%lld",&A,&B);
+	for(int i=61;i>=0;i--)
+	if(((A>>i)&1)^((B>>i)&1)) break;
+	else if((A>>i)&1) A-=(1<<i),B-=(1<<i);
+	int lim=61;
+	while(lim>=0)
+	{
+		if(((A>>lim)&1)!=((B>>lim)&1))
+		{
+			l=A&((1ll<<lim+1)-1),r=(1ll<<lim)+l;
+			int tt=lim-1;
+			while(tt>=0&&!((B>>tt)&1)) tt--;
+			R=(1ll<<lim)+(1ll<<tt+1)-1;
+			break;
+		}
+		lim--;
+	}
+	long long ans=0;
+	if(R>=r) ans=(1ll<<lim+1)-l;
+	else ans=(1ll<<lim+1)-r+R-l+1;
+	printf("%lld\n",ans);
+}

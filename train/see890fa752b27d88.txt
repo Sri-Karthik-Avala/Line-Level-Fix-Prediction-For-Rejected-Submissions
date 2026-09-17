@@ -1,0 +1,6 @@
+s=input()
+
+if s.find('B')=="2":
+  print('ARC')
+else:
+  print('ABC')

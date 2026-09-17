@@ -1,0 +1,4 @@
+S = input()
+S.capitalize()
+print(S.capitalize())
+

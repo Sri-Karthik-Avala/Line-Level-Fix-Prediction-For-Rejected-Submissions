@@ -1,0 +1,102 @@
+#include <bits/stdc++.h>
+#define REP(i,n) for(int i=0; i<(int)(n); ++i)
+
+using namespace std;
+
+typedef vector<int> Node;
+typedef vector<Node> Graph;
+typedef pair<int, int> P;
+typedef tuple<int, int, int, int> T;
+const int INF = 1000000000;
+
+int main(){
+    int N, M;
+    while(cin >> N >> M) {
+        vector<string> s(N);
+        REP(i, N) cin >> s[i];
+
+        bool d[100][100] = {};
+        REP(i, M) {
+            int a, b;
+            cin >> a >> b;
+            a--; b--;
+            d[a][b] = true;
+        }
+
+        vector<P> next[100][10][26];
+        REP(i, N) REP(j, s[i].size()) {
+            if(j == s[i].size() - 1) {
+                REP(k, N) if(d[i][k]) {
+                    next[i][j][ s[k][0] - 'a' ].push_back(P(k, 0));
+                }
+            } else {
+                next[i][j][s[i][j+1] - 'a'].push_back(P(i, j+1));
+            }
+        }
+
+        vector<P> nextr[100][10][26];
+        REP(i, N) REP(j, s[i].size()) {
+            if(j == 0) {
+                REP(k, N) if(d[k][i]) {
+                    nextr[i][j][ s[k][s[k].size() - 1] - 'a' ].push_back(P(k, s[k].size() - 1));
+                }
+            } else {
+                nextr[i][j][s[i][j-1] - 'a'].push_back(P(i, j-1));
+            }
+        }
+
+
+        int dist[100][10][100][10] = {};
+        bool inque[100][10][100][10] = {};
+        //REP(i, N) REP(j, s[i].size()) REP(k, N) REP(l, s[k].size()) dist[i][j][k][l] = INF;
+
+        queue<T> que;
+
+        REP(i, N) REP(k, N) {
+            if(s[i][0] == s[k][s[k].size() - 1]) {
+                que.push(T(i, 0, k, s[k].size() - 1));
+                dist[i][0][k][s[k].size() - 1] = 1;
+            }
+        }
+
+        int ans = 0;
+        const int MAX_D = 100000 / 40;
+        while(!que.empty()){
+            int a, i, b, j;
+            tie(a, i, b, j) = que.front();
+            que.pop();
+            inque[a][i][b][j] = false;
+
+            int cdist = dist[a][i][b][j];
+
+            if(cdist > MAX_D) continue;
+
+            //printf("(%d, %d) (%d, %d) : %d\n", a, i, b, j, cdist);
+
+            if(a == b && i == j) {
+                ans = max(ans, 2 * cdist - 1);
+            }
+            bool exist = false;
+            REP(c, 26) for(auto p : next[a][i][c]) if(p.first == b && p.second == j) exist = true;
+            if(exist) {
+                ans = max(ans, 2 * cdist);
+            }
+
+            REP(c, 26) for(auto p : next[a][i][c]) for(auto q : nextr[b][j][c]) {
+                int& ndist = dist[p.first][p.second][q.first][q.second];
+                bool& inq = inque[p.first][p.second][q.first][q.second];
+                if(ndist < cdist + 1) {
+                    ndist = cdist + 1;
+                    if(!inq) {
+                        que.push(T(p.first, p.second, q.first, q.second));
+                        inq = true;
+                    }
+                }
+            }
+        }
+        if(ans >= MAX_D + 1) ans = -1;
+
+        cout << ans << endl;
+    }
+    return 0;
+}

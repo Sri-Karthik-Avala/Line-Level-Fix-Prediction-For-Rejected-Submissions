@@ -1,0 +1,30 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,a) loop(i,0,a)
+using namespace std;
+typedef long long ll;
+typedef vector<int> vi;
+int main(){
+  int n;
+  cin>>n;
+  vector<double>s(n+1);
+  rep(i,n+1){
+    int m;
+    cin>>m>>m;
+    double sum=0;
+    while(m--){
+      double a,b;
+      cin>>a>>b;
+      sum+=b;
+      s[i]+=a*b;
+    }
+    s[i]/=sum;
+  }
+  bool h=false;
+  rep(i,n)if(s[i]>s[n]+1e10)h=true;
+  if(h)cout<<"YES"<<endl;
+  else cout<<"NO"<<endl;
+}

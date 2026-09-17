@@ -1,0 +1,6 @@
+n = int(input())
+items = [input().split(' ') for i in range(n)]
+
+items = sorted(items)
+for item in items:
+    print(' '.join(item))

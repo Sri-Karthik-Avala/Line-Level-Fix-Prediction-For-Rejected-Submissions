@@ -1,0 +1,28 @@
+def get_rectangle_area(table, w):
+    maxv = 0
+    stack = []
+    table.append(0)
+    for i, rect in enumerate(table):
+        if stack == []:
+            stack.append((rect, i))
+        elif stack[-1][0] < rect:
+            stack.append((rect, i))
+        elif stack[-1][0] == rect:
+            pass
+        elif stack[-1][0] > rect:
+            while stack != [] and stack[-1][0] >= rect:
+                high, pos = stack.pop()
+                maxv = max(maxv, high*(i-pos))
+            stack.append((rect, pos))
+    return maxv
+
+while True:
+    h, w = map(int, raw_input().split())
+    if h == w == 0:
+        break
+    mass = [raw_input() for i in range(h)]
+    table = histgram(mass, h, w)
+    ans = 0
+    for tab in table:
+        ans = max(ans, get_rectangle_area(tab, w))
+    print ans

@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int dy[]={-1,-1,0,1,1,1,0,-1};
+int dx[]={0,1,1,1,0,-1,-1,-1};
+
+string s;
+int t[21][17];
+int py[20],px[20];
+int m=0,sy,sx;
+
+struct state{
+  int y,x,S,cost;
+};
+
+
+state calc(int dir,state s){
+  int T=0;
+
+  int ny=s.y+dy[dir],nx=s.x+dx[dir];
+
+  while(1){
+    if(t[ny][nx]==-1)break;
+    T|=(1<<t[ny][nx]);
+    ny+=dy[dir];
+    nx+=dx[dir];
+  }
+
+  if(T==0)s.cost=-2;
+  s.y=ny;
+  s.x=nx;
+  s.cost++;
+  s.S-=T;
+  return s;
+}
+
+int solve(){
+
+  queue< state > Q;
+  Q.push((state){sy,sx,(1<<m)-1,0});
+
+  while(!Q.empty()){
+    state s=Q.front();Q.pop();
+    int S=s.S;
+
+    for(int i=0;i<m;i++)
+      if(S>>i&1)
+	t[py[i]][px[i]]=i;
+
+    for(int i=0;i<8;i++){
+      state next=calc(i,s);
+      if(next.cost==-1)continue;
+      if(next.y<1)continue;
+      if(next.y>=19)return s.cost+1;
+      if(next.x<1)continue;
+      if(next.x>15)continue;
+      Q.push(next);
+    }
+    for(int i=0;i<m;i++)
+      if(S>>i&1)
+	t[py[i]][px[i]]=-1;
+  }
+  return -1;
+}
+
+int main(){
+  for(int i=0;i<21;i++)
+    for(int j=0;j<17;j++)
+      t[i][j]=-1;
+
+  for(int i=0;i<19;i++){
+    cin>>s;
+    for(int j=0;j<15;j++){
+      if(s[j]=='O'){
+	sy=i+1,sx=j+1;
+      }else if(s[j]=='X'){
+	py[m]=i+1;
+	px[m]=j+1;
+	m++;
+      }
+    }
+  }
+  cout<<solve()<<endl;
+  return 0;
+}

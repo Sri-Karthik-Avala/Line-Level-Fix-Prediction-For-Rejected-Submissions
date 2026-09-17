@@ -1,0 +1,14 @@
+while True:
+    h, w = map(int, input().split())
+    if w+h == 0:
+        break
+    line = ""
+    for y in range(h):
+        for x in range(w):
+            if (y+x) % 2 == 0:
+                line += "#"
+            else:
+                line += "."
+        print(line)
+    print()
+

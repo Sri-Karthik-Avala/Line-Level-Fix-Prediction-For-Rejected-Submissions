@@ -1,0 +1,81 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+const int MAXN = 500005, P = 924844033, G = 5;
+int n, head[MAXN], nxt[MAXN<<1], to[MAXN<<1], cnt;
+inline void insert(int u, int v) { nxt[++cnt] = head[u]; to[cnt] = v; head[u] = cnt; }
+
+int A[MAXN], B[MAXN], ans[MAXN], fac[MAXN], inv[MAXN], rev[MAXN], size[MAXN];
+inline int QuickPow(int x, int k) {
+	int res = 1;
+	for(; k; k >>= 1, x = 1LL * x * x % P) if(k & 1) res = 1LL * res * x % P;
+	return res;
+}
+
+inline void dfs(int u, int fa) {
+	size[u] = 1;
+	for(int v, i = head[u]; i; i = nxt[i]) if((v = to[i]) != fa) {
+		dfs(v, u);
+		size[u] += size[v];
+		if(--A[size[v]] < 0) A[size[v]] += P;
+	}
+	if(--A[n-size[u]] < 0) A[n-size[u]] += P;
+	if(++A[n] >= P) A[n] -= P;
+}
+
+inline void NTT(int* x, int len, int d) {
+	for(int i = 0; i < len; ++i) rev[i] = rev[i>>1] >> 1 | ((i & 1) ? (len>>1) : 0);
+	for(int i = 0; i < len; ++i) if(rev[i] > i) swap(x[i], x[rev[i]]);
+	
+	for(int h = 2; h <= len; h <<= 1) {
+		int wn = QuickPow(G, (P - 1 + d * (P - 1) / h) % (P - 1));
+		for(int j = 0; j < len; j += h) {
+			int w = 1;
+			for(int k = j; k < j + h / 2; ++k) {
+				int u = x[k], v = 1LL * w * x[k+h/2] % P;
+				x[k] = (u + v) % P;
+				x[k+h/2] = (u - v + P) % P;
+				w = 1LL * w * wn % P;
+			}
+		}
+	}
+	if(d > 0) return;
+	int Inv = QuickPow(len, P - 2);
+	for(int i = 0; i < len; ++i) x[i] = 1LL * x[i] * Inv % P;
+}
+
+inline void Mul() {
+	int len = n << 1 | 1;
+	while(len != (len&-len)) len += (len&-len);
+	NTT(A, len, 1); NTT(B, len, 1);
+	for(int i = 0; i < len; ++i) A[i] = 1LL * A[i] * B[i] % P;
+	NTT(A, len, -1);
+	for(int i = 1; i <= n; ++i) ans[i] = 1LL * inv[i] * A[n+i] % P;
+}
+
+int main() {
+	scanf("%d", &n);
+	for(int u, v, i = n; --i; ) {
+		scanf("%d%d", &u, &v);
+		insert(u, v);
+		insert(v, u);
+	}
+	dfs(1, 0);
+	
+	fac[0] = fac[1] = inv[0] = inv[1] = 1;
+	for(int i = 2; i <= n; ++i) {
+		fac[i] = 1LL * i * fac[i-1] % P;
+		inv[i] = 1LL * (P - P / i) * inv[P % i] % P;
+	}
+	for(int i = 2; i <= n; ++i) inv[i] = 1LL * inv[i] * inv[i-1] % P;
+	for(int i = 0; i <= n; ++i) {
+		A[i] = 1LL * A[i] * fac[i] % P;
+		B[i] = inv[n-i];
+	}
+	
+	Mul();
+	
+	for(int i = 1; i <= n; ++i) printf("%d\n", ans[i]);
+	return 0;
+}

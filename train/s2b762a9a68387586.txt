@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+ll extgcd(ll x,ll y,ll &a,ll &b){
+  if(y==0){
+    a=1;
+    b=0;
+    return x;
+  }
+  ll res=extgcd(y,x%y,b,a);
+  b -= x/y*a;
+  return res;
+}
+
+int main(){
+  int Tc;
+  cin>>Tc;
+  while(Tc--){
+    ll x,y,z,a,b;
+    cin>>x>>y;
+    z=extgcd(x,y,a,b);
+    ll py=abs(a);
+    ll px=abs(b);
+    if(z<=25000){
+      cout<<3<<endl;
+      cout<<0<<' '<<0<<endl;
+      if(x*py-y*px<0){
+        cout<<x<<' '<<y<<endl;
+        cout<<px<<' '<<py<<endl;
+      }else{
+        cout<<px<<' '<<py<<endl;
+        cout<<x<<' '<<y<<endl;
+      }
+    }else{
+      cout<<4<<endl;
+      cout<<0<<' '<<0<<endl;
+      cout<<x<<' '<<y-1<<endl;
+      cout<<x/z<<' '<<y/z<<endl;
+      cout<<x-1<<' '<<y<<endl;
+    }
+  }
+  return 0;
+}

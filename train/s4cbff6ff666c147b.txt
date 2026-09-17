@@ -1,0 +1,119 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <set>
+#include <map>
+#include <cmath>
+
+using namespace std;
+
+template<typename T, typename S>
+istream& operator >> (istream& is, pair<T, S>& p) {
+    is >> p.first >> p.second;
+    return is;
+}
+
+template<typename T>
+istream& operator >> (istream& is, vector<T>& v) {
+    for (auto& x : v) {
+        is >> x;
+    }
+    return is;
+}
+
+template<typename T>
+ostream& operator << (ostream& os, const vector<T>& v) {
+    for (auto& x : v) {
+        os << x << " ";
+    }
+    os << "\n";
+    return os;
+}
+
+bool dfs(int v, int64_t s, const vector<vector<pair<int, int64_t>>>& e, vector<int>& used, vector<int64_t>& ans, vector<int>& comp) {
+    used[v] = 1;
+    comp.push_back(v);
+    ans[v] = s;
+    for (auto [u, a] : e[v]) {
+        if (!used[u]) {
+            if (!dfs(u, a - s, e, used, ans, comp)) return false;
+        } else {
+            if (ans[u] + s != a) return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false); 
+    cin.tie(NULL);
+
+#ifdef _DEBUG
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    int R, C, N;
+    cin >> R >> C >> N;
+    vector<vector<pair<int, int64_t>>> e(R + C);
+    for (int i = 0; i < N; ++i) {
+        int r, c, a;
+        cin >> r >> c >> a;
+        --r, --c;
+        e[r].push_back({R + c, a});
+        e[R + c].push_back({r, a});
+    }
+    vector<int> used(R + C);
+    vector<int64_t> ans(R + C);
+    vector<int64_t> AA, BB;
+    for (int i = 0; i < R + C; ++i) {
+        if (!used[i]) {
+            vector<int> comp;
+            if (!dfs(i, 1e15, e, used, ans, comp)) {
+                cout << "No";
+                return 0;
+            }
+            vector<int> A, B;
+            for (auto j : comp) {
+                if (j < R) A.push_back(ans[j]);
+                else B.push_back(ans[j]);
+            }
+            if (A.empty() || B.empty()) continue;
+            int64_t minA = *min_element(A.begin(), A.end());
+            int64_t minB = *min_element(B.begin(), B.end());
+            if (minA + minB < 0) {
+                cout << "No";
+                return 0;
+            }
+            AA.push_back(minA);
+            BB.push_back(minB);
+        }
+    }
+    set<pair<int64_t, int>> As, Bs;
+    for (int i = 0; i < AA.size(); ++i) {
+        As.insert({AA[i], i});
+        Bs.insert({BB[i], i});
+    }
+    for (int t = 0; t <= R + C; ++t) {
+        int64_t minA = As.begin()->first;
+        int ia = As.begin()->second;
+        int64_t minB = Bs.begin()->first;
+        int ib = Bs.begin()->second;
+        if (minA + minB >= 0) {
+            cout << "Yes";
+            return 0;
+        }
+        if (ia == ib) {
+            cout << "No";
+            return 0;
+        }
+        int64_t s = minA + minB;
+        As.erase({AA[ia], ia});
+        AA[ia] -= s;
+        As.insert({AA[ia], ia});
+        Bs.erase({BB[ia], ia});
+        BB[ia] += s;
+        Bs.insert({BB[ia], ia});
+    }
+    cout << "No";
+}

@@ -1,0 +1,91 @@
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+using namespace std;
+#define REP(i,b,n) for(int i=b;i<n;i++)
+#define rep(i,n)   REP(i,0,n)
+
+const int inf = 3000*1000;
+const int N   = 2000;
+
+int ori[N];
+int tool[N];
+bool is_in_loop[N];
+int ans;
+
+void calc_loop_min(int *a,int p){
+  int ret = inf;
+  rep(i,p)is_in_loop[a[i]]=true;
+  rep(i,p){
+    int tmp = 0;
+    rep(j,p){
+      if (j == i)tmp+= ori[a[j]];
+      else       tmp+=tool[a[j]];
+    }
+    ret=min(ret,tmp);
+  }
+  ans+=ret;
+}
+
+vector<int> edge[N];
+bool gvis[N];
+bool vis[N];
+void dfs(int now,int *st,int p){
+  if (gvis[now])return;
+  if (vis[now]){
+    calc_loop_min(st,p);
+    return;
+  }
+  vis[now]=true;
+  rep(i,edge[now].size()){
+    int next=edge[now][i];
+    st[p]=now;
+    dfs(next,st,p+1);
+  }
+  if (!is_in_loop[now]){
+    ans+=tool[now];
+  }
+  gvis[now]=true;
+}
+
+int getindex(string &a,map<string,int> &M){
+  int index = M.size();
+  if (M.find(a) == M.end())M[a]=index;
+  return M[a];
+}
+
+main(){
+  int n;
+  int path[N];
+  while(cin >> n&&n){
+    ans=0;
+    rep(i,N){
+      is_in_loop[i]=false;
+      edge[i].clear();
+      vis[i]=false;
+      gvis[i]=false;
+      ori[i]=0;
+      tool[i]=0;
+    }
+
+    map<string,int> M;
+    rep(i,n){
+      string a,b;
+      int c,d;
+      int index1,index2;
+      cin>>a>>c>>b>>d;
+      index1=getindex(a,M);
+      index2=getindex(b,M);
+      edge[index2].push_back(index1);
+      ori[index1]=c;
+      tool[index1]=d;
+    }
+
+    rep(i,M.size()){
+      if (!gvis[i])dfs(i,path,0);
+    }
+    
+    cout << ans << endl;
+  }
+}

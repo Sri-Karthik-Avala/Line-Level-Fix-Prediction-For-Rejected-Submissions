@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int main()
+{
+  int A, B, C, N, X[1000], Y[1000], Z[1000];
+
+  cin >> A >> B >> C >> N;
+  for(int i = 0; i < N; i++) {
+    cin >> X[i] >> Y[i] >> Z[i];
+  }
+
+  int add = 0;
+  for(int i = 0; i < N; i++) {
+    add += X[i] == 0;
+    add += X[i] == A - 1;
+    add += Y[i] == 0;
+    add += Y[i] == B - 1;
+    add += Z[i] == 0;
+    add += Z[i] == C - 1;
+    for(int j = 0; j < i; j++) {
+      add += abs(X[i] - X[j]) + abs(Y[i] - Y[j]) + abs(Z[i] - Z[j]) == 1;
+    }
+  }
+  cout << 2 * (A * B + B * C + A * C) + 6 * N - add * 2 << endl;
+}

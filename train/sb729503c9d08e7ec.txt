@@ -1,0 +1,8 @@
+while True:
+    n = input()
+    if n == 0:
+        break
+    A = [0]*7
+    for _ in xrange(n):
+        A[min(input()/10,6)] += 1
+    print "\n".join(map(str,A))

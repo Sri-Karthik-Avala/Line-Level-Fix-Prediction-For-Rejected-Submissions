@@ -1,0 +1,118 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<ll, ll> l_l;
+typedef pair<int, int> i_i;
+template<class T>
+inline bool chmax(T &a, T b) {
+    if(a < b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+template<class T>
+inline bool chmin(T &a, T b) {
+    if(a > b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+#define EPS (1e-7)
+#define INF (1e9)
+#define PI (acos(-1))
+//const ll mod = 1000000007;
+ll beki(ll a, ll b) {
+    if(b == 0) return 1;
+    ll ret = beki(a, b / 2);
+    ret = ret * ret;
+    if(b & 1) ret *= a;
+    return ret;
+}
+ll K;
+string FESTIVAL = "FESTIVAL";
+vector<int> ans;
+ll val[10][1000];
+ll num[10];
+void f(int index, ll v) {
+    //cerr << "f: " << index << " " << v << endl;
+    ll tmp = 0;
+    ll NumBefore = 0;
+    for(int i = 0; i < ans.size(); i++) {
+        //cerr << i << " " << ans[i] << endl;
+        if(ans[i] == index - 1) {
+            NumBefore++;
+            tmp += val[index-1][NumBefore];
+        }
+        if(tmp == v) {
+            ans.insert(ans.begin() + i + 1, index);
+            num[index]++;
+            val[index][num[index]] = v;
+            return;
+        }
+        assert(tmp <= v);
+    }
+    assert(false);
+}
+void g(int index) {
+    ll tmp = 0;
+    ll NumBefore = 0;
+    for(int i = 0; i < ans.size(); i++) {
+        //cerr << i << " " << ans[i] << endl;
+        if(ans[i] == index - 1) {
+            NumBefore++;
+            if(tmp + val[index-1][NumBefore] > K) {
+                cerr << "L" << i << endl;
+                ans.insert(ans.begin() + i, index);
+                K -= val[index-1][NumBefore];
+                return;
+            }
+            tmp += val[index-1][NumBefore];
+        }
+    }
+    ans.push_back(index);
+    K -= val[index-1][NumBefore];
+}
+const int UNIT = 9;
+void print(vector<int> v) {
+    for(auto t : v) cerr << t << " ";
+    cerr << endl;
+}
+int main() {
+    //cout.precision(10);
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin >> K;
+    for(int i = 1; i <= beki(2, UNIT); i++) {
+        ans.push_back(0);
+        num[0]++;
+        val[0][i] = 1;
+    }
+    for(int index = 1; index <= 6; index++) {
+        f(index, 1);
+        for(int j = 0; beki(2, j) <= val[index-1][num[index-1]] * beki(2, UNIT); j++) {
+            f(index, beki(2, j));
+        }
+        //print(ans);
+        for(int j = 1; j <= beki(2, UNIT) - 1; j++) {
+            /*
+            val[index][num[index]+1] = val[index][num[index]] + val[index-1][num[index-1]];
+            ans.push_back(index);
+            num[index]++;
+            */
+            f(index, beki(2, UNIT) * val[index-1][num[index-1]]);
+            //print(ans);
+        }
+        //for(int j = 1; j <= num[index]; j++) cerr << val[index][j] << " ";
+        //cerr << endl;
+    }
+    //print(ans);
+    while(K > 0) g(7);
+    for(auto v : ans) cout << FESTIVAL[v];
+    cout << endl;
+    cerr << ans.size() << endl;
+    return 0;
+}

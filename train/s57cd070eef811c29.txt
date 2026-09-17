@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(int argc, char *argv[]){
+  int n, m;
+  cin >> n;
+  vector<int> s(n), l(n), p(n);
+  vector<vector<int> > dp(n + 1, vector<int>(394, -1));
+  for (int i = 0; i < n; i++) {
+    cin >> s[i] >> l[i] >> p[i];
+  }
+  dp[0][0] = 0;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < 394; j++) {
+      for (int k = s[i]; k <= l[i]; k++) {
+        if(j < k){
+          dp[i + 1][j] = max(dp[i + 1][j], dp[i][j]);        
+        }else{
+          if(dp[i + 1][j - k] == -1)continue;
+          dp[i + 1][j] = max(dp[i + 1][j],
+                             max(dp[i][j],
+                                 dp[i + 1][j - k] + p[i]));
+        }
+      }
+    }
+  }
+  cin >> m;
+  int query;
+  vector<int> ans;
+  for (int i = 0; i < m; i++) {
+    cin >> query;
+    ans.push_back(dp[n][query]);
+    if(ans.back() == -1){
+      std::cout << -1 << std::endl;
+      return 0;
+    }
+  }
+  for (int i: ans) {
+    std::cout << i << std::endl;
+  }
+  return 0;
+}

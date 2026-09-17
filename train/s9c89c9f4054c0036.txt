@@ -1,0 +1,13 @@
+n, t = map(int,raw_input().split())
+
+arr = [0 for i in range(t+1)]
+
+for i in range(n):
+	start, end = map(int,raw_input().split())
+	arr[start] += 1
+	arr[end] -= 1
+import numpy as np
+
+cs = np.cumsum(arr)
+
+print max(cs)

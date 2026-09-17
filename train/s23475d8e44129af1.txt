@@ -1,0 +1,39 @@
+
+def a2c(name):
+	c = name[0]
+	boin=['a','i','u','e','o']
+	for i, b in enumerate(name[:-1]):
+		if b in boin:
+			c += name[i+1]
+	
+	return c
+
+	
+while True:
+	n = int(raw_input())
+	
+	if n == 0:
+		break
+	
+	names = []
+	length = -1
+	for i in xrange(n):
+		tmp = a2c(raw_input())
+		#print tmp
+		names.append(tmp)
+		length = max(length, len(tmp))
+	
+	names = set(names)
+	if len(names) != n:
+		print -1
+		continue
+	
+	for i in xrange(1, length):
+		s = set([name[:min(i, len(name))] for name in names])
+		if len(s) == n:
+			print i
+			n = 0
+			break
+			
+	if n != 0:
+		print -1

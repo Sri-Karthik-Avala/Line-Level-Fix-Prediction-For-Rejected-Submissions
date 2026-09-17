@@ -1,0 +1,14 @@
+#include<iostream>
+using namespace std;
+int n,m,c=0,s=0,q;
+int main(){
+	cin>>n>>m;
+	for(int i=0;i<n;i++){
+		cin>>q;c+=q;
+	}
+	for(int i=0;i<m;i++){
+		cin>>q;s+=q;
+	}
+	cout<<s*c<<endl;
+}
+

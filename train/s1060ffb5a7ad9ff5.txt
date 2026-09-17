@@ -1,0 +1,18 @@
+while True:
+    n=raw_input()
+    if n in "0":break
+    m=input()
+    S,L=set(),[]
+    for i in range(m):
+        a,b=map(int,raw_input().split())
+        if a==1:
+            S.add(b)
+        elif b==1:
+            S.add(a)
+        else:
+            L.append((a,b))
+    for i in S:
+        for s in L:
+            if i in s:
+                S=S.union(s)
+    print len(S)

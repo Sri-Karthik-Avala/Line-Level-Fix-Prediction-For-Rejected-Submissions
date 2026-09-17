@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+#define ll long long
+#define ull unsigned long long
+#define F(i,j,k) for(int i=(j);i<=(k);i++)
+#define DF(i,j,k) for(int i=(j);i>=(k);i--)
+using namespace std;
+template<typename T>inline void read(T &n){
+    T w=1;n=0;char ch=getchar();
+    while(!isdigit(ch)&&ch!=EOF){if(ch=='-')w=-1;ch=getchar();}
+    while(isdigit(ch)&&ch!=EOF){n=(n<<1)+(n<<3)+(ch^48);ch=getchar();}
+    n*=w;
+}
+template<typename T>inline void write(T x){
+    ull y=0;
+    T l=0;
+    if(x<0){x=-x;putchar('-');}
+    if(!x){putchar(48);return;}
+    while(x){y=y*10+x%10;x/=10;l++;}
+    while(l){putchar(y%10+48);y/=10;l--;}
+}
+template<typename T>inline void writeln(T x){
+    write(x);
+    puts("");
+}
+template<typename T>inline void writes(T x){
+    write(x);
+    putchar(' ');
+}
+template<typename T>inline void checkmax(T &a,T b){a=a>b?a:b;}
+template<typename T>inline void checkmin(T &a,T b){a=a<b?a:b;}
+int w[101000],h[22],dp[(1<<15)+1],s[(1<<15)+1],ans,st;
+int main(){
+ 	int n;read(n);
+ 	F(i,1,n-1){int x,y,a;read(x);read(y);read(a);w[x]^=a;w[y]^=a;}
+ 	F(i,0,n-1)h[w[i]]++;
+ 	F(i,1,15){ans+=h[i]/2;h[i]%=2;st^=(1<<(i-1))*h[i];}
+ 	F(i,1,(1<<15))dp[i]=dp[i>>1]+(i&1);
+ 	F(i,1,(1<<15))dp[i]--;
+ 	F(i,1,(1<<15))
+ 		F(j,0,14)
+ 			if(i&(1<<j))s[i]^=j;
+ 	F(i,1,(1<<15)){
+ 		if(s[i])continue;
+ 		for(int k=(i-1)&i;k;k=(k-1)&i){if(!s[k])checkmin(dp[i],dp[k]+dp[i^k]);}
+ 	}
+ 	writeln(ans+dp[st]);
+    return 0;
+}

@@ -1,0 +1,64 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int N,M;
+char fie[111][111];
+int dx[]={0,1,0,-1};
+int dy[]={-1,0,1,0};
+
+bool co[111][111];
+bool used[111][111][4];
+
+bool check( int x,int y){
+  if( fie[x][y] != '#' ) return true;
+  return false;
+}
+
+int dfs(int x,int y,int d){
+  if( used[x][y][d] ) return -(1<<29);
+  used[x][y][d] = true;
+  int ret = 0;
+  if( !co[x][y] ) ret=1;
+  //  cout << x << " "<< y << endl;
+  co[x][y] = true;
+  if( fie[x][y] == 'G' ) return ret;
+  int nd1 = (d+1)%4,nd2 = d, nd3 = (d+3)%4, nd4 = (d+2)%4;
+  int nx1 = x + dx[nd1], ny1 = y + dy[nd1];
+  int nx2 = x + dx[nd2], ny2 = y + dy[nd2];
+  int nx3 = x + dx[nd3], ny3 = y + dy[nd3];
+  int nx4 = x + dx[nd4], ny4 = y + dy[nd4];
+  if( check( nx1, ny1 ) ) 
+    ret += dfs( nx1, ny1, nd1 );
+  else if( check( nx2, ny2 ) )
+    ret += dfs( nx2, ny2, nd2 );
+  else if( check( nx3, ny3 ) )
+    ret += dfs( nx3, ny3, nd3 );
+  else
+    ret += dfs( nx4, ny4, nd4 );
+  return ret;
+}
+
+int main(){
+  cin >> N >> M;
+  int sx,sy,sd;
+  for(int i=0;i<=N+1;i++)
+    for(int j=0;j<=M+1;j++)
+      fie[j][i] = '#';
+  for(int i=1;i<=N;i++){
+    for(int j=1;j<=M;j++){
+      cin >> fie[j][i];
+      if( fie[j][i] != '.' && fie[j][i] != '#' ){
+	sx = j; sy = i;
+	if( fie[j][i] == '^' ) sd = 0;
+	if( fie[j][i] == '>' ) sd = 1;
+	if( fie[j][i] == 'v' ) sd = 2;
+	if( fie[j][i] == '<' ) sd = 3;
+      }
+    }
+  }
+  // cout << sx << " "<< sy << " "<< sd << endl;
+  int res = dfs(sx,sy,sd);
+  if( res < 0 ) cout << -1 << endl;
+  else cout << res << endl;
+  
+}

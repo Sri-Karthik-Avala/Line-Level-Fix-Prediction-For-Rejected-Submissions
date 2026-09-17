@@ -1,0 +1,13 @@
+Score : 500 points 
+ 
+ 
+ Problem Statement You are given a tree with N vertices and N-1 edges. The vertices are numbered 1 to N , and the i -th edge connects Vertex a_i and b_i . 
+ You have coloring materials of K colors.
+For each vertex in the tree, you will choose one of the K colors to paint it, so that the following condition is satisfied: 
+ 
+ If the distance between two different vertices x and y is less than or equal to two, x and y have different colors. 
+ 
+ How many ways are there to paint the tree? Find the count modulo 1\ 000\ 000\ 007 . 
+ 
+ What is tree? 
+A tree is a kind of graph. For detail, please see: Wikipedia "Tree (graph theory)"

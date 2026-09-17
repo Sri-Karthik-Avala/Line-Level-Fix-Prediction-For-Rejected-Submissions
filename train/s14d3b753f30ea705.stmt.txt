@@ -1,0 +1,112 @@
+G - Revenge of Minimum Cost Flow 
+
+ Problem Statement 
+
+ 
+Flora is a freelance carrier pigeon.
+Since she is an excellent pigeon, there are too much task requests to her.
+It is impossible to do all tasks, so she decided to outsource some tasks to Industrial Carrier Pigeon Company.
+ 
+
+ 
+There are N cities numbered from 0 to N-1 .
+The task she wants to outsource is carrying f freight units from city s to city t .
+There are M pigeons in the company.
+The i -th pigeon carries freight from city s_i to t_i , and carrying cost of u units is u a_i if u is smaller than or equals to d_i , otherwise d_i a_i + (u-d_i)b_i .
+Note that i -th pigeon cannot carry from city t_i to s_i .
+Each pigeon can carry any amount of freights.
+If the pigeon carried freight multiple times, the cost is calculated from total amount of freight units he/she carried.
+ 
+
+ 
+Flora wants to minimize the total costs.
+Please calculate minimum cost for her.
+ 
+
+ Input 
+
+ 
+The test case starts with a line containing five integers N ( 2 \leq N \leq 100 ), M ( 1 \leq M \leq 1{,}000 ), s ( 0 \leq s \leq N-1 ), t ( 0 \leq t \leq N-1 ) and f ( 1 \leq f \leq 200 ).
+You may assume s \neq t .
+Each of the next M lines contains five integers s_i ( 0 \leq s_i \leq N-1 ), t_i ( 0 \leq t_i \leq N-1 ), a_i ( 0 \leq a_i \leq 1{,}000 ), b_i ( 0 \leq b_i \leq 1{,}000 ) and d_i ( 1 \leq d_i \leq 200 ).
+Each denotes i -th pigeon's information.
+You may assume at most one pair of a_i and b_i satisfies a_i , all others satisfies a_i > b_i .
+ 
+
+ Output 
+
+ 
+Print the minimum cost to carry f freight units from city s to city t in a line.
+If it is impossible to carry, print "Impossible" (quotes for clarity).
+ 
+
+ Sample Input 1 
+
+ 
+2 2 0 1 5
+0 1 3 0 3
+0 1 2 1 6
+ 
+
+ Output for the Sample Input 1 
+
+ 
+9
+ 
+
+ Sample Input 2 
+
+ 
+4 4 0 3 5
+0 1 3 0 3
+1 3 3 0 3
+0 2 2 1 6
+2 3 2 1 6
+ 
+
+ Output for the Sample Input 2 
+
+ 
+18
+ 
+
+ Sample Input 3 
+
+ 
+2 1 0 1 1
+1 0 1 0 1
+ 
+
+ Output for the Sample Input 3 
+
+ 
+Impossible
+ 
+
+ Sample Input 4 
+
+ 
+2 2 0 1 2
+0 1 5 1 2
+0 1 6 3 1
+ 
+
+ Output for the Sample Input 4 
+
+ 
+9
+ 
+
+ Sample Input 5 
+
+ 
+3 3 0 2 4
+0 2 3 4 2
+0 1 4 1 3
+1 2 3 1 1
+ 
+
+ Output for the Sample Input 5 
+
+ 
+14

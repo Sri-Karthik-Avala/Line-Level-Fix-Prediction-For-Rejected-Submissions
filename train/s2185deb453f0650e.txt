@@ -1,0 +1,80 @@
+import math
+
+class Vector:
+    def __init__(self, x=None, y=None):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, k):
+        return Vector(self.x * k, self.y * k)
+
+    def __truediv__(self, k):
+        return Vector(self.x / k, self.y / k)
+
+    def __gt__(self, other):
+        return self.x > other.x and self.y > other.yb
+
+    def __lt__(self, other):
+        return self.x < other.x and self.y < other.yb
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def dot(self, other):
+        return self.x * other.x + self.y * other.y
+
+    # usually cross operation return Vector but it returns scalor
+    def cross(self, other):
+        return self.x * other.y - self.y * other.x
+
+    def norm(self):
+        return self.x * self.x + self.y * self.y
+
+    def abs(self):
+        return math.sqrt(self.norm())
+
+    def rotate(self, theta):
+        return Vector(self.x * math.cos(theta)
+                               - self.y * math.sin(theta),
+                               self.x * math.sin(theta)
+                               + self.y * math.cos(theta))
+
+class Point(Vector):
+    def __init__(self, *args, **kargs):
+        return super().__init__(*args, **kargs)
+
+class Segment:
+    def __init__(self, p1=Point(0, 0), p2=Point(1, 1)):
+        self.p1 = p1
+        self.p2 = p2
+
+class Line(Segment):
+    def __init__(self, *args, **kargs):
+        return super().__init__(*args, **kargs)
+
+class Circle:
+    def __init__(self, c=Point(0, 0), r=1):
+        self.c = c
+        self.r = r
+
+def get_cross_point(c1, c2):
+    v = c2.c - c1.c
+    d = v.abs()
+    assert d <= (c1.r + c2.r)
+    a = math.acos((c1.r * c1.r + d * d - c2.r * c2.r) / (2 * c1.r  * d))
+    return v.rotate(a) * (c1.r/d), v.rotate(-a) * (c1.r/d)
+
+x1, y1, r1 = [ int(i) for i in input().split() ]
+c1 = Circle(Point(x1, y1), r1)
+x2, y2, r2 = [ int(i) for i in input().split() ]
+c2= Circle(Point(x2, y2), r2)
+p1, p2 = get_cross_point(c1, c2)
+x1, y1 = min((p1.x, p1.y), (p2.x, p2.y))
+x2, y2 = max((p1.x, p1.y), (p2.x, p2.y))
+print("{0:0.8f} {1:0.8f} {2:0.8f} {3:0.8f}".format(x1, y1, x2, y2))

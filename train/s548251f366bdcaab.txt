@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+double PI=3.14159265359;
+int x[2000];
+int y[2000];
+int r[2000];
+pair<double,double> p[2000];
+pair<double,double> c[2000];
+double dp[2000][2000];
+int main(){
+	int a,b;
+	scanf("%d%d",&a,&b);
+	for(int i=0;i<a;i++){
+		scanf("%d%d%d",x+i,y+i,r+i);
+		double d=sqrt(x[i]*x[i]+y[i]*y[i]);
+		double q=atan2(y[i],x[i]);
+		if(q<-PI/2)q+=PI*2;
+		double v=asin((double)r[i]/d);
+		//printf("%f %f\n",q,v);
+		p[i]=make_pair(max(0.0,min(PI,q-v)),min(PI,max(0.0,q+v)));
+	}
+	std::sort(p,p+a);
+	int sz=0;
+	for(int i=0;i<a;i++){
+		bool ok=true;
+		for(int j=0;j<a;j++){
+			if(i!=j&&p[j].first<p[i].first&&p[i].second<p[j].second)ok=false;
+		}
+		if(ok){
+			c[sz++]=p[i];
+		}
+	}
+	double ret=0;
+	for(int i=1;i<=b;i++){
+		double tmp=0;
+		int at=0;
+		for(int j=0;j<sz;j++){
+			while(p[at].second<p[j].first){tmp=max(tmp,dp[i-1][at]);at++;}
+			dp[i][j]=max(tmp+p[j].second-p[j].first,dp[i-1][at]+p[j].second-p[at].second);
+			ret=max(ret,dp[i][j]);
+		}
+	}printf("%.12f\n",ret/PI);
+}

@@ -1,0 +1,26 @@
+from collections import Counter
+n = int(input())
+a = list(map(int, input().split()))
+c = Counter(a)
+
+judge = False
+if 0 in c and c[0] == n:
+  judge = True
+if n % 3 == 0:
+  judge1, judge2 = False, 0
+  num = 0
+  value = 0
+  for k, v in c.items():
+    num += 1
+    if v == n // 3:
+      if k == 0:
+        judge1 = True
+      judge2 += 1
+      value ^= v
+  if judge1 and num == 2:
+    judge = True
+  if judge2 == num == 3 and value == 0:
+    judge = True
+
+print("Yes" if judge else "No")
+  

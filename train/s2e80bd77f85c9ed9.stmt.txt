@@ -1,0 +1,50 @@
+Segment Intersections: Manhattan Geometry 
+
+ 
+ For given $n$ segments which are parallel to X-axis or Y-axis, find the number of intersections of them.
+ 
+
+ Input 
+
+ 
+ In the first line, the number of segments $n$ is given. In the following $n$ lines, the $i$-th segment is given by coordinates of its end points in the following format:
+ 
+ 
+
+$x_1 \; y_1 \; x_2 \; y_2$
+
+ 
+ 
+The coordinates are given in integers.
+ 
+
+
+ Output 
+
+ 
+ Print the number of intersections in a line.
+ 
+
+
+ Constraints 
+ 
+ $1 \leq n \leq 100,000$ 
+ $ -1,000,000,000 \leq x_1, y_1, x_2, y_2 \leq 1,000,000,000$ 
+ Two parallel segments never overlap or touch.
+ The number of intersections $\leq 1,000,000$ 
+ 
+
+ Sample Input 1 
+ 
+6
+2 2 2 5
+1 3 5 3
+4 1 4 4
+5 2 7 2
+6 1 6 3
+6 5 6 7
+ 
+
+ Sample Output 1 
+ 
+3

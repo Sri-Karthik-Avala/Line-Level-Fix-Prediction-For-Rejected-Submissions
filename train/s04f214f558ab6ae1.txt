@@ -1,0 +1,88 @@
+#include <iostream>
+#include <algorithm>
+#include <cassert>
+#include <cctype>
+#include <complex>
+#include <cstdio>
+#include <map>
+#include <math.h>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct R{int o,x,s,ok;};
+struct C{int o,x,s,ok;};
+
+int n,m;
+R r[10000];
+C c[10000];
+
+int main(){
+	while(cin>>n){
+		if(!n)return 0;
+		int rs=0,r0=0,rn=0,rmin=10000,rmax=0,cs=0,c0=0,cn=0,cmin=10000,cmax=0;
+		for(int i=0;i<n;i++){
+			cin>>m;
+			r[i].o=0;
+			r[i].x=0;
+			r[i].s=m;
+			r[i].ok=0;
+			rs+=m;
+			if(m==0)r0++;
+			if(m==n)rn++;
+			rmin=min(rmin,m);
+			rmax=max(rmax,m);
+		}
+		for(int i=0;i<n;i++){
+			cin>>m;
+			c[i].o=0;
+			c[i].x=0;
+			c[i].s=m;
+			c[i].ok=0;
+			cs+=m;
+			if(m==0)c0++;
+			if(m==n)cn++;
+			cmin=min(rmin,m);
+			cmax=max(rmax,m);
+		}
+		if(!(rs==cs&&rmin>=cn&&rmax<=n-c0&&cmin>=rn&&cmax<=n-r0)){
+			cout<<"No"<<endl;
+			break;
+		}
+		bool f=1;
+		int ok=0;
+		while(f&&ok<2*n){
+			f=0;
+			for(int i=0;i<n;i++){
+				if(r[i].o==r[i].s&&!r[i].ok){
+					f=1;ok++;r[i].ok=1;
+					r[i].x=n-r[i].o;
+					for(int j=0;j<n;j++)if(!c[j].ok)c[j].x++;
+				}
+				if(r[i].x==n-r[i].s&&!r[i].ok){
+					f=1;ok++;r[i].ok=1;
+					r[i].o=n-r[i].x;
+					for(int j=0;j<n;j++)if(!c[j].ok)c[j].o++;
+				}
+				if(c[i].o==c[i].s&&!c[i].ok){
+					f=1;ok++;c[i].ok=1;
+					c[i].x=n-c[i].o;
+					for(int j=0;j<n;j++)if(!r[j].ok)r[j].x++;
+				}
+				if(c[i].x==n-c[i].s&&!c[i].ok){
+					f=1;ok++;c[i].ok=1;
+					c[i].o=n-c[i].x;
+					for(int j=0;j<n;j++)if(!r[j].ok)r[j].o++;
+				}
+			}
+			//for(int i=0;i<n;i++)cout<<"o"<<r[i].o<<" x"<<r[i].x<<" s"<<r[i].s<<" ok"<<r[i].ok<<"  o"<<c[i].o<<" x"<<c[i].x<<" s"<<c[i].s<<" ok"<<c[i].ok<<endl;
+			//cout<<endl;
+		}
+		if(ok==2*n)cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;
+		//cout<<ok<<endl<<endl;
+	}
+}

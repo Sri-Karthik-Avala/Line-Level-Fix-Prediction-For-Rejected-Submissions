@@ -1,0 +1,113 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <utility>
+#include <cstdlib>
+
+using namespace std;
+typedef pair<int, int> pii;
+const int MISSING = 0x7fffffff;
+
+int main(){
+	while(true){
+		int p, s;
+		cin >> p >> s;
+		if(p == 0 && s == 0){ continue; }
+		vector< vector<int> > table(p + 1, vector<int>(s + 1));
+		vector< vector<bool> > missing(p, vector<bool>(s));
+		for(int i = 0; i <= p; ++i){
+			for(int j = 0; j <= s; ++j){
+				string item;
+				cin >> item;
+				if(item == "?"){
+					table[i][j] = MISSING;
+					missing[i][j] = true;
+				}else{
+					table[i][j] = atoi(item.c_str());
+				}
+			}
+		}
+		queue<pii> q;
+		for(int i = 0; i < p; ++i){
+			int count = 0, pos = 0, sum = 0;
+			for(int j = 0; j < s; ++j){
+				if(table[i][j] == MISSING){
+					++count;
+					pos = j;
+				}else{
+					sum += table[i][j];
+				}
+			}
+			if(count == 1){ table[i][pos] = table[i][s] - sum; }
+		}
+		for(int i = 0; i < s; ++i){
+			int count = 0, pos = 0, sum = 0;
+			for(int j = 0; j < p; ++j){
+				if(table[j][i] == MISSING){
+					++count;
+					pos = j;
+				}else{
+					sum += table[j][i];
+				}
+			}
+			if(count == 1){
+				table[pos][i] = table[p][i] - sum;
+				q.push(pii(0, pos));
+			}
+		}
+		while(!q.empty()){
+			pii e = q.front();
+			q.pop();
+			if(e.first == 0){
+				int count = 0, pos = 0, sum = 0;
+				for(int i = 0; i < s; ++i){
+					if(table[e.second][i] == MISSING){
+						++count;
+						pos = i;
+					}else{
+						sum += table[e.second][i];
+					}
+				}
+				if(count == 1){
+					table[e.second][pos] = table[e.second][s] - sum;
+					q.push(pii(1, pos));
+				}
+			}else{
+				int count = 0, pos = 0, sum = 0;
+				for(int i = 0; i < p; ++i){
+					if(table[i][e.second] == MISSING){
+						++count;
+						pos = i;
+					}else{
+						sum += table[i][e.second];
+					}
+				}
+				if(count == 1){
+					table[pos][e.second] = table[p][e.second] - sum;
+					q.push(pii(0, pos));
+				}
+			}
+		}
+		bool valid = true;
+		vector<int> answer;
+		for(int i = 0; i < p; ++i){
+			for(int j = 0; j < s; ++j){
+				if(table[i][j] == MISSING){
+					valid = false;
+				}else if(missing[i][j]){
+					answer.push_back(table[i][j]);
+				}
+			}
+		}
+		if(!valid){
+			cout << "NO" << endl;
+		}else{
+			for(int i = 0; i < answer.size(); ++i){
+				cout << answer[i] << endl;
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}

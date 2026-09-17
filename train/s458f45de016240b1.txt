@@ -1,0 +1,26 @@
+#include <iostream>
+#include <unordered_set>
+#include <vector>
+using namespace std;
+
+int main(void) {
+  int N;
+  cin >> N;
+  string S;
+  cin >> S;
+  unordered_set<char> countX;
+  int answer = 0;
+  for (int i = 1; i < N - 1; ++i) {
+    countX.emplace(S[i]);
+    unordered_set<char> countY;
+    int num = 0;
+    for (int j = i + 1; j < N; ++j) {
+      if (countY.count(S[j])) continue;
+      countY.emplace(S[j]);
+      if (countX.count(S[j])) ++num;
+    }
+    answer = max(answer, num);
+  }
+  cout << answer << endl;
+  return 0;
+}

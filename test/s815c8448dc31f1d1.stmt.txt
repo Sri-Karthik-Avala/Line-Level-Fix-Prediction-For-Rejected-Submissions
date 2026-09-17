@@ -1,0 +1,43 @@
+Advanced Algorithm Class 
+
+ 
+ In the advanced algorithm class, n 2 students sit in n rows and
+n columns. One day, a professor who teaches this subject comes into the class, asks the shortest student in each row to lift up his left hand, and the tallest student in each column to lift up his right hand.
+What is the height of the student whose both hands are up ? The student will
+become a target for professor’s questions.
+ 
+ 
+ Given the size of the class, and the height of the students in the class, you
+have to print the height of the student who has both his hands up in the class.
+ 
+
+ Input 
+
+ 
+The input will consist of several cases. the first line of each case will be n(0 
+
+ Output 
+
+ 
+For each input case, you have to print the height of the student in the class
+whose both hands are up. If there is no such student, then print 0 for that case.
+
+ 
+
+ Sample Input 
+ 
+3
+1 2 3
+4 5 6
+7 8 9
+3
+1 2 3
+7 8 9
+4 5 6
+0
+ 
+
+ Output for the Sample Input 
+ 
+7
+7

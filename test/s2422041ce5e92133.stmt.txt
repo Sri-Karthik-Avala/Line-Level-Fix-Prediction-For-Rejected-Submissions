@@ -1,0 +1,167 @@
+Max Score: $1500$ Points 
+ 
+ Problem Statement 
+ Huge kingdom: $Atcoder$ contains $N$ towns and $N-1$ roads. This kingdom is connected. 
+ 
+ You have to detect the kingdom's road. 
+ In order to detect, You can ask this form of questions. 
+ 
+ You can output a string $S$. Length of $S$ must be $N$ and The character of string $S$ must be represented by '$0$' or '$1$'. 
+ Computer paint the towns with white or black according to the character string you output. 
+ If $i$-th character of $S$ is '0', computer paint town $i$ white. 
+ If $i$-th character of $S$ is '1', computer paint town $i$ black. 
+ Please consider an undirected graph $G$. 
+ For each edge, computer do the following processing: If both ends painted black, computer adds this edge to $G$. 
+ Computer returns value $x$: sum of "diameter of tree"$^2$ about each connected components. 
+ 
+ For example, when $S$="11001111" and the kingdom's structure is this, computer returns 10. 
+ 
+ 
+ 
+ Please detect the structure of $Atcoder$ as few questions as possible. 
+ 
+ 
+ 
+ 
+ 
+ Input, Output 
+ This is a reactive problem. 
+ The first input is as follows: 
+ 
+ 
+$N$
+ 
+ 
+ $N$ is number of towns in $Atcoder$. 
+ 
+ 
+ Next, you can ask questions. 
+ The question must be in the form as follows: 
+ 
+? $S$
+ 
+ $S$ is a string. The mean of $S$ written in the problem statement. Length of $S$ must be $N$. 
+ 
+ The answer of question is as follows: 
+ 
+$x$
+ 
+ The mean of $x$ written in the problem statement. 
+ 
+ Finally, your program must output as follows: 
+ 
+! $(a_1,b_1)$ $(a_2,b_2)$ $(a_3,b_3)$ … $(a_{N-1},b_{N-1})$
+ 
+ This output means your program detects all roads of $Atcoder$. 
+ $(a_i,b_i)$ means there is a road between $a_i$ and $b_i$. 
+ 
+ You can output roads any order, but you must output the answer on a single line. 
+ 
+ 
+ 
+ 
+ 
+ Constraints 
+ 
+ $N$=200 
+ $Atcoder$ contains $N-1$ roads and this kingdom is connected. 
+ All cases were made randomly. 
+ 
+ 
+ 
+ 
+ 
+ Scoring 
+ Let the number of questions be $L$. 
+ 
+ 
+ If $L > 20000$, $score$ = $0$ points 
+ If $18000 < L ≦ 20000$, $score$ = $200$ points 
+ If $5000 < L ≦ 18000$, $score$ = $650-L/40$ points 
+ If $4000 < L ≦ 5000$, $score$ = $800-L/20$ points 
+ If $2000 < L ≦ 4000$, $score$ = $1400-L/5$ points 
+ If $1200 < L ≦ 2000$, $score$ = $1500-L/4$ points 
+ If $700 < L ≦ 1200$, $score$ = $1850-L/2$ points 
+ If $L ≦ 700$, $score$ = $1500$ points 
+ 
+ 
+ There is $5$ cases, so points of each case is $score/5$. 
+ 
+ 
+ 
+ 
+ Sample Input 
+ This case is $N=4$. This case is not include because this is not $N=200$. 
+ 
+N=4
+0 1
+1 2
+1 3
+ 
+ 
+ 
+ 
+ 
+ Sample Output 
+ Sample interaction is as follows: 
+ 
+ 
+ Input from computer 
+ Output 
+ 
+ 
+ 4 
+ 
+ 
+ 
+ 
+ ? 1111 
+ 
+ 
+ 4 
+ 
+ 
+ 
+ 
+ ? 1101 
+ 
+ 
+ 4 
+ 
+ 
+ 
+ 
+ ? 1001 
+ 
+ 
+ 0 
+ 
+ 
+ 
+ 
+ ? 1100 
+ 
+ 
+ 1 
+ 
+ 
+ 
+ 
+ ? 1011 
+ 
+ 
+ 0 
+ 
+ 
+ 
+ 
+ ! (0,1) (1,2) (1,3) 
+ 
+ 
+ 
+ In this sample, structure of $Atcoder$ is as follows: 
+ 
+ 
+ 
+ 
+ This question is not always meaningful.

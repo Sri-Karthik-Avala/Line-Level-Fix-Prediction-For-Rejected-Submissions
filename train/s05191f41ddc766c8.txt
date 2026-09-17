@@ -1,0 +1,43 @@
+def solve(x,y,maxm):
+    for i in xrange(y):
+        for j in xrange(maxm+1):
+            if dp[i][j]==0:continue
+            for k in xrange(int(x)):
+
+                if event[min(y,i+v[k])][0]==0:
+                    dp[min(y,i+v[k])][j]+=dp[i][j]/x
+
+                elif event[i+v[k]][0]==1:
+                    skip=event[i+v[k]][1]
+                    dp[min(y,i+skip)][j]+=dp[i][j]/x
+
+                elif event[i+v[k]][0]==2:
+                    m=event[i+v[k]][1]
+                    dp[i+v[k]][j+m]+=dp[i][j]/x
+
+                else:
+                    m=event[i+v[k]][1]
+                    dp[i+v[k]][max(0,j-m)]+=dp[i][j]/x
+    return dp
+
+while 1:
+    x,y,z=map(int,raw_input().split())
+    if x==0 and y==0 and z==0:break
+    v=map(int,raw_input().split())
+    event=[[0]*2 for _ in xrange(y+1)]
+    maxm=0
+    for i in xrange(z):
+        n,e,a=map(int,raw_input().split())
+        event[n][0]=e
+        event[n][1]=a
+        if e==2:
+            maxm+=a
+
+    dp=[[0]*(5005) for _ in xrange(y+1)]
+    dp[0][0]=1
+    x=float(x)
+    dp=solve(x,y,maxm)
+    ans=0.0
+    for i in xrange(maxm+1):
+        ans+=dp[y][i]*i
+    print(int(ans))

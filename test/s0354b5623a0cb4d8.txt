@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define rep1(i,n) for(int i=1;i<=(int)(n);i++)
+#define all(c) c.begin(),c.end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl
+#define chmin(x,y) x=min(x,y)
+#define chmax(x,y) x=max(x,y)
+using namespace std;
+double eps=1e-9;
+typedef double D;
+typedef complex<D> P;
+struct C{
+	P p;D r;
+	C(P p,D r) :p(p),r(r){}
+};
+bool comp(const C& l,const C& r){
+	return l.r<r.r;
+}
+bool contain(C c,P p){
+	return c.r>abs(c.p-p);
+}
+bool containCC(C a,C b){
+	return abs(a.p-b.p)+b.r+eps<a.r;
+}
+int main(){
+	while(true){
+		int N;
+		cin>>N;
+		if(N==0) break;
+		int sx,sy,tx,ty;
+		cin>>sx>>sy>>tx>>ty;
+		P s=P(sx,sy),t=P(tx,ty);
+		vector<C> A,B;
+		rep(i,N){
+			D x,y,r;
+			cin>>x>>y>>r;
+			C c(P(x,y),r);
+			if(contain(c,s)&&!contain(c,t)) A.pb(c);
+			if(contain(c,t)&&!contain(c,s)) B.pb(c);
+		}
+		int da[1001]={},db[1001]={};
+		int ans=0;
+		sort(all(A),comp);
+		sort(all(B),comp);
+		rep(i,A.size()){
+			da[i]=1;
+			rep(j,i) if(containCC(A[i],A[j])) chmax(da[i],da[j]+1);
+			chmax(ans,da[i]);
+		}
+		rep(i,B.size()){
+			db[i]=1;
+			rep(j,i) if(containCC(B[i],B[j])) chmax(db[i],db[j]+1);
+			chmax(ans,db[i]);
+		}
+		rep(i,A.size()) rep(j,B.size()){
+			if(abs(A[i].p-B[j].p)>A[i].r+B[i].r+eps) chmax(ans,da[i]+db[j]);
+		}
+		cout<<ans<<endl;
+	}
+}

@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=114514;
+bitset<50005> v[50005];
+int x[N],y[N],vis[N],fin[N];
+char s[N];
+signed main(){
+	int n,m,T;
+	cin>>n>>m>>T;
+	if(T==1){
+		for(int i=1;i<=n;++i)
+			v[i][i]=1;
+		for(int i=1;i<=m;++i){
+			cin>>x[i]>>y[i];
+			v[x[i]]|=v[y[i]];
+			v[y[i]]=v[x[i]];
+		}
+		for(int i=1;i<=n;++i)
+			if(v[i].count()==n){
+				vis[i]=1;
+				for(int j=m;j>=1;--j)
+					if(vis[x[j]]) s[j]='^',vis[y[j]]=1;
+					else if(vis[y[j]]) s[j]='v',vis[x[j]]=1;
+					else s[j]='v';
+				for(int j=1;j<=m;++j)
+					cout<<s[j];
+				break;
+			}
+		puts("-1"); 
+	}
+	else{
+		if(n<=2) return puts("-1"),0;
+		for(int i=1;i<=m;++i)
+			cin>>x[i]>>y[i];
+		for(int i=1;i<=n;++i)
+			vis[i]=1,fin[i]=i;
+		for(int i=m;i>=1;--i)
+			if(vis[fin[x[i]]]>=vis[fin[y[i]]]) --vis[fin[x[i]]],++vis[fin[y[i]]],fin[x[i]]=fin[y[i]],s[i]='v';
+			else --vis[fin[y[i]]],++vis[fin[x[i]]],fin[y[i]]=fin[x[i]],s[i]='^';
+		for(int i=1;i<=m;++i)
+			cout<<s[i];
+	}
+	return 0;
+} 

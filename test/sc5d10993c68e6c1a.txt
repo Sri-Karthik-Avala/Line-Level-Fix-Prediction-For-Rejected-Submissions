@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i, n) for(int i = 0; i < (int)n; ++i)
+#define SZ(s) ((int)(s.size()))
+#define pb push_back
+#define mp make_pair
+#define F first
+#define S second
+#define ALL(a) (a).begin(), (a).end()
+typedef pair<int,int> PI;
+typedef long long ll;
+
+int app[100][100];
+ll cost[100][100];
+int main(int argc, char *argv[])
+{
+  int n;
+  cin >> n;
+  rep(i, n){
+    char c;
+    int b;
+    cin >> c >> b;
+    app[c-'A'][b] = 1;
+  }
+
+  int m;
+  cin >> m;
+  rep(i, 100) rep(j, 100) cost[i][j] = 1LL << 40LL;
+  
+  rep(j, m){
+    char c;
+    int b;
+    ll e;
+    cin >> c >> b >> e;
+    cost[c-'A'][b] = min(cost[c-'A'][b], e);
+  }
+  
+  ll ans = 1LL << 40;
+
+  ll dp[2][1<<10] = {};
+  
+  rep(used, 1 << 10){
+    int needalpha[30] = {};
+    rep(i, 26) rep(j, 10){
+      if(app[i][j] && ((~used>>j)&1))
+        needalpha[i] = 1;
+    }
+    
+    rep(i,2) rep(k, 1<< 10) dp[i][k] = 1LL << 40LL;
+    
+    int cur = 0;
+    dp[cur][0] = 0;
+    rep(i, 26){
+      int ne = 1 - cur;
+      rep(j, 1 << 10) dp[ne][j] = 1LL << 40LL;
+      if(!needalpha[i]){
+        rep(j, 1 << 10) dp[ne][j] = min(dp[ne][j], dp[cur][j]);
+      }
+      
+      rep(j, 1 << 10){
+        rep(k, 10){
+          dp[ne][j|(1<<k)] = min(dp[ne][j|(1<<k)], dp[cur][j] + cost[i][k]);
+        }
+      }
+      
+      cur = 1 - cur;
+    }
+    
+    rep(i, 1 << 10){
+      if((i&used) == used)
+        ans = min(ans, dp[cur][i]);
+    }
+  }
+
+  if(ans >= (1LL << 40LL)) cout << -1 << endl;
+  else cout << ans << endl;
+  return 0;
+}

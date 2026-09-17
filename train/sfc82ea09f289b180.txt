@@ -1,0 +1,21 @@
+N,K=map(int,input().split())
+A=[]
+ans=[]
+for i,a in enumerate(input().split()):
+  A.append((int(a),i))
+unuse=N
+for s in range(K+1):
+  A.sort(reverse=True)
+  for i in range(N):
+    a,k=A[i]
+    if k==unuse:
+      continue
+    if a==0:
+      print(-1)
+      exit()
+    ans.append(str(k+1))
+    A[i]=(a-1,k)
+  unuse=A[-1][1]
+print(len(ans))
+print(" ".join(ans))
+

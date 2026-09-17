@@ -1,0 +1,119 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <set>
+#include <map>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <algorithm>
+#include <cstring>
+#include <functional>
+#include <cmath>
+#include <complex>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define rep1(i,n) for(int i=1;i<=(int)(n);++i)
+#define all(c) (c).begin(),(c).end()
+#define fs first
+#define sc second
+#define pb push_back
+#define show(x) cout << #x << " " << x << endl
+typedef double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+D inf=1e50,eps=1e-9;
+bool eq(D a,D b){return abs(a-b)<eps;}
+D cro(P a,P b){return imag(conj(a)*b);}
+D dot(P a,P b){return real(conj(a)*b);}
+int ccw(P a,P b,P c){
+	if(cro(b-a,c-a)>eps) return 1;
+	if(cro(b-a,c-a)<-eps) return -1;
+	if(eq(abs(a-c)+abs(c-b),abs(a-b))) return 0;
+	if(eq(abs(a-b)+abs(c-b),abs(a-c))) return -2;
+	if(eq(abs(a-c)+abs(a-b),abs(c-b))) return 2;
+}
+P perp(L l,P p){
+	D t=dot(p-l.fs,l.fs-l.sc)/norm(l.fs-l.sc);
+	return l.fs+t*(l.fs-l.sc);
+}
+P refl(L l,P p){
+	return p+2.0*(perp(l,p)-p);
+}
+bool iLS(L l,L s){
+	return cro(l.sc-l.fs,s.fs-l.fs)*cro(l.sc-l.fs,s.sc-l.fs)<eps;
+}
+P intLL(L a,L b){
+	D t=cro(a.sc-a.fs,a.sc-b.fs)/cro(a.sc-a.fs,b.sc-b.fs);
+	return b.fs+t*(b.sc-b.fs);
+}
+P S,T;
+int N;
+L l[5];
+D ans;
+void calc(P ss,P tt,vector<int> ref){
+	L a=L(tt,ss);
+	reverse(all(ref));
+	D d=0;
+//	cout<<"ref  ";
+//	rep(i,ref.size()) cout<<ref[i]<<" ";
+//	cout<<endl;
+	rep(i,ref.size()+1){
+		P s=a.fs,t=a.sc;
+//		show(s);
+//		show(t);
+		D mx=inf;
+		P tmp;
+		int tmpid;
+		rep(j,N){
+			if(i>0&&j==ref[i-1]) continue;
+			if(iLS(a,l[j])){
+				P p=intLL(l[j],a);
+				if(ccw(a.fs,a.sc,p)!=2&&mx>abs(s-p)){
+					mx=abs(s-p);
+					tmp=p;
+					tmpid=j;
+				}
+			}
+		}
+		if(i==ref.size()){
+			if(mx>abs(s-S)) ans=min(ans,d+abs(s-S));
+			return;
+		}
+		if(ref[i]!=tmpid) return;
+		d+=mx;
+		P dx=(l[tmpid].fs-l[tmpid].sc)*P(0,1);
+		L lx=L(tmp,tmp+dx);
+		a=L(tmp,refl(lx,s));
+	}
+
+}
+void dfs(P s,P t,vector<int> ref){
+	calc(s,t,ref);
+	if(ref.size()==5) return;
+	rep(i,N){
+		if(ref.size()&&ref.back()==i) continue;
+		vector<int> nr=ref;
+		nr.pb(i);
+		P ns=refl(l[i],s);
+		dfs(ns,t,nr);
+	}
+}
+int main(){
+	while(true){
+		cin>>N;
+		if(N==0) break;
+		ans=inf;
+		rep(i,N){
+			D a,b,c,d;
+			cin>>a>>b>>c>>d;
+			l[i]=L(P(a,b),P(c,d));
+		}
+		D aa,bb,cc,dd;
+		cin>>aa>>bb>>cc>>dd;
+		S=P(aa,bb),T=P(cc,dd);
+		vector<int> be;
+		dfs(S,T,be);
+		printf("%.12f\n",ans);
+	}
+}

@@ -1,0 +1,39 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int p=1000000007;
+void inline check(int &x){x-=p,x+=x>>31&p;}
+int N,M;
+int pow2[250];
+int g[15][15];
+int G[15][32768];
+
+int F[32768];
+
+int main(){
+	scanf("%d%d",&N,&M);
+	pow2[0]=1;for(int i=1;i<250;i++) check(pow2[i]=pow2[i-1]+pow2[i-1]);
+	for(int i=1;i<=M;i++){
+		int u,v;scanf("%d%d",&u,&v);u--;v--;
+		g[u][v]=1;
+	}
+	for(int u=0;u<N;u++)
+	for(int v=0;v<N;v++)
+	for(int s=0;s<(1<<N);s++) if((s>>v)&1)
+		G[u][s]+=g[u][v];
+	for(int s=0;s<(1<<N);s++) if((s&3)==0||(s&3)==3){
+		for(int A=s;A;A=(A-1)&s) if((A&3)==0){
+			int B=s^A,tmp=F[B];
+			for(int u=0;u<N;u++) if((B>>u)&1)
+				tmp=1LL*tmp*(pow2[G[u][A]]-1)%p;
+			check(F[s]+=tmp);
+		}
+		for(int A=s;A;A=(A-1)&s) if((A&3)==3){
+			int B=s^A,tmp=1;
+			for(int u=0;u<N;u++) if((B>>u)&1)
+				tmp=1LL*tmp*(pow2[G[u][A]]-1)%p*pow2[G[u][B]]%p;
+			check(F[s]+=tmp);
+		}
+	}
+	printf("%d\n",(pow2[M]-F[(1<<N)-1]+p)%p);
+}

@@ -1,0 +1,104 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <cstring>
+#include <cmath>
+#include <queue>
+using namespace std;
+
+#define rep(i,n) for(int i=0; i<n; i++)
+#define reps(i,s,n) for(int i=s; i<n; i++)
+#define all(x) x.begin(), x.end()
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pii;
+struct node {
+	pii lp;
+	pii rp;
+	node( pii l, pii r ) {
+		lp = l;
+		rp = r;
+	}
+};
+
+bool visit[55][55][55][55] = {};
+
+int main() {
+	int w, h;
+	while( cin >> w >> h, w||h ) {
+		w+=1;
+		h+=1;
+		string fl[h+1], fr[h+1];
+		rep(y,h+1) {
+			fl[y] = '#';
+			fr[y] = '#';
+		}
+		rep(x,w) {
+			fl[0] += '#';
+			fl[h] += '#';
+			fr[0] += '#';
+			fr[h] += '#';
+		}
+		int lx, ly, rx, ry;
+		for(int y=1; y<h; y++) {
+			string in;
+			cin >> in;
+			fl[y] += in + '#';
+			cin >> in;
+			fr[y] += in + '#';
+			reverse( fr[y].begin(), fr[y].end() );
+			for(int x=1; x<=w; x++) {
+				if( fl[y][x] == 'L' ) {
+					fl[y][x] = '.';
+					lx = x; ly = y;
+				}
+				if( fr[y][x] == 'R' ) {
+					fr[y][x] = '.';
+					rx = x; ry = y;
+				}
+			}
+		}
+		bool ok = false;
+		queue<node> que;
+		que.push(node(pii(lx, ly), pii(rx, ry)));
+		memset( visit, 0, sizeof(visit) );
+		while( !que.empty() ) {
+			node nd = que.front();
+			que.pop();
+			if( visit[nd.lp.first][nd.lp.second][nd.rp.first][nd.rp.second] ) continue;
+			visit[nd.lp.first][nd.lp.second][nd.rp.first][nd.rp.second] = true;
+			if( fl[nd.lp.second][nd.lp.first]=='%' && fr[nd.rp.second][nd.rp.first]=='%' ) {
+				ok = true;
+				break;
+			}
+			if( fl[nd.lp.second][nd.lp.first]=='%' || fr[nd.rp.second][nd.rp.first]=='%' )
+				continue;
+			int dx[4] = {-1, 0, 1, 0};
+			int dy[4] = {0, -1, 0, 1};
+			rep(i, 4) {
+				int nlx = nd.lp.first  + dx[i];
+				int nly = nd.lp.second + dy[i];
+				int nrx = nd.rp.first  + dx[i];
+				int nry = nd.rp.second + dy[i];
+				if( !visit[nlx][nrx][nly][nry] ) {
+					int wall = 0;
+					if( fl[nly][nlx] == '#' ) {
+						nly-=dy[i];  nlx-=dx[i];
+						wall++;
+					}
+					if( fr[nry][nrx] == '#' ) {
+						nry-=dy[i];  nrx-=dx[i];
+						wall++;
+					}
+					if( wall < 2 ) {
+						que.push( node(pii(nlx, nly), pii(nrx, nry)) );
+					}
+				}
+			}
+		}
+		cout << (ok ? "Yes" : "No") << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long LL;
+const int dx[] = {-1, 0, 1, 0};
+const int dy[] = {0, -1, 0, 1};
+const LL INF = 1001001001001001;
+
+int r, x[2], y[2];
+LL grid[2][502][502];
+bool done[2][502][502];
+LL memo[2][5001];
+
+struct P
+{
+	int g, x, y;
+	
+	bool operator < (const P& t) const {
+		return grid[g][x][y] > grid[g][t.x][t.y];
+	}
+};
+
+void search(int g)
+{
+	for (int i = 0; i < 502; i++){
+		for (int j = 0; j < 502; j++){
+			done[g][i][j] = false;
+		}
+	}
+	for (int i = 0; i <= 5000; i++){
+		memo[g][i] = INF;
+	}
+	memo[g][0] = 0;
+	
+	int num = 0;
+	LL level = 0;
+	LL mini = INF;
+	priority_queue<P> que;
+	que.push({g, x[g], y[g]});
+	while (!que.empty()){
+		P p = que.top(); que.pop();
+		if (done[g][p.x][p.y]) continue;
+		done[g][p.x][p.y] = true;
+		
+		//printf("%d %d %d\n", g, p.x, p.y);
+		
+		if (grid[g][p.x][p.y] <= level){
+			num++;
+			memo[g][num] = level;
+		}
+		else {
+			//if (grid[g][p.x][p.y] == INF) break;
+			level = grid[g][p.x][p.y];
+			num++;
+			memo[g][num] = level;
+		}
+		
+		if (num >= r) return;
+		
+		for (int dir = 0; dir < 4; dir++){
+			int tx = p.x + dx[dir];
+			int ty = p.y + dy[dir];
+			if (!done[g][tx][ty] && done[g][tx][ty] != INF){
+				que.push({g, tx, ty});
+			}
+		}
+	}
+}
+
+int main()
+{
+	while (scanf("%d", &r), r){
+		for (int i = 0; i < 2; i++){
+			for (int j = 0; j < 502; j++){
+				for (int k = 0; k < 502; k++){
+					grid[i][j][k] = INF;
+				}
+			}
+			
+			int h, w;
+			scanf("%d %d %d %d", &w, &h, &y[i], &x[i]);
+			for (int j = 1; j <= h; j++){
+				for (int k = 1; k <= w; k++){
+					scanf("%lld", &grid[i][j][k]);
+				}
+			}
+		}
+		
+		for (int i = 0; i < 2; i++){
+			search(i);
+		}
+		
+		LL mini = INF;
+		for (int i = 0; i <= r; i++){
+			mini = min(mini, memo[0][i] + memo[1][r - i]);
+		}
+		printf("%lld\n", mini);
+	}
+	
+	return 0;
+}

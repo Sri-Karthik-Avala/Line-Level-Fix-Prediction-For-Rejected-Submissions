@@ -1,0 +1,86 @@
+#include <bits/stdc++.h>
+using ll = long long;
+using namespace std;
+
+long long l, a, b, MOD;
+
+struct Matrix {
+    vector<vector<long long> > val;
+    Matrix(int n, int m, long long x = 0) : val(n, vector<long long>(m, x)) {}
+    void init(int n, int m, long long x = 0) { val.assign(n, vector<long long>(m, x)); }
+    int size() const { return (int)val.size(); }
+    inline vector<long long>& operator [] (int i) { return val[i]; }
+};
+
+Matrix operator * (Matrix A, Matrix B) {
+    Matrix R((int)A.size(), (int)B[0].size());
+    for (int i = 0; i < (int)A.size(); ++i) {
+        for (int j = 0; j < (int)B[0].size(); ++j) {
+            for (int k = 0; k < (int)B.size(); ++k) {
+                R[i][j] = (R[i][j] + A[i][k] * B[k][j] % MOD) % MOD;
+            }
+        }
+    }
+    return R;
+}
+
+Matrix pow(Matrix A, long long n) {
+    Matrix R((int)A.size(), (int)A.size());
+    for (int i = 0; i < (int)A.size(); ++i) R[i][i] = 1; // 正方行列
+    while (n > 0) {
+        if (n & 1) R = R * A;
+        A = A * A;
+        n >>= 1;
+    }
+    return R;
+}
+
+long long modpow(long long a, long long n) {
+    long long res = 1;
+    while (n > 0) {
+        if (n & 1) res = res * a % MOD;
+        a = a * a % MOD;
+        n >>= 1;
+    }
+    return res;
+}
+
+ll kyu(int n) {
+    ll res = 0;
+    for (int i = 0; i < n; i++) res = res * 10 + 9;
+    return res;
+}
+
+Matrix mat(int n) {
+    Matrix res(3,3);
+   	res[0][0] = modpow(10, n);
+    res[0][1] = 0;
+    res[0][2] = 0;
+    res[1][0] = 1;
+    res[1][1] = 1;
+    res[1][2] = 0;
+    res[2][0] = 0;
+    res[2][1] = b;
+    res[2][2] = 1;
+    return res;
+}
+
+int main() {
+    cin >> l >> a >> b >> MOD;
+    Matrix data(1,3);
+    data[0][0] = 0;
+    data[0][1] = a;
+    data[0][2] = 1;
+    for (int i = 1; i <= 18; i++) {
+        ll from = kyu(i-1), to = kyu(i);
+        from = ( from - a < 0 ? -1 : (from - a) / b ); 
+        to = ( to - a < 0 ? -1 : (to - a) / b );
+        if (from >= l - 1) break;
+        if (to < 0) continue;
+        if (to >= l - 1) to = l - 1;
+        ll count = to - from;
+        data = data * pow(mat(i), count);
+    }
+    cout << data[0][0] % MOD << endl;
+    return 0;
+}

@@ -1,0 +1,52 @@
+import sys
+
+def dijkstra(nodes, start, matrix):
+  defnode = [False] * (nodes)
+  cost = [sys.maxint] * (nodes)
+  cost[start] = 0
+  node = start
+  counter = 0
+  while True:
+    counter += 1
+    if counter == nodes or node == sys.maxint:
+      return cost
+    defnode[node] = True
+    for i in xrange(1, nodes):
+      if defnode[i]:
+        continue
+      if matrix[node][i] == sys.maxint:
+        continue
+      cost[i] = min(cost[i], cost[node]+matrix[node][i])
+    minnode = sys.maxint
+    mincost = sys.maxint
+    for i in xrange(1, nodes):
+      if defnode[i]:
+        continue
+      if cost[i] < mincost:
+        minnode = i
+        mincost = cost[i]
+    node = minnode
+
+def get_state(a, c, k):
+  return (a-1) * (c+1) + k
+
+while True:
+  c,n,m,s,d = map(int, raw_input().split())
+  if c==n==m==s==d==0:
+    break
+  matrix = [[sys.maxint] * n*(c+1) for i in xrange(n*(c+1))]
+  for i in xrange(m):
+    a,b,f = map(int, raw_input().split())
+    # no use ticket
+    for i in xrange(c+1):
+      matrix[get_state(a, c, i)][get_state(b, c, i)] = f
+      matrix[get_state(b, c, i)][get_state(a, c, i)] = f
+    # use ticket
+    for i in xrange(c):
+      matrix[get_state(a, c, i)][get_state(b, c, i+1)] = f/2
+      matrix[get_state(b, c, i)][get_state(a, c, i+1)] = f/2
+  costs = dijkstra(n*(c+1), get_state(s, c, 0), matrix)
+  mincost = sys.maxint
+  for i in xrange(c+1):
+    mincost = min(mincost, costs[get_state(d, c, i)])
+  print mincost

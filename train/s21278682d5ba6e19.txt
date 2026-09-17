@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<map>
+#include<set>
+#include<list>
+#include<queue>
+#include<deque>
+#include<algorithm>
+#include<numeric>
+#include<utility>
+#include<complex>
+#include<functional>
+ 
+using namespace std;
+
+/* constant */
+
+const int MAX_N = 1000000;
+
+/* typedef */
+
+/* global variables */
+
+int phis[MAX_N + 1], fs[MAX_N + 1];
+
+/* subroutines */
+
+/* main */
+
+int main() {
+  for (int i = 0; i <= MAX_N; i++) phis[i] = i;
+  for (int i = 1; i <= MAX_N; i++)
+    for (int j = i + i; j <= MAX_N; j += i) phis[j] -= phis[i];
+
+  fs[1] = 2;
+  for (int i = 2; i <= MAX_N; i++) fs[i] = fs[i - 1] + phis[i];
+
+  int tn;
+  cin >> tn;
+
+  while (tn--) {
+    int n;
+    cin >> n;
+
+    cout << fs[n] << endl;
+  }
+
+  return 0;
+}

@@ -1,0 +1,13 @@
+N = int(input())
+l = []
+for i in range(N):
+  l.append(int(input()))
+  
+ans = 0
+for i in range(N):
+  ans += l[i] // 2
+  l[i] = l[i] % 2
+  if (0<i) and (l[i-1]+l[i]==2):
+    ans += 1
+    l[i-1], l[i] = 0, 0
+print(ans)

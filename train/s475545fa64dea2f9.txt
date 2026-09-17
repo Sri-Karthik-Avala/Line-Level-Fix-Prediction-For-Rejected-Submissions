@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0; i<n;i++)
+#define INF 1e9
+int main(){
+    int n; cin>>n;
+    using pii = pair<int,int>;
+    using piii = pair<pii,int>;
+    vector<pii>range;
+    vector<int>nd(361,0);
+    vector<int>s;
+    rep(i,n){
+        int m,d,v,_s; cin>>m>>d>>v>>_s;
+        pii temp;
+        temp.first=(m-1)*30+d;
+        temp.second=temp.first+v-1;  if(temp.second>360)temp.second-=360;
+        range.push_back(temp);
+        if(temp.first<=temp.second)
+            for(int i=temp.first;i<=temp.second;i++)
+                nd[i]=max(nd[i],_s);
+        else{
+            for(int i=temp.first; i<=360;i++)nd[i]=max(nd[i],_s);
+            for(int i=1; i<=temp.second;i++)nd[i]=max(nd[i],_s);
+        }
+        
+        s.push_back(_s);
+    }
+    
+    for(int day=1; day<=360;day++){
+        for(int i=0; i<n;i++){
+            pii t=range[i];
+            pii value;
+            if(t.first>=day)value.first=t.first-day;
+            else value.first=360-day+t.first;
+            if(t.second<=day)value.second=day-t.second;
+            else value.second=360-day+t.second;
+            nd[day]=max(nd[day],max(0,s[i]-min(value.first,value.second)));
+        }
+    }
+    int ans=INF;
+    for(int i=1; i<=360;i++)ans=min(ans,nd[i]);
+    cout<<ans<<endl;
+}

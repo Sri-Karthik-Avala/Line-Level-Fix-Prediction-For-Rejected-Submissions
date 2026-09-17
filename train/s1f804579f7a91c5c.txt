@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+#define FOR(v, a, b) for(int v = (a); v < (b); ++v)
+#define FORE(v, a, b) for(int v = (a); v <= (b); ++v)
+#define REP(v, n) FOR(v, 0, n)
+#define REPE(v, n) FORE(v, 0, n)
+#define REV(v, a, b) for(int v = (a); v >= (b); --v)
+#define RS resize
+#define CLR clear
+#define PB push_back
+#define ALL(x) (x).begin(), (x).end()
+#define LLI long long int
+using namespace std;
+template <typename T> using V = vector<T>;
+template <typename T, typename U> using P = pair<T,U>;
+template <typename T, typename U> P<T,U> operator+(const P<T,U> &a, const P<T,U> &b){return {a.first + b.first, a.second + b.second};}
+template <typename T, typename U> P<T,U> operator-(const P<T,U> &a, const P<T,U> &b){return {a.first - b.first, a.second - b.second};}
+template <typename T> void cout_join(vector<T> &v,string d=" "){REP(i,v.size()){if(i>0)cout<<d;cout<<v[i];}cout<<endl;}
+
+template <typename T = int>
+T minimum_power_2(T n){
+  T i = 1;
+  while(i<n) i = i<<1;
+  return i;
+}
+
+template <typename T> class LazySegmentTree{
+private:
+  int size;
+  vector<T> vec;
+  function<T(T,T)> f, upd;
+  T e;
+
+  void propagate(int i){
+    if(i<size/2){
+      vec[i*2+1] = f(vec[i], vec[i*2+1]);
+      vec[i*2+2] = f(vec[i], vec[i*2+2]);
+      vec[i] = e;
+    }
+  }
+  
+  void update_aux(int s, int t, int i, int l, int r, T x){
+    if(r <= s || t <= l) return;
+    else if(s <= l && r <= t) vec[i] = upd(vec[i],x);
+    else{
+      propagate(i);
+      update_aux(s,t,i*2+1,l,(l+r)/2,x);
+      update_aux(s,t,i*2+2,(l+r)/2,r,x);
+    }
+  }
+  void find_aux(int i){if(i>0){find_aux((i-1)/2); propagate(i);}}
+
+public:
+  LazySegmentTree(int n, T e, function<T(T,T)> f, function<T(T,T)> upd):
+    size(minimum_power_2(n)*2-1), vec(size, e), f(f), e(e), upd(upd){}
+  
+  void update(int s, int t, T x){update_aux(s,t,0,0,size/2+1,x);}
+
+  T find(int i){
+    int j=i+size/2;
+    find_aux((j-1)/2);
+    return vec[j];
+  }
+};
+
+int main(){
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+
+  const int inf = INT_MAX;
+
+  int n,q; cin >> n >> q;
+  LazySegmentTree<int> ruq(n, inf, [](int a, int b){return a==inf?b:a;}, [](int a, int b){return b;});
+
+  REP(i,q){
+    int com; cin >> com;
+    switch(com){
+    case 0:
+      int s,t,x; cin >> s >> t >> x;
+      ruq.update(s,t+1,x);
+      break;
+    case 1:
+      int i; cin >> i;
+      cout << ruq.find(i) << endl;
+      break;
+    }
+  }
+  
+  return 0;
+}
+
+

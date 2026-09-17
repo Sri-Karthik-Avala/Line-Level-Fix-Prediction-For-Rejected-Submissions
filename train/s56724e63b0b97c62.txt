@@ -1,0 +1,64 @@
+#include "bits/stdc++.h"
+#include<unordered_map>
+#pragma warning(disable:4996)
+using namespace std;
+
+const int My_Inf=2147483647;
+const long long int My_LInf=9223372036854775807;
+
+//  文字列を置換する
+std::string Replace(std::string String1, std::string String2, std::string String3)
+{
+	std::string::size_type  Pos(String1.find(String2));
+
+	while (Pos != std::string::npos)
+	{
+		String1.replace(Pos, String2.length(), String3);
+		Pos = String1.find(String2, Pos + String3.length());
+	}
+
+	return String1;
+}
+int main() {
+	while (1) {
+
+		vector<string>froms;
+		vector<string>tos;
+		set<string>used;
+		int N; cin >> N;
+		if (!N)break;
+		for (int i = 0; i < N; ++i) {
+			string f, t; cin >> f >> t;
+			froms.push_back(f);
+			tos.push_back(t);
+		}
+		string start, goal; cin >> start >> goal;
+		priority_queue<pair<int, string>>que;
+		que.push(make_pair(0, start));
+		used.emplace(start);
+		int ans = -1;
+		while (!que.empty()) {
+			pair<int, string>atop(que.top());
+			que.pop();
+			const string st = atop.second;
+			if (st == goal) {
+				ans = atop.first;
+				break;
+			}
+			if (st.size() >= goal.size())continue;
+			
+			for (int i = 0; i < N; ++i) {
+				string  nst(st);
+				bool flag = false;
+				nst=Replace(nst, froms[i], tos[i]);
+				if (used.find(nst) == used.end()) {
+					used.emplace(nst);
+					que.push(make_pair(atop.first+1,nst));
+				}
+			}
+		}
+		cout << ans << endl;
+	}
+
+	return 0;
+}

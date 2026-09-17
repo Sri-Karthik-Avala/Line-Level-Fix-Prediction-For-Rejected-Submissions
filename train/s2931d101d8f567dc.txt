@@ -1,0 +1,103 @@
+
+"""
+
+https://atcoder.jp/contests/agc018/tasks/agc018_c
+
+絶対最大なのは、全員から一番たくさん持ってるコインを貰う事
+とりあえずそうして、後から人数を調整することを考える
+
+金と銀を貰いすぎたとする
+金をN個減らす、銀をM個減らす、銅をN+M個増やす…？
+→必ずしもこうではなさそう…
+金を貰いすぎたとする。
+貰いすぎたコインを減らし、別のコインを増やす
+削った時の減少量が銀にするとA-B , 銅だとA-C
+減少量最小化問題になる
+→あれなんかやったことがある気が…？
+
+方針違う？
+適当にX,Y,Z人で振り分ける
+swapすると増える限りswapし続ける？
+
+金銀でswapする場合(1が金→銀)
+(B1-A1) + (A2-B2)増える
+どちらもheapqに突っ込んで、正な限りswapし続ける？
+金銀・金銅・銀銅でやれば最適解になるか？
+→そんなことはない(改善できない局所解がある…)
+
+なんもわからん…
+
+
+=====ちょっと答えを見た=====
+
+まず銅を無視する(金銀だけに分ける)
+A-Bで降順ソート(B-A)で昇順ソート
+ここで金銀グループはどこかで切って左右にすっぱり分けられる
+その中で金銅・銀銅を同様に求めればよい？
+→ヒープを使って切り方を全探索
+
+まずX個金・Y+Z個銀グループにしたとする
+→銀グループは B-Cで昇順ソート小さいほうからZ個の和*-1 + 大きいほうからY個の和が現在の解
+
+左からX個金・右からZ個銅にして、ずらしていって解を求める
+X側では、a-c をヒープに入れ、最小のやつを取り除いて-1をかけて寄与に足せばいい
+Z側では逆
+"""
+import heapq
+X,Y,Z = map(int,input().split())
+ABC = []
+for i in range(X+Y+Z):
+    a,b,c = map(int,input().split())
+    ABC.append( (b-a , a,b,c) )
+
+ABC.sort()
+
+#金側
+
+q = []
+ansX = []
+now = 0
+for i in range(X):
+    tmp,a,b,c = ABC[i]
+    heapq.heappush( q , a-c )
+    now += a
+ansX.append(now)
+
+for i in range(X,X+Z):
+    tmp,a,b,c = ABC[i]
+    heapq.heappush( q , a-c )
+    now += a
+    pp = heapq.heappop( q )
+    now -= pp
+    ansX.append(now)
+
+#銀側
+ABC.reverse()
+
+q = []
+ansY = []
+now = 0
+for i in range(Y):
+    tmp,a,b,c = ABC[i]
+    heapq.heappush( q , b-c )
+    now += b
+ansY.append(now)
+
+for i in range(Y,Y+Z):
+    tmp,a,b,c = ABC[i]
+    heapq.heappush( q , b-c )
+    now += b
+    pp = heapq.heappop( q )
+    now -= pp
+    ansY.append(now)
+
+ansY.reverse()
+
+#print (ABC)
+#print (ansX,ansY)
+
+ans = 0
+for i in range(Z):
+    ans = max(ans , ansX[i] + ansY[i])
+print (ans)
+    

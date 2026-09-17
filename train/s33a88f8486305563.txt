@@ -1,0 +1,50 @@
+n,a,b = map(int,input().split())
+if bin(a^b).count("1")%2 == 0:
+  print("NO")
+  exit()
+st = min(a,b)
+dif = a^b
+t = 1<<(n-1)
+chls = []
+chcnt = n-1
+for i in range(n)[::-1]:
+  if dif&1<<i:
+    chls.append((chcnt,i))
+    chcnt -= 1
+def change(x,p,q):
+  if (x>>p)&1 ^ (x>>q)&1:
+    x ^= (1<<p)+(1<<q)
+  return x
+def changeall(x):
+  x ^= st
+  for l,r in chls:
+    x = change(x,l,r)
+  return x
+if n == 1:
+  print("YES")
+  print(a,b)
+  exit()
+ls = []
+x = 0
+for i in range(1,2**n):
+  cnt = 0
+  while i%2 == 0:
+    i //= 2
+    cnt += 1
+  ls.append(1<<cnt)
+chcnt += 1
+while chcnt < n-1:
+  i = chcnt+1
+  ls[-2**i] //= 2
+  ls[-2**(i-1)] *= 2
+  ls[-2**(i-1)-2**i] *= 2
+  chcnt += 2
+nls = [0]
+for i in ls:
+  nls.append(nls[-1]^i)
+print("YES")
+ansls = [changeall(nls[i]) for i in range(2**n)]
+if a < b:
+  print(*ansls)
+else:
+  print(*ansls[::-1])

@@ -1,0 +1,39 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<climits>
+#include<string>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<cmath>
+#include<queue>
+#include<cstring>
+#include<stack>
+#include<functional>
+using namespace std;
+
+struct Human{
+	int n,h,w;
+	double bmi;
+	void calcBMI(){
+		bmi = (double)w/(h*0.01*h*0.01);
+	}
+	bool operator <(const Human &h)const{
+		if(abs(22-bmi)==abs(22-h.bmi)) return n<h.n;
+		return abs(22-bmi)<abs(22-h.bmi);
+	}
+};
+Human h[1000000];
+
+int main(){
+	int N;
+	while(cin>>N){
+		for(int i=0;i<N;i++){
+			cin>>h[i].n>>h[i].h>>h[i].w; h[i].calcBMI();
+		}
+		sort(h,h+N); printf("%d\n",h[0].n);
+	}
+	return 0;
+}

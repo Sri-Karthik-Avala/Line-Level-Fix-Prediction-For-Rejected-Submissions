@@ -1,0 +1,41 @@
+import heapq as hp
+# heapq.heappush(heap,item)
+# heapq.heppop(heap) 最小値　最初のやつの取り出し
+t=int(input())
+for i in range(t):
+    n=int(input())
+# 左からkまでなら、+x lef[k]=[3,4,5]
+    lef=[[] for i in range(n+1)]
+    rig=[[] for i in range(n+1)]
+    a=[]
+    hp.heapify(a)
+    ans=0
+    lefcnt=0
+
+    for i in range(n):
+        k,l,r=map(int,input().split())
+        if(l>=r):
+            ans+=r
+            lefcnt+=1
+            tmp=l-r
+            lef[k].append(tmp)
+        else:
+            ans+=l
+            tmp=r-l
+            rig[n-k].append(tmp)
+    for i in range(lefcnt,0,-1):
+        for j in lef[i]:
+            hp.heappush(a,-j)
+        if(a):
+            tmp=hp.heappop(a)*(-1)
+            ans+=tmp
+
+    a=[]
+    hp.heapify(a)
+    for i in range(n-lencnt,0,-1):
+        for j in rig[i]:
+            hp.heappush(a,-j)
+        if(a):
+            tmp=hp.heappop(a)*(-1)
+            ans+=tmp
+    print(ans)

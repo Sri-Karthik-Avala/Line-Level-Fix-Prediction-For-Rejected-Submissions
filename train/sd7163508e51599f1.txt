@@ -1,0 +1,9 @@
+A,B,C = map(int, input().split())
+
+days = C / (A+(B/7))
+
+coins = A*days + B*days/7
+
+days = int(days) if coins >= C else int(days+1)
+
+print(days)

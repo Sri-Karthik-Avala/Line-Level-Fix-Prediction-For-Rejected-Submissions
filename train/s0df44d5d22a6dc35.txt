@@ -1,0 +1,22 @@
+n, k = map(int, input().split())
+aa = list(map(int, input().split()))
+cnts = [0] * (k + 1)
+ans = 1e6
+existing = 0
+r = 0
+for l in range(n - k + 1):
+    while r < n and existing < k:
+        a = aa[r]
+        if a <= k:
+            cnts[a] += 1
+            if cnts[a] == 1:
+                existing += 1
+        r += 1
+    ans = min(ans, r - l)
+    a = aa[l]
+    if a <= k:
+        cnts[a] -= 1
+        if cnts[a] == 0:
+            existing -= 1
+
+print(ans if ans < 1e6 else 0)

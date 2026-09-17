@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int dx[]={1,0,-1,0};
+int dy[]={0,1,0,-1};
+int solve(int n){
+    vector<int> l(n),t(n),r(n),b(n);
+    for(int i=0;i<n;i++) cin>>l[i]>>t[i]>>r[i]>>b[i];
+
+    set<int> xs,ys;
+    for(int i=0;i<n;i++) xs.insert(l[i]),xs.insert(r[i]),ys.insert(t[i]),ys.insert(b[i]);
+    xs.insert(1e8);
+    xs.insert(-1);
+    ys.insert(1e8);
+    xs.insert(-1);
+    map<int,int> mpx,mpy;
+    int idx=0;
+    for(auto &e:xs) mpx[e]=idx++;
+    int idy=0;
+    for(auto &e:ys) mpy[e]=idy++;
+    vector<vector<long long>> f(idx,vector<long long>(idy,0LL));
+
+    for(int i=0;i<n;i++){
+        for(int x=mpx[l[i]];x<mpx[r[i]];x++){
+            for(int y=mpy[b[i]];y<mpy[t[i]];y++){
+                f[x][y]+=(1LL<<i);
+            }
+        }
+    }
+    int res=0;
+    function<void(int,int,long long)> dfs=[&](int x,int y,long long c){
+        if(x<0 || idx<=x || y<0 || idy<=y) return;
+        if(f[x][y]!=c) return;
+        f[x][y]=-1;
+        for(int i=0;i<4;i++){
+            dfs(x+dx[i],y+dy[i],c);
+        }
+    };
+    for(int i=0;i<idx;i++){
+        for(int j=0;j<idy;j++){
+            if(f[i][j]!=-1){
+                res++;
+                dfs(i,j,f[i][j]);
+            }
+        }
+    }
+    return res;
+}
+
+int main(){
+    int n;
+    while(cin>>n,n){
+        cout<<solve(n)<<endl;
+    }
+    return 0;
+}

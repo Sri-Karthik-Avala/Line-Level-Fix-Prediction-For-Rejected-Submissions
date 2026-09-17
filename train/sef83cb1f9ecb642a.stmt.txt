@@ -1,0 +1,68 @@
+Range Sum Query 
+
+ 
+Write a program which manipulates a sequence A = { a 1 , a 2 , . . . , a n } with the following operations:
+ 
+
+ 
+ add(i, x) : add x to a i . 
+ getSum(s, t) : print the sum of a s , a s+1 ,...,a t . 
+ 
+
+ 
+Note that the initial values of a i ( i = 1, 2, . . . , n ) are 0.
+ 
+
+ Input 
+
+
+ 
+ n q 
+ com 1 x 1 y 1 
+ com 2 x 2 y 2 
+...
+ com q x q y q 
+ 
+
+ 
+In the first line, n (the number of elements in A ) and q (the number of queries) are given. Then, q queries are given where com represents the type of queries. '0' denotes add(x i , y i ) and '1' denotes getSum(x i , y i ) .
+ 
+
+
+ Output 
+
+ 
+For each getSum operation, print the sum in a line.
+ 
+
+ Constraints 
+
+ 
+ 
+ 1 &le; n &le; 100000 
+ 
+ 
+ 1 &le; q &le; 100000 
+ 
+ 
+If com i is 0, then 1 &le; x i &le; n , 0 &le; y i &le; 1000 .
+ 
+ 
+If com i is 1, then 1 &le; x i &le; n , 1 &le; y i &le; n .
+ 
+ 
+
+
+ Sample Input 1 
+ 
+3 5
+0 1 1
+0 2 2
+0 3 3
+1 1 2
+1 2 2
+ 
+ Sample Output 1 
+ 
+3
+2

@@ -1,0 +1,82 @@
+Disjoint Set 
+
+ 
+Write a program which manipulates a disjoint set S = {S 1 , S 2 , . . . , S k } .
+ 
+
+ 
+First of all, the program should read an integer n , then make a disjoint set where each element consists of 0, 1, ... n&minus;1 respectively.
+ 
+
+ 
+Next, the program should read an integer q and manipulate the set for q queries. There are two kinds of queries for different operations:
+ 
+
+ 
+ unite(x, y) : unites sets that contain x and y , say S x and S y , into a new set.
+ same(x, y) : determine whether x and y are in the same set. 
+ 
+
+ Input 
+
+
+ 
+ n q 
+ com 1 x 1 y 1 
+ com 2 x 2 y 2 
+...
+ com q x q y q 
+ 
+
+ 
+In the first line, n and q are given. Then, q queries are given where com represents the type of queries. '0' denotes unite and '1' denotes same operation. 
+ 
+
+
+ Output 
+
+ 
+For each same operation, print 1 if x and y are in the same set, otherwise 0 , in a line.
+ 
+
+ Constraints 
+
+ 
+ 
+ 1 &le; n &le; 10000
+ 
+ 
+ 1 &le; q &le; 100000
+ 
+ 
+ x &ne; y 
+ 
+ 
+
+
+ Sample Input 
+ 
+5 12
+0 1 4
+0 2 3
+1 1 2
+1 3 4
+1 1 4
+1 3 2
+0 1 3
+1 2 4
+1 3 0
+0 0 4
+1 0 2
+1 3 0
+ 
+ Sample Output 
+ 
+0
+0
+1
+1
+1
+0
+1
+1

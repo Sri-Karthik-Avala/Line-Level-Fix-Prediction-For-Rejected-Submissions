@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+  string t,p;
+  cin >> t;
+  cin >> p;
+  vector<int> ve;
+  int k=0;
+  for(int i=0;i<t.size();i++){
+    if(t[i]==p[k]){
+      ve.push_back(i);
+      //   cout << i << endl;
+      k++;
+    }
+  }
+  ve.push_back(t.size());
+  if(k!=p.size()){
+    cout << "no" << endl;
+    return 0;
+  }
+  for(int i=0;i<ve.size()-1;i++){
+    for(int j=ve[i]+1;j<ve[i+1];j++){
+      if(p[ve[i]]==t[j]){
+	cout << "no" << endl;
+	return 0;
+      }
+    }
+
+  }
+  cout << "yes" << endl;
+  return 0;
+}

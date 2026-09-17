@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+#define MOD 1000000007
+int dp[2][303][90909];
+int d,s;
+int l[303];
+int mod_pow(int x,int n,int m){
+  int res=1;
+  while(n){
+    if(n&1) (res*=x)%=m;
+    x=(x*x)%m;
+    n>>=1;
+  }
+  return res;
+}
+int dfs(int f,int x,int y){
+  if(~dp[f][x][y]) return dp[f][x][y];
+  int res=0;
+  if(x==d){
+    res=mod_pow(y,d,MOD);
+    if(f) res=(MOD-res)%MOD;
+    return dp[f][x][y]=res;
+  }
+  (res+=dfs(f,x+1,y))%=MOD;
+  if(l[x]<y) (res+=dfs(!f,x+1,y-l[x]))%=MOD;
+  return dp[f][x][y]=res;
+}
+signed main(){
+  cin>>d;
+  for(int i=0;i<d;i++) cin>>l[i];
+  cin>>s;
+  memset(dp,-1,sizeof(dp));
+  cout<<dfs(0,0,s)<<endl;
+  return 0;
+}

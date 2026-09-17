@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
+#include <cstdlib>
+using namespace std;
+
+typedef vector<int> vint;
+
+vint input(int sz){
+	string s;
+	getline(cin, s);
+	stringstream ss1(s), ss2;
+	istream_iterator<int> b(ss1), e;
+	vint v(b, e);
+	if(cin.eof() || v.size() != sz){ throw ""; }
+	for(int i = 0; i < sz; ++i){
+		if(i){ ss2 << ' '; }
+		ss2 << v[i];
+	}
+	string t = ss2.str();
+	if(s != t){ throw 0; }
+	return v;
+}
+
+int main(){
+	int q = input(1)[0];
+	for(int i = 0; i < q; ++i){
+		input(3);
+	}
+
+	cin.peek();
+	if(!cin.eof()){
+		exit(EXIT_FAILURE);
+	}
+}

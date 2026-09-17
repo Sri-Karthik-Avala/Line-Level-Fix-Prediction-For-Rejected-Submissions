@@ -1,0 +1,68 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+#include<algorithm>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<map>
+#include<queue>
+#include<cassert>
+#include<cmath>
+#define rep(i,n) for(int i=0;i<n;i++)
+#define fr(i,c) for(__typeof (c.begin()) i=c.begin(); i!=c.end(); i++)
+#define all(c) (c).begin(), (c).end()
+#define mp make_pair
+#define pb push_back
+using namespace std;
+
+typedef vector<int> vi;
+typedef pair<int,int> pi;
+typedef long long ll;
+
+const int mod=100000007;
+int n,e[100],C[101][101];
+double p[100],q[100];
+bool v[100];
+
+void _(vi &tmp,int c){
+  v[c]=1; tmp.pb(c);
+  if(!v[e[c]])_(tmp,e[c]);
+}
+double rec(int c,int s,bool start=1){
+  if(start)return 1/p[c]+rec(e[c],s,0);
+  return 1/q[c]+(e[c]!=s?rec(e[c],s,0):0);
+}
+
+int main(){
+  rep(i,101)rep(j,i+1)C[i][j]=(i==0||j==i?1:C[i-1][j]+C[i-1][j-1]);
+
+  while(cin>>n,n){
+    rep(i,n){
+      int t; cin>>p[i]>>t>>q[i];
+      e[t]=i; v[i]=0;
+    }
+    vector<vi> vs;
+    
+    rep(i,n)if(!v[i]){
+      vi tmp;
+      _(tmp,i);
+      vs.pb(tmp);
+    }
+    
+    ll comb=1; double ex=0;
+    rep(i,vs.size()){
+      double mn=1e9,tmp; int cnt=0;
+      rep(j,vs[i].size()){
+        tmp=rec(vs[i][j],vs[i][j]);
+        if(tmp+1e-9<mn)mn=tmp, cnt=0;
+        if(abs(tmp-mn)<1e-9)cnt++;
+      }
+      ex+=mn; (comb*=cnt*C[n][vs[i].size()])%=mod;
+      n-=vs[i].size();
+    }
+    printf("%.9f %d\n",ex,(int)comb);
+  }
+  return 0;
+}

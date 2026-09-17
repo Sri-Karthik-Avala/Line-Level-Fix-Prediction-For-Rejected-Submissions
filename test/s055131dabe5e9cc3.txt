@@ -1,0 +1,79 @@
+#include<iostream>
+#include<cstdio>
+#include<queue>
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define INF (1<<28)
+#define MAX 105
+struct edge{int to,cost;};
+struct state{
+  int pos,cost;
+  bool operator < (const state &p)const{
+    return cost > p.cost;
+  }
+};
+
+vector<edge> G[MAX];
+int n,m,p;
+
+void init(){
+  for(int i=0;i<MAX;i++){
+    G[i].clear();
+  }
+}
+
+long long d[MAX][MAX],cnt[MAX][MAX];
+void dijkstra(int si){
+  for(int i=0;i<MAX;i++)d[si][i]=INF,cnt[si][i]=0;
+  priority_queue<state> Q;
+  d[si][si]=0;
+  cnt[si][si]=1;
+  Q.push((state){si,0});
+  while(!Q.empty()){
+    state s=Q.top();Q.pop();
+    if(s.cost>d[si][s.pos])continue;
+    for(int i=0;i<(int)G[s.pos].size();i++){
+      edge e=G[s.pos][i];
+      if(d[si][e.to]<s.cost+e.cost)continue;
+      else if(d[si][e.to]==s.cost+e.cost){
+	cnt[si][e.to]+=cnt[si][s.pos];
+      }else{
+	cnt[si][e.to]=cnt[si][s.pos];
+	d[si][e.to]=s.cost+e.cost;
+	Q.push((state){e.to,d[si][e.to]});
+      }
+    }
+  }
+}
+
+int main(){
+  while(1){
+    cin>>n>>m>>p;
+    if(n==0&&m==0&&p==0)break;
+    init();
+    for(int i=0;i<m;i++){
+      int a,b,c;
+      scanf("%d%d%d",&a,&b,&c);
+      G[a].push_back((edge){b,c});
+      G[b].push_back((edge){a,c});
+    }
+    for(int i=0;i<n;i++)
+      dijkstra(i);
+
+    for(int i=0;i<p;i++){
+      int a;
+      scanf("%d",&a);
+      if(d[0][a]+d[a][n-1]!=d[0][n-1]){
+	cout<<"0.0"<<endl;
+      }else{
+	double x=cnt[0][a],x2=cnt[a][n-1],y=cnt[0][n-1];
+	printf("%.8f\n",x/y*x2);
+      }
+
+
+    }
+    cout<<endl;
+  }
+  return 0;
+}

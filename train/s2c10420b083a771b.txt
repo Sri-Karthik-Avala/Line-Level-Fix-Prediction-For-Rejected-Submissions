@@ -1,0 +1,92 @@
+#include<bits/stdc++.h>
+#define For(i,x,y) for (register int i=(x);i<=(y);i++)
+#define FOR(i,x,y) for (register int i=(x);i<(y);i++)
+#define Dow(i,x,y) for (register int i=(x);i>=(y);i--)
+#define Debug(v) for (auto i:v) printf("%lld ",i);puts("")
+#define mp make_pair
+#define fi first
+#define se second
+#define pb push_back
+#define ep emplace_back
+#define siz(x) ((int)(x).size())
+#define all(x) (x).begin(),(x).end()
+#define fil(a,b) memset((a),(b),sizeof(a))
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pa;
+typedef pair<ll,ll> PA;
+typedef vector<int> poly;
+inline ll read(){
+    ll x=0,f=1;char c=getchar();
+    while ((c<'0'||c>'9')&&(c!='-')) c=getchar();
+    if (c=='-') f=-1,c=getchar();
+    while (c>='0'&&c<='9') x=x*10+c-'0',c=getchar();
+    return x*f;
+}
+
+inline int exgcd(int a,int b,int &x,int &y){
+	if (!b) return x=1,y=0,a;
+	int g=exgcd(b,a%b,y,x);
+	return y-=a/b*x,g;
+}
+inline int inv(int A,int mod){
+	int x,y;
+	exgcd(A,mod,x,y);
+	return x<0?x+mod:x;
+}
+
+int A,B,C,D,X,Y;
+
+inline void init(){
+	int g=__gcd(__gcd(A,B),C);
+	A/=g,B/=g,C/=g;
+	g=__gcd(A,C),Y/=g,C/=g,A/=g;
+	g=__gcd(B,C),X/=g,C/=g,B/=g;
+}
+vector<int>x,cnt;
+inline void Get(){
+	D=1ll*A*inv(B,C)%C,x.clear(),cnt.clear();
+	int W=C,H=D,now=0,invD=inv(D,C);
+	while (W){
+		int tmp=W/H;
+		cnt.pb(tmp),x.pb(1ll*now*invD%C),now+=tmp*H;
+		W%=H;
+		if (!W) break;
+		H%=W;
+		if (H==0) H=W;
+	}
+	x.pb(C),cnt.pb(0);
+}
+inline ll Div(ll x,ll y){
+	return x/y-(x%y&&(x^y)<0);
+}
+inline int Get(int x){
+	return x==0?C:(C-1ll*x*D%C)%C;
+}
+inline void solve(){
+	A=read(),X=read(),B=read(),Y=read(),C=read();
+	init();
+	if (C==1) return printf("%d\n",A+B),void(0);
+	Get();
+	ll ans=0;
+	FOR(i,0,siz(x)-1){
+		int lx=x[i],ly=Get(lx),rx=x[i+1],ry=Get(rx),dx=(rx-lx)/cnt[i],dy=(ly-ry)/cnt[i];
+		ll l=0,r=X+Y,ret=0;
+		while (l<=r){
+			ll mid=l+r>>1;
+			if (X-mid*lx>=0&&Y-mid*ry>=0){
+				ll a=(X-mid*lx)/dx,b=(Y-mid*ry)/dy;
+				if (a>=0&&b>=0&&a+b>=mid*cnt[i]) l=mid+1,ret=mid;
+					else r=mid-1;
+			} else r=mid-1;
+		}
+		ans=max(ans,ret);
+	}
+	printf("%lld\n",ans);
+}
+
+int main(){
+	int T=read();
+	while (T--) solve();
+}

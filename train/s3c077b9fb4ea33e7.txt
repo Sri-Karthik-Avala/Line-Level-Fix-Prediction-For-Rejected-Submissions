@@ -1,0 +1,37 @@
+#include<iostream>  
+#include<algorithm>  
+#include<string>  
+#include<map>//ll dx[4]={0,0,-1,1};ll dy[4]={-1,1,0,0};  
+#include<set>//  
+#include<vector>  
+#include<cmath>  
+#include<stack>  
+#include<string.h>  
+#include<stdlib.h>  
+#include<cstdio>  
+#define mod 1e9+7  
+#define ll long long
+using namespace std;  
+int y[10100];
+int x[1010];
+int main(){
+		int n;
+		cin>>n;
+		for(int i=0;i<n;++i){
+			cin>>x[i];
+		}
+		for(int i=0;i<n;++i){
+			int s=0;
+			for(int j=i;j<i+3;++j){
+				s=s*10+x[j];
+				y[s]=1;
+			}
+		}
+		for(int i=0;i<=1005;++i){
+			if(y[i]==0){
+				cout<<i<<endl;
+				break;
+			}
+		}
+	return 0;
+}

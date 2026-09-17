@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int max_dist(int node, int parent, vector<int>& dist, vector<vector<int>>& tree){
+  int mx = dist[node];
+  for(int next : tree[node]){
+    if(next == parent) continue;
+    
+    dist[next] = dist[node] + 1;
+    mx = max(max_dist(next, node, dist, tree), mx);
+  }
+  
+  return mx;
+}
+
+void search_max_degree(int node, int parent, vector<long long>& max_degree, vector<int>& dist, vector<vector<int>>& tree){
+  for(int next : tree[node]){
+    if(next == parent) continue;
+    
+    max_degree[dist[next]] = max((long long)tree[next].size() - 1, max_degree[dist[next]]);
+    
+    search_max_degree(next, node, max_degree, dist, tree);
+  }
+};
+
+int main(){
+  int N;
+  cin >> N;
+  
+  vector<vector<int>> tree(N);
+  for(int i = 0; i < N - 1; i++){
+    int a, b;
+    cin >> a >> b;
+    --a; --b;
+    
+    tree[a].push_back(b);
+    tree[b].push_back(a);
+  }
+  
+  int min_color = N;
+  long long min_leaf = (1ll << 61);
+  for(int i = 0; i < N; i++){
+    vector<int> dist(N, N);
+    dist[i] = 0;
+    
+    int color = max_dist(i, -1, dist, tree) + 1;
+    
+    if(color <= min_color){
+      vector<long long> max_degree(color, 0);
+      max_degree[0] = tree[i].size();
+      search_max_degree(i, -1, max_degree, dist, tree);
+      
+      long long leaf = 1;
+      for(long long d : max_degree){
+        if(d && d * leaf / leaf == d) leaf *= d;
+        else if(d) leaf = -1;
+      }
+      
+      if(leaf == -1) break;
+      
+      if(color < min_color) min_leaf = leaf;
+      else min_leaf = min(leaf, min_leaf);
+      
+      min_color = color;
+    }
+  }
+  
+  for(int i = 0; i < N; i++){
+    for(int j = i + 1; j < N; j++){
+      bool co = false;
+      for(int next : tree[i]){
+        if(next == j){
+          co = true;
+          break;
+        }
+      }
+      if(!co) continue;
+      
+      vector<int> dist(N, N);
+      dist[i] = dist[j] = 0;
+      
+      int color = max(max_dist(i, j, dist, tree), max_dist(j, i, dist, tree)) + 1;
+      
+      if(color <= min_color){
+        vector<long long> max_degree(color, 0);
+        max_degree[0] = max((int)tree[i].size(),(int)tree[j].size()) - 1;
+        search_max_degree(i, j, max_degree, dist, tree);
+        
+        long long leaf = 2;
+        for(long long d : max_degree){
+          if(d && d * leaf / leaf == d) leaf *= d;
+          else if(d) leaf = -1;
+        }
+        
+        if(leaf == -1) break;
+        
+        if(color < min_color) min_leaf = leaf;
+        else min_leaf = min(leaf, min_leaf);
+        
+        min_color = color;
+      }
+    }
+  }
+  
+  cout << min_color << ' ' << min_leaf << endl;
+  
+  return 0;
+}

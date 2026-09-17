@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+int main(){
+  int n,i,j;
+  int w;
+  string str;
+  
+  cin >> n;
+  for (i=0;i<n;i++){
+    cin >> str;
+    vector <int> s;
+    for(j=0;j<str.length();j++){
+      s.push_back(str[j]-'0');
+    }
+    w=0;
+    while(s.size()>2){
+      int b = (s[0]+s[1])/10;
+      s[1]=(s[0]+s[1])%10;
+      if(b==0)s.erase(s.begin());
+      else s[0]=1;
+      w++;
+    }
+    if(w%2==0) printf("Audrey wins.\n");
+    else printf("Fabre wins.\n");
+  }
+  
+  return 0;
+}

@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<class T> inline bool chmin(T& a, T b) {
+    if (a > b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+template<class T> inline bool chmax(T& a, T b) {
+    if (a < b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+
+long long solve(long long  h, long long w){
+    long long sa, sb, sc;
+    
+    long long res = 1<<30;
+    for (long long i=1; i<h; i++){
+        sa = w * i;
+        
+        sb = ((h-i) / 2) * w;
+        sc = (h-((h-i) / 2))*w; 
+        
+        chmin(res, max({sa, sb, sc}) - min({sa, sb, sc}));
+
+        sb = (h - i) * (w / 2);
+        sc = (h - i) * (w - (w/2));
+    
+        chmin(res, max({sa, sb, sc}) - min({sa, sb, sc}));
+    }
+    
+    return res;
+}
+
+int main(void){
+    long long h, w;
+    cin >> h >> w;
+    
+    cout << min(solve(h, w), solve(w, h)) << endl;
+}

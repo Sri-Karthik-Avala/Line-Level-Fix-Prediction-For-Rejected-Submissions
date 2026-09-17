@@ -1,0 +1,101 @@
+C - Decoding Ancient Messages 
+
+ Problem Statement 
+
+ 
+Professor Y's work is to dig up ancient artifacts. Recently, he found a lot of strange stone plates, each of which has $N^2$ characters arranged in an $N \times N$ matrix. Further research revealed that each plate represents a message of length $N$. Also, the procedure to decode the message from a plate was turned out to be the following:
+ 
+
+ 
+ Select $N$ characters from the plate one by one so that any two characters are neither in the same row nor in the same column. 
+ Create a string by concatenating the selected characters. 
+ Among all possible strings obtained by the above steps, find the lexicographically smallest one. It is the message represented by this plate. 
+ 
+
+ 
+NOTE: The order of the characters is defined as the same as the order of their ASCII values (that is, $\mathtt{A} \lt \mathtt{B} \lt \cdots \lt \mathtt{Z} \lt \mathtt{a} \lt \mathtt{b} \lt \cdots \lt \mathtt{z}$).
+ 
+
+ 
+After struggling with the plates, Professor Y gave up decoding messages by hand. You, a great programmer and Y's old friend, was asked for a help. Your task is to write a program to decode the messages hidden in the plates.
+ 
+
+ Input 
+
+ The input is formated as follows:
+ 
+ $N$ $c_{11} c_{12} \cdots c_{1N}$ $c_{21} c_{22} \cdots c_{2N}$ : : $c_{N1} c_{N2} \cdots c_{NN}$ 
+
+ 
+The first line contains an integer $N$ ($1 \le N \le 50$). Each of the subsequent $N$ lines contains a string of $N$ characters. Each character in the string is an uppercase or lowercase English letter ( A - Z , a - z ).
+ 
+
+ Output 
+
+ Print the message represented by the plate in a line. 
+
+ Sample Input 1 
+
+ 3
+aab
+czc
+baa 
+
+ Output for the Sample Input 1 
+
+ aac 
+
+ Sample Input 2 
+
+ 36
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiQiiiiiiiiiiiiiiiQiiiiiiiii
+iiiiiiiiiiQQQiiiiiiiiiiQQQQiiiiiiiii
+iiiiiiiiiiQQQQQiiiiiiiQQQQiiiiiiiiii
+iiiiiiiiiiiQQQQQQQQQQQQQQQiiiiiiiiii
+iiiiiiiiiiiQQQQQQQQQQQQQQQiiiiiiiiii
+iiiiiiiiiiiQQQQQQQQQQQQQQiiiiiiiiiii
+iiiiiiiiiiiiQQQQQQQQQQQQQiiiiiiiiiii
+iiiiiiiiiiiQQQQQQQQQQQQQQQiiiiiiiiii
+iiiiiiiiiiQQQQQQQQQQQQQQQQQiiiiiiiii
+iiiiiiQiiiQQQQQQQQQQQQQQQQQiiiQiiiii
+iiiiiiQQiQQQQQQQQQQQQQQQQQQiiQQiiiii
+iiiiiiiQQQQQQQQQQQQQQQQQQQQiQQiiiiii
+iiiiiiiiiQQQQQQQQQQQQQQQQQQQQiiiiiii
+iiiiiiiiQQQQQiiQQQQQQQQiiQQQQQiiiiii
+iiiiiiQQQQQQiiiiQQQQQiiiiQQQQQQiiiii
+iiiiiQQQQQQQQiiiQQQQQiiQQQQQQQQiQiii
+iiiQQQQQQQiiQiiiQQQQQiiQiiQQQQQQQQii
+iQQQQQQQQQiiiiiQQQQQQQiiiiiiQQQQQQQi
+iiQQQQQQQiiiiiiQQQQQQQiiiiiiiiQQQiii
+iQQQQiiiiiiiiiQQQQQQQQQiiiiiiiiQQQii
+iiiiiiiiiiiiiiQQQQQQQQQiiiiiiiiiiiii
+iiiiiiiiiiiiiQQQQQQQQQQiiiiiiiiiiiii
+iiiiiiiiiiiiiQQQQQQQQQQiiiiiiiiiiiii
+iiiiiiiiiiiiiiQQQQQQQQiiiiiiiiiiiiii
+iiiiiiiiiiiiiiQQQQQQQQiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii 
+
+ Output for the Sample Input 2 
+
+ QQQQQQQQQQQQQQQQQQQQQQQQQiiiiiiiiiii 
+
+ Sample Input 3 
+
+ 3
+Acm
+aCm
+acM 
+
+ Output for the Sample Input 3 
+
+ ACM

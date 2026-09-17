@@ -1,0 +1,13 @@
+n=int(raw_input())
+ns=map(int,raw_input().split())
+dp=[[0]*21 for _ in xrange(n)]
+dp[0][0]=1
+for i in xrange(n-1):
+    for j in xrange(21):
+        if j-ns[i]>=0 and j+ns[i]<=20:
+            dp[i+1][j]=dp[i][j-ns[i]]+dp[i][j+ns[i]]
+        elif j-ns[i]>=0:
+            dp[i+1][j]=dp[i][j-ns[i]]
+        else:
+            dp[i+1][j]=dp[i][j+ns[i]]
+print(dp[n-1][ns[-1]])

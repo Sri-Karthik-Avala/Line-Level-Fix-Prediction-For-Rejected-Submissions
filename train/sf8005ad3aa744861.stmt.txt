@@ -1,0 +1,76 @@
+Let’s Make a Flag -->
+ Flag 
+
+ 
+ AHK Education, the educational program section of Aizu Broadcasting Cooperation, broadcasts a children’s workshop program called "Let's Play and Make." Today’s theme is "Make your own flag." A child writes his first initial in the center of their rectangular flag.
+ 
+
+ 
+Given the flag size and the initial letter to be placed in the center of it, write a program to draw the flag as shown in the figure below.
+ 
+
+ 
++-------+
+|.......|
+|...A...|
+|.......|
++-------+
+ 
+ 
+ The figure has "A" in the center of a flag with size 9 (horizontal) &times; 5 (vertical).
+ 
+
+
+ Input 
+
+ 
+The input is given in the following format.
+ 
+
+ 
+ W H c 
+ 
+
+ 
+The input line provides the flag dimensions W (width) and H (height) (3 &le; W,H &le; 21), and the initial letter c . Both W and H are odd numbers, and c is a capital letter.
+ 
+ 
+
+ Output 
+
+ 
+Draw the flag of specified size with the initial in its center using the following characters: " + " for the four corners of the flag, " - " for horizontal lines, " | " for vertical lines, and " . " for the background (except for the initial in the center).
+ 
+ 
+
+ Sample Input 1 
+
+ 
+3 3 B
+ 
+
+ Sample Output 1 
+
+ 
++-+
+|B|
++-+
+ 
+
+
+ Sample Input 2 
+
+ 
+11 7 Z
+ 
+
+ Sample Output 2 
+
+ 
++---------+
+|.........|
+|.........|
+|....Z....|
+|.........|
+|.........|
++---------+

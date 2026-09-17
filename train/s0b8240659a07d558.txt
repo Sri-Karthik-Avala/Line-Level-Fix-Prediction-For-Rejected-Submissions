@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+from collections import deque
+import itertools as it
+import sys
+
+sys.setrecursionlimit(1000000)
+
+S1 = raw_input()
+S2 = raw_input()
+
+m = {}
+
+for i in range(len(S1)):
+    lst = [0 for j in range(26)]
+    for j in range(i, len(S1)):
+        lst[(ord(S1[j]) - ord('a'))] += 1
+        m[tuple(lst)] = j - i + 1
+
+ans = 0
+
+for i in range(len(S2)):
+    lst = [0 for j in range(26)]
+    for j in range(i, len(S2)):
+        lst[(ord(S2[j]) - ord('a'))] += 1
+        t = tuple(lst)
+        if t in m:
+            ans = max(ans, m[t])
+
+print ans

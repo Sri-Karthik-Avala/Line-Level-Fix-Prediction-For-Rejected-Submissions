@@ -1,0 +1,117 @@
+A Simple Offline Text Editor 
+ A text editor is a useful software tool that can help people in various situations including writing and programming. Your job in this problem is to construct an offline text editor, i.e., to write a program that first reads a given text and a sequence of editing commands and finally reports the text obtained by performing successively the commands in the given sequence. 
+ The editor has a text buffer and a cursor. The target text is stored in the text buffer and most editing commands are performed around the cursor. The cursor has its position that is either the beginning of the text, the end of the text, or between two consecutive characters in the text. The initial cursor position (i.e., the cursor position just after reading the initial text) is the beginning of the text. 
+ A text manipulated by the editor is a single line consisting of a sequence of characters, each of which must be one of the following: 'a' through 'z', 'A' through 'Z', '0' through '9', '.' (period), ',' (comma), and ' ' (blank). You can assume that any other characters never occur in the text buffer. You can also assume that the target text consists of at most 1,000 characters at any time. The definition of words in this problem is a little strange: a word is a non-empty character sequence delimited by not only blank characters but also the cursor. For instance, in the following text with a cursor represented as '^', 
+ 
+
+ He^llo, World. 
+ 
+
+ the words are the following. 
+ 
+
+ He 
+ llo, 
+ World. 
+ 
+
+ Notice that punctuation characters may appear in words as shown in this example. 
+ The editor accepts the following set of commands. In the command list, " any-text " represents any text surrounded by a pair of double quotation marks such as "abc" and "Co., Ltd.". 
+ 
+ 
+ Command 
+ 
+ Descriptions 
+ 
+ 
+ forward char 
+ 
+ Move the cursor by one character to the right, unless the cursor is already at the end of the text. 
+ 
+ 
+ forward word 
+ 
+ Move the cursor to the end of the leftmost word in the right. If no words occur in the right, move it to the end of the text. 
+ 
+ 
+ backward char 
+ 
+ Move the cursor by one character to the left, unless the cursor is already at the beginning of the text. 
+ 
+ 
+ backward word 
+ 
+ Move the cursor to the beginning of the rightmost word in the left. If no words occur in the left, move it to the beginning of the text. 
+ 
+ 
+ insert " any-text " 
+ 
+ Insert any-text (excluding double quotation marks) at the position specified by the cursor. After performing this command, the new cursor position is at the end of the inserted text. The length of any-text is less than or equal to 100. 
+ 
+ 
+ delete char 
+ 
+ Delete the character that is right next to the cursor, if it exists. 
+ 
+ 
+ delete word 
+ 
+ Delete the leftmost word in the right of the cursor. If one or more blank characters occur between the cursor and the word before performing this command, delete these blanks, too. If no words occur in the right, delete no characters in the text buffer. 
+ 
+ 
+ 
+
+ 
+ Input 
+ The first input line contains a positive integer, which represents the number of texts the editor will edit. For each text, the input contains the following descriptions: 
+
+ 
+
+ 
+ The first line is an initial text whose length is at most 100. 
+ The second line contains an integer M representing the number of editing commands. 
+ Each of the third through the M +2nd lines contains an editing command. 
+ 
+
+ You can assume that every input line is in a proper format or has no syntax errors. You can also assume that every input line has no leading or trailing spaces and that just a single blank character occurs between a command name (e.g., forward) and its argument (e.g., char). 
+
+ Output 
+ For each input text, print the final text with a character '^' representing the cursor position. Each output line shall contain exactly a single text with a character '^'. 
+ Sample Input 
+ 
+ 
+3
+A sample input
+9
+forward word
+delete char
+forward word
+delete char
+forward word
+delete char
+backward word
+backward word
+forward word
+Hallow, Word.
+7
+forward char
+delete word
+insert "ello, "
+forward word
+backward char
+backward char
+insert "l"
+
+3
+forward word
+backward word
+delete word
+ 
+ 
+
+ Output for the Sample Input 
+ 
+ 
+Asampleinput^
+Hello, Worl^d.
+^

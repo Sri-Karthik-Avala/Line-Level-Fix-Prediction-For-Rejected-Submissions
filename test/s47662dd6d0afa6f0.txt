@@ -1,0 +1,25 @@
+#include <iostream>
+#include <utility>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+
+typedef long long int ll;
+
+
+using namespace std;
+
+string a,b;
+
+int main(){
+	int cnt=0;
+	while(cin>>a){
+		b=a;
+		reverse(&b[0],&b[b.size()-1]);
+		if(b==a)cnt++;
+	}
+	cout<<cnt<<endl;
+}

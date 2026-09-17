@@ -1,0 +1,74 @@
+import sys,queue,math,copy,itertools,bisect,collections,heapq
+
+class Node:
+    def __init__(self,x):
+        self.data = x
+        self.left = None
+        self.right = None
+
+def insert(node,x):
+    if node is None: return Node(x)
+    elif x < node.data:
+        node.left = insert(node.left,x)
+    else:
+        node.right = insert(node.right,x)
+    return node
+
+def search_min(node):
+    if node.left is None: return node.data
+    return search_min(node.left)
+
+def delete_min(node):
+    if node.left is Node: return node.right
+    node.left = delete_min(node.left)
+    return node
+
+def delete(node,x):
+    if node:
+        if x == node.data:
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
+            else:
+                node.data = search_min(node.right)
+                node.right = delete_min(node.right)
+        elif x < node.data:
+            node.left = delete(node.left,x)
+        else:
+            node.right = delete(node.right,x)
+    return node
+
+
+def main():
+    sys.setrecursionlimit(10**7)
+    LI = lambda : [int(x) for x in sys.stdin.readline().split()]
+
+    N,M = LI()
+    p = [LI() for _ in range(M)]
+
+    p.sort()
+
+    r = [[] for _ in range(N+1)]
+    d = 0
+    j = 0
+    root = None
+    for i in range(1,N):
+        update = False
+        while j < M and p[j][0] == i:
+            root = insert(root,d + p[j][2])
+            update = True
+            r[p[j][1]].append(d + p[j][2])
+            j += 1
+        for z in r[i]:
+            root = delete(root,z)
+            update = True
+        if root == None:
+            print(-1)
+            return
+        if update:
+            d = search_min(root)
+    print(d)
+
+if __name__ == '__main__':
+    main()

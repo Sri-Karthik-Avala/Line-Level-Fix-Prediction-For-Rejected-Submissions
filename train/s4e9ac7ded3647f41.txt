@@ -1,0 +1,15 @@
+#include <bits/stdc++.h>
+#define ll long long int
+
+using namespace std;
+
+int main(){
+    ll x, ans;
+    cin >> x;
+    ll c = x/11;
+    ans = c * 2;
+    x -= 11*c;
+    if(0 < x && x <= 6) ans++;
+    else ans += 2;
+    cout << ans << endl;
+}

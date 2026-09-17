@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for (int i = 0; i < (n); i++)
+#define rrep(i,n) for (int i = 1; i <= (n); i++)
+using ll = long long;
+using Graph = vector<vector<int>>;
+using P = pair<int,int>;
+
+int main() {
+  int n; cin >> n;
+  string s = "MARCH";
+  int c[5] = {0};
+  rep(i,n) {
+    string t;
+    cin >> t;
+    rep(j,5) {
+      if (t[0] == s[j]) {
+        c[j]++;
+      }
+    }
+  }
+  ll ans = 0;
+  for (int i = 0; i < 5; i++) {
+    for (int j = i + 1; j < 5; j++) {
+      for (int k = j + 1; k < 5; k++) {
+        ans += c[i] * c[j] * c[k];
+      }
+    }
+  }
+  cout << ans << endl;
+}

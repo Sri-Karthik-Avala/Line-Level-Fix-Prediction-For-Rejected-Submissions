@@ -1,0 +1,68 @@
+#include <cstdio>
+
+const int mod = 998244353;
+const int MAXN = 2e6 + 5;
+
+template<typename _T>
+void read( _T &x )
+{
+	x = 0;char s = getchar();int f = 1;
+	while( s > '9' || s < '0' ){if( s == '-' ) f = -1; s = getchar();}
+	while( s >= '0' && s <= '9' ){x = ( x << 3 ) + ( x << 1 ) + ( s - '0' ), s = getchar();}
+	x *= f;
+}
+
+template<typename _T>
+void write( _T x )
+{
+	if( x < 0 ){ putchar( '-' ); x = ( ~ x ) + 1; }
+	if( 9 < x ){ write( x / 10 ); }
+	putchar( x % 10 + '0' );
+}
+
+template<typename _T>
+void swapp( _T &x, _T &y )
+{
+	_T t = x; x = y, y = t;
+}
+
+int fac[MAXN], ifac[MAXN];
+int N, M;
+
+int qkpow( int, int );
+int inv( const int a ) { return qkpow( a, mod - 2 ); }
+void add( int &x, const int v ) { x = ( x + v >= mod ? x + v - mod : x + v ); }
+int C( const int n, const int m ) { return 1ll * fac[n] * ifac[m] % mod * ifac[n - m] % mod; }
+int invC( const int n, const int m ) { return 1ll * ifac[n] * fac[m] % mod * fac[n - m] % mod; }
+
+int qkpow( int base, int indx )
+{
+	int ret = 1;
+	while( indx )
+	{
+		if( indx & 1 ) ret = 1ll * ret * base % mod;
+		base = 1ll * base * base % mod, indx >>= 1;
+	}
+	return ret;
+}
+
+void init( const int siz )
+{
+	fac[0] = ifac[0] = 1;
+	for( int i = 1 ; i <= siz ; i ++ ) fac[i] = 1ll * fac[i - 1] * i % mod;
+	ifac[siz] = inv( fac[siz] );
+	for( int i = siz - 1 ; i ; i -- ) ifac[i] = 1ll * ifac[i + 1] * ( i + 1 ) % mod;
+}
+
+int main()
+{
+	read( N ), read( M );
+	if( N < M ) swapp( N, M );
+	init( N + M ); 
+	
+	int ans = 0, tmp = invC( N + M, N );
+	for( int k = 1 ; k <= N ; k ++ )
+		add( ans, 499122177ll * C( M - k + N - k, M - k ) % mod * C( 2 * k, k ) % mod * tmp % mod );
+	add( ans, N ); write( ans ), putchar( '\n' );
+	return 0;
+}

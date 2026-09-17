@@ -1,0 +1,119 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <sstream>
+using namespace std;
+
+const int MAXH = 21;
+const int MAXW = 21;
+const int MAXT = 103;
+const int INF = 1<<28;
+const int dx[] = {1,0,-1,0};
+const int dy[] = {0,1,0,-1};
+int H, W;
+int D;
+int G[MAXH][MAXW][4];
+int S[MAXH][MAXW];
+bool dp[MAXT][MAXH][MAXW][4];
+
+pair<int,int> getPair() {
+  string s;
+  cin >> s;
+  replace(s.begin(), s.end(), '-', ' ');
+  stringstream ss(s);
+  char h, v;
+  ss >> h >> v;
+  return make_pair(h-'a', v-'1');
+}
+
+int main() {
+  while(cin >> H >> W && (H|W)) {
+    cin >> D;
+    {
+      fill(S[0], S[MAXH], 0);
+      int ns;
+      cin >> ns;
+      while(ns--) {
+        pair<int,int> p = getPair();
+        cin >> S[p.first][p.second];
+      }
+    }
+    {
+      fill(G[0][0], G[MAXH][0], D);
+      int nc;
+      cin >> nc;
+      while(nc--) {
+        pair<int,int> p1 = getPair();
+        pair<int,int> p2 = getPair();
+        int tx = p2.second - p1.second;
+        int ty = p2.first - p1.first;
+        for(int i = 0; i < 4; ++i) {
+          if(dx[i] == tx && dy[i] == ty) {
+            G[p1.first][p1.second][i] = INF;
+            G[p2.first][p2.second][(i+2)%4] = INF;
+            break;
+          }
+        }
+      }
+    }
+    {
+      int nj;
+      cin >> nj;
+      while(nj--) {
+        pair<int,int> p1 = getPair();
+        pair<int,int> p2 = getPair();
+        int d;
+        cin >> d;
+        int tx = p2.second - p1.second;
+        int ty = p2.first - p1.first;
+        for(int i = 0; i < 4; ++i) {
+          if(dx[i] == tx && dy[i] == ty) {
+            G[p1.first][p1.second][i] = D+d;
+            G[p2.first][p2.second][(i+2)%4] = D+d;
+            break;
+          }
+        }
+      }
+    }
+    pair<int,int> src = getPair();
+    pair<int,int> dst = getPair();
+
+    fill(dp[0][0][0], dp[MAXT][0][0], false);
+    dp[0][src.first][src.second][0] = true;
+    for(int t = 0; t < MAXT; ++t) {
+      for(int i = 0; i < H; ++i) {
+        for(int j = 0; j < W; ++j) {
+          for(int d = 0; d < 4; ++d) {
+            if(!dp[t][i][j][d]) continue;
+            for(int k = 0; k < 4; ++k) {
+              if(k == (d+2)%4) continue;
+              int ni = i + dy[k];
+              int nj = j + dx[k];
+              if(nj < 0 || nj >= W) continue;
+              if(ni < 0 || ni >= H) continue;
+              int nt = t + G[i][j][k];
+              if(nt >= MAXT) continue;
+              if(S[ni][nj]) {
+                int a = (nt / S[ni][nj]) % 2;
+                if(a == k % 2) continue;
+              }
+              dp[nt][ni][nj][k] = true;
+            }
+          }
+        }
+      }
+    }
+
+    try {
+      for(int t = 0; t < MAXT; ++t) {
+        for(int d = 0; d < 4; ++d) {
+          if(dp[t][dst.first][dst.second][d]) {
+            cout << t << endl;
+            throw 0;
+          }
+        }
+      }
+    } catch(...) {}
+  }
+  return 0;
+}

@@ -1,0 +1,47 @@
+Minimum Spanning Tree 
+
+ 
+ For a given weighted graph $G = (V, E)$, find the minimum spanning tree (MST) of $G$ and print total weight of edges belong to the MST.
+ 
+
+ Input 
+
+ 
+ In the first line, an integer $n$ denoting the number of vertices in $G$ is given. In the following $n$ lines, a $n \times n$ adjacency matrix $A$ which represents $G$ is given.
+$a_{ij}$ denotes the weight of edge connecting vertex $i$ and vertex $j$. If there is no edge between $i$ and $j$, $a_{ij}$ is given by -1.
+ 
+
+ Output 
+
+ 
+Print the total weight of the minimum spanning tree of $G$.
+ 
+
+ Constraints 
+
+ 
+ $1 \leq n \leq 100$ 
+ $0 \leq a_{ij} \leq 2,000$ (if $a_{ij} \neq -1$) 
+ $a_{ij} = a_{ji}$ 
+ $G$ is a connected graph 
+ 
+
+ Sample Input 1 
+ 
+5
+ -1 2 3 1 -1
+ 2 -1 -1 4 -1
+ 3 -1 -1 1 1
+ 1 4 1 -1 3
+ -1 -1 1 3 -1
+ 
+
+ Sample Output 1 
+ 
+5
+ 
+
+ Reference 
+
+ 
+Introduction to Algorithms, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. The MIT Press.

@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+#define H 128
+#define W 17
+#define INF 1e4
+using namespace std;
+int h,w;
+string str[H];
+
+/*
+  short mem[H][W][1<<W];
+  bool used[H][W][1<<W];
+  int dfs(int y,int x,int bit,int p,int u){
+  if( y == h ) return 0;
+  if(p+(w-x) < str[y].size()) return -INF;
+  if( x == w ) {
+  if(p < (int)str[y].size()) return -INF;
+  return dfs(y+1,0,bit,0,0);
+  }
+
+  if(used[y][x][bit]) return mem[y][x][bit];
+  used[y][x][bit] = 1;
+  int a=0,b=0;
+
+  //?????????????????????
+  int abit = bit & (~(1<<x));
+  a = dfs(y,x+1,abit,p,u+(bit>>x&1));
+  
+  //???????????????
+  int bbit = bit | (1<<x);
+  if(p<(int)str[y].size()){
+  int score = 0;
+  score += 2*((bit>>x&1)&&(str[y][p]==str[y-1][u]));
+  score += 2*(x>=1&&(bit>>(x-1)&1)&&str[y][p]==str[y][p-1]);
+  b = score+dfs(y,x+1,bbit,p+1,u+(bit>>x&1));
+  }
+  return mem[y][x][bit]=max(a,b);
+  }
+*/
+
+
+int Max(int &a,int b){return a=max(a,b);}
+int dp[2][W][1<<W];
+int A[W][1<<W],B[W][1<<W];
+void mkAB(int x,int bit){
+  int sum = __builtin_popcount(bit);
+  int cnt = 0;
+  for(int i=0;i<x;i++)cnt+=(bit>>i&1);
+  A[x][bit] = cnt;
+  B[x][bit] = sum - cnt;
+}
+
+int DP(){
+  for(int i=0;i<W;i++)
+    for(int j=0;j<(1<<W);j++)mkAB(i,j);
+
+  memset(dp,-1,sizeof(dp));
+  dp[0][0][0] = 0;
+  int res = 0;
+  for(int i=0;i<h;i++){
+    int idx = i%2;
+    for(int j=0;j<w;j++){
+      for(int bit=0;bit<(1<<w);bit++){
+        if(dp[idx][j][bit]==-1)continue;
+        int p = A[j][bit];
+        int u = str[i].size()-B[j][bit]-1;
+ 
+        //use space
+        int abit = bit & (~(1<<j));
+        Max(dp[idx][j+1][abit],dp[idx][j][bit]);
+        
+
+        //use character
+        if(p>=(int)str[i].size())continue;
+        int bbit = bit | (1<<j);
+        int score = 0;
+        score += 2*((bit>>j&1)&&(str[i][p]==str[i-1][u]));
+        score += 2*(j>=1&&(bit>>(j-1)&1)&&str[i][p]==str[i][p-1]);
+        Max(dp[idx][j+1][bbit],dp[idx][j][bit]+score);
+      }
+    }
+    for(int bit=0;bit<(1<<w);bit++){
+      if(__builtin_popcount(bit) != str[i].size())continue;
+      Max(dp[!idx][0][bit],dp[idx][w][bit]);
+      Max(res,dp[idx][w][bit]);
+    }
+  }
+  return res;
+}
+
+int main(){
+  cin>>h>>w;
+  for(int i=0;i<h;i++) cin>>str[i];
+  //  cout<<dfs(0,0,0,0,0)<<endl;
+  cout<<DP()<<endl;
+  return 0;
+}

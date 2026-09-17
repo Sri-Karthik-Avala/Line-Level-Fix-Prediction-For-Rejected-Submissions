@@ -1,0 +1,71 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+typedef vector<int>vint;
+typedef pair<int,int>pint;
+typedef vector<pint>vpint;
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define reps(i,f,n) for(int i=(f);i<(n);i++)
+#define all(v) (v).begin(),(v).end()
+#define each(it,v) for(__typeof((v).begin()) it=(v).begin();it!=(v).end();it++)
+#define pb push_back
+#define fi first
+#define se second
+template<typename A,typename B>inline void chmin(A &a,B b){if(a>b)a=b;}
+template<typename A,typename B>inline void chmax(A &a,B b){if(a<b)a=b;}
+
+string S;
+string dp[55][55];
+
+bool f(int i,char c){
+    return S[i]==c||S[i]=='?';
+}
+
+bool update(string &s,string t){
+    if(s.size()<t.size()||(s.size()==t.size()&&s<t))s=t;
+}
+
+signed main(){
+    cin>>S;
+    for(int len=1;len<=S.size();len++){
+        for(int i=0;i+len<=S.size();i++){
+            int j=i+len;
+            string s=S.substr(i,len);
+            bool flag=true;
+            rep(k,s.size()){
+                if(isdigit(s[k]))continue;
+                if(s[k]=='?'){
+                    s[k]='9';
+                    continue;
+                }
+                flag=false;
+            }
+            if(flag&&s[0]!='0')dp[i][j]=s;
+
+            if(len<6)continue;
+            if(!f(i+1,'(')||!f(j-1,')'))continue;
+            if(f(i,'L')||f(i,'R')){
+                for(int k=i+3;k+2<j;k++){
+                    if(!f(k,','))continue;
+                    if(dp[i+2][k]=="")continue;
+                    if(dp[k+1][j-1]=="")continue;
+                    if(f(i,'L'))update(dp[i][j],dp[i+2][k]);
+                    if(f(i,'R'))update(dp[i][j],dp[k+1][j-1]);
+                }
+            }
+        }
+    }
+
+    /*
+    for(int i=0;i<S.size();i++){
+        for(int j=i+1;j<=S.size();j++){
+            cout<<i<<" "<<j<<" "<<dp[i][j]<<endl;
+        }
+    }*/
+
+    if(dp[0][S.size()]=="")cout<<"invalid"<<endl;
+    else cout<<dp[0][S.size()]<<endl;
+
+    return 0;
+}

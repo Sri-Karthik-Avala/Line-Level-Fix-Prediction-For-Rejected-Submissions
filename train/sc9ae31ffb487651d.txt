@@ -1,0 +1,91 @@
+
+"""
+
+https://atcoder.jp/contests/agc035/tasks/agc035_c
+
+全ての対の頂点に関して、パス上の重みのxorが自分に等しい
+1から順に求めていくことを考える
+
+A,Bの関係を考える
+木なので、片方のパス上にあればいい→片方にのみ含ませることも、両方に含ませることも可能
+
+1をいい感じに使って構築できないか？
+
+101-100-1-101-100
+みたいに、1の位だけ違う数字をまとめて処理すればいい感じになる
+もう一つの1は、どっかの葉につけておけばおk
+これで、Nが奇数かつ1でない場合は全て構築可能！！
+
+偶数の時は？ 2,4みたいな場合は自明にダメ
+6は？
+001 010 011 100 101 110
+xorで110になるのは010と100
+
+101-100-1-010-011
+    |     |
+    110   100
+
+→分からんけどとりあえず提出
+
+偶数でも可能な場合がある…
+(N+i)-(N+i+1)- -(i)-(i+1)
+とする
+
+"""
+import sys
+N = int(input())
+
+if N == 1:
+    print ("No")
+
+elif N % 2 == 1:
+    print ("Yes")
+
+    for i in range(2,N+1,2):
+        print (1,i)
+        print (i,i+1)
+        print (1,i+1+N)
+        print (i+1+N,i+N)
+
+    print (N+1,3)
+
+else:
+
+    a = None
+    b = None
+
+    for i in range(1,N):
+        if N ^ i < N:
+            a = i
+            b = N ^ i
+
+    if a == None:
+        print ("No")
+        sys.exit()
+    
+    print ("Yes")
+    for i in range(3,N,2):
+        print (i,i+1)
+        print (N+i,N+i+1)
+
+        #1につけていく
+        if i not in (a,b) and i+1 not in (a,b):
+            print (1,i)
+            print (1,N+i+1)
+
+    pa = a^1
+    pb = b^1
+
+    print (N+1,a)
+    print (a,b)
+    print (N,a)
+    print (b,2*N)
+    print (1,pa)
+
+    print (1,a+N)
+    print (pa+N,pb+N)
+    
+    
+    
+        
+        

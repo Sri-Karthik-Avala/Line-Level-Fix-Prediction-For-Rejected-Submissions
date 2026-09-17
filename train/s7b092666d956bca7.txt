@@ -1,0 +1,45 @@
+def university(xxx, pattern):
+    tate = 0
+    yoko = 1
+    for current_tate in range(8-xxx[tate]+1):
+        for current_yoko in range(8-xxx[yoko]+1):
+            if absolutely_fantastic(current_tate, current_yoko):
+                return True
+
+def absolutely_fantastic(current_tate, current_yoko):
+    tate = 0
+    yoko = 1
+    run = []
+    for add_tate in range(xxx[tate]):
+        for add_yoko in range(xxx[yoko]):
+            run.append(mapppp[current_tate+add_tate][current_yoko+add_yoko])
+    if run == pattern:
+        print xxx[2]
+        return True
+
+A = {(2,2,'A'):[1,1,1,1]}
+B = {(4,1,'B'):[1,1,1,1]}
+C = {(1,4,'C'):[1,1,1,1]}
+D = {(3,2,'D'):[0,1,1,1,1,0]}
+E = {(2,3,'E'):[1,1,0,0,1,1]}
+F = {(3,2,'F'):[1,0,1,1,0,1]}
+G = {(2,3,'G'):[0,1,1,1,1,0]}
+lis = [A,B,C,D,E,F,G]
+mapppp = []
+while True:
+    try:
+        input_line = raw_input()
+        if input_line:
+            yoko = [int(char) for char in input_line]
+            mapppp.append(yoko)
+        else:
+            for XXX in lis:
+                flag = False
+                for xxx, pattern in XXX.items():
+                    if university(xxx, pattern):
+                        flag = True
+                        break
+                if flag == True:
+                    break
+    except EOFError:
+        break

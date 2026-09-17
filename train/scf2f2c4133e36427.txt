@@ -1,0 +1,36 @@
+while True:
+    n=input()
+    if n==0:
+        break
+    m,goal,d=input(),input(),input()
+    step=[""]*d
+    for i in xrange(d):
+        step[i]="0"+raw_input()+"0"
+    raw=range(n+2)
+    for i in xrange(d):
+        for j in xrange(1,n+1):
+            if step[i][j]=="1":
+                raw[j],raw[j+1]=raw[j+1],raw[j]
+    ans=0
+    if not raw[goal]==m:
+        e=raw[goal]
+        raw=range(n+2)
+        for i in xrange(d):
+            if not ans==0:
+                break
+            for j in xrange(1,n+1):
+                if (raw[j]==m and raw[j+1]==e) or (raw[j]==e and raw[j+1]==m):
+                    if step[i][j-1]=="0" and step[i][j]=="0" and step[i][j+1]=="0":
+                        ans=(i+1,j)
+                        break
+                if step[i][j]=="1":
+                    raw[j],raw[j+1]=raw[j+1],raw[j]
+        if ans==0:
+            ans=1
+    print " ".join(map(str,ans))
+
+
+    
+
+
+    

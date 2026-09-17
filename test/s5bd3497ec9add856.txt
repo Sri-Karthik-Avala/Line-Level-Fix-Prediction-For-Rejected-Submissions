@@ -1,0 +1,99 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+struct unionfind{
+  
+  vector<int> parent;
+  vector<int> size;
+  
+  void init(int n){
+    size.clear();
+    parent.clear();
+    size.resize(n);
+    parent.resize(n);
+    
+    for(int i=0;i<n;i++){
+      parent[i]=i;
+      size[i]=1;
+    }
+  }
+  int find(int x){
+    if(parent[x]==x)return x;
+    else parent[x]=find(parent[x]);
+  }
+  bool same(int x,int y){
+    return (find(x)==find(y));
+  }
+  int getSize(int x){
+    return size[ find(x) ];
+  }
+  void unite(int x,int y){
+    x=find(x);
+    y=find(y);
+    if(x==y)return;
+    parent[x]=y;
+    size[y]+=size[x];
+  }
+};
+  
+struct edge{
+  int from,to,cost;
+  bool operator < (const edge &e) const {
+    return cost < e.cost;
+  }
+};
+
+int n,t,k;
+unionfind uf;
+
+int main(){
+
+  
+  for(int tc=1;;tc++){
+    cin>>n>>t>>k;
+    if(n==0&&t==0&&k==0)break;
+    vector<edge> E;
+
+    uf.init(n);
+    
+    for(int i=0;i<n-1;i++){
+      int a,b,c;
+      cin>>a>>b>>c;
+      a--,b--;
+      E.push_back( (edge){a,b,-c} );
+      uf.unite(a,b);
+    }
+    assert( uf.getSize(0) == n );
+    
+    for(int i=0;i<t;i++){
+      int a;
+      cin>>a;
+      a--;
+      E.push_back( (edge){a,n,-20000} );
+    }
+    sort(E.begin(),E.end());
+    
+    uf.init(n+1);
+
+    vector<edge> tmp;
+    
+    for(int i=0;i<(int)E.size();i++){
+      edge e=E[i];
+      if( uf.same(e.from,e.to) ){
+        tmp.push_back(e);
+      }else{
+        uf.unite(e.from,e.to);
+      }
+    }
+
+    reverse(tmp.begin(),tmp.end());
+    
+    int ans=0;
+    for(int i=0;i< min(k,(int)tmp.size());i++){
+      ans-=tmp[i].cost;
+    }
+    cout<<"Case "<<tc<<": "<<ans<<endl;
+    
+  }
+  return 0;
+}

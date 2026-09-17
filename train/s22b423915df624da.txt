@@ -1,0 +1,111 @@
+#include<stdio.h>
+#include <iostream>
+#include <math.h>
+#include <numeric>
+#include <vector>
+#include <map>
+#include <functional>
+#include <stdio.h>
+#include <array>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <assert.h>
+#include <stdio.h>
+#include <queue>
+#include<iomanip>
+#include<bitset>
+#include<stack>
+#include<set>
+#include<limits>
+#include <complex>
+using namespace std;
+
+int N;
+long long int memo[100][100][100][3];
+long long int getans(vector<int>usenums,int now) {
+	long long int *nmemo = &memo[usenums[0]][usenums[1]][usenums[2]][now];
+	if (*nmemo >= 0) {
+		return *nmemo;
+	}
+	else {
+		if (now == 0) {
+			if (usenums[0] == N) {
+				return *nmemo = usenums[0] - max(usenums[1], usenums[2]) + 1;
+			}
+			else {
+				long long int ans = 0;
+				vector<int>nusenums(usenums);
+				nusenums[0]++;
+				ans += getans(nusenums, 0);
+				nusenums[1] = nusenums[0];
+				ans += getans(nusenums, 1);
+				nusenums[2] = nusenums[0];
+				ans+=(usenums[0] - max(usenums[1], usenums[2]) + 1)*getans(nusenums,2);
+				ans %= 1000000;
+				return *nmemo = ans;
+			}
+		}
+		else if (now == 2) {
+			if (usenums[2] == N) {
+				return *nmemo = 1;
+			}
+			else {
+				long long int ans = 0;
+				vector<int>nusenums(usenums);
+				nusenums[2]++;
+				ans += getans(nusenums, 2);
+				nusenums[1] = nusenums[2];
+				ans += getans(nusenums, 1);
+				nusenums[0] = nusenums[2];
+				ans += (usenums[2] - max(usenums[1], usenums[0]) + 1)*getans(nusenums, 0);
+				ans %= 1000000;
+				return *nmemo = ans;
+			}
+		}
+		else if(now==1){
+			if (usenums[1] == N) {
+				return *nmemo = 1;
+			}
+			else {
+				long long int ans = 0;
+				vector<int>nusenums(usenums);
+				nusenums[1]++;
+				ans += getans(nusenums, 1);
+				nusenums[2] = nusenums[1];
+				ans += getans(nusenums, 2);
+				nusenums[2] = usenums[2];
+				nusenums[0] = nusenums[1];
+				ans +=getans(nusenums, 0);
+				ans %= 1000000;
+				return *nmemo = ans;
+			}
+		}
+		else {
+			assert(false);
+		}
+	}
+}
+int main() {
+	memset(memo, -1, sizeof(memo));
+	int  M; cin >> N >> M;
+	long long int ans=0;
+	if (M == 1) {
+		ans = 1;
+		while (N) {
+			ans *= 2;
+			ans %= 1000000;
+			N--;
+		}
+		cout << ans << endl;
+		return 0;
+	}
+	else {
+		ans += getans(vector<int>({ 1, 0, 0 }), 0);
+		ans += getans(vector<int>({ 1,1,0 }), 1);
+		ans += getans(vector<int>({ 1,1,1, }), 2);
+	}
+	ans %= 1000000;
+	cout << ans << endl;
+	return 0;
+}

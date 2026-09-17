@@ -1,0 +1,88 @@
+def up_to_you(formula):
+    l_p = None
+    r_p = None
+    for i, c in enumerate(formula):
+        if c == '(':
+            l_p = i
+        elif c == ')':
+            r_p = i
+            break
+    else:
+        print fx(formula)
+        return
+    
+    r = fx(formula[l_p+1:r_p])
+    n_formula = formula[:l_p]+r+formula[r_p+1:]
+    return up_to_you(n_formula)
+            
+def fx(gemstone):
+    n = ''
+    lis = []
+    add = ''
+    if gemstone[0] == '-':
+        gemstone = gemstone[1:]
+        add = '-'
+    for c in gemstone:
+        if c.isdigit():
+            n += c
+        else:
+            if n == '':
+                add = '-'
+            else:
+                lis.append(add+n)
+                lis.append(c)
+                n = ''
+                add = ''
+    else:
+        lis.append(add+n)
+    return isolation(lis)
+    
+def isolation(lis):
+    if len(lis) == 1:
+        return str(lis[0])
+    o1 = None
+    o = None
+    o2 = None
+    o_i = None
+    n_lis = None
+    if '*' in lis or '/' in lis:
+        for i, v in enumerate(lis):
+            if o1 == None:
+                o1 = v
+            elif v == '*' or v == '/':
+                o = v
+                o_i = i
+            elif v == '+' or v == '-':
+                o1 = None
+            else:
+                o2 = v
+                r = discomfort(int(o1), o, int(o2))
+                n_lis = lis[:(o_i-1)]+[r]+lis[(o_i+2):]
+                return isolation(n_lis)
+    else:
+        o1 = lis[0]
+        o = lis[1]
+        o2 = lis[2]
+        o_i = 1
+        r = discomfort(int(o1), o, int(o2))
+        n_lis = lis[:(o_i-1)]+[r]+lis[(o_i+2):]
+        return isolation(n_lis)
+                
+def discomfort(o1, o, o2):
+    r = None
+    if o == '*':
+        r = o1 * o2
+    elif o == '/':
+        r = o1 / o2
+        if o1 < 0: r += 1
+    elif o == '+':
+        r = o1 + o2
+    elif o == '-':
+        r = o1 - o2
+    return str(r)
+    
+if __name__ == '__main__':
+    N = int(raw_input())
+    for i in range(N):
+        formula = raw_input().rstrip('=')
+        up_to_you(formula)

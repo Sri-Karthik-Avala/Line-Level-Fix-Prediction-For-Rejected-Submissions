@@ -1,0 +1,48 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+using namespace std;
+#define INF 100000000
+
+typedef long long ll;
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+int main(void) {
+    int T;
+    cin >> T;
+    while (T--) {
+        int p, q;
+        cin >> p >> q;
+        int P = p*p + q*q;
+        int cnt = 0;
+        int ma = 0;
+        for (int i = 0; i <= P; i++) ma = i;
+        for (int m = -ma; m <= ma; m++) {
+            for (int n = -ma; n <= ma; n++) {
+                int tmp = m*m + n*n;
+                if (tmp == 0) continue;
+                if (P % tmp == 0) {
+                    int mp = m*p + n*q;
+                    int mq = m*q - n*p;
+                    if (mp % tmp == 0 && mq % tmp == 0) cnt++;
+                }
+            }
+        }
+        if (cnt == 8) cout << "P" << endl;
+        else cout << "C" << endl;
+    }
+    return 0;
+}

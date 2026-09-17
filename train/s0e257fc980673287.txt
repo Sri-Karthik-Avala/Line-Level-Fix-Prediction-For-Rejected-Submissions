@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long  ll;
+
+int main()
+{
+    int N, m;
+
+    cin >> N >> m;
+    vector<bool> select(m, true);
+    vector<pair<int, int>> cd(m);
+
+    for (int i = 0; i < m; ++i)
+        cin >> cd[i].first >> cd[i].second;
+    sort(cd.begin(), cd.end());
+
+    for (int i = 0; i < m; ++i) {
+        if (cd[i].second <= cd[i].first)
+            select[i] = false;
+    }
+
+    for (int i = 0; i < m; ++i) {
+        bool isIN = false;
+        for (int j = i + 1; j < m; ++j) {
+            if (cd[j].first <= cd[i].first && cd[i].second <= cd[j].second) {
+                isIN = true;
+                break;
+            }
+        }
+        if (isIN)
+            select[i] = false;
+    }
+
+    for (int i = 0; i < m; ++i) {
+        if (!select[i])
+            continue;
+        for (int j = i + 1; j < m; ++j) {
+            if (!select[j])
+                continue;
+            if (cd[i].first <= cd[j].first && cd[j].first < cd[i].second) {
+                select[j] = false;
+                cd[i].second = cd[j].second;
+            }
+        }
+    }
+
+    int ans = N + 1;
+    for (int i = 0; i < m; ++i)
+        if (select[i])
+            ans += 2 * (cd[i].second - cd[i].first);
+
+    cout << ans << endl;
+
+    return 0;
+}

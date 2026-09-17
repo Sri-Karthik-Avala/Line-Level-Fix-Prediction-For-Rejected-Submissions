@@ -1,0 +1,6 @@
+n = input()
+
+n_list = list(n)
+ans = sum(n_list)
+
+print("Yes" if (ans % 9) == 0 else "No")

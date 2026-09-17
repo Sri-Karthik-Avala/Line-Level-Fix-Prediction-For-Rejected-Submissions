@@ -1,0 +1,41 @@
+Circumscribed Circle of A Triangle. 
+
+ 
+Write a program which prints the central coordinate $(p_x, p_y)$ and the radius $r$ of a circumscribed circle of a triangle which is constructed by three points $(x_1, y_1)$, $(x_2, y_2)$ and $(x_3, y_3)$ on the plane surface. 
+ 
+
+ Input 
+
+ 
+Input consists of several datasets. In the first line, the number of datasets $n$ is given. Each dataset consists of: 
+ 
+$x_1$ $y_1$ $x_2$ $y_2$ $x_3$ $y_3$ 
+ 
+
+in a line. All the input are real numbers.
+ 
+
+ Output 
+
+ 
+For each dataset, print $p_x$, $p_y$ and $r$ separated by a space in a line. Print the solution to three places of decimals. Round off the solution to three decimal places.
+ 
+
+ Constraints 
+
+ 
+ $-100 \leq x_1, y_1, x_2, y_2, x_3, y_3 \leq 100$ 
+ $ n \leq 20$ 
+ 
+
+ Sample Input 
+
+ 
+1
+0.0 0.0 2.0 0.0 2.0 2.0
+ 
+
+ Output for the Sample Input 
+
+ 
+1.000 1.000 1.414

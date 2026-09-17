@@ -1,0 +1,141 @@
+Problem I: Intersection of Two Prisms 
+
+ 
+Suppose that P 1 is an infinite-height prism whose axis is parallel to the z -axis, and P 2 is also an infinite-height prism whose axis is parallel to the y -axis. P 1 is defined by the polygon C 1 which is the cross section of P 1 and the xy -plane, and P 2 is also defined by the polygon C 2 which is the cross section of P 2 and the x z-plane.
+ 
+
+ 
+Figure I.1 shows two cross sections which appear as the first dataset in the sample input, and
+Figure I.2 shows the relationship between the prisms and their cross sections.
+ 
+
+ 
+ 
+ Figure I.1: Cross sections of Prisms 
+ 
+ Figure I.2: Prisms and their cross sections 
+ 
+ Figure I.3: Intersection of two prisms 
+ 
+
+ 
+Figure I.3 shows the intersection of two prisms in Figure I.2, namely, P 1 and P 2 .
+ 
+ 
+Write a program which calculates the volume of the intersection of two prisms.
+ 
+
+
+ Input 
+
+ 
+The input is a sequence of datasets. The number of datasets is less than 200.
+ 
+ 
+Each dataset is formatted as follows.
+ 
+
+ 
+ m n 
+ x 11 y 11 
+ x 12 y 12 
+. 
+. 
+. 
+ x 1 m y 1 m 
+ x 21 z 21 
+ x 22 z 22 
+. 
+. 
+. 
+ x 2 n z 2 n 
+ 
+
+ 
+ m and n are integers (3 &le; m &le; 100, 3 &le; n &le; 100) which represent the numbers of the vertices of the polygons, C 1 and C 2 , respectively.
+ 
+
+ 
+ x 1 i , y 1 i , x 2 j and z 2 j are integers between -100 and 100, inclusive. ( x 1 i , y 1 i ) and ( x 2 j , z 2 j ) mean the i -th and j -th vertices' positions of C 1 and C 2 respectively.
+ 
+ 
+The sequences of these vertex positions are given in the counterclockwise order either on the xy -plane or the xz -plane as in Figure I.1.
+ 
+
+ 
+You may assume that all the polygons are convex , that is, all the interior angles of the polygons are less than 180 degrees. You may also assume that all the polygons are simple , that is, each polygon's boundary does not cross nor touch itself.
+ 
+
+ 
+The end of the input is indicated by a line containing two zeros.
+ 
+
+ Output 
+
+ 
+For each dataset, output the volume of the intersection of the two prisms, P 1 and P 2 , with a decimal representation in a line.
+ 
+
+ 
+None of the output values may have an error greater than 0.001. The output should not contain any other extra characters.
+ 
+
+ Sample Input 
+ 
+4 3
+7 2
+3 3
+0 2
+3 1
+4 2
+0 1
+8 1
+4 4
+30 2
+30 12
+2 12
+2 2
+15 2
+30 8
+13 14
+2 8
+8 5
+13 5
+21 7
+21 9
+18 15
+11 15
+6 10
+6 8
+8 5
+10 12
+5 9
+15 6
+20 10
+18 12
+3 3
+5 5
+10 3
+10 10
+20 8
+10 15
+10 8
+4 4
+-98 99
+-99 -99
+99 -98
+99 97
+-99 99
+-98 -98
+99 -99
+96 99
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+4.708333333333333
+1680.0000000000005
+491.1500000000007
+0.0
+7600258.4847715655

@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+#include <math.h>
+using namespace std;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+#define rep2(i, s, n) for (int i = (s); i < (int)(n); i++)
+
+const int MOD = 1000000007;
+
+const int INF_32 = 1LL << 30;
+const int64_t INF_64 = 1LL << 60;
+
+template <class T>
+inline bool chmin(T& a, T b)
+{
+    if (a > b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+template <class T>
+inline bool chmax(T& a, T b)
+{
+    if (a < b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+typedef long long ll;
+
+int N;
+ll W, weight[110], value[110];
+
+// dp[i][j]はi-1番目までの品物を選ぶとき，価値の総和をj以上にするための重さの総和の最小値
+ll dp[110][100100];
+
+int main()
+{
+    cin >> N >> W;
+    for (int i = 0; i < N; i++)
+        cin >> weight[i] >> value[i];
+
+    for (int i = 0; i < 110; i++) {
+        for (int j = 0; j < 100100; j++) {
+            dp[i][j] = INF_64;
+        }
+    }
+    dp[0][0] = 0;
+    for (int i = 0; i < N; i++) {
+        for (int sum_value = 0; sum_value <= 100100; ++sum_value) {
+            // i番目の品物を選ぶ場合
+            if (sum_value - value[i] >= 0) {
+                chmin(dp[i + 1][sum_value], dp[i][sum_value - value[i]] + weight[i]);
+            }
+
+            // i番目の品物を選ばない場合
+            chmin(dp[i + 1][sum_value], dp[i][sum_value]);
+        }
+    }
+
+    int ans = 0;
+    for (int sum_value = 0; sum_value <= 100100; ++sum_value) {
+        if (dp[N][sum_value] <= W) {
+            ans = sum_value;
+        }
+    }
+    cout << ans << endl;
+}

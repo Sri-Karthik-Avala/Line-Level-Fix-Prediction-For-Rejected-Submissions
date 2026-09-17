@@ -1,0 +1,53 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement How many ways are there to choose two distinct positive integers totaling N , disregarding the order? 
+ 
+ 
+ 
+ 
+ Constraints 
+ 1 \leq N \leq 10^6 
+ N is an integer. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ N 
+ 
+ 
+ 
+ 
+ 
+ Output Print the answer. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 1
+ 
+ There is only one way to choose two distinct integers totaling 4 : to choose 1 and 3 . (Choosing 3 and 1 is not considered different from this.) 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 999999
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 499999

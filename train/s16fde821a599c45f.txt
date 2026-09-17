@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<n;++i)
+using namespace std;
+
+using ll = long long;
+const ll mod = 1000000007LL;
+
+const int limit = 5000000;
+ll F[limit+10],IF[limit+10];
+
+ll inv(ll a){
+	ll b = 1LL;
+	ll n = mod -2;
+	while(n){
+		if(n&1) b = b * a % mod;
+		a = a * a % mod;
+		n >>= 1;
+	}
+	return b;
+}
+
+inline ll C(int n,int k){
+	if(n < 0 or k < 0 or n-k < 0) return 0;
+	return F[n] * IF[k] % mod * IF[n-k] %mod;
+}
+
+inline ll H(int n,int k){
+	n += k - 1;
+	return C(n,k);
+}
+
+int main(void){
+	F[0] = 1LL;
+	for(ll i=1LL;i<=limit;++i) F[i] = i * F[i-1] %mod;
+	IF[limit] = inv(F[limit]);
+	for(ll i=limit;i>=1;--i) IF[i-1] = i * IF[i] %mod;
+		
+	ll a,b,c,sx,sy;
+	while(cin >> a >> b >> c >> sx >> sy){
+		if(a+b+c+sx+sy==0) break;
+		ll ans = 0LL;
+
+		for(ll wa = a; wa <= sx; ++ wa){
+			const ll draw = sx - wa;
+			const ll wb = sy - draw; 
+			if(draw < 0 or wb < b) continue;
+			//cerr << wa << " " << wb << " " << draw << endl;
+			ll cur = 1LL;
+			cur = cur * H(a,wa-a) % mod;
+			cur = cur * H(b,wb-b) % mod;
+			cur = cur * H(a+b+c,draw) % mod;
+			ans = (ans + cur) % mod;
+		}
+
+		ans = ans * C(a+b+c,a) % mod * C(b+c,b) % mod;
+		cout << ans << endl;
+	}
+	return 0;
+}

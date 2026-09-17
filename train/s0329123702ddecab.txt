@@ -1,0 +1,15 @@
+while 1:
+    h, w, n = map(int, raw_input().split())
+    if h == 0: break
+    l = [map(int, raw_input().split()) for i in range(h)]
+    dp = [[0]*w for i in range(h)]
+    dp[0][0] = n - 1
+    for i in range(h):
+        for j in range(w):
+            if i + 1 < h: dp[i+1][j] += (dp[i][j] + l[i][j] ^ 1) >> 1
+            if j + 1 < w: dp[i][j+1] += (dp[i][j] + l[i][j]) >> 1
+    dx = dy = 0
+    while dx < w and dy < h:
+        if (dp[dy][dx] + l[dy][dx]) % 2 == 0: dy += 1
+        else: dx += 1
+    print dy + 1, dx + 1

@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=5000+10;
+typedef long long ll;
+int n;
+ll ans,mod;
+int coe[N];
+int dp[2][N];
+void pri(int ind){
+	for(int i=0;i<=n;i++)cout<<dp[ind][i]<<" ";
+	puts("");
+}
+void add(int &x,int y){
+	x+=y;
+	if(x>mod)x-=mod;
+}
+int main(){
+	n=5000,mod=1e9+7;
+	//cin>>n>>mod;
+	coe[2]=1;
+	int l=3,r=n,nw=2;
+	while(l<=r)coe[l++]=coe[r--]=nw++;
+	int pre=0,now=1;
+	dp[pre][0]=1;
+	for(int i=2;i<=n;i++){
+		memset(dp[now],0,sizeof(dp[now]));
+		for(int j=0;j*coe[i]<=n;j++)
+			for(int k=0;k+j*coe[i]<=n;k++)
+				add(dp[now][k+j*coe[i]],dp[pre][k]);
+		//pri(now);
+		swap(pre,now);
+	}
+	for(int i=0;i<=n;i++)
+		ans=(ans+(ll)dp[pre][i]*(n-i)%mod)%mod;
+	cout<<(ans%mod+mod)%mod;
+	return 0;
+}

@@ -1,0 +1,49 @@
+Party Dress 
+ 
+Yae joins a journey plan, in which parties will be held several times during the itinerary. She wants to participate in all of them and will carry several dresses with her. But the number of dresses she can carry with her may be smaller than that of the party opportunities. In that case, she has to wear some of her dresses more than once. 
+ 
+
+ 
+ Fashion-conscious Yae wants to avoid that. At least, she wants to reduce the maximum number of times she has to wear the same dress as far as possible.
+ 
+
+ 
+ Given the number of dresses and frequency of parties, make a program to determine how she can reduce the maximum frequency of wearing the most reused dress.
+ 
+
+ Input 
+ 
+ The input is given in the following format.
+ 
+ 
+$A$ $B$
+ 
+
+ 
+ The input line provides the number of dresses $A$ ($1 \leq A \leq 10^5$) and frequency of parties $B$ ($1 \leq B \leq 10^5$).
+ 
+
+
+ Output 
+ 
+ Output the frequency she has to wear the most reused dress.
+ 
+
+
+ Sample Input 1 
+ 
+3 5
+ 
+ Sample Output 1 
+ 
+2
+ 
+
+ Sample Input 2 
+ 
+25 10
+ 
+
+ Sample Output 2 
+ 
+1

@@ -1,0 +1,8 @@
+N,S=map(int,input().split())
+dp=[0]*3001
+for i,a in enumerate(map(int,input().split())):
+    dp[S]+=dp[S-a]*(N-i)
+    for w in range(S-a-1,0,-1):
+        dp[w+a]+=dp[w]
+    dp[a]+=i+1
+print(dp[S]%998244353)

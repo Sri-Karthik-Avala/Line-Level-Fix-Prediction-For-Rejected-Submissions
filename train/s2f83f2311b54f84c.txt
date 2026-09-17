@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef vector<int> VI;
+#define pb push_back
+#define all(vec) (vec).begin(),(vec).end()
+
+const int INF = 2000000000;
+
+int x[5000], y[5000];
+int sx[500000], sy[500000], ex[500000], ey[500000];
+short num[5000][5000];
+
+int find(VI &zip, int key, int type = 0)
+{
+	int l = 0, r = zip.size() - 1;
+	while (true){
+		if (l > r) return type ? l : r;
+		int m = (l + r) / 2;
+		if (zip[m] == key) return m;
+		if (zip[m] < key) l = m + 1;
+		else r = m - 1;
+	}
+}
+
+int main()
+{
+	VI zip_x; zip_x.pb(-INF); zip_x.pb(INF);
+	VI zip_y; zip_y.pb(-INF); zip_y.pb(INF);
+	
+	int n, m;
+	scanf("%d %d", &n, &m);
+	for (int i = 0; i < n; i++){
+		scanf("%d %d", &x[i], &y[i]);
+		zip_x.pb(x[i]);
+		zip_y.pb(y[i]);
+	}
+	for (int i = 0; i < m; i++){
+		scanf("%d %d %d %d", &sx[i], &sy[i], &ex[i], &ey[i]);
+		//zip_x.pb(sx[i]);
+		//zip_y.pb(sy[i]);
+		//zip_x.pb(ex[i]);
+		//zip_y.pb(ey[i]);
+	}
+	
+	
+	// 座標圧縮
+	sort(all(zip_x));
+	zip_x.erase(unique(all(zip_x)), zip_x.end());
+	sort(all(zip_y));
+	zip_y.erase(unique(all(zip_y)), zip_y.end());
+	
+	
+	// 圧縮後の座標を受け取る
+	for (int i = 0; i < n; i++){
+		x[i] = find(zip_x, x[i]);
+		y[i] = find(zip_y, y[i]);
+	}
+	for (int i = 0; i < m; i++){
+		sx[i] = find(zip_x, sx[i], 1);
+		sy[i] = find(zip_y, sy[i], 1);
+		ex[i] = find(zip_x, ex[i]);
+		ey[i] = find(zip_y, ey[i]);
+	}
+	
+	
+	//累積和
+	for (int i = 0; i < n; i++){
+		num[x[i]][y[i]]++;
+	}
+	for (int i = 1; i < zip_x.size(); i++){
+		for (int j = 1; j < zip_y.size(); j++){
+			num[i][j] += num[i - 1][j];
+			num[i][j] += num[i][j - 1];
+			num[i][j] -= num[i - 1][j - 1];
+		}
+	}
+	
+	/*
+	puts("");
+	for (int i = 0; i < zip_x.size(); i++){
+		for (int j = 0; j < zip_y.size(); j++){
+			printf("%d ", num[i][j]);
+		}
+		puts("");
+	}
+	puts("");
+	*/
+	
+	for (int i = 0; i < m; i++){
+		int res = num[ex[i]][ey[i]];
+		res -= num[sx[i] - 1][ey[i]];
+		res -= num[ex[i]][sy[i] - 1];
+		res += num[sx[i] - 1][sy[i] - 1];
+			
+		printf("%d\n", res);
+	}
+	
+	return 0;
+}

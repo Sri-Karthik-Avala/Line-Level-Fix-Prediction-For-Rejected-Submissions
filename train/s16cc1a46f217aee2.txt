@@ -1,0 +1,74 @@
+
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<stdint.h>
+#include<vector>
+#include<deque>
+#include<stack>
+#include<functional>
+#include<string>
+#include<cstring>
+#include<time.h>
+#include<array>
+#include<iomanip>
+#include<list>
+#include<set>
+#include<map>
+#include<random>
+#include<unordered_map>
+#include<unordered_set>
+#include<bitset>
+#include <queue>
+#include<boost/multiprecision/cpp_int.hpp>
+
+
+using namespace std;
+using namespace boost::multiprecision;
+
+using ll = long long;
+using ull = unsigned long long;
+using uint = unsigned int;
+using ldb = long double;
+
+
+//BDD,ZDD,kdtree, bdtree,bicalc, bolonoy, doloney, tree, chinesemod,segmenttree,daikusutora, saidairyuu, 2bugurahu, heirokenshutu, topologicalsort, kyourenketuseibun
+
+#define REP(i,a,b) for(ll i = a; i < b; ++i)
+#define PRI(s) cout << s << endl
+#define PRIF(v, n) printf("%."#n"f\n", v)
+#define PRIY PRI("Yes")
+#define PRIN PRI("No")
+template<typename A, typename B>
+void mins(A & a, const B & b) { a = min(a, (A)b); };
+template<typename A, typename B>
+void maxs(A & a, const B & b) { a = max(a, (A)b); };
+
+//1-indexed S文字目からT文字目までが同じか
+bool sm(int s, int t, string str) {
+	if (!(1 <= s && s < t && t <= str.size()))return false;
+	--s; --t;
+	for (int i = s; i < t; ++i) if (str[i] != str[i + 1])return false;
+	return true;
+}
+
+bool p(int x, string str) {
+	if (x <= (str.size() + 1) / 2)return true;
+	int i = x-(str.size() + 1) / 2;
+	if (str.size() % 2 == 0) return sm(str.size() / 2 + 1 - i, str.size() / 2 + i, str);
+	else return sm((str.size() + 1) / 2 - i, (str.size() + 1) / 2 + i, str);
+}
+
+int main() {
+	string str;
+	cin >> str;
+	ll l = 1;
+	ll r = str.size();
+	while (r - l > 1) {
+		ll mid = l + (r - l) / 2;
+		if (p(mid, str)) l = mid;
+		else r = mid;
+	}
+	PRI(l);
+	return 0;
+}

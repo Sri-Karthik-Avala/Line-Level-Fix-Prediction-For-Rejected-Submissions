@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<n;++i)
+#define rrep(i,n) for(int i=n-1;i>0;--i)
+#define yesno(flg) if(flg){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
+#define Vi vector<int>
+#define Vd vector<double>
+#define Vl vector<long long>
+#define pb(a) push_back(a)
+using namespace std;
+
+typedef long long ll;
+const int inf=1000000000;
+const int np=1000000007;
+struct edge{
+	int myc,to,c,cost;
+};
+struct pos{
+	int to,cost,color;
+};
+int dy[]={0, 0, 1, -1};
+int dx[]={1, -1, 0, 0};
+
+Vd x(100000);
+Vd r(100000);
+int n;
+double rec(double high,double low){
+	if(high-low<0.001)return high;
+	double maxp=1000000;
+	double minp=0;
+	double mid=(high+low)/2;
+	rep(i,n){
+		double s=r[i]*r[i]-mid*mid;
+		s=sqrt(s);
+		maxp=min(maxp,x[i]+s);
+		minp=max(minp,x[i]-s);
+	}
+	if(maxp<minp){
+		return rec(mid,low);
+	}else{
+		return rec(high,mid);
+	}
+}
+int main() {
+	cin>>n;
+	double minr=1000000;
+	rep(i,n){
+		cin>>x[i]>>r[i];
+		minr=min(minr,r[i]);
+	}
+
+	printf("%0.4f\n",rec(minr,0));
+	return 0;
+}
+

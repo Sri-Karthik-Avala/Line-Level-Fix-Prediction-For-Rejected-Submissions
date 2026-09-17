@@ -1,0 +1,51 @@
+def f(n):
+    spiral = [list(' ' for i in range(n)) for i in range(n)]
+    for i in range(n):
+        spiral[i][0] = '#'
+    for i in range(n):
+        spiral[0][i] = '#'
+    for i in range(n):
+        spiral[i][-1] = '#'
+        
+    return spiral
+        
+def draw(n, m):
+    #down
+    for w in range(m, n):
+        spiral[n-1][w] = '#'
+    if n-m == 2:
+        return
+    #left
+    for h in range(m, n):
+        spiral[h][m] = '#'
+    if n-m == 3:
+        return
+    #up
+    for w in range(m, n-2):
+        spiral[m][w] = '#'
+    if n-m == 4:
+        return
+    #right
+    for h in range(m, n-2):
+        spiral[h][n-3] = '#'
+    if n-m == 5:
+        return
+        
+    draw(n-2, m+2)
+
+c = 0
+for i in range(input()):
+    if c != 0:
+        print
+    n = input()
+    if n == 1:
+        spiral = [['#']]
+    elif n == 2:
+        spiral = [['#'],['#']]
+    elif 3 <= n:
+        spiral = f(n)
+    if 4 <= n:
+        draw(n, 2)
+    for line in spiral:
+        print ''.join(line)
+    c = 1

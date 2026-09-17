@@ -1,0 +1,64 @@
+#include<bits/stdc++.h>
+using namespace std;
+int H,W,hp,HP;
+char t[1005][1005];
+int T,S,P;
+map<char,int> mp;
+vector<int> u;
+int dp[1005][(1<<12)];
+int v[12];
+
+int main(){
+
+  while(1){
+    u.clear();
+    cin>>hp>>HP;
+    if(hp==0&&HP==0)break;
+    cin>>H>>W;
+    for(int i=0;i<H;i++)
+      for(int j=0;j<W;j++)
+        cin>>t[i][j];
+    cin>>T;
+    for(int i=0;i<T;i++){
+      char ch;
+      int num;
+      cin>>ch>>num;
+      mp[ch]=num;
+    }
+    int y=0,x=0;
+    cin>>S;
+    for(int i=0;i<S;i++){
+      char ch;
+      int num;
+      cin>>ch>>num;
+      while(num--){
+        if(ch=='U')y--;
+        if(ch=='R')x++;
+        if(ch=='D')y++;
+        if(ch=='L')x--;
+        u.push_back(mp[ t[y][x] ]);
+      }
+    }
+    cin>>P;
+    for(int i=0;i<P;i++)cin>>v[i];
+    memset(dp,0,sizeof(dp));
+    dp[0][0]=hp;
+    int N=u.size();
+    for(int i=0;i<N;i++){
+      for(int S=0;S<(1<<P);S++){
+        if(dp[i][S]==0)continue;        
+        for(int k=0;k<P;k++){
+          if(S>>k&1)continue;
+          int nS=S|(1<<k);
+          dp[i+1][nS]=max(dp[i+1][nS],min(HP,dp[i][S]+v[k]));
+        }
+        dp[i+1][S]=max(dp[i+1][S],dp[i][S]-u[i]);
+      }
+    }
+    string ans="NO";
+    for(int i=0;i<(1<<P);i++)
+      if(dp[N][i]>0)ans="YES";
+    cout<<ans<<endl;
+  }
+  return 0;
+}

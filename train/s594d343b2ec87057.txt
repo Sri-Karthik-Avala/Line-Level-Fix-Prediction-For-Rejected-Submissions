@@ -1,0 +1,90 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <list>
+#include <set>
+#include <numeric>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+#include <climits>
+#include <cfloat>
+#include <ctime>
+#include <complex>
+#include <cassert>
+#include <iomanip>
+using namespace std;
+typedef long long LL;
+typedef pair<int,int> P;
+
+unsigned dist[1<<16];
+int main() {
+	int n;
+	cin >> n;
+	vector<int> pt;
+	memset(dist,-1,sizeof(dist));
+	for(int k=0;k<n;k++){
+		int h,w;
+		cin >> h >> w;
+		for(int i=-h+1;i<4;i++){
+			for(int j=-w+1;j<4;j++){
+				int u=0;
+				for(int p=0;p<4;p++){
+					if(i<=p&&p<i+h){
+						for(int q=0;q<4;q++){
+							if(j<=q&&q<j+w){
+								u|=1<<(4*p+q);
+							}
+						}
+					}
+				}
+				pt.push_back(u);
+			}
+		}
+	}
+	sort(pt.begin(),pt.end());
+	pt.resize(unique(pt.begin(),pt.end())-pt.begin());
+	int col[3]={0};
+	for(int i=0;i<4;i++){
+		char buf[5];
+		cin >> buf;
+		for(int j=0;j<4;j++){
+			int u=1<<(4*i+j);
+			switch(buf[j]){
+				case 'R':col[0]|=u;break;
+				case 'G':col[1]|=u;break;
+				case 'B':col[1]|=u;break;
+			}
+		}
+	}
+	vector<P> mask;
+	for(int u:pt){
+		for(int c:col){
+			if(u&c){
+				mask.push_back(P(u&c,~u));
+			}
+		}
+	}
+	dist[0]=0;
+	queue<int> q;
+	q.push(0);
+	while(q.size()){
+		int u=q.front();
+		q.pop();
+		for(auto m:mask){
+			int v=(u&m.second)|m.first;
+			if(dist[u]+1<dist[v]){
+				dist[v]=dist[u]+1;
+				q.push(v);
+			}
+		}
+	}
+	cout << dist[(1<<16)-1] << endl;
+}

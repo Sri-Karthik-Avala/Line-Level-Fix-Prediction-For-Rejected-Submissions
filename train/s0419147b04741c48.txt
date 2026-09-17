@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+const int maxn = 2e5+5;
+const ll inf = 1e18;
+int n, m;
+vector<int> L[maxn];
+vector<pair<int,int>> R[maxn];
+ll st[4*maxn], lazy[4*maxn];
+
+void push(int pos, int l, int r){
+	if (lazy[pos] != 0){
+		st[pos] += lazy[pos];
+		if (l < r){
+			lazy[2*pos] += lazy[pos];
+			lazy[2*pos+1] += lazy[pos];
+		}
+		lazy[pos] = 0;
+	}
+}
+
+void upd(int ql, int qr, int v, int pos = 1, int l = 0, int r = n){
+	push(pos, l, r);
+	if (qr < ql or l > qr or r < ql) return;
+	if (ql <= l && r <= qr) {
+		lazy[pos] += v;
+		push(pos, l, r);
+		return;
+	}
+	int mid = (l+r)/2;
+	upd(ql, qr, v, 2*pos, l, mid);
+	upd(ql, qr, v, 2*pos+1, mid+1, r);
+	st[pos] = max(st[2*pos], st[2*pos+1]);
+}
+
+ll query(int ql, int qr, int pos = 1, int l = 0, int r = n){
+	push(pos, l, r);
+	if (qr < ql or r < ql or l > qr) return -inf;
+	if (ql <= l && r <= qr) return st[pos];
+	int mid = (l+r)/2;
+	return max(query(ql, qr, 2*pos, l, mid), query(ql, qr, 2*pos+1, mid+1, r));
+}
+
+void debug_tree(int curpos){
+	printf("ST at pos %d:\n", curpos);
+	for(int i = 1; i<=n; i++) printf("%lld%c", query(i, i), " \n"[i==n]);
+}
+
+int main(){
+	scanf("%d %d", &n, &m);
+	for(int i = 0; i<m; i++){
+		int l, r, x;
+		scanf("%d %d %d", &l, &r, &x);
+		L[l].emplace_back(x);
+		R[r].push_back({l, x});
+	}
+	ll ans = 0;
+	for(int i = 1; i<=n; i++){
+		for(int x: L[i]) upd(0, i-1, x);
+		ll mx = query(0, i-1);
+		ans = max(ans, mx);
+		upd(i, i, mx);
+		for(pair<int,int>&p: R[i]) upd(0, p.first-1, -p.second);
+	}
+	printf("%lld\n", ans);
+	return 0;
+}

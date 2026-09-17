@@ -1,0 +1,98 @@
+#include <iostream>
+#include <iomanip>
+#include <complex>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <array>
+using namespace std;
+const double EPS = 1e-10;
+const double INF = 1e12;
+#define EQ(n,m) (abs((n)-(m)) < EPS)
+#define X real()
+#define Y imag()
+typedef complex<double> P;
+typedef vector<P> VP;
+struct L : array<P, 2>{
+    L(const P& a, const P& b){ at(0)=a; at(1)=b; }
+    L(){}
+};
+struct C{
+    P p;
+    double r;
+    C(const P& p, const double& r) : p(p), r(r) {}
+    C(){}
+};
+
+double dot(P a, P b){
+    return (conj(a)*b).X;
+}
+double cross(P a, P b){
+    return (conj(a)*b).Y;
+}
+P unit(const P &p){
+    return p/abs(p);
+}
+
+double distanceLP(const L &l, const P &p) {
+    return abs(cross(l[1]-l[0], p-l[0])) /abs(l[1]-l[0]);
+}
+double distanceSP(const L &s, const P &p) {
+    if(dot(s[1]-s[0], p-s[0]) < EPS) return abs(p-s[0]);
+    if(dot(s[0]-s[1], p-s[1]) < EPS) return abs(p-s[1]);
+    return distanceLP(s, p);
+}
+
+int main(){
+    while(1){
+        double rr;
+        int n;
+        cin >> rr >> n;
+        if(n==0) break;
+
+        VP p(n);
+        vector<double> r(n), v(n);
+        for(int i=0; i<n; i++){
+            int x,y;
+            cin >> x >> y >> r[i] >> v[i];
+            p[i] = P(x, y);
+        }
+
+        int rem = n;
+        int ans = 0;
+        vector<bool> used(n, false);
+        while(rem > 0){
+            for(int i=0; i<n; i++){
+                if(used[i]) continue;
+                if(abs(p[i]) -v[i] < rr +EPS){
+                    used[i] = true;
+                    rem--;
+                    ans++;
+                }
+                p[i] += -unit(p[i])*v[i];
+            }
+            int nearest = -1;
+            double dist = INF;
+            for(int i=0; i<n; i++){
+                if(used[i]) continue;
+                if(abs(p[i]) < dist){
+                    dist = abs(p[i]);
+                    nearest = i;
+                }
+            }
+            if(nearest == -1){
+                break;
+            }
+            L ray(unit(p[nearest])*(rr +EPS), 1e4*p[nearest]);
+            for(int i=0; i<n; i++){
+                if(used[i]) continue;
+                if(distanceSP(ray, p[i]) < rr +EPS){
+                    used[i] = true;
+                    rem--;
+                }
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}

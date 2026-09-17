@@ -1,0 +1,30 @@
+while(1):
+    [n,m]=[int(x) for x in raw_input().split()]
+    if n==0:
+        break
+    else:
+        C=[[9999 for x in range(m+1)] for y in range (m+1)]
+        T=[[9999 for x in range(m+1)] for y in range (m+1)]
+        for i in range(n):
+            [a,b,c,t]=[int(x) for x in raw_input().split()]
+            C[a][b]=c
+            C[b][a]=c
+            T[a][b]=t
+            T[b][a]=t
+        for i in range(1,m+1):
+            C[i][i]=0
+            T[i][i]=0
+        for k in range(1,m+1):
+            for i in range(1,m+1):
+                for j in range(1,m+1):
+                    if C[i][j]>C[i][k]+C[k][j]:
+                        C[i][j]=C[i][k]+C[k][j]
+                    if T[i][j]>T[i][k]+T[k][j]:
+                        T[i][j]=T[i][k]+T[k][j]
+        Q=int(raw_input())
+        for i in range(Q):
+            [p,q,r]=[int(x) for x in raw_input().split()]
+            if r:
+                print T[p][q]
+            else:
+                print C[p][q]

@@ -1,0 +1,6 @@
+for a,b,r,c,d,s in[map(float,raw_input().split())for i in range(input())]:
+	d=((a-c)**2+(b-d)**2)**0.5
+	if d>(r+s):print 0
+	elif d+min(r,s)>max(r,s):print 1
+	elif r>s:print 2
+	else:print -2

@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+n, x = map(int, input().split())
+a = list(map(int, input().split()))
+
+a = sorted(a)
+if x < a[0]:
+    print(0)
+    exit()
+
+cnt = 0 
+for i in range(n):
+    if x >= a[i]:
+        x -= a[i]
+        cnt += 1
+
+if x > 0:
+    ans = cnt-1
+else:
+    ans = cnt 
+
+print(ans)

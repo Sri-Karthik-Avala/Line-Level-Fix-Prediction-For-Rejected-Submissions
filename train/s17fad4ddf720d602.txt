@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+#define pb push_back
+#define ins insert
+#define F first
+#define S second 
+#define var auto
+using namespace std;
+typedef long long ll;
+
+int ANS(ll n , deque<int> & beg , deque<int> & ed)
+{
+	if(n == 1)
+	{
+		return 0;
+	}
+	if(n == 2)
+	{
+		beg.pb(1);
+		ed.pb(1);
+		return 1;
+	}
+	if(n % 2)
+	{
+		int numcol = ANS(n / 2 , beg , ed);
+		beg.push_front(numcol + 1);
+		ed.push_front(numcol + 1);
+		beg.pb(numcol + 2);
+		ed.push_front(numcol + 2);
+		return numcol + 2;
+	}
+	else
+	{
+		int numcol = ANS(n / 2 , beg , ed);
+		beg.push_front(numcol + 1);
+		ed.push_front(numcol + 1);
+		return numcol + 1;
+	}
+}
+
+int main()
+{
+	ll n;cin >> n;
+	deque<int> beg , ed;
+	ANS(n , beg , ed);
+	cout << beg.size() + ed.size() << '\n';
+
+	for(var a : beg)
+		cout << a << " ";
+	for(var a : ed)
+		cout << a << " ";
+}
+

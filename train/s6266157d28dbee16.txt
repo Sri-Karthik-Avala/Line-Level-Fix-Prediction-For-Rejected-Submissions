@@ -1,0 +1,48 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+int main(){
+
+  int n;
+  cin >> n;
+  for(int i=0;i<n;i++){
+    string a,b,out,tmp;
+    cin >> a;
+    cin >> b;
+    //int m=max(a.size(),b.size());
+    if(a.size()<b.size()){
+      tmp=a;
+      a=b;
+      b=tmp;
+    }
+    //cout << a << endl;
+    int si=-a.size()+b.size();
+    for(int j=a.size()-1;j>=0;j--){
+      if(j+si>=0){
+	//cout << si << endl;
+	a[j]+=b[j+si]-'0';
+	//cout << a[j] << endl;
+      }else{
+	a[j]+=0;
+	//cout << "!" << endl;
+      }
+      if(a[j]>'9'&&j!=0){
+	a[j-1]++;
+	a[j]-=10;
+      }else if(a[j]>'9'&&j==0){
+	a='1'+a;
+	a[1]-=10;
+	//for(int i=a.size();i>0;i--)
+	//  a[i]=a[i-1];
+	//a[1]-=10;
+	//a[0]='1';
+      }
+    }
+    if(a[80]!='\0')
+      cout << "overflow" << endl;
+    else
+      cout << a << endl;
+  }
+
+}

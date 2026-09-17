@@ -1,0 +1,11 @@
+A=[i+1 for i in range(2001)]
+ 
+while(1):
+    try:
+        n=int(raw_input())
+        ans=0
+        for i in range(n+1):
+            ans+=A[i]*A[n-i]
+        print ans
+    except:
+        break

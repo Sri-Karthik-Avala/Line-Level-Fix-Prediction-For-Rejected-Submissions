@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+template<int MAX>
+struct Combination {
+    vector<long long> _inv, _fac, _ifac;
+    const long long MOD;
+    Combination(long long mod) : _inv(MAX+1), _fac(MAX+1), _ifac(MAX+1), MOD(mod) { init(); }
+    inline void init(long long mod = 0) { init_inv(), init_fac(); }
+
+    inline void init_inv() {
+        _inv[0] = 0;
+        for (int i = 1; i <= MAX; i++) {
+            if (i == 1) _inv[i] = 1;
+            else {
+                _inv[i] = (MOD - (MOD / i) * _inv[MOD % i]) % MOD;
+                if (_inv[i] < 0) _inv[i] += MOD;
+            }
+        }
+    }
+    inline void init_fac() {
+        _fac[0] = _ifac[0] = 1;
+        for (int i = 1; i <= MAX; i++) {
+            _fac[i] = _fac[i-1] * i % MOD;
+            _ifac[i] = _ifac[i-1] * _inv[i] % MOD;
+        }
+    }
+
+    inline long long modpow(long long n, long long r) {
+        n %= MOD, r %= (MOD-1);
+        if (!n) return 0;
+        long long ret = 1; long long tmp = n;
+        while (r != 0) {
+            if (r % 2) ret *= tmp;
+            tmp *= tmp; tmp %= MOD; ret %= MOD;
+            r /= 2;
+        }
+        return ret;
+    }
+    inline const long long invb(int i) { return (i <= MAX) ? _inv[i] : this->modpow(i, MOD-2); }
+    inline const long long inv(int i) { return _inv[i]; }
+    inline const long long fac(int i) { return _fac[i]; }
+    inline const long long ifac(int i) { return _ifac[i]; }
+
+    const long long operator()(int n, int r) {
+        if (n < r) return 0;
+        return fac(n) * ifac(r) % MOD * ifac(n-r) % MOD;
+    }
+};
+
+int main() {
+    cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    constexpr int MAX = 600000;
+    constexpr int mod = 1000000007;
+    Combination<MAX> C(mod);
+    int n, m, l, r; cin >> n >> m >> l >> r;
+    vector<long long> x(r+1, 0);
+    vector<long long> y(r+1, 0);
+    for (int a = 1; a <= r; a++) {
+        for (int i = 0; i <= n-m; i++) {
+            if ((m+i)*a > r) break;
+            if (i & 1) x[(m+i)*a] -= C(n-m, i);
+            else x[(m+i)*a] += C(n-m, i);
+            x[(m+i)*a] = (x[(m+i)*a] + mod) % mod;
+        }
+    }
+    for (int i = r; i >= m; i--) {
+        x[i] = (x[i] - x[i-m] + mod) % mod;
+    }
+    for (int i = 0; i <= r; i++) y[i] = C(n+i, i);
+    auto calc = [&](int l) {
+        long long ret = 0;
+        for (int i = 0; i <= l; i++) {
+            ret += x[i] * y[l-i] % mod;
+        }
+        return ret % mod;
+    };
+    long long sub = (calc(r) - calc(l-1) + mod) % mod * C(n, m) % mod;
+    long long all = 0;
+    for (int i = l; i <= r; i++) all += C(i+n-1, i);
+    cout << (all - sub + mod) % mod << "\n";
+    return 0;
+}

@@ -1,0 +1,103 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+#include <cstring>
+#include <queue>
+#include <cmath>
+#define enter putchar('\n')
+#define space putchar(' ')
+#define mp make_pair
+#define pb push_back
+#define fi first
+#define se second
+#define pii pair<int,int>
+#define eps 1e-7
+#define MAXN 1000005
+//#define ivorysi
+using namespace std;
+typedef long long int64;
+typedef double db;
+template<class T>
+void read(T &res) {
+    res = 0;char c = getchar();T f = 1;
+    while(c < '0' || c > '9') {
+	if(c == '-') f = -1;
+	c = getchar();
+    }
+    while(c >= '0' && c <= '9') {
+	res = res * 10 + c - '0';
+	c = getchar();
+    }
+    res *= f;
+}
+template<class T>
+void out(T x) {
+    if(x < 0) {putchar('-');x = -x;}
+    if(x >= 10) {
+	out(x / 10);
+    }
+    putchar('0' + x % 10);
+}
+int N,K,L[2005];
+char s[2005][10005];
+bool vis[2005][10005];
+int dp[10005],tot;
+pii que[8005],tmp[8005];
+char ans[10005];
+void Init() {
+    read(N);read(K);
+    for(int i = 1 ; i <= N ; ++i) {
+	scanf("%s",s[i] + 1);
+	L[i] = strlen(s[i] + 1);
+    }
+    vis[N + 1][0] = 1;
+    for(int i = N ; i >= 1 ; --i) {
+	for(int j = K ; j >= 0 ; --j) {
+	    vis[i][j] |= vis[i + 1][j];
+	    if(j >= L[i]) vis[i][j] |= vis[i + 1][j - L[i]];
+	}
+    }
+    for(int i = 1 ; i <= K ; ++i) dp[i] = N + 1;
+}
+void Solve() {
+    for(int i = 1 ; i <= K ; ++i) {
+	int t = 26;
+	for(int j = dp[i - 1] + 1 ; j <= N ; ++j) {
+	    if(K - L[j] - i + 1 >= 0 && vis[j + 1][K - L[j] - i + 1]) {
+		t = min(t,s[j][1] - 'a');
+	    }
+	}
+	for(int j = 1 ; j <= tot ; ++j) {
+	    t = min(t,s[que[j].fi][que[j].se + 1] - 'a');
+	}
+	ans[i] = 'a' + t;
+	int tp = 0;
+	for(int j = dp[i - 1] + 1 ; j <= N ; ++j) {
+	    if(K - L[j] - i + 1 >= 0 && vis[j + 1][K - L[j] - i + 1]) {
+		if(s[j][1] - 'a' == t) {
+		    if(L[j] == 1) dp[i] = min(dp[i],j);
+		    else tmp[++tp] = mp(j,1);
+		}
+	    }
+	}
+	for(int j = 1 ; j <= tot ; ++j) {
+	    if(s[que[j].fi][que[j].se + 1] - 'a' == t) {
+		if(que[j].se + 1 == L[que[j].fi]) dp[i] = min(dp[i],que[j].fi);
+		else tmp[++tp] = mp(que[j].fi,que[j].se + 1);
+	    }
+	}
+	tot = tp;
+	for(int j = 1 ; j <= tot ; ++j) que[j] = tmp[j];	
+    }
+    for(int i = 1 ; i <= K ; ++i) {
+	putchar(ans[i]);
+    }
+    enter;
+}
+int main() {
+#ifdef ivorysi
+    freopen("f1.in","r",stdin);
+#endif
+    Init();
+    Solve();
+}

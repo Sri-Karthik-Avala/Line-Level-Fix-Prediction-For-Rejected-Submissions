@@ -1,0 +1,39 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
+from bisect import *
+
+while 1:
+    (N, M) = map(int, raw_input().split())
+    if N == 0: break
+    r = int(raw_input())
+    used = [0]*(N+1)
+    imos = [[0]*1301 for i in range(M+1)]
+    for i in range(r):
+        (t, n, m, s) = map(int, raw_input().split())
+        if s == 1 and used[n] == 0:
+            used[n] = m
+            imos[m][t] = 1
+        if s == 0 and used[n] == m:
+            used[n] = 0
+            imos[m][t] -= 1
+            #if imos[m][t] > 0:
+            #    imos[m][t] -= 1
+            #else:
+            #    imos[m][t] = -1
+
+    q = int(raw_input())
+    for i in range(q):
+        (qs, qe, user) = map(int, raw_input().split())
+        tmp = 0
+        ans = 0
+        for j in range(540, 1261):
+            #if imos[user][j] == 1:
+            #    tmp += 1
+            if tmp > 0 and j > qs and j <= qe:
+                ans += 1
+            tmp += imos[user][j]
+            #if imos[user][j] == -1:
+            #    tmp -= 1
+        print ans
+               

@@ -1,0 +1,15 @@
+dic = {}
+while True:
+    try:
+        word, pgn = input().split()
+
+        if word in dic.keys():
+            dic[word].append(int(pgn))
+        else:
+            dic[word] = [int(pgn)]
+    except:
+        break
+
+for k, v in dic.items():
+    print(k)
+    print(' '.join(map(str, sorted(v))))

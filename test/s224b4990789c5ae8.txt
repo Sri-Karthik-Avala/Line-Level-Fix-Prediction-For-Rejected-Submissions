@@ -1,0 +1,17 @@
+friends=input()
+friends.split('')
+friends_all=friends[0]
+friends_cakes=friends[1]
+person=int(friends_all)+1
+cakes=input()
+cakes_amount=0
+for a in cakes.split(''):
+        cakes_amount+=int(a)
+one_person=cakes_amount//person
+
+if cakes_amount%person!=0:
+        one_person+=1
+else:
+        pass
+print(one_person)
+

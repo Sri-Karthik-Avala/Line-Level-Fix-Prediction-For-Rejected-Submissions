@@ -1,0 +1,30 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int P,Q;
+    while(cin>>P>>Q){
+        map<int,int> latte;
+        int m=0,l=0,r=0;
+        vector<int> ans;
+        latte[P%Q] = 0;
+        m = P%Q;
+        while(m){
+            int nm = m*10%Q;
+            ans.push_back(m*10/Q);
+            if(latte.find(nm)!=latte.end()){
+                l = latte[nm]; r = ans.size(); break;
+            }
+            latte[nm] = ans.size()-1;
+            m = nm;
+        }
+        for(int i=0;i<ans.size();i++) printf("%d",ans[i]); puts("");
+        if(r!=0){
+            for(int i=0;i<ans.size();i++){
+                if(l<=i) printf("^");
+                else printf(" ");
+            }puts("");
+        }
+    }
+    return 0;
+}

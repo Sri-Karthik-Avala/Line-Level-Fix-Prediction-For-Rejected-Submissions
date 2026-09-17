@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int N;
+  cin >> N;
+  vector<int>vec(N);
+  for(int i=0; i<N; i++){
+    cin >> vec[i];
+  }
+  sort(vec.begin(),vec.end());
+  reverse(vec.begin(),vec.end());
+  int X=0,Y=0;
+  for(int i=0; i<N-1; i++){
+    if(vec[i] == vec[i+1]){
+      if(X>0){
+        Y = vec[i];
+        break;
+      }
+      else{
+        X = vec[i];
+      }
+      i++;
+    }
+  }
+  cout << X*Y << endl;
+}

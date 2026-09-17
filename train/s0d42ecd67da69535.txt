@@ -1,0 +1,65 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>	
+#include<map>
+#include<set>
+#include<utility>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdio>
+#include<sstream>
+#include<iomanip>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb push_back
+#define mp make_pair
+#define all(in) in.begin(),in.end()
+#define shosu(x) fixed<<setprecision(x)
+using namespace std;
+//kaewasuretyuui
+typedef long long ll;
+typedef pair<int,int> pii;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<pii> vp;
+typedef vector<vp> vvp;
+typedef pair<int,pii> pip;
+typedef vector<pip>vip;
+const double PI=acos(-1);
+const double EPS=1e-8;
+const int inf=1<<30;
+vp in;
+pii p1,p2;
+int fil[5010][5010];
+bool f(pii w){
+	int a=w.first,b=w.second;
+	if(a<0||b<0||a>=5010||b>=5010)return false;
+	return true;
+}
+int main(){
+	int n;
+	while(cin>>n,n){
+		rep(i,5010)rep(j,5010)fil[i][j]=0;
+		in=vp(n);
+		rep(i,n){
+			int a,b;
+			cin>>a>>b;
+			fil[a][b]=1;
+			in[i]=pii(a,b);
+		}
+		int out=0;
+		rep(i,n){
+//			if(i%100==0)cout<<i<<endl;
+			rep(j,n)if(i!=j){
+				int a=in[i].first-in[j].first,b=in[i].second-in[j].second;
+				p1=pii(in[i].first-b,in[i].second+a);
+				p2=pii(in[j].first-b,in[j].second+a);
+				if(f(p1)==0||f(p2)==0)continue;
+				if(fil[p1.first][p1.second]&&fil[p2.first][p2.second])out=max(out,a*a+b*b);
+			}
+		}
+		cout<<out<<endl;
+	}
+}

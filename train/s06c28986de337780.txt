@@ -1,0 +1,48 @@
+class WeightedUnionFind:
+    def __init__(self, size):
+        self.parent = [i for i in range(size)]
+        self.rank = [0]*size
+        self.diff_weight = [0]*size
+    
+    def find(self, x):
+        if self.parent[x] == x:
+            return x
+        r = self.find(self.parent[x])
+        self.parent[x] = r
+        self.diff_weight[x] += self.diff_weight[r]
+        return r
+    
+    def unite(self, x, y, w):
+        w += self.weight(x) - self.weight(y)
+        x, y = self.find(x), self.find(y)
+        if x == y:
+            return
+        if self.rank[x] < self.rank[y]:
+            x, y = y, x
+            w = -w
+        if self.rank[x] == self.rank[y]:
+            self.rank[x] += 1
+        self.parent[y] = x
+        self.diff_weight[y] = w
+
+    def same(self, x, y):
+        return self.find(x) == self.find(y)
+
+    def weight(self, x):
+        self.find(x)
+        return self.diff_weight[x]
+
+    def diff(self, x, y):
+        return self.weight(y)-self.weight(x)
+
+N, M = map(int,input().split())
+uf = WeightedUnionFind(N)
+for _ in range(M):
+    l,r,d = map(int,input().split())
+    l -= 1
+    r -= 1
+    if uf.same(l,r) and uf.diff(l,r) != d:
+        print("No")
+        exit()
+    uf.unite(l,r,d)
+print("Yes")

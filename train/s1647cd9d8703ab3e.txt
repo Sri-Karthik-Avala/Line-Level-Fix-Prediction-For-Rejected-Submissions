@@ -1,0 +1,13 @@
+from math import *
+PI = 3.1415926535898
+base = "A"
+while True:
+    try:
+    	x, y = map(str, raw_input().strip().split(','))
+    	if x == base:
+    		base = y
+    	if y == base:
+    		base = x
+    except EOFError:
+        break
+print base

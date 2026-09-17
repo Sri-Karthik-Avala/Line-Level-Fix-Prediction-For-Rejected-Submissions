@@ -1,0 +1,90 @@
+#include <iostream>
+#include <iomanip>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+
+#define INF (1<<30)
+int x[105], l[105], f[105], d[105], ud[105], v[105];
+
+double up(int n)
+{
+	return 1.0*l[n]/f[n];
+}
+
+double down(int n)
+{
+	return 1.0*l[n]/d[n];
+}
+
+double dp[105][1250];
+
+int main()
+{
+	cout << setiosflags(ios::fixed) << setprecision(10);
+	
+	int N,M,K;
+	while(cin >> N >> M >> K, (N||M||K))
+	{
+		v[0]=INF;
+		K+=100;
+
+		x[N]=INF;
+		
+		memset(dp,0,sizeof(dp));
+		
+		for(int i=0; i<N; i++)
+		{
+			cin >> x[i] >> l[i] >> f[i] >> d[i] >> ud[i];
+			x[i]+=100;
+		}
+		for(int i=1; i<=M; i++)
+			cin >> v[i];	
+		
+		for(int i=0; i<=K+100; i++)
+			dp[0][i]=0;
+		
+		for(int i=0; i<N; i++)
+		{
+			if(ud[i]==0) dp[0][x[i]+1]=-INF;
+		}
+			
+		for(int i=1; i<=M; i++)
+		{
+			int g=0;
+			for(int j=100-i+2; j<=K+102; j++)
+			{
+				double tmp = dp[i-1][j+1];
+				if(x[g+1]==j+1)
+				{
+					if(ud[g+1]==0) tmp-=up(g+1);
+					if(ud[g+1]==1) tmp-=down(g+1);
+				}
+
+				if(x[g]!=j)
+				{
+					dp[i][j]=max(dp[i][j-1] + 1.0/v[i], tmp);
+				}
+				else
+				{
+
+					if(ud[g]==0) 
+					{
+						dp[i][j]=max(dp[i][j-1]+1.0/v[i], max(dp[i-1][j]+down(g), tmp));
+						dp[i][j]+=up(g);
+					}
+					if(ud[g]==1) 
+					{
+						dp[i][j]=max(dp[i][j-1]+1.0/v[i], max(dp[i-1][j]+  up(g), tmp));
+						dp[i][j]+=down(g);
+					}
+					
+					g++;
+				}
+				
+			}
+		}
+		
+		cout << dp[M][K] << endl;
+	}
+}

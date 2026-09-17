@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int INF = 1 << 30;
+
+
+int main()
+{
+  int N, K;
+  string S, T;
+
+  cin >> N >> K;
+
+  cin >> S;
+  cin >> T;
+
+  vector< int > sweep(N + 1);
+  for(int i = 0; i + 1 < N; i++) {
+    if(T[i] != T[i + 1]) sweep[i + 1] = 1;
+    sweep[i + 1] += sweep[i];
+  }
+
+  vector< int > dp(N + 1, INF);
+  dp[0] = 0;
+  for(int i = 1; i <= N; i++) {
+    dp[i] = dp[i - 1] + (S[i - 1] != T[i - 1]);
+    for(int j = i - 2; j >= 0 && i - j <= K; j--) {
+      dp[i] = min(dp[i], (dp[j] * 2 + sweep[i - 1] - sweep[j]/*sum*/ + 3) / 2);
+    }
+  }
+
+  cout << dp.back() << endl;
+}

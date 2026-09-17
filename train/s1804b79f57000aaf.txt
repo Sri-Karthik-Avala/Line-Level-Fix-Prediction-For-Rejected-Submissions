@@ -1,0 +1,26 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int main(){
+	int a;string y;
+	cin>>y>>a;
+	int cnt=0;
+	for(int i=0;i<a;i++){
+		string b,c="";
+		cin>>b;
+		c.clear();
+		for(int j=0;j<7;j++){
+			for(int k=j;k<y.size()+j;k++){
+				c+=b[k];
+			}
+			if(y==c){
+			cnt++;break;
+			}
+			c="";
+		}
+	}
+	cout<<cnt<<endl;
+	return 0;
+}

@@ -1,0 +1,14 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int main() {
+  int N, K, x, s=0, xk;
+  cin >> N >> K;
+  for(int i=0;i<N;i++){
+    cin >> x;
+    xk=x-K;
+    if(xk<0) xk=-xk;
+    if(x>xk) s+=2*xk; else s+=2*xk;
+  }
+  cout << s << endl; 
+}

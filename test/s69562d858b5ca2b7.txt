@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+
+using i64 = long long;
+
+const i64 MOD = 1000000007;
+i64 pow(i64 a, i64 k) {
+	i64 t = 1;
+	for (; k; a = a * a % MOD, k >>= 1) if (k & 1) t = t * a % MOD;
+	return t;
+}
+
+const int INF = int(MOD);
+const int N = 100000 + 7;
+
+int n;
+int a[N];
+
+struct seg {
+	int low[N << 2];
+	void build(int p, int l, int r) {
+		if (l == r)
+			low[p] = a[l];
+		else
+			build(p << 1, l, l + r >> 1), build(p << 1 | 1, (l + r >> 1) + 1, r),
+			low[p] = std::min(low[p << 1], low[p << 1 | 1]);
+	}
+	int getmin(int p, int l, int r, int x, int y) {
+		if (x <= l && r <= y) return low[p];
+		int m = l + r >> 1, u = INF, v = INF;
+		if (x <= m) u = getmin(p << 1, l, m, x, y);
+		if (y > m) v = getmin(p << 1 | 1, m + 1, r, x, y);
+		return std::min(u, v);
+	}
+	void arr(int p, int l, int r, int x, int y, int k, std::vector<int>& z) {
+		if (low[p] > k) return;
+		if (l == r) return void(z.push_back(l));
+		int m = l + r >> 1;
+		if (x <= m) arr(p << 1, l, m, x, y, k, z);
+		if (y > m) arr(p << 1 | 1, m + 1, r, x, y, k, z);
+	}
+} seg;
+
+int ct;
+int l[N], r[N], h[N];
+std::vector<int> kid[N];
+int build(int u, int v, int q) {
+	int p = ++ct;
+	l[p] = u, r[p] = v, h[p] = q;
+	if (u == v) return p;
+	std::vector<int> z;
+	int w = seg.getmin(1, 1, n, u, v);
+	z.push_back(u - 1), seg.arr(1, 1, n, u, v, w, z), z.push_back(v + 1);
+	for (int i = 1, j; i < z.size(); ++i)
+		if (z[i - 1] + 1 <= z[i] - 1)
+			kid[p].push_back(build(z[i - 1] + 1, z[i] - 1, w));
+  return p;
+}
+
+i64 dp[N][2];
+void solve(int p) {
+	int w = r[p] - l[p] + 1;
+	for (auto t : kid[p]) solve(t), w -= r[t] - l[t] + 1;
+	dp[p][0] = pow(2, w), dp[p][1] = 1;
+	w = a[l[p]];
+	for (auto t : kid[p])
+		( dp[p][0] *= dp[t][0] + 2 * dp[t][1] ) %= MOD,
+		( dp[p][1] *= dp[t][1] ) %= MOD,
+		w = std::min(w, h[t]);
+	( dp[p][0] -= dp[p][1] * 2 ) %= MOD;
+	( dp[p][1] *= pow(2, w - h[p]) ) %= MOD;
+}
+
+int main() {
+//	freopen("code.in", "r", stdin);
+//	freopen("code.out", "w", stdout);
+
+	scanf("%d", &n);
+	if (n == 1) return printf("0"), 0;
+	for (int i = 1; i <= n; ++i)
+		scanf("%lld", a + i);
+	seg.build(1, 1, n);
+	int rt = build(1, n, 0);
+	solve(rt);
+	printf("%lld", (dp[rt][0] + dp[rt][1] + MOD * 3) % MOD);
+	return 0;
+}

@@ -1,0 +1,75 @@
+#include<bits/stdc++.h>
+#define ll long long
+#define ld long double
+#define ull unsigned ll
+#define db double
+#define pint pair<int,int>
+#define mk make_pair
+#define pb push_back
+#define eb emplace_back
+#define ins insert
+#define fi first
+#define se second
+#define Rep(x,y,z) for(int x=y;x<=z;x++)
+#define Red(x,y,z) for(int x=y;x>=z;x--)
+using namespace std;
+const int MAXN=1e3+5;
+char buf[1<<12],*pp1=buf,*pp2=buf,nc;int ny;
+inline char gc() {return pp1==pp2&&(pp2=(pp1=buf)+fread(buf,1,1<<12,stdin),pp1==pp2)?EOF:*pp1++;}
+//inline char gc(){return getchar();}
+inline int read(){
+	int x=0;for(ny=1;nc=gc(),(nc<48||nc>57)&&nc!=EOF;)if(nc==45)ny=-1;if(nc<0)return nc;
+	for(x=nc-48;nc=gc(),47<nc&&nc<58&&nc!=EOF;x=(x<<3)+(x<<1)+(nc^48));return x*ny;
+}
+int n,m=40,p1[30],p2[30],type;ll c[50];pint a[MAXN];
+inline void print(pint x){
+	int Mx=19-type;
+	int opta=0,optb=0,a=x.fi,b=x.se;
+	if(a<0)opta=1,a=-a;if(b<0)optb=1,b=-b;
+	memset(p1,0,sizeof(p1)),memset(p2,0,sizeof(p2));
+	for(int t=a,i=0;t;p1[i]=t%3,t/=3,i++);
+	for(int t=b,i=0;t;p2[i]=t%3,t/=3,i++);
+	Rep(i,0,Mx){
+		if(p1[i]&&p2[i]){
+			if(p1[i]==1)putchar("RL"[opta]);
+			else{
+				putchar("LR"[opta]),p1[i+1]++;
+				for(int t=i+1;p1[t]>=3;p1[t]-=3,p1[t+1]++,t++);
+			}
+			if(p2[i]==1)putchar("UD"[optb]);
+			else{
+				putchar("DU"[optb]),p2[i+1]++;
+				for(int t=i+1;p2[t]>=3;p2[t]-=3,p2[t+1]++,t++);
+			}
+		}else if(p1[i]){
+			if(p1[i]==1){
+				putchar("LR"[opta]),putchar("LR"[opta]),p1[i+1]++;
+				for(int t=i+1;p1[t]>=3;p1[t]-=3,p1[t+1]++,t++);
+			}else putchar("RL"[opta]),putchar("RL"[opta]);
+		}else if(p2[i]){
+			if(p2[i]==1){
+				putchar("DU"[optb]),putchar("DU"[optb]),p2[i+1]++;
+				for(int t=i+1;p2[t]>=3;p2[t]-=3,p2[t+1]++,t++);
+			}else putchar("UD"[optb]),putchar("UD"[optb]);
+		}else putchar('L'),putchar('R');
+	}if(type){
+		if(p1[19])putchar("RL"[opta]);
+		else if(p2[19])putchar("UD"[optb]);
+	}
+	puts("");
+}
+int main(){
+//	freopen("std.in","r",stdin);
+//	freopen("std.out","w",stdout);
+	n=read();
+	Rep(i,1,n)a[i].fi=read(),a[i].se=read();type=(abs(a[1].fi)+abs(a[1].se))%2;
+	Rep(i,1,n)if((abs(a[i].fi)+abs(a[i].se))%2!=type)return puts("-1"),0;
+	m-=type;cout<<m<<'\n';int tmp=1;
+	Rep(i,1,m/2)c[i*2-1]=c[i*2]=tmp,tmp*=3;
+	Rep(i,1,m)cout<<c[i]<<" ";cout<<'\n';
+	Rep(i,1,n)print(a[i]);
+	return 0;
+}
+
+
+

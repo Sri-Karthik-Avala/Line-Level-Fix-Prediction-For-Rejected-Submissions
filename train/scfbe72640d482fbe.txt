@@ -1,0 +1,73 @@
+def read_data():
+    nV, nE = map(int, input().split())
+    C = [dict() for v in range(nV)]
+    for e in range(nE):
+        u, v, c = map(int, input().split())
+        C[u][v] = c
+    return C, nV, 0, nV - 1
+
+def dinic_ap(C, nV, s, t):
+    '''C[u][v] > 0 and C[v][u] > 0 ??¨?????????????????? antiparallel ????¨±????????????
+    '''
+    Cpp, nVpp = resolve_antiparallel(C, nV)
+    return dinic(Cpp, nVpp, s, t)
+
+def resolve_antiparallel(C, nV):
+    Cpp = [dict() for i in range(nV)]
+    new_v = nV
+    for u in range(nV):
+        for v, capacity in C[u].items():
+            if capacity:
+                if (u not in C[v]) or (u not in Cpp[v]):
+                    Cpp[u][v] = capacity
+                else:
+                    Cpp.append(dict())
+                    Cpp[u][new_v] = capacity
+                    Cpp[new_v][v] = capacity
+                    new_v += 1
+    return Cpp, new_v
+
+def dinic(C, nV, s, t):
+    cf = [dict() for i in range(nV)]
+    for u in range(nV):
+        for v, capacity in C[u].items():
+            if capacity:
+                cf[u][v] = capacity
+                cf[v][u] = 0
+    dist = get_distance(cf, s, t)
+    while dist[t] > 0:
+        df = dfs(dist, cf, s, t, float('inf'))
+        while df:
+            df = dfs(dist, cf, s, t, float('inf'))
+        dist = get_distance(cf, s, t)
+    return sum(cf[t].values())
+
+def get_distance(cf, s, t):
+    dist = [-1] * len(cf)
+    dist[s] = 0
+    frontiers = [s]
+    while frontiers:
+        new_frontiers = []
+        for u in frontiers:
+            for v, capacity in cf[u].items():
+                if dist[v] == -1 and capacity > 0:
+                    dist[v] = dist[u] + 1
+                    new_frontiers.append(v)
+        frontiers = new_frontiers
+    return dist
+
+def dfs(dist, cf, u, t, df):
+    if u == t:
+        return df
+    for v, capacity in cf[u].items():
+        if dist[v] > dist[u] and capacity > 0:
+            new_df = dfs(dist, cf, v, t, min(df, capacity))
+            if new_df > 0:
+                cf[u][v] -= new_df
+                cf[v][u] += new_df
+                return new_df
+    return 0
+
+if __name__ == '__main__':
+    C, nV, s, t = read_data()
+    print(dinic_ap(C, nV, s, t))

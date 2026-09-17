@@ -1,0 +1,53 @@
+import numpy as np
+from numba import njit
+
+N = int(input())
+S = input()
+Q = int(input())
+ks = list(map(int, input().split()))
+
+def func(ch):
+    if ch == 'D':
+        return 1
+    if ch == 'M':
+        return 2
+    if ch == 'C':
+        return 3
+    return 0
+    
+S_arr = np.array([func(ch) for ch in S], dtype = np.int32)
+
+@njit("i4(i4, i4[:], i4)", cache = True)
+def solve(N, S_arr, k):
+    ans = 0
+    D = 0
+    M = 0
+    DM = 0
+    for i in range(k):
+        if S_arr[i] == 1:
+            D += 1
+        elif S_arr[i] == 2:
+            DM += D
+            M += 1
+        elif S_arr[i] == 3:
+            ans += DM
+    for i in range(k, N):
+        if S_arr[i-k] == 1:
+            D -= 1
+            DM -= M
+        elif S_arr[i-k] == 2:
+            M -= 1
+
+        if S_arr[i] == 1:
+            D += 1
+        elif S_arr[i] == 2:
+            DM += D
+            M += 1
+        elif S_arr[i] == 3:
+            ans += DM
+
+    return ans
+
+for k in ks:
+    print(solve(N, S_arr, k))
+    

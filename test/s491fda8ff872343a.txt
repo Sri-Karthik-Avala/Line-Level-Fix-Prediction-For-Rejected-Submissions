@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <cmath>
+#include <algorithm>
+#include <cfloat>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <set>
+#include <map>
+#include <time.h>
+typedef long long int ll;
+typedef unsigned long long int ull;
+#define BIG_NUM 2000000000
+#define MOD 1000000007
+#define EPS 0.000000001
+using namespace std;
+
+
+struct Info{
+	Info(ll arg_minus_value,ll arg_loc){
+		minus_value = arg_minus_value;
+		loc = arg_loc;
+	}
+	ll minus_value,loc;
+};
+
+
+int main(){
+
+	ll S,T,D;
+	scanf("%lld %lld %lld",&S,&T,&D);
+
+	ll* table = new ll[D];
+	for(int i = 0; i < D; i++)scanf("%lld",&table[i]);
+
+	vector<Info> V;
+	if(table[0] < 0){
+		V.push_back(Info(abs(table[0]),0));
+	}
+
+	for(int i = 1; i <= D-1; i++){
+		table[i] += table[i-1];
+		if(table[i] < 0){
+			V.push_back(Info(abs(table[i]),i));
+		}
+	}
+
+	ll tmp = S;
+
+	for(int day = 1; day <= D; day++){
+		tmp = S+table[day-1];
+		if(tmp <= T){
+			printf("%d\n",day);
+			return 0;
+		}
+	}
+
+	if(tmp >= S){
+		printf("-1\n");
+		return 0;
+	}
+
+	int pre_loc = -1;
+	ll ans = D;
+
+	while(true){
+
+		for(int i = 0; i < V.size(); i++){
+
+			if(V[i].loc <= pre_loc){
+				ans += (V[i].loc+D)-pre_loc;
+			}else{
+				ans += V[i].loc-pre_loc;
+			}
+			if(tmp -V[i].minus_value<= T){
+				printf("%d\n",ans);
+				return 0;
+			}
+			pre_loc = V[i].loc;
+		}
+		tmp -= V[V.size()-1].minus_value;
+	}
+
+	return 0;
+}

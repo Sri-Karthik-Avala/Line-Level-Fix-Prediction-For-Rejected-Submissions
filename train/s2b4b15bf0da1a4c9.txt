@@ -1,0 +1,12 @@
+#include <bits/stdc++.h>
+#define r(i,n) for(int i=0;i<n;i++)
+using namespace std;
+
+int M=1e9+7;
+
+int main(){
+  int n,k,a=1;
+  cin>>n>>k;
+  r(i,n)a=(a*k)%M;
+  cout<<a<<endl;
+}

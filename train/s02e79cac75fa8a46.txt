@@ -1,0 +1,98 @@
+#include <iostream>
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <numeric>
+#include <string>
+#include <string.h>
+#include <map>
+#include <set>
+#include <functional>
+#include <complex>
+#include <stack>
+#include <tuple>
+#include <array>
+using namespace std;
+#define rep(i,n) for (int i=0; i < (n); i++)
+
+
+typedef long long int ll;
+typedef double D;      // ??§?¨?????????????double???long double?????????
+typedef complex<D> P;  // Point
+typedef pair<P, P> L;  // Line
+typedef vector<P> VP;
+
+
+const int INF = (1<<30) - 1;
+const D EPS = 1e-9;
+
+#define X real()
+#define Y imag()
+#define LE(n,m) ((n) < (m) + EPS)
+#define GE(n,m) ((n) + EPS > (m))
+#define EQ(n,m) (abs((n)-(m)) < EPS)
+
+int M, N;
+vector<string> field;
+
+int dh[] = {-1, 1, 0, 0};
+int dw[] = {0, 0, 1, -1};
+
+inline bool in_field(int h, int w){
+    return 0<=h&&h<M && 0<=w&&w<N;
+}
+
+void solve(){
+    bool updated = true;
+    int count = 0;
+    while (updated) {
+        updated = false;
+        for(int i=0; i<M; i++){
+            for(int j=0; j<N; j++) if(field[i][j] == '.'){
+                vector<tuple<char, int, int>> colors;
+                
+                for(int d=0; d<4; d++){
+                    int l = 0;
+                    while(in_field(i+dh[d]*l, j+dw[d]*l) && field[i+dh[d]*l][j+dw[d]*l] == '.') l++;
+                    
+                    if(!in_field(i+dh[d]*l, j+dw[d]*l)) continue;
+                    
+                    colors.push_back(tuple<char, int, int>(field[i+dh[d]*l][j+dw[d]*l], i+dh[d]*l, j+dw[d]*l));
+                }
+                
+                for(int i=0; i<colors.size(); i++){
+                    for(int j=1+1; j<colors.size(); j++){
+                        char c1, c2;
+                        int h1, w1, h2, w2;
+                        tie(c1, h1, w1) = colors[i];
+                        tie(c2, h2, w2) = colors[j];
+                        if(c1 == c2){
+                            field[h1][w1] = field[h2][w2] = '.';
+                            count += 2;
+                            updated = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cout << count << endl;
+}
+
+//g++ -std=c++0x -msse4.2 -O3
+//#include <bits/stdc++.h>
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    //cout.precision(16);
+    
+    cin >> M >> N;
+    field = vector<string>(M);
+    for(int i=0; i<M; i++)
+        cin >> field[i];
+    
+    solve();
+    
+    return 0;
+}

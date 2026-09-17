@@ -1,0 +1,38 @@
+def li():
+    return [int(x) for x in input().split()]
+
+
+INF = 10 ** 60
+
+N, W = li()
+L = [li() for i in range(N)]
+V = 1000
+# W <= 10**9 なので、
+# dp[i][w]: i番目の選択で重さwだった時の価値の最大値、は計算量厳しい
+# dp[i][v]: i番目の選択で価値vだった時の重さの最小値、で考えて重さの最小値がW以下のものから最大価値を算出する
+
+dp = [[INF] * (V+1) for _ in range(N)]
+
+# 初期条件
+# 選ばない
+dp[0][0] = 0
+# 選ぶ
+w0, v0 = L[0]
+dp[0][v0] = w0
+
+for i in range(1, N):
+    for v in range(V+1):
+        cw, cv = L[i]
+        # 選ばない
+        dp[i][v] = min(dp[i][v], dp[i-1][v])
+        # 選ぶ
+        if v + cv > V:
+            continue
+        dp[i][v+cv] = min(dp[i][v+cv], dp[i-1][v] + cw)
+
+# 重さの最小値がW以下で達成できるvの最大値
+v_max = 0
+for v in range(V+1):
+    if dp[N-1][v] <= W:
+        v_max = v
+print(v_max)

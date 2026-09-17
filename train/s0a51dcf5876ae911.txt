@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <cmath>
+#include <climits>
+#include <iomanip>
+#include <set>
+#include <map>
+using namespace std;
+typedef long long ll;
+int main(){
+  ll n,q;
+  cin >> n >> q;
+  string s;
+  cin >> s;
+  vector<pair<char,ll>> a(q);
+  for(int i = 0;i < q;i++){
+    char dir;
+    cin >> a[i].first >> dir;
+    if(dir == 'L')a[i].second = -1;
+    else a[i].second = 1;
+  }
+  ll res = 0;
+  
+  //左に到達するか
+  ll l = 0;
+  ll r = n - 1;
+  while(1){
+    if(r - l <= 1)break;
+    ll mid = (r + l) / 2;
+    ll now = mid;
+    bool left = false;
+    for(int i = 0;i < q;i++){
+      if(a[i].first == s[now])now += a[i].second;
+      if(now >= n)break;
+      if(now < 0){
+        left = true;
+        break;
+      }
+    }
+    if(left)l = mid;
+    else r = mid;
+  }
+  res += r;
+  //cout << l << " " << r << endl;
+  
+  //右に到達するか
+  l = -1;
+  r = n;
+  while(1){
+    if(r - l <= 1)break;
+    ll mid = (r + l) / 2;
+    ll now = mid;
+    bool right = false;
+    for(int i = 0;i < q;i++){
+      if(a[i].first == s[now])now += a[i].second;
+      if(now < 0)break;
+      if(now >= n){
+        right = true;
+        break;
+      }
+    }
+    //cout << "right" << " " << mid << " " << right << endl;
+    if(right)r = mid;
+    else l = mid;
+  }
+  res += n - r;
+  //cout << l << " " << r << endl;
+  
+  cout << n - res << endl;
+}

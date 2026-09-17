@@ -1,0 +1,19 @@
+import fractions
+h,w,t=map(int,input().split())
+g=fractions.gcd(h,w)
+def power_func(a,n,p):
+  bi=str(format(n,"b"))
+  res=1
+  for i in range(len(bi)):
+    res=(res*res) %p
+    if bi[i]=="1":
+      res=(res*a) %p
+  return res
+H=fractions.gcd(h,t)
+W=fractions.gcd(w,t)
+p=10**9+7
+a=power_func(2,g,p)
+b=power_func(2,h//H,p)
+c=power_func(2,w//W,p)
+d=(a+b+c-3)%p
+print(power_func(d,H*W,p))

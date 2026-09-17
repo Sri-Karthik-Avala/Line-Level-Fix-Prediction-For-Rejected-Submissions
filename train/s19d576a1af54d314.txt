@@ -1,0 +1,8 @@
+h,w=map(int,input().split())
+board=[list(map(int,input().split())) for _ in range(h)]
+pos="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+for i in range(h):
+  for j in range(w):
+    if board[i][j]=="snuke":
+      print(pos[j]+str(i+1))
+      exit()

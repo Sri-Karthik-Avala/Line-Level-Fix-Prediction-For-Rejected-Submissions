@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+using namespace std;
+using ll=long long;
+using P=pair<ll,ll>;
+string s;
+int main(){
+  cin>>s;ll N=s.size();
+  bool judge=true;
+ for(ll i=0;i<(N/2);i++)
+   if(s[i]!=s[N-2-i])judge=false;
+  
+  if(s[0]=='0' ||s[N-1]=='1')judge=false;
+  
+  if(!judge)
+    cout<<-1<<endl;
+  else{
+  vector<ll>A;
+    for(ll i=0;i<N/2;i++)
+      if(s[i]=='1')A.push_back(i+1);
+    vector<vector<ll>>G(N+1);
+    ll M=A.size();for(ll i=0;i<M-1;i++)
+      G[i+1].push_back(i+2);
+    ll I=M+1;
+    for(ll i=1;i<M;i++){
+    ll a=A[i];ll b=A[i];
+      for(ll j=0;j<b-a-1;j++){
+      G[i+1].push_back(I);I++;
+      }
+    
+    }G[M].push_back(I);
+    for(ll i=I+1;i<=N;i++)
+      G[I].push_back(i);
+    set<P>S;
+    for(ll i=1;i<=N;i++)
+      for(auto v:G[i]){
+      P p(i,v);S.insert(p);
+       }for(auto p:S){
+      ll u=p.first;ll v=p.second;
+        cout<<u<<" "<<v<<endl;
+      }
+  }
+  return 0;
+}

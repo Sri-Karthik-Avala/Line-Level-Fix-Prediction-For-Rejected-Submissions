@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define rep1(i,n) for(int i=1;i<=(int)(n);i++)
+#define all(c) c.begin(),c.end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl
+#define chmin(x,y) x=min(x,y)
+#define chmax(x,y) x=max(x,y)
+using namespace std;
+template<class S,class T> ostream& operator<<(ostream& o,const pair<S,T> &p){return o<<"("<<p.fs<<","<<p.sc<<")";}
+template<class T> ostream& operator<<(ostream& o,const vector<T> &vc){o<<"sz = "<<vc.size()<<endl<<"[";for(const T& v:vc) o<<v<<",";o<<"]";return o;}
+typedef long long ll;
+ll N,D;
+int main(){
+	cin>>N>>D;
+	ll a=N-D-1;
+	if(D==N-1) cout<<N-1<<endl;
+	else if(D==1) cout<<N*(N-1)/2<<endl;
+	else cout<<N-1 + a*(a-1)/2 + 2<<endl;
+}

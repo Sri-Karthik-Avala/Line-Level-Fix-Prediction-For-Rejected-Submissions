@@ -1,0 +1,80 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <numeric>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <climits>
+#include <cmath>
+using namespace std;
+
+typedef vector <int> VI;
+typedef vector <VI> VVI;
+
+VVI E;
+
+int n, m;
+VI D;
+
+int cnt;
+VI F;
+int answer;
+
+const int inf = 1<<24;
+
+bool check() {
+    for ( int i = 0; i < n; i++ ) {
+        if ( !F[i] ) {
+            bool flag = true;
+            for ( int j = 0; j < (int)E[i].size() && flag; j++ ) {
+                if ( F[E[i][j]] ) flag = false;
+            }
+            if ( flag ) return false;
+        }
+    }
+    return true;
+}
+
+void solve( int s ) {
+    if ( s == n ) {
+        if ( check() ) answer = cnt;
+        return;
+    }
+
+    F[s] = 1;
+    cnt++;
+    solve(s+1);
+    F[s] = 0;
+    cnt--;
+    solve(s+1);
+}
+
+int main() {
+    while ( cin >> n >> m ) {
+        if ( n == 0 && m == 0 ) break;
+
+        F = VI(n,0);
+        E = VVI(n);
+
+        for ( int i = 0; i < m; i++ ) {
+            int a, b;
+            cin >> a >> b;
+            E[a].push_back(b);
+            E[b].push_back(a);
+        }
+
+        answer = n;
+        cnt = 0;
+        solve(0);
+        cout << answer << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,114 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
+using namespace __gnu_pbds;
+
+typedef long long ll;
+typedef long double ld;
+typedef vector<int> vii;
+typedef vector<double> vdd;
+typedef vector<ll> vll;
+typedef vector<ld> vld;
+typedef set<int> sii;
+typedef set<double> sdd;
+typedef set<ll> sll;
+typedef set<ld> sld;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef pair<ld, ld> pld;
+typedef pair<double, double> pdd;
+
+#define feach(i, a) for(auto  &i : a)
+#define allo(a, n) (a), (a) + (n)
+#define all(a) (a).begin(), (a).end()
+
+const int MAXN = 2e3 + 1;
+const int mod = 1e9;
+const double PI = atan2(0, -1);
+const int INF32 = 2e9 + 1;
+const ll INF64 = 1e18 + 1;
+
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+
+void time() {
+    cerr << (double) clock() / CLOCKS_PER_SEC << '\n';
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    int a[n];
+
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    vii ans_odd, ans_even;
+    ll sum_odd = 0, sum_even = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (i % 2) {
+            if (a[i] > 0) {
+                sum_odd += a[i];
+                ans_odd.push_back(i);
+            }
+        } else {
+            if (a[i] > 0) {
+                sum_even += a[i];
+                ans_even.push_back(i);
+            }
+        }
+    }
+
+    ll sum;
+    vii ans;
+
+    if (sum_even == 0 and sum_odd == 0) {
+        sum = -INF64;
+        ans.push_back(-1);
+
+        for (int i = 0; i < n; i++) {
+            if (a[i] > sum) {
+                sum = a[i];
+                ans.back() = i;
+            }
+        }
+
+    } else if (sum_odd > sum_even) {
+        sum = sum_odd;
+        ans = ans_odd;
+    } else {
+        sum = sum_even;
+        ans = ans_even;
+    }
+
+    cout << sum << '\n';
+    vii to_print;
+    for (int i = n - 1; i > ans.back(); i--)
+        to_print.push_back(i + 1);
+
+    for (int i = int(ans.size()) - 2; i >= 0; i--) {
+        for (int j = 0; j < (ans[i + 1] - ans[i] - 2) / 2; i++)
+            to_print.push_back(ans[i] + 3);
+        to_print.push_back(ans[i] + 2);
+    }
+
+    for (int i = 1; i - 1 < ans.front(); i++)
+        to_print.push_back(1);
+
+    cout << to_print.size() << '\n';
+    feach(i, to_print)
+        cout << i << '\n';
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    solve();
+    //time();
+
+    return 0;
+}

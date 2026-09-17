@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void Main()
+{
+    long n, m;
+    cin >> n >> m;
+    vector<int> a(n);
+    vector<long> b(n+1);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+    }
+    sort(a.begin(), a.end());
+    for (int i = 0; i < n; i++)
+    {
+        b[i+1] = b[i] + a[i];
+    }
+    
+    int ok = 1, ng = 200001;
+    while (abs(ok - ng) > 1) { // ok: 幸福度がok以上の、握手の回数がm回未満
+        int mid = (ok + ng)/2;
+        long hand = 0;
+        for (int i = 0; i < n; i++)
+        {
+            hand += lower_bound(a.begin(), a.end(), mid-a[i]-1) - a.begin();
+        }
+        if (n*n - hand >= m) ok = mid;
+        else ng = mid;
+        // cout << "ok:" << ok << " ng: " << ng << " hand: " << n*n - hand << endl;
+    }
+    long ans = 0;
+    long sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        long ind = lower_bound(a.begin(), a.end(), ok-a[i]-1) - a.begin();
+        sum += n - ind;
+        // cout << n-ind << endl;
+        ans += b[n]-b[ind]+a[i]*(n-ind);
+    }
+    // cout << sum << endl;
+    if (sum != 0) ans -= (ok-1)*(sum-m);
+    
+    cout << ans << endl;
+}
+
+int main(int argc, char **argv)
+{
+    ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    Main();
+    return 0;
+}

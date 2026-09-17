@@ -1,0 +1,108 @@
+Score : 900 points 
+ 
+ 
+ Problem Statement In the city of Nevermore, there are 10^8 streets and 10^8 avenues, both numbered from 0 to 10^8-1 .
+All streets run straight from west to east, and all avenues run straight from south to north.
+The distance between neighboring streets and between neighboring avenues is exactly 100 meters. 
+ Every street intersects every avenue. Every intersection can be described by pair (x, y) , where x is avenue ID and y is street ID. 
+ There are N fountains in the city, situated at intersections (X_i, Y_i) .
+Unlike normal intersections, there's a circle with radius 10 meters centered at the intersection, and there are no road parts inside this circle. 
+ The picture below shows an example of how a part of the city with roads and fountains may look like. 
+ 
+ 
+ 
+ City governors don't like encountering more than one fountain while moving along the same road.
+Therefore, every street contains at most one fountain on it, as well as every avenue. 
+ Citizens can move along streets, avenues and fountain perimeters.
+What is the shortest distance one needs to cover in order to get from intersection (x_1, y_1) to intersection (x_2, y_2) ? 
+ 
+ 
+ 
+ 
+ Constraints 
+ 0 \leq x_1, y_1, x_2, y_2 < 10^8 
+ 1 \leq N \leq 200,000 
+ 0 \leq X_i, Y_i < 10^8 
+ X_i \neq X_j for i \neq j 
+ Y_i \neq Y_j for i \neq j 
+ Intersections (x_1, y_1) and (x_2, y_2) are different and don't contain fountains. 
+ All input values are integers. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ x_1 y_1 x_2 y_2 
+ N 
+ X_1 Y_1 
+ X_2 Y_2 
+ : 
+ X_N Y_N 
+ 
+ 
+ 
+ 
+ 
+ Output Print the shortest possible distance one needs to cover in order to get from intersection (x_1, y_1) to intersection (x_2, y_2) , in meters.
+Your answer will be considered correct if its absolute or relative error doesn't exceed 10^{-11} . 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 1 1 6 5
+3
+3 2
+5 3
+2 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 891.415926535897938
+ 
+ One possible shortest path is shown on the picture below. The path starts at the blue point, finishes at the purple point and follows along the red line. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 3 5 6 4
+3
+3 2
+5 3
+2 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 400.000000000000000
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 4 2 2 2
+3
+3 2
+5 3
+2 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 211.415926535897938

@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i = 0; i < n; i++)
+#define INF 100000000
+#define EPS 1e-10
+#define MOD 1000000007
+#define MAX_V 100000
+#define MAX_LOG_V 20
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<P,int> PP;
+
+vector<int> G[MAX_V];
+int root;
+
+int parent[MAX_LOG_V][MAX_V];
+int depth[MAX_V];
+
+void dfs(int v, int p, int d){
+	parent[0][v] = p;
+	depth[v] = d;
+	for(int i = 0; i < G[v].size(); i++){
+		if(G[v][i] != p) dfs(G[v][i], v, d+1);
+	}
+}
+
+void init(int V){
+	dfs(root, -1, 0);
+	for(int k = 0; k+1 < MAX_LOG_V; k++){
+		for(int v = 0; v < V; v++){
+			if(parent[k][v] < 0) parent[k+1][v] = -1;
+			else parent[k+1][v] = parent[k][parent[k][v]];
+		}
+	}
+}
+
+int lca(int u, int v){
+	if(depth[u] > depth[v]) swap(u,v);
+	for(int k = 0; k < MAX_LOG_V; k++){
+		if((depth[v]-depth[u]) >> k & 1){
+			v = parent[k][v];
+		}
+	}
+	if(u == v) return u;
+	for(int k = MAX_LOG_V - 1; k >= 0; k--){
+		if(parent[k][u] != parent[k][v]){
+			u = parent[k][u];
+			v = parent[k][v];
+		}
+	}
+	return parent[0][u];
+}
+
+int n;
+vector<P> vec;
+int par[100000];
+int pri[100000];
+vector<int> ve[100000];
+
+int main(){
+	cin >> n;
+	par[0] = 0;
+	for(int i = 1; i < n; i++){
+		int tmp; cin >> tmp;
+		tmp--;
+		par[i] = tmp;
+		G[tmp].push_back(i);
+		G[i].push_back(tmp);
+	}
+	init(n);
+	rep(i,n) ve[depth[i]].push_back(i);
+	pri[0] = 0;
+	int cnt = 1;
+	for(int i = 1; i < 100000; i++){
+		if(ve[i].size() == 0) break;
+		vec.clear();
+		rep(j,ve[i].size()){
+			vec.push_back(P(par[ve[i][j]],ve[i][j]));
+		}
+		sort(vec.begin(),vec.end());
+		rep(j,vec.size()){
+			pri[cnt] = vec[j].second;
+			cnt++;
+		}
+	}
+	
+	long long sum = 0;
+	for(int i = 1; i < n; i++){
+		int t1 = pri[i-1], t2 = pri[i];
+		int pa = lca(t1,t2);
+		sum += depth[t1]-depth[pa]+depth[t2]-depth[pa];
+	}
+	cout << sum << endl;
+}

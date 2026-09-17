@@ -1,0 +1,67 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<cstring>
+#include<climits>
+#include<queue>
+#include<map>
+#include<utility>
+
+using namespace std;
+
+map<string, int> res;
+int dx[4] = { 1, -1, 4, -4};
+
+void bfs()
+{
+    queue<string> q;
+    string u = "01234567";
+    res[u] = 1;
+    q.push(u);
+
+    while(q.size())
+    {
+        string u = q.front(); q.pop();
+        int pos;
+        for(int i = 0; i < 8; ++i)
+            if(u[i] == '0')
+                pos = i;
+
+        for(int i = 0; i < 4; ++i)
+        {
+            if (0 <= pos + dx[i] && pos + dx[i] < 8 &&
+                !(pos == 3 && i == 2) && !(pos == 4 && i == 3))
+                {
+                    string v = u;
+                    swap(v[pos], v[pos + dx[i]] );
+                    if(res[v] == 0)
+                    {
+                        res[v] = res[u] + 1;
+                        q.push(v);
+                    }
+                        
+                }
+        }
+    }
+    
+}
+
+
+int main()
+{
+    string input;
+    char ch;
+    bfs();
+    while(cin>>ch)
+    {
+        input.push_back(ch);
+        for(int i = 0; i < 7; ++i)
+        {
+            cin>>ch;
+            input.push_back(ch);
+        }
+        cout<< res[input] - 1 << endl;
+        input.clear();
+    }
+}

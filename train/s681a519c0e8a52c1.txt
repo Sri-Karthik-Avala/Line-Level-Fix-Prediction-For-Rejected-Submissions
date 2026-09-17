@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+
+typedef int _loop_int;
+#define REP(i,n) for(_loop_int i=0;i<(_loop_int)(n);++i)
+#define FOR(i,a,b) for(_loop_int i=(_loop_int)(a);i<(_loop_int)(b);++i)
+#define FORR(i,a,b) for(_loop_int i=(_loop_int)(b)-1;i>=(_loop_int)(a);--i)
+
+#define DEBUG(x) cout<<#x<<": "<<x<<endl
+#define DEBUG_VEC(v) cout<<#v<<":";REP(i,v.size())cout<<" "<<v[i];cout<<endl
+#define ALL(a) (a).begin(),(a).end()
+
+#define CHMIN(a,b) a=min((a),(b))
+#define CHMAX(a,b) a=max((a),(b))
+
+// mod
+const ll MOD = 1000000007ll;
+#define FIX(a) ((a)%MOD+MOD)%MOD
+
+// floating
+typedef double Real;
+const Real EPS = 1e-11;
+#define EQ0(x) (abs(x)<EPS)
+#define EQ(a,b) (abs(a-b)<EPS)
+typedef complex<Real> P;
+
+int n,m,r;
+int d[35];
+int g[35][35];
+vi gg[35];
+// pos,time,prev -> max num
+int dp[35][1252][35][2];
+const int INF = 830252521;
+
+int main(){
+  scanf("%d%d%d",&n,&m,&r);
+  REP(i,n)scanf("%d",d+i);
+  REP(i,n)REP(j,n)g[i][j] = INF;
+  REP(i,n)g[i][i] = 0;
+  REP(i,m){
+    int a,b,c;
+    scanf("%d%d%d",&a,&b,&c);
+    --a;--b;
+    g[a][b] = g[b][a] = c;
+    gg[a].push_back(b);
+    gg[b].push_back(a);
+  }
+  REP(i,n)REP(j,r+1)REP(k,n)REP(b,2)dp[i][j][k][b] = -INF;
+  dp[0][0][0][0] = 0;
+  REP(tm,r+1)REP(pos,n)REP(prv,n)REP(b,2){
+    int now = dp[pos][tm][prv][b];
+    if(now<0)continue;
+    int prvlast = g[pos][prv];
+    REP(i,gg[pos].size()){
+      int to = gg[pos][i];
+      int nxtprv = pos;
+      if(b)nxtprv = to;
+      if(to==prv){
+        if(prvlast*2 >= 15){
+          // go
+          CHMAX(dp[to][tm+prvlast][nxtprv][0],now+d[to]);
+        }else{
+          // no wait
+          CHMAX(dp[to][tm+prvlast][nxtprv][1],now);
+          // wait and go
+          CHMAX(dp[to][tm+15-prvlast][nxtprv][0],now+d[to]);
+        }
+      }else{
+        // go
+        CHMAX(dp[to][tm+g[pos][to]][nxtprv][0],now+d[to]);
+      }
+    }
+    // all wait
+    CHMAX(dp[pos][tm+15][pos][0],now+d[pos]);
+  }
+  int ans = 0;
+  REP(tm,r+1)REP(prv,n)REP(b,2)CHMAX(ans,dp[n-1][tm][prv][b]);
+  printf("%d\n",ans);
+  return 0;
+}

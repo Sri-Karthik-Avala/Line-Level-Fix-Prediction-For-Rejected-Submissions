@@ -1,0 +1,9 @@
+while True:
+    N,K = map(int, input().strip().split(" "))
+    X = list(map(int,input().strip().split(" ")))
+    L = [X[i+1] - X[i] for i in range(0,N-1)]
+    L.sort()
+    s = 0
+    for i in range(0,N-K):
+        s = s + L[i]
+    print(s)

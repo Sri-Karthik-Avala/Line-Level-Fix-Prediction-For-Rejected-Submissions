@@ -1,0 +1,16 @@
+N = int(input())
+import numpy as np
+A = np.array([int(x) for x in input().split()])
+B = np.array([int(x) for x in input().split()])
+ans = 0
+for k in range(28):
+    T = 2**k
+    mod = 2*T
+    Amod = A.copy()%mod
+    Bmod = B.copy()%mod
+    Bmod.sort()
+    f = lambda x,y:np.searchsorted(Bmod,x-Amod)-np.searchsorted(Bmod,y-Amod)
+    Cnt = f(2*T,T) + f(4*T,3*T)
+    i = Cnt.sum()&1
+    ans |= i << k
+print(ans)

@@ -1,0 +1,29 @@
+import sys
+INF = (sys.maxint)/3
+
+def SmallestWindow(S, a_list):
+	i = 0
+	j = 0
+	tmpS = 0
+	res = INF
+	while 1 :
+		while tmpS < S and i <len(a_list)-1:
+			i +=1
+			tmpS += a_list[i]
+		if (tmpS <S):
+			break
+		res = min (res, i-j)
+		j += 1
+		tmpS -=a_list[j]
+	if res == INF:
+		res = 0
+	return res
+		
+
+def main():
+	N, S = map(int, raw_input().split())
+	a_list = map(int, raw_input().split())
+	print SmallestWindow(S, a_list)
+
+if __name__ == '__main__':
+	main()

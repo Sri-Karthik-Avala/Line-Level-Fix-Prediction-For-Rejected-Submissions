@@ -1,0 +1,10 @@
+import fractions as frac
+n=int(input())
+t=[int(input()) for _ in range(n)]
+x=t[0]
+ans=t[0]
+for i in range(1,n):
+    g=frac.gcd(x,t[i])
+    ans=x*y//g
+    x=ans
+print(int(ans))

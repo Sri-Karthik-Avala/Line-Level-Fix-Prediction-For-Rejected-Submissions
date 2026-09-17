@@ -1,0 +1,82 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int n;
+string s;
+
+bool check(int x){
+	int l, r;
+	static bool isUseI[1000001], isUseO[1000001];
+	int cntI = 0;
+	
+	for( r = 0; r < n; r++ ){ isUseI[r] = false; isUseO[r] = false; }
+	
+	for( r = n-1; r >= 0; r-- ){
+		if( cntI == x ){
+			break;
+		}
+		if( s[r] == 'I' ){
+			isUseI[r] = true;
+			cntI++;
+		}
+	}
+	if( cntI < x ) return false;
+	
+	l = n-1;
+	for( r = n-1; r >= 0; r-- ){
+		if( isUseI[r] ){
+			bool f = false;
+			for( l = min(l, r); l >= 0; l-- ){
+				if( s[l] == 'O' ){
+					isUseO[l] = true;
+					l--;
+					f = true;
+					break;
+				}
+			}
+			if( !f ) return false;
+		}
+	}
+	
+	l = n-1;
+	for( r = n-1; r >= 0; r-- ){
+		if( isUseO[r] ){
+			bool f = false;
+			for( l = min(l, r); l >= 0; l-- ){
+				if( s[l] == 'J' || (s[l] == 'I' && !isUseI[l]) ){
+					l--;
+					f = true;
+					break;
+				}
+			}
+			if( !f ) return false;
+		}
+	}
+	return true;
+}
+
+int main(){
+	int i;
+	
+	cin >> n;
+	for( i = 0; i < n; i++ ) cin >> s[i];
+	
+	int st = 0, ed = n, medi;
+	while( ed - st > 1 ){
+		medi = (st + ed) / 2;
+		if( check(medi) ){
+			st = medi;
+		}
+		else{
+			ed = medi - 1;
+		}
+	}
+	medi = (st + ed) / 2;
+	if( check(medi+1) )
+		cout << medi+1 << endl;
+	else
+		cout << medi << endl;
+	return 0;
+}

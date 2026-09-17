@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+#define REP(x,y,z) for(int x=y;x<=z;x++)
+#define FORD(x,y,z) for(int x=y;x>=z;x--)
+#define MSET(x,y) memset(x,y,sizeof(x))
+#define FOR(x,y) for(__typeof(y.begin()) x=y.begin();x!=y.end();x++)
+#define F first
+#define S second
+#define MP make_pair
+#define PB push_back
+#define SZ size()
+#define M 100005
+void RI(){}
+template<typename... T>
+void RI( int& head, T&... tail ) {
+    scanf("%d",&head);
+    RI(tail...);
+}
+using namespace std;
+typedef long long LL;
+int n,c1[26],c2[26];
+char buf[M];
+int main()
+{
+	RI(n);
+	scanf("%s", buf+1);
+	REP(i,1,n) c1[buf[i]-'a']++;
+	scanf("%s", buf+1);
+	REP(i,1,n) c2[buf[i]-'a']++;
+
+	sort(c1,c1+26);
+	sort(c2,c2+26);
+	int ans=0;
+	REP(i,0,25) ans += abs(c1[i] - c2[i]);
+	printf("%d\n", ans/2);
+	return 0;
+}

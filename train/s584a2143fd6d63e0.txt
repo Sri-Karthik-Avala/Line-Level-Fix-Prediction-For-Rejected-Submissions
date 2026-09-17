@@ -1,0 +1,16 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+int main(void)
+{
+	int a,s,d,f,g,h,i,j;
+	scanf("%d %d",&a,&s);
+	if(a>0) printf("1\n");
+	if(a<0){
+		a*=-1;
+		if(a==s)
+			printf("0\n");
+		else if(a>s) printf("-1\n");
+	}
+	return 0;
+}

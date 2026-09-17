@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1<<29;
+
+struct state{
+    vector<int> arr;
+    int cost;
+    state(){}
+    ~state(){}
+    state(vector<int> a, int c){
+        arr.resize(a.size());
+        for(int i = 0; i < a.size(); i++){
+            arr[i] = a[i];
+        }
+        cost = c;
+    }
+};
+
+int N;
+int c[8][8];
+map<vector<int>, int> ord;
+int d[50000];
+
+void set_ord(int n){
+    vector<int> vec(n);
+    for(int i = 0; i < n; i++){
+        vec[i] = i;
+    }
+    int m = 0;
+    do{
+        ord[vec] = m++;
+    }while(next_permutation(vec.begin(), vec.end()));
+}
+
+int main(){
+    scanf("%d", &N);
+    set_ord(N);
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++){ scanf("%d", &c[i][j]); }
+    }
+    vector<int> init(N);
+    for(int i = 0; i < N; i++){ init[i] = i; }
+    fill(d, d+50000, INF);
+    queue<state> que;
+    que.push(state(init, 0));
+    d[ord[init]] = 0;
+    while(!que.empty()){
+        state s = que.front(); que.pop();
+        vector<int>& v = s.arr;
+        int ind = ord[v];
+        if(s.cost > d[ind]) continue;
+        for(int i = 0; i < N; i++){
+            for(int j = i+1; j < N; j++){
+                swap(v[i], v[j]);
+                if(d[ind] + c[v[i]][v[j]] < d[ord[v]]){
+                    d[ord[v]] = d[ind] + c[v[i]][v[j]];
+                    que.push(state(v, d[ord[v]]));
+                }
+                swap(v[i], v[j]);
+            }
+        }
+    }
+    int max_v = 0;
+    for(int i = 0; i < N; i++){
+        if(d[i] == INF) continue;
+        max_v = max(max_v, d[i]);
+    }
+    printf("%d\n", max_v);
+    return 0;
+}

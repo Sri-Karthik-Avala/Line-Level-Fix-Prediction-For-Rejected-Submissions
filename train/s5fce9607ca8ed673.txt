@@ -1,0 +1,20 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,a) loop(i,0,a)
+
+using namespace std;
+
+int main(){
+	int n,q;
+	cin>>n>>q;
+	string ans="kogakubu10goukan";
+	rep(i,n){
+		int y;
+		string name;
+		cin>>y>>name;
+		if(y<=q)ans=name;
+	}
+	cout<<ans<<endl;
+}

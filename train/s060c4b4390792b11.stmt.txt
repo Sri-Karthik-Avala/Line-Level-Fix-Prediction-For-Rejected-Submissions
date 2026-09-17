@@ -1,0 +1,23 @@
+Max Score: $300$ Points 
+ 
+ Problem Statement 
+ We are playing a puzzle. An upright board with $H$ rows by $W$ columns of cells, is used in this puzzle. 
+ A stone in $i$-th row and $j$-th column engraved with a digit, one of 1 through 9, is placed in each of the cells. 
+ You can erase 1 cell in the board. 
+ 
+ The game process is following: 
+ 
+ When $K$ or more stones in horizontally adjacent cells are engraved with the same digit, the stones will disappear. Disappearances of all such groups of stones take place simultaneously. 
+ When stones are in the cells above the emptied cells, these stones drop down so that the emptied cells are filled. 
+ After the completion of all stone drops, if one or more groups of stones satisfy the disappearance condition, repeat by returning to the step 1. 
+ Score is $\sum_i 2^i \times \left(\text{Sum of numbers in the stones which disappeared in the $i$-th chain (0-indexed)}\right)$. 
+ 
+ Please answer the points if he erased the optimal place. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input 
+ The input is given from standard input in the following format.

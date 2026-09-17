@@ -1,0 +1,11 @@
+# encoding: 'utf-8'
+
+N = int(input())
+ls = list()
+for _ in range(N):
+    e = sorted([int(x) for x in split(input())])
+    if e in ls:
+        continue
+    else:
+        ls.append(e)
+print(N - len(ls))

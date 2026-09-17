@@ -1,0 +1,72 @@
+#include<bits/stdc++.h>
+#define f first
+#define s second
+#define mp make_pair
+using namespace std;
+
+int main()
+{
+  vector<pair<char,long long> > A,B,C;
+  char c;
+  int a;
+
+  while(1){
+    cin>>c;
+    if(c=='$')break;
+    cin>>a;
+    A.push_back(mp(c,a));
+  }
+  while(1){
+    cin>>c;
+    if(c=='$')break;
+    cin>>a;
+    B.push_back(mp(c,a));
+  }
+  while(1){
+    cin>>c;
+    if(c=='$')break;
+    cin>>a;
+    C.push_back(mp(c,a));
+  }
+
+  int size=A.size()-B.size()+1;
+  for(int i=0;i<size;i++){
+    bool flag=true;
+    for(int j=0;j<B.size();j++){
+      if(j==0 || j==B.size()-1){
+	if(A[i+j].f!=B[j].f || A[i+j].s<B[j].s)flag=false;
+      }
+      else {
+	if(A[i+j].f!=B[j].f || A[i+j].s!=B[j].s)flag=false;
+      }
+    }
+    if(flag){
+      for(int j=0;j<B.size();j++)A[i+j].s-=B[j].s;
+
+      if(B.size()==1)A.insert(A.begin()+i,C.begin(),C.end());
+      else A.insert(A.begin()+i+1,C.begin(),C.end());
+
+      size+=C.size();
+      for(int j=0;j<A.size();j++){
+	if(A[j].s==0){
+	  A.erase(A.begin()+j);
+	  j--;
+	  size--;
+	}
+      }
+      for(int j=1;j<A.size();j++){
+	if(A[j].f==A[j-1].f){
+	  A[j-1].s+=A[j].s;
+	  A.erase(A.begin()+j);
+	  j--;
+	  size--;
+	}
+      }
+      i--;
+    }
+  }
+
+  for(int j=0;j<A.size();j++)cout<<A[j].f<<" "<<A[j].s<<" ";
+  cout<<"$"<<endl;
+  return 0;
+}

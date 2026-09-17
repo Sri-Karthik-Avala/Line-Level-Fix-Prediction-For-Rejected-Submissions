@@ -1,0 +1,108 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define rep1(i,n) for(int i=1;i<=(int)(n);i++)
+#define all(c) c.begin(),c.end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl
+#define chmin(x,y) x=min(x,y)
+#define chmax(x,y) x=max(x,y)
+using namespace std;
+typedef vector<int> vi;
+typedef pair<int,int> P;
+vi G[100];
+int ord[100],low[100],sid[100];
+bool inS[100];
+stack<int> S;
+int cnt;
+vector<vi> scc;
+int N,M,T;
+void vis(int v){
+	ord[v]=low[v]=++cnt;
+	S.push(v);
+	inS[v]=1;
+	for(int u:G[v]){
+		if(ord[u]==0){
+			vis(u);
+			chmin(low[v],low[u]);
+		}else if(inS[u]){
+			chmin(low[v],ord[u]);
+		}
+	}
+	if(low[v]==ord[v]){
+		vi vc;
+		while(true){
+			int w=S.top();S.pop();
+			inS[w]=0;
+			vc.pb(w);
+			sid[w]=scc.size();
+			if(v==w) break;
+		}
+		scc.pb(vc);
+	}
+}
+void makescc(){
+	rep(i,N) if(ord[i]==0) vis(i);
+}
+int p[100],t[100],k[100];
+int deq[10001],deqv[10001];
+P es[1000];
+vector<int> nG[100];		//y in nG[x] : x<-y
+int dp[100][10001];
+void init(){
+	rep(i,100) G[i].clear(),nG[i].clear(),ord[i]=0,low[i]=0,inS[i]=0;
+	rep(i,100) rep(j,10001) dp[i][j]=0;
+	while(!S.empty()) S.pop();
+	cnt=0;
+	scc.clear();
+}
+int main(){
+	while(true){
+		cin>>N>>M>>T;
+		if(N==0) break;
+		init();
+		rep(i,N) cin>>p[i]>>t[i]>>k[i];
+		rep(i,M){
+			int a,b;
+			cin>>a>>b;
+			a--,b--;
+			G[a].pb(b);
+			es[i]=P(a,b);
+		}
+		makescc();
+		int K=scc.size();
+		{
+			bool ise[100][100]={};
+			rep(i,M) ise[ sid[es[i].fs] ][ sid[es[i].sc] ]=1;
+			rep(i,K) rep(j,K) if(ise[i][j]) nG[j].pb(i);
+		}
+		for(int i=K-1;i>=0;i--){
+			bool isol=1;
+			for(int j:nG[i]){
+				if(j==i){
+					isol=0;
+					continue;
+				}
+				rep(t,T+1) chmax(dp[i][t],dp[j][t]);
+			}
+			if(isol) k[scc[i][0]]=1;
+			for(int v:scc[i]){
+				rep(a,t[v]){
+					int be=0,en=0;
+					for(int j=0;j*t[v]+a<=T;j++){
+						int val=dp[i][j*t[v]+a]-j*p[v];
+						while(be<en&&deqv[en-1]<=val) en--;
+						deq[en]=j,deqv[en]=val;
+						en++;
+						dp[i][j*t[v]+a]=deqv[be]+j*p[v];
+						if(deq[be]==j-k[v]) be++;
+					}
+				}
+			}
+		}
+		int ans=0;
+		rep(t,T+1) chmax(ans,dp[0][t]);
+		cout<<ans<<endl;
+	}
+}

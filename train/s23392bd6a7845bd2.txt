@@ -1,0 +1,100 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <limits>
+#include <climits>
+#include <cfloat>
+#include <functional>
+using namespace std;
+
+class Data
+{
+public:
+    string str;
+    Data* next;
+    Data(){
+        next = NULL;
+    }
+};
+
+int main()
+{
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+
+    int n, q;
+    cin >> n >> q;
+    vector<Data*> v(n+1, NULL);
+    for(int i=1; i<=n; ++i){
+        string s;
+        cin >> s;
+        Data **p = &v[i];
+        for(unsigned j=0; j<s.size(); j+=320){
+            Data* d = new Data;
+            d->str = s.substr(j, 320);
+            *p = d;
+            p = &d->next;
+        }
+    }
+
+    while(--q >= 0){
+        int type;
+        cin >> type;
+
+        if(type == 1){
+            int a, b, c, d;
+            cin >> a >> b >> c >> d;
+
+            Data* p1 = v[a];
+            Data* p2 = v[c];
+            while((int)p1->str.size() < b){
+                b -= p1->str.size();
+                p1 = p1->next;
+            }
+            while((int)p2->str.size() < d){
+                d -= p2->str.size();
+                p2 = p2->next;
+            }
+
+            string s = p1->str.substr(0, b-1) + p2->str.substr(d-1);
+            string t = p2->str.substr(0, d-1) + p1->str.substr(b-1);
+            p1->str = s;
+            p2->str = t;
+
+            swap(p1->next, p2->next);
+        }
+        else{
+            int a, b;
+            char c;
+            cin >> a >> b >> c;
+
+            Data* p = v[a];
+            while((int)p->str.size() < b){
+                b -= p->str.size();
+                p = p->next;
+            }
+            p->str[b-1] = c;
+        }
+    }
+
+    for(int i=1; i<=n; ++i){
+        for(Data* p=v[i]; p!=NULL; p=p->next)
+            cout << p->str;
+        cout << endl;
+    }
+
+    return 0;
+}

@@ -1,0 +1,77 @@
+S,Kstring = input().split()
+K = int(Kstring)
+lastZero = -1
+segment = []
+MOD = 998244353
+N = len(S)
+
+for i in range(N):
+    if S[i] == '0':
+        segment.append(i - lastZero - 1)
+        lastZero = i
+
+segment.append(N - 1 - lastZero)
+M = len(segment)
+No1 = N + 1 - M
+
+partialSumSegment = []
+for i in range(M):
+    if partialSumSegment:
+        partialSumSegment.append(segment[i] + partialSumSegment[-1])
+    else:
+        partialSumSegment.append(segment[i])
+
+DP = []
+DPSum = [] # Sum of DP i,j,k ~ i,j,a
+for i in range(M):
+    DP.append([])
+    DPSum.append([])
+    for j in range(No1 + 2):
+        DP[i].append([])
+        DPSum[i].append([])
+        for k in range(No1 + 2):
+            DP[i][j].append(0)
+            DPSum[i][j].append(0)
+
+# Initialize on the last segment
+
+for j in range(No1 - partialSumSegment[M-2] + 1):
+    DP[M-1][j][partialSumSegment[M-2] + j] = 1
+for j in range(No1 - partialSumSegment[M-2] + 1):
+    for k in range(partialSumSegment[M-2] + j,-1,-1):
+        DPSum[M-1][j][k] = DPSum[M-1][j][k+1] + DP[M-1][j][k]
+
+for i in range(M-2,-1,-1):
+    for j in range(No1 + 1):
+        Kmin = partialSumSegment[i-1]
+        if i == 0:
+            Kmin = 0
+        for k in range(No1, Kmin - 1, -1):
+            DPCur = 0
+            for l in range(1,segment[i] + 1):
+                if j >= l and k + segment[i] - l <= No1 + 1:
+                    DPCur += DP[i + 1][j - l][k + segment[i] - l]
+            if k + segment[i] <= No1:
+                DPCur += DPSum[i + 1][j][k + segment[i]]
+            DP[i][j][k] = DPCur % MOD
+            DPSum[i][j][k] = (DPSum[i][j][k+1] + DP[i][j][k]) % MOD 
+
+# print(DP)
+# print(DPSum)
+
+AnsSum = 0
+for j in range(min(K,No1) + 1):
+    AnsSum += DP[0][j][0]
+
+if M == 0:
+    print(1)
+else:
+    print(AnsSum % MOD)
+
+
+
+
+
+
+    
+

@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<algorithm>
+#include<vector>
+#include<queue>
+using namespace std;
+bool dp[1010][53][53][4];
+int dir[1010];
+int g[52][52];
+int dx[]={0,1,-1,0};
+int dy[]={1,0,0,-1};
+char in[5];
+int main(){
+	int n,sx,sy,t;
+	scanf("%d%d%d%d",&n,&sx,&sy,&t);
+	for(int i=0;i<n;i++){
+		int x1,x2,y1,y2;scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+		if(x1>x2)swap(x1,x2);
+		if(y1>y2)swap(y1,y2);
+		if(x1==x2){
+			for(int j=y1;j<y2;j++){
+				g[x1][j]|=1;
+				g[x1][j+1]|=8;
+			}
+		}else{
+			for(int j=x1;j<x2;j++){
+				g[j][y1]|=2;
+				g[j+1][y1]|=4;
+			}
+		}
+	}
+	for(int i=0;i<1010;i++)dir[i]=-1;
+	int now=0;
+	for(int i=0;i<t;i++){
+		int d;scanf("%d%s",&d,in);
+		now+=d;
+		if(in[0]=='N')dir[now]=0;
+		if(in[0]=='E')dir[now]=1;
+		if(in[0]=='W')dir[now]=2;
+		if(in[0]=='S')dir[now]=3;
+	}
+	for(int i=0;i<4;i++)dp[0][sx][sy][i]=1;
+	for(int i=0;i<now;i++){
+		for(int j=0;j<52;j++)for(int k=0;k<52;k++)for(int l=0;l<4;l++){
+			if(!dp[i][j][k][l])continue;
+		//	printf("%d %d %d %d\n",i,j,k,l);
+			for(int p=0;p<4;p++){
+				if((g[j][k]&(1<<p))==0)continue;
+				if(l+p==3)continue;
+				if(~dir[i]&&p!=dir[i]&&j!=dir[i])continue;
+				dp[i+1][j+dx[p]][k+dy[p]][p]=1;
+			}
+		}
+	}
+	for(int i=0;i<52;i++)for(int j=0;j<52;j++){
+		bool ok=false;
+		for(int k=0;k<4;k++){
+			if(k==dir[now]||(k+dir[now]!=3&&(g[i][j]&(1<<dir[now])))){
+				if(dp[now][i][j][k])ok=true;
+			}
+		}
+		if(ok)printf("%d %d\n",i,j);
+	}
+}

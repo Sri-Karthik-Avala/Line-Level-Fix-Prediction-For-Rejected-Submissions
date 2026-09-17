@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int c[7][7];
+int v[10];
+int pat[11][3][5]={
+{{2,3,0,0,0},
+{0,1,2,0,0},
+{0,0,3,1,0}},
+{{2,3,2,0,0},
+{0,0,1,3,1},
+{0,0,0,0,0}},
+{{3,1,0,0,0},
+{0,2,3,2,0},
+{0,1,0,0,0}},
+{{3,1,0,0,0},
+{0,2,3,2,0},
+{0,0,1,0,0}},
+{{3,2,0,0,0},
+{0,1,3,1,0},
+{0,0,0,2,0}},
+{{3,0,0,0,0},
+{1,2,1,2,0},
+{3,0,0,0,0}},
+{{3,0,0,0,0},
+{1,2,1,2,0},
+{0,3,0,0,0}},
+{{3,0,0,0,0},
+{1,2,1,2,0},
+{0,0,3,0,0}},
+{{3,0,0,0,0},
+{1,2,1,2,0},
+{0,0,0,3,0}},
+{{0,3,0,0,0},
+{1,2,1,2,0},
+{0,3,0,0,0}},
+{{0,3,0,0,0},
+{1,2,1,2,0},
+{0,0,3,0,0}}
+};
+int to[10][10];
+int tmp[10];
+int main(){
+	int T;
+	scanf("%d",&T);
+	while(T--){
+		for(int i=0;i<5;i++)for(int j=0;j<5;j++)scanf("%d",&c[i][j]);
+		bool dame=false;
+		for(int i=0;i<10;i++)v[i]=0;
+		for(int i=0;i<5;i++)for(int j=0;j<5;j++){
+			if(c[i][j]){
+				v[c[i][j]]++;
+			}
+		}
+		for(int i=1;i<=6;i++)if(v[i]!=1)dame=true;
+		if(dame){
+			printf("false\n");
+			continue;
+		}
+		bool ok=false;
+		for(int s=0;s<2;s++){
+		for(int r=0;r<4;r++){
+		for(int i=0;i<11;i++){
+			for(int j=0;j<3;j++){
+				bool OK=true;
+				for(int k=0;k<10;k++)tmp[k]=0;
+				for(int k=0;k<3;k++){
+					for(int l=0;l<5;l++){
+						if(pat[i][k][l]){
+							if(!c[j+k][l])OK=false;
+							tmp[pat[i][k][l]]+=c[j+k][l];
+						}
+					}
+				}
+				for(int k=1;k<=3;k++)if(tmp[k]!=7)OK=false;
+				if(OK)ok=true;
+			}
+		}
+		for(int i=0;i<5;i++)for(int j=0;j<5;j++)to[j][4-i]=c[i][j];
+		for(int i=0;i<5;i++)for(int j=0;j<5;j++)c[i][j]=to[i][j];
+		}
+		for(int i=0;i<5;i++)for(int j=0;j<5;j++)to[i][4-j]=c[i][j];
+		for(int i=0;i<5;i++)for(int j=0;j<5;j++)c[i][j]=to[i][j];
+		}
+		if(ok)printf("true\n");
+		else printf("false\n");
+	}
+}

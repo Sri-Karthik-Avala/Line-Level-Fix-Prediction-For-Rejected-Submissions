@@ -1,0 +1,22 @@
+import math
+for i in range(input()):
+    x1,y1,x2,y2,x3,y3=map(float,raw_input().split(" "))
+    if y2-y1 == 0. or y3-y1 == 0.:
+        if y2-y1 == 0.:
+            a2=-(x3-x1)/(y3-y1)
+            b2=((y3+y1)-a2*(x1+x3))/2.0
+            a,b,c,d,e,f=1.0,0.0,(x1+x2)/2.0,-a2,1.0,b2
+        else:
+            a1=-(x2-x1)/(y2-y1)
+            b1=((y2+y1)-a2*(x1+x2))/2.0
+            a,b,c,d,e,f=-a1,1.0,b1,1.0,0.0,(x1+x3)/2.0
+    else:
+        a1=-(x2-x1)/(y2-y1)
+        a2=-(x3-x1)/(y3-y1)
+        b1=((y2+y1)-a1*(x1+x2))/2.0
+        b2=((y3+y1)-a2*(x1+x3))/2.0
+        a,b,c,d,e,f=-a1,1.0,b1,-a2,1.0,b2
+    py=(a*f-c*d)/(a*e-b*d)
+    px=(c*e-f*b)/(a*e-b*d)
+    r=math.sqrt((px-x1)**2 + (py-y1)**2)
+    print "{0:.3f} {1:.3f} {2:.3f}".format(px,py,r)

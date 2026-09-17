@@ -1,0 +1,35 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+	vector<int> sprime(21800, 0);
+	sprime[0] = 2;
+	int a = 1;
+	for (int i = 3; i < 123456 * 2; i += 2) {
+		int k = 3;
+		while (k<=sqrt(i)) {
+			if (i % k == 0) break;
+			k += 2;
+		}
+		if (k > sqrt(i)) {
+			sprime[a] = i;
+			a++;
+		}
+	}
+
+	int n;
+	while (cin >> n && n) {
+		int cnt = 0;
+		for (int i = 0; i < n; ++i)
+			if (n < sprime[i] && sprime[i] <= 2 * n) cnt++;
+		cout << cnt << endl;
+	}
+
+	return 0;
+}
+

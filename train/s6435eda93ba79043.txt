@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+using namespace std::chrono;
+#define idfc ios_base::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr)
+//:/
+#define pb push_back
+#define mp make_pair
+#define nt _ll128
+#define ld double
+long double PI =3.14159265;
+using ll = long long;
+
+const ll modo=998244353;
+const ll ms=1e6+5;
+const ll inf=1e17;
+
+
+ll fac[ms];
+int ar[ms];
+int br[ms]={0};
+int ans[ms];
+ll modpow(ll a,ll b)
+{
+    ll r=1;
+    while(b)
+    {
+        if(b&1)
+        {
+            r=(r*a)%modo;
+        }
+        a=(a*a)%modo;
+        b>>=1;
+    }
+    return r;
+}
+
+void check()
+{
+    int i;
+    fac[0]=1;
+    for(i=1;i<=1000000;i++)
+    {
+        fac[i]=(i*fac[i-1])%modo;
+    }
+}
+
+int ncr(ll n,int r)
+{
+    if(r>n)return 0;
+    ll p=(fac[r]*fac[n-r])%modo;
+   // cout<<p<<"\n";
+    n=(fac[n]*modpow(p,modo-2))%modo;
+    return n;
+}
+
+
+
+int main()
+{
+    idfc;
+
+    check();
+
+    int n;
+    cin>>n;
+    int i;
+
+    for(i=1;i<=(n+1);i++)
+    {
+        cin>>ar[i];
+        br[ar[i]]++;
+    }
+    int a;
+    int b;
+    for(i=1;i<=(n+1);i++)
+    {
+        if(br[ar[i]]>1)
+        {
+            a=i;break;
+        }
+    }
+    for(i=n+1;i>=1;i--)
+    {
+        if(br[ar[i]]>1)
+        {
+            b=n+1-i;break;
+        }
+    }
+
+    for(i=1;i<=(n+1);i++)
+    {
+        ans[i]=ncr(n+1,i);
+   //     cout<<ans[i]<<"\n";
+    }
+    //cout<<a<<" "<<b<<"\n";
+    for(i=1;i<=(a+b);i++)
+    {
+        ans[i]=ans[i]+modo-ncr(a+b-1,i-1);
+        ans[i]%=modo;
+    }
+    for(i=1;i<=n+1;i++)cout<<ans[i]<<"\n";
+
+
+    return 0;
+}

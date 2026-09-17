@@ -1,0 +1,74 @@
+// AOJ 1016
+#include<iostream>
+#include<set>
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+using namespace std;
+
+int V, d;
+const int N = 1001;
+int F[1024];
+
+int abs(int x) { return (x > 0 ? x : -x); }
+
+const int VMAX = 1024;
+int par[VMAX], Rank[VMAX];
+
+int find(int x) {
+  if (par[x] == x) {
+    return x;
+  } else {
+    return par[x] = find(par[x]);
+  }
+}
+
+void unite(int x, int y) {
+  x = find(x), y = find(y);
+  if (x == y) return;
+
+  if (Rank[x] < Rank[y]) {
+    par[x] = y;
+  } else {
+    par[y] = x;
+    if (Rank[x] == Rank[y]) Rank[x]++;
+  }
+}
+
+bool same(int x, int y) {
+  return find(x) == find(y);
+}
+
+int count_sets(int begin, int end) {
+  set<int> s;
+  for (int i = begin; i <= end; i++) {
+    s.insert(par[i]);
+  }
+  return s.size();
+}
+
+int solve() {
+  for (int i = 1; i <= V; i++) for(int j = 1; j <= V; j++) {
+    if (abs(F[i] - F[j]) < d)
+      unite(i, j);
+  }
+
+  return count_sets(1, V);
+}
+
+void init() {
+  REP(i, V) {
+    par[i] = i;
+    Rank[i] = 0;
+  }
+}
+
+int main() {
+  F[0] = 1, F[1] = 2;
+  for (int i = 2; i < 1024; i++) {
+    F[i] = (F[i-1] + F[i-2]) % N;
+  }
+
+  while (cin >> V >> d) {
+    init();
+    cout << solve() << endl;
+  }
+}

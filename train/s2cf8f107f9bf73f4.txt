@@ -1,0 +1,27 @@
+dic = {}
+dic["A"] = "BD"
+dic["B"] = "ACE"
+dic["C"] = "BF"
+dic["D"] = "AEG"
+dic["E"] = "BDFH"
+dic["F"] = "CEI"
+dic["G"] = "DH"
+dic["H"] = "EGI"
+dic["I"] = "FH"
+
+results = []
+
+for i in range(2):
+	pwd = input()
+	frag = 1
+	for j in range(len(pwd) - 1):
+		if pwd[j] in dic[pwd[j + 1]]:
+			a = 1
+		else:
+			frag = 0
+			break
+	if frag:
+		results.append(pwd)
+
+for i in range(len(results)):
+	print(results[i])

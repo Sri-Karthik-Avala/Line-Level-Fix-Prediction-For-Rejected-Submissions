@@ -1,0 +1,27 @@
+from collections import Counter
+
+n = int(input())
+A = list(map(int, input().split()))
+c = Counter(A)
+
+over4 = []
+over2 = []
+
+for k, v in c.items():
+    if v >= 4:
+        over4.append(k)
+    elif v >= 2:
+        over2.append(k)
+
+over4.sort(reverse=True)
+over2.sort(reverse=True)
+
+s1, s2, s3 = 0, 0, 0
+if len(over4) > 0:
+    s1 = over4[0]**2
+if len(over2) >= 1:
+    s2 = over2[0]*over2[1]
+if len(over4) > 0 and len(over2) > 0:
+    s3 = over4[0]*over2[0]
+
+print(max(s1, s2, s3))

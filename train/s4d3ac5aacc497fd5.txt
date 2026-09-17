@@ -1,0 +1,101 @@
+from math import ceil
+from itertools import accumulate
+n = int(input())
+import math
+import numpy as np
+import decimal
+import collections
+import itertools
+import sys
+#Union-Find
+def find(x):
+    if par[x] < 0:
+        return x
+    else:
+        par[x] = find(par[x])
+        return par[x]
+def unite(x, y):
+    p = find(x)
+    q = find(y)
+    if p == q:
+        return None
+    if p > q:
+        p,q = q,p
+    par[p] += par[q]
+    par[q] = p
+def same(x, y):
+    return find(x) == find(y)
+def size(x):
+    return -par[find(x)]
+par = [-1 for i in range(n)]
+
+#素数関連
+def prime_numbers(x):
+    if x < 2:
+        return []
+    prime_numbers = [i for i in range(x)]
+    prime_numbers[1] = 0
+    for prime_number in prime_numbers:
+        if prime_number > math.sqrt(x):
+            break
+        if prime_number == 0:
+            continue
+        for composite_number in range(2 * prime_number, x, prime_number):
+            prime_numbers[composite_number] = 0
+    return [prime_number for prime_number in prime_numbers if prime_number != 0]
+def is_prime(x):
+    if x < 2:
+        return False
+    if x == 2 or x == 3 or x == 5:
+        return True
+    if x % 2 == 0 or x % 3 == 0 or x % 5 == 0:
+        return False
+    prime_number = 7
+    difference = 4
+    while prime_number <= math.sqrt(x):
+        if x % prime_number == 0:
+            return False
+        prime_number += difference
+        difference = 6 - difference
+    return True
+#nCr
+mod = 10 ** 9 + 7
+def comb(n, r):
+    if n < r:return 0
+    if n < 0 or r < 0:return 0
+    return fa[n] * fi[r] % mod * fi[n - r] % mod
+fa = [1] * (n + 1)
+fi = [1] * (n + 1)
+for i in range(1, n + 1):
+    fa[i] = fa[i - 1] * i % mod
+    fi[i] = pow(fa[i], mod - 2, mod)
+def add(i, x):
+    while i <= len(BIT):
+        BIT[i] += x
+        i += i & -i
+def query(i):
+    s = 0
+    while i > 0:
+        s += BIT[i]
+        i -= i & -i
+    return s
+a = list(map(int, input().split()))
+lis = sorted(list(set(a)))
+l, r = 0, len(lis)
+while r - l > 1:
+    BIT = [0] * (2 * (n + 1) + 100)
+    m = (l + r) // 2
+    cum = [0]
+    for i in range(n):
+        cur = 1 if a[i] >= lis[m] else -1
+        cum.append(cum[-1] + cur)
+    cnt = 0
+    for i in range(n + 1):
+        cur = n + cum[i] + 5
+        cnt += query(cur)
+        add(cur, 1)
+    if n * (n + 1) // 2 <= cnt * 2:
+        l = m 
+    else:
+        r = m
+print(lis[l])

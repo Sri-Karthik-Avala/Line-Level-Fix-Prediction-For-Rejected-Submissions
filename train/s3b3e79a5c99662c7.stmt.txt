@@ -1,0 +1,60 @@
+8 Puzzle 
+
+
+ 
+ The goal of the 8 puzzle problem is to complete pieces on $3 \times 3$ cells where one of the cells is empty space. 
+ 
+
+ 
+ In this problem, the space is represented by 0 and pieces are represented by integers from 1 to 8 as shown below.
+ 
+
+ 
+1 3 0
+4 2 5
+7 8 6
+ 
+
+ 
+ You can move a piece toward the empty space at one step. Your goal is to make the pieces the following configuration in the shortest move (fewest steps).
+ 
+
+
+ 
+1 2 3
+4 5 6
+7 8 0
+ 
+
+ 
+ Write a program which reads an initial state of the puzzle and prints the fewest steps to solve the puzzle.
+ 
+
+ Input 
+
+ 
+ The $3 \times 3$ integers denoting the pieces or space are given.
+ 
+
+ Output 
+
+ 
+ Print the fewest steps in a line.
+ 
+
+ Constraints 
+
+ 
+ There is a solution. 
+ 
+
+ Sample Input 
+ 
+1 3 0
+4 2 5
+7 8 6
+ 
+
+ Sample Output 
+ 
+4

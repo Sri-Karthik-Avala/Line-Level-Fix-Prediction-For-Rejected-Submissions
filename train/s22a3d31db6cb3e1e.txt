@@ -1,0 +1,77 @@
+#include "bits/stdc++.h"
+using namespace std;
+typedef long long ll;
+#define int ll
+typedef pair<int,int> pii;
+#define rep(i,n) for(ll i=0;i<(ll)(n);i++)
+#define all(a) (a).begin(),(a).end()
+#define pb emplace_back
+#define INF (1LL<<60)
+
+//verified AOJ GRL_1
+#define MAX_V 100020
+template <typename T>
+struct edge{int to;T cost;};
+
+template <typename T>
+void dijkstra(int s, vector<T> &d, vector<edge<T>> G[MAX_V]){
+    priority_queue< pii,vector<pii>,greater<pii> > que;
+    rep( i,d.size() )d[i]=INF;
+    d[s] = 0;
+    que.push( pii(0,s) );
+    
+    while( que.size() ){
+        pii p=que.top();
+        que.pop();
+        
+        int v=p.second;
+        if(d[v]<p.first)continue;
+        
+        rep(i,G[v].size()){
+            edge<T> e=G[v][i];
+            if(d[e.to]>d[v]+e.cost){
+                d[e.to]=d[v]+e.cost;
+                que.push(pii(d[e.to],e.to));
+            }
+        }
+    }
+}
+
+
+
+signed main(){
+    int n,m,r,q;
+    cin>>n>>m>>r>>q;
+    vector<edge<int>> G[MAX_V];
+
+    rep(i,m){
+        int s,t,c;
+        cin>>s>>t>>c;
+        G[t].pb(edge<int>{s,c});
+    }
+    for(int i=1;i<=n;i++){
+        G[n+1+i%r].pb(edge<int>{i,0});
+    }
+    
+    static vector<vector<int>> d(r,vector<int>(n+r));
+    for(int i=0;i<r;i++){
+        dijkstra<int>(n+i+1,d[i],G);
+    }
+    
+    int ans = 0;
+    rep(i,q){
+        int x,y,z;
+        cin>>x>>y>>z;
+        int mini = INF;
+        rep(j,r){
+            mini = min(mini,d[j][x]+d[j][y]);
+        }
+        if(z-mini>0)ans += z-mini;
+    }
+    cout<<ans<<endl;
+}
+
+
+
+
+

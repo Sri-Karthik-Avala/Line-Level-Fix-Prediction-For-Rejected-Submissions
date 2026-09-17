@@ -1,0 +1,98 @@
+#define taskname "test"
+
+#include <algorithm>
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+using namespace std;
+typedef long long lli;
+typedef pair<int, int> pii;
+const int maxn = 45;
+const int inf = 1e6;
+int n, m;
+char ice[maxn][maxn];
+int pi, pj;
+
+int sum[maxn][maxn];
+
+int dp[maxn][maxn][maxn][maxn];
+
+void read_input()
+{
+    cin >> n >> m;
+    for(int i = 1; i <= n; ++i)
+        for(int j = 1; j <= m; ++j)
+        {
+            cin >> ice[i][j];
+            if(ice[i][j] == 'P')
+            {
+                pi = i;
+                pj = j;
+            }
+        }
+}
+
+inline int get_sum(int li, int lj, int ri, int rj)
+{
+    return sum[ri][rj] - sum[li - 1][rj] - sum[ri][lj - 1] + sum[li - 1][lj - 1];
+}
+
+bool p_inside(int li, int lj, int ri, int rj)
+{
+    return pi >= li && pi <= ri && pj >= lj && pj <= rj;
+}
+
+void minim(int&tar, int val)
+{
+    if(tar > val) tar = val;
+}
+
+int DP(int li, int lj, int ri, int rj)
+{
+    if(dp[li][lj][ri][rj] != -1) return dp[li][lj][ri][rj];
+    int res = inf;
+    for(int i = li - 1; i > 0; --i)
+        for(int j = lj - 1; j > 0; --j)
+            minim(res, DP(i, j, ri, rj) + get_sum(i, lj, li + 1, rj) + get_sum(li, j, ri, lj - 1));
+    for(int i = li - 1; i > 0; --i)
+        for(int j = rj + 1; j <= m; ++j)
+            minim(res, DP(i, lj, ri, j) + get_sum(i, lj, li - 1, rj) + get_sum(li, rj + 1, ri, j));
+    for(int i = ri + 1; i <= n; ++i)
+        for(int j = rj + 1; j <= m; ++j)
+            minim(res, DP(li, lj, i, j) + get_sum(li, rj + 1, ri, j) + get_sum(ri + 1, lj, i, rj));
+    for(int i = ri + 1; i <= n; ++i)
+        for(int j = lj - 1; j > 0; --j)
+            minim(res, DP(li, j, i, rj) + get_sum(li, j, ri, lj - 1) + get_sum(ri + 1, lj, i, rj));
+    return dp[li][lj][ri][rj] = res;
+}
+
+void solve()
+{
+    for(int i = 1; i <= n; ++i)
+        for(int j = 1; j <= m; ++j)
+            sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + (ice[i][j] == '#');
+    fill_n(&dp[0][0][0][0], sizeof(dp) / sizeof(dp[0][0][0][0]), -1);
+    dp[1][1][n][m] = 0;
+    int ans = inf;
+    for(int li = 1; li <= n; ++li)
+        for(int lj = 1; lj <= m; ++lj)
+            for(int ri = li; ri <= n; ++ri)
+                for(int rj = lj; rj <= m; ++rj)
+                    if(p_inside(li, lj, ri, rj))
+                        minim(ans, DP(li, lj, ri, rj) + min(get_sum(li, lj, pi, pj), min(get_sum(li, pj, pi, rj),
+                                                        min(get_sum(pi, lj, ri, pj), get_sum(pi, pj, ri, rj)))));
+    cout << ans << '\n';
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    read_input();
+    solve();
+}

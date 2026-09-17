@@ -1,0 +1,13 @@
+while 1:
+    a = list(input())
+    if a == ["0", "0", "0", "0"]:break
+    if a[0] == a[1] == a[2] == a[3]:print("NA")
+    else:
+        c = 0
+        while 1:
+            if a == ["6", "1", "7", "4"]:break
+            c += 1
+            s = int("".join(sorted(a)))
+            l = int("".join(sorted(a, reverse = True)))
+            a = list(str(l - s))
+        print(c)

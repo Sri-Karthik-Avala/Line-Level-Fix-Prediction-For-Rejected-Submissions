@@ -1,0 +1,118 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<ll, ll> pll;
+typedef complex<long double> cd;
+
+const int maxn = 2e5 + 5;
+const ll inf = 1e18;
+
+pll dp1[maxn], dp2[maxn];
+ll cost[maxn], x[maxn];
+int near[maxn], c[maxn], par[maxn], root[maxn];
+vector<pair<int, int> > t[maxn];
+ll answer = 0;
+
+int get_par(int v){
+	return par[v] < 0 ? v : par[v] = get_par(par[v]);
+}
+
+void merge(int v, int u, ll w){
+	if ((v = get_par(v)) == (u = get_par(u)))
+		return;
+	answer += w;
+	if (par[v] > par[u])
+		swap(v, u);
+	par[v] += par[u];
+	par[u] = v;
+}
+
+pll rev(pll a){
+	return make_pair(a.second, a.first);
+}
+
+pair<pll, pll> mergepairs(pll a, pll b, pll c, pll d){
+	vector<pair<ll,ll> > v = {rev(a), rev(b), rev(c), rev(d)};
+	sort(v.begin(), v.end());
+	for (int i = 1; i < 3; i++)
+		if (v[i].second != v[0].second)
+			return make_pair(rev(v[0]), rev(v[i]));
+	return make_pair(rev(v[0]), rev(v[3]));
+}
+
+void dfsdw(int v, int p = -1){
+	if (dp1[v].first != c[v]){
+		if (cost[c[v]] > dp1[v].second + x[v]){
+			cost[c[v]] = dp1[v].second + x[v];
+			near[c[v]] = dp1[v].first;
+		}
+	}
+	else{
+		if (cost[c[v]] > dp2[v].second + x[v]){
+			cost[c[v]] = dp2[v].second + x[v];
+			near[c[v]] = dp2[v].first;
+		}
+	}
+	for (auto edge : t[v]){
+		int u = edge.first, w = edge.second;
+		if (u == p)
+			continue;
+		pll fi = make_pair(dp1[v].first, dp1[v].second + w);
+		pll se = make_pair(dp2[v].first, dp2[v].second + w);
+		auto tmp = mergepairs(dp1[u], dp2[u], fi, se);
+		dp1[u] = tmp.first;
+		dp2[u] = tmp.second;
+		dfsdw(u, v);
+	}
+}
+
+void dfs(int v, int p = -1){	
+	dp1[v] = {c[v], x[v]};
+	dp2[v] = {0, inf};
+	for (auto edge : t[v]){
+		int u = edge.first, w = edge.second;
+		if (u == p)
+			continue;
+		dfs(u, v);
+		pll fi = make_pair(dp1[u].first, dp1[u].second + w);
+		pll se = make_pair(dp2[u].first, dp2[u].second + w);
+		auto tmp = mergepairs(dp1[v], dp2[v], fi, se);
+		dp1[v] = tmp.first;
+		dp2[v] = tmp.second;
+	}
+}
+
+int main(){
+	ios_base::sync_with_stdio(false);
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+		cin >> x[i];
+	for (int i = 0; i < n - 1; i++){
+		int v, u, w;
+		cin >> v >> u >> w;
+		t[v].push_back({u, w});
+		t[u].push_back({v, w});
+	}
+	for (int i = 1; i <= n; i++)
+		c[i] = root[i] = i;
+	memset(par, -1, sizeof par);
+	int	col = n;
+	int bs = 2;
+	while (col > 1 and bs --){
+		memset(near, 0, sizeof near);
+		memset(cost, 63, sizeof cost);
+		dfs(1);
+		dfsdw(1);
+		for (int i = 1; i <= col; i++)
+			merge(root[i], root[near[i]], cost[i]);
+		col = 0;
+		for (int i = 1; i <= n; i++)
+			if (par[i] < 0)
+				c[i] = ++ col, root[col] = i;
+		for (int i = 1; i <= n; i++)
+			if (par[i] > 0)
+				c[i] = c[get_par(i)];
+	}
+	cout << answer << endl;
+}

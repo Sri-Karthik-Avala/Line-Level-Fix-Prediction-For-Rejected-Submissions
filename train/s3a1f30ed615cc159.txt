@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+#define rrep(i, n) for(int i = n-1; i >= 0; i--)
+#define  all(x) (x).begin(),(x).end()     // 昇順ソート
+#define  rall(v) (v).rbegin(), (v).rend() // 降順ソート
+#define  FastIO ios_base::sync_with_stdio(0),cin.tie(0),cout.tie(0)
+#define sz(x) ((int)(x).size())
+typedef long long ll;
+using P = pair<int,int>;
+using VI = vector<int>;
+using VVI = vector<vector<int>>;
+using VL = vector<ll>;
+using VVL = vector<vector<ll>>;
+using VP = vector<P>;
+template<typename T> void view(T e){std::cout << e << std::endl;}
+template<class T> bool chmax(T &a, const T &b) { if (a<b) { a=b; return true; } return false; }
+template<class T> bool chmin(T &a, const T &b) { if (a>b) { a=b; return true; } return false; }
+
+const int inf = 1 << 30;
+const ll INF = 1LL << 60;
+
+int main(){
+    int n;
+    ll w;
+    cin >> n >> w;
+    map<int, VL> mp;
+    int wf;
+    rep(i,n){
+        int wi, vi;
+        cin >> wi >> vi;
+        mp[wi].push_back(vi);
+        if (i == 0) wf = wi;
+    }
+
+    map<int, VL> mpsum;
+    rep(i,4){
+        mpsum[wf+i].push_back(0);
+    }
+
+    for(auto m: mp){
+        sort(rall(m.second));
+        rep(i, sz(m.second)){
+            mpsum[m.first].push_back(mpsum[m.first].back() + m.second[i]);
+        }
+    }
+
+    ll ans = 0;
+    rep(i, sz(mpsum[wf])) rep(j, sz(mpsum[wf+1])) rep(k, sz(mpsum[wf+2])) rep(l, sz(mpsum[wf+3])){
+        ll r = w - wf*i - (wf+1)*j - (wf+2)*k - (wf+3)*l;
+        if (r < 0) continue;
+        ll v = mpsum[wf][i] + mpsum[wf+1][j] + mpsum[wf+2][k] + mpsum[wf+3][l];
+        ans = max(ans, v);
+    }
+    cout << ans << endl;
+    return 0;
+}

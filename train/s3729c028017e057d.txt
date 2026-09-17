@@ -1,0 +1,31 @@
+#include "bits/stdc++.h"
+#define rep(i,a,b) for(int i=int(a);i<int(b);i++)
+using ll = long long;
+using namespace std;
+
+ll GCD(ll a, ll b) {
+	return b ? GCD(b, a%b) : a;
+}
+
+//sort(a, a + N, greater<int>())   // descend
+//sort(a, a+N)                    //  ascend
+
+int main() {
+	ll n;
+	cin >> n;
+	ll a[110000];
+	ll b[110000];
+	ll c[110000];
+	ll d[110000];
+	rep(i, 0, n) cin >> a[i];
+	b[0] = 0;
+	c[n] = 0;
+	rep(i, 0, n) b[i + 1] = GCD(b[i], a[i]);
+	for (int i = n - 1; i >= 0; i--) c[i] = GCD(c[i + 1], a[i]);
+	ll ans = 0;
+	rep(i, 0, n-1) {
+		d[i] = GCD(b[i], c[i+1]);
+		ans = max(ans, d[i]);
+	}
+	cout << ans;
+}

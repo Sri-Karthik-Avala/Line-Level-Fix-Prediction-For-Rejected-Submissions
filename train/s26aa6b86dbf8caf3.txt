@@ -1,0 +1,11 @@
+import sys
+f = sys.stdin
+
+
+while True:
+    n = int(f.readline())
+    if n == 0:
+        break
+    k = [int(ki) for ki in f.readline().split()]
+    k = [ki for ki in k if 0 < ki]
+    print('NA' if max(k) < 2 else len(k) + 1)

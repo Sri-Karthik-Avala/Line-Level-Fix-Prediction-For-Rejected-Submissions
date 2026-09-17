@@ -1,0 +1,68 @@
+import sys
+input = lambda : sys.stdin.readline().rstrip()
+sys.setrecursionlimit(max(1000, 10**9))
+write = lambda x: sys.stdout.write(x+"\n")
+
+
+n,m = list(map(int, input().split()))
+s = [input() for _ in range(n)]
+# scipyの例
+import scipy.sparse
+data = []
+rs = []
+cs = []
+def add(i,j,v=1,directed=False):
+    rs.append(i)
+    cs.append(j)
+    data.append(v)
+    if not directed:
+        rs.append(j)
+        cs.append(i)
+        data.append(v)
+S = n*m
+T = n*m+1
+for i in range(n):
+    for j in range(m):
+        if (i+j)%2==0:
+            add(S, i*m+j)
+        else:
+            add(i*m+j, T)
+        if s[i][j]=="#":
+            continue
+        u = i*m + j
+        if i>=1:
+            v = u-m
+            if s[i-1][j]==".":
+                add(u,v)
+        if j>=1:
+            v = u-1
+            if s[i][j-1]==".":
+                add(u,v)
+        
+g = scipy.sparse.csr_matrix((data, (rs, cs)), shape=(n*m+2, n*m+2))
+ans = scipy.sparse.csgraph.maximum_flow(g, S, T) # 最大流
+# 復元
+val = [["."]*m for _ in range(n)]
+for i in range(n):
+    for j in range(m):
+        if s[i][j]=="#":
+            val[i][j] = "#"
+        u = i*m + j
+        if i>=1:
+            v = u-m
+            if ans.residual[u,v]==-1:
+                val[i][j] = "^"
+                val[i-1][j] = "v"
+            elif ans.residual[v,u]==-1:
+                val[i][j] = "^"
+                val[i-1][j] = "v"
+        if j>=1:
+            v = u-1
+            if ans.residual[u,v]==-1:
+                val[i][j] = "<"
+                val[i][j-1] = ">"
+            elif ans.residual[v,u]==-1:
+                val[i][j] = "<"
+                val[i][j-1] = ">"
+print(ans.flow_value)
+write("\n".join(["".join(val[i]) for i in range(n)]))

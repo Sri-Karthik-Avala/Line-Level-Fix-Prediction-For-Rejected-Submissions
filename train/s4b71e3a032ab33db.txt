@@ -1,0 +1,92 @@
+#include<stdio.h>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<string>
+using namespace std;
+char in[110][1100];
+map<string,int>m;
+string rev[110];
+vector<int>g[110];
+int mod=1000000007;
+int v[310];
+int sz[310];
+int cur;
+int solve(int a){
+	if(~sz[a])return sz[a];
+	int ret=0;
+	for(int i=0;i<g[a].size();i++){
+		if(g[a][i]<0)ret=min(210,ret+1);
+		else ret=min(210,ret+solve(g[a][i]));
+	}
+	return ret;
+}
+void dfs(int a){
+	for(int i=0;i<g[a].size();i++){
+		if(g[a][i]<0){
+			v[cur++]=-g[a][i];
+		}else dfs(g[a][i]);
+	}
+}
+int dp[51][51][51][51];
+int main(){
+	int a,b,c,d,e;
+	scanf("%d%d%d%d%d",&a,&b,&c,&d,&e);
+	gets(in[0]);
+	for(int i=0;i<e;i++)gets(in[i]);
+	for(int i=e-1;i>=0;i--){
+		string tmp="";
+		int j=0;
+		for(;in[i][j];j++){
+			if(in[i][j]==':'){
+				break;
+			}
+			tmp+=in[i][j];
+		}
+		m[tmp]=i;
+		rev[i]=tmp;
+		j+=2;
+		while(in[i][j]){
+			if(in[i][j]=='['){
+				int now=0;
+				while(in[i][j]!=']'){
+					if(in[i][j]=='A')now-=1;
+					if(in[i][j]=='T')now-=2;
+					if(in[i][j]=='G')now-=4;
+					if(in[i][j]=='C')now-=8;
+					j++;
+				}
+				g[i].push_back(now);
+				j++;
+			}else{
+				string now="";
+				while(in[i][j]!=' '&&in[i][j]){
+					now+=in[i][j];
+					j++;
+				}
+				g[i].push_back(m[now]);
+			}
+			j++;
+		}
+	}
+	for(int i=0;i<e;i++)sz[i]=-1;
+	int t=solve(0);
+	if(t!=a+b+c+d){
+		printf("0\n");return 0;
+	}
+	dfs(0);
+	dp[0][0][0][0]=1;
+	for(int i=0;i<t;i++){
+		for(int j=max(0,i-b-c-d);j<=min(i,a);j++){
+			for(int k=max(0,i-j-c-d);k<=min(i-j,b);k++){
+				for(int l=max(0,i-j-k-d);l<=min(i-j-k,c);l++){
+					if((v[i]&1)&&j<a)dp[j+1][k][l][i-j-k-l]=(dp[j+1][k][l][i-j-k-l]+dp[j][k][l][i-j-k-l])%mod;
+					if((v[i]&2)&&k<b)dp[j][k+1][l][i-j-k-l]=(dp[j][k+1][l][i-j-k-l]+dp[j][k][l][i-j-k-l])%mod;
+					if((v[i]&4)&&l<c)dp[j][k][l+1][i-j-k-l]=(dp[j][k][l+1][i-j-k-l]+dp[j][k][l][i-j-k-l])%mod;
+					if((v[i]&8)&&i-j-k-l<d)dp[j][k][l][i-j-k-l+1]=(dp[j][k][l][i-j-k-l+1]+dp[j][k][l][i-j-k-l])%mod;
+				}
+			}
+		}
+	}
+	printf("%d\n",dp[a][b][c][d]);
+}

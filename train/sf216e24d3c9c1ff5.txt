@@ -1,0 +1,27 @@
+while 1:
+	W, H = map(int,raw_input().split(" "))
+	if W == H == 0: 
+		break
+	field = [[c for c in raw_input()] for _ in range(H)]
+	secret = [0, ""]
+	for j in range(H):
+		for i in range(W):
+			if not field[j][i].isdigit():
+				continue
+			pre = left = top = ""
+			if i > 0 and field[j][i-1].isdigit() and field[j][i-1] != "0":
+				left = field[j][i-1]
+			if j > 0 and field[j-1][i].isdigit() and field[j-1][i] != "0":
+				top = field[j-1][i]
+			if len(left) == len(top):
+				pre = left if left > top else top
+			else :
+				pre = left if len(left) > len(top) else top
+			field[j][i] = pre + field[j][i]
+			length = len(field[j][i])
+			if length > secret[0]:
+				secret[1] = field[j][i]
+				secret[0] = length
+			elif length == secret[0] and field[j][i] < secret[1]:
+				secret[1] = field[j][i]
+	print secret[1]

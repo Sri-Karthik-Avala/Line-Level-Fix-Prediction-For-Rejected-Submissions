@@ -1,0 +1,30 @@
+def prime(a):
+    prime = []
+    for p in range(2, a):
+        if a % p == 0:
+            prime.append(p)
+            while a % p == 0:
+                a /= p
+    return prime
+
+def keynumber(prime):
+    sum = 0
+    for i in range(len(prime) - 1):
+        sum += prime[i]
+    key = prime[-1] - sum
+    return key
+
+while 1:
+    ab = raw_input().split()
+    a = int(ab[0])
+    b = int(ab[1])
+    if a == 0 and b == 0:
+        break
+    pa = prime(a)
+    pb = prime(b)
+    ka = keynumber(pa)
+    kb = keynumber(pb)
+    if ka > kb:
+        print('a')
+    else:
+        print('b')

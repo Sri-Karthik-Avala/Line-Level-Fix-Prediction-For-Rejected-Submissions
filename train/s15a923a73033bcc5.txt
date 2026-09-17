@@ -1,0 +1,24 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+#define INTINF 1999999999
+#define REP(i,n) for(int i=0;i<n;i++)
+#define REP1(i,n) for(ll i=1;i<=n;i++)
+#define MODA 1000000007 
+
+int main() {
+	int tmp;
+	int n, t;
+	int gr = 0;
+	int ma[n+1] = {}, a[n];
+	map<int, int> d;
+	cin >> n >> t;
+	REP(i, n) cin >> a[i];
+	for(int i = n-1; i >= 0; i--){
+		ma[i] = max(ma[i+1], a[i]);
+		d[ma[i]-a[i]]++;
+		gr = max(gr, ma[i]-a[i]);
+	}
+	cout << d[gr] << endl;
+}

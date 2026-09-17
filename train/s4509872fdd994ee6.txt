@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class range {
+private:
+  struct Iterator {
+    int val;
+    int operator*() {return val;}
+    bool operator!=(Iterator &itr) {return val < itr.val;}
+    void operator++() {++val;}
+  };
+  Iterator i, n;
+public:
+  range(int n) : i({0}), n({n}) {}
+  range(int i, int n) : i({i}), n({n}) {}
+  Iterator &begin() {return i;}
+  Iterator &end() {return n;}
+};
+
+template<class T> T at(vector<T> v, int i) {return v[(i % (int)v.size() + v.size()) % v.size()];}
+
+int main() {
+  while (true) {
+    int n, m, p, q, r;
+    cin >> n;
+    if (n == 0) break; 
+    cin >> m >> p >> q >> r;;
+    --p;
+    vector<pair<int, int>> dp[2];
+    dp[0].emplace_back(1, n);
+    for (int i : range(m)) {
+      int x, y, sum = 0;
+      cin >> x >> y;
+      --x;
+      for (const auto &i : dp[0]) {
+        int nsum = sum + i.second - i.first + 1;
+        int xx = max(sum, y);
+        int yy = min(nsum, n);
+        if (xx < yy) dp[1].emplace_back(i.first + max(0, y - sum), i.second - max(0, nsum - n));
+        sum = nsum;
+      }
+      sum = 0;
+      for (const auto &i : dp[0]) {
+        int nsum = sum + i.second - i.first + 1;
+        int xx = max(sum, x);
+        int yy = min(nsum, y);
+        if (xx < yy) dp[1].emplace_back(i.first + max(0, x - sum), i.second - max(0, nsum - y));
+        sum = nsum;
+      }
+      sum = 0;
+      for (const auto &i : dp[0]) {
+        int nsum = sum + i.second - i.first + 1;
+        int xx = max(sum, 0);
+        int yy = min(nsum, x);
+        if (xx < yy) dp[1].emplace_back(i.first + max(0, 0 - sum), i.second - max(0, nsum - x));
+        sum = nsum;
+      }
+      dp[0] = dp[1];
+      dp[1].clear();
+    }
+    int sum = 0;
+    int res = 0;
+    for (const auto &i : dp[0]) {
+      int nsum = sum + i.second - i.first + 1;
+      int xx = max(sum, p);
+      int yy = min(nsum, q);
+      if (xx < yy) {
+        int s = i.first + max(0, p - sum);
+        int t = min(i.second - max(0, nsum - q), r);
+        if (s <= r) res += t - s + 1;
+      }
+      sum = nsum;
+    }
+    cout << res << endl;
+  }
+}

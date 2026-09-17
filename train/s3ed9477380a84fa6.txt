@@ -1,0 +1,114 @@
+#include <bits/stdc++.h>
+#pragma GCC optimize ("O2,unroll-loops")
+//#pragma GCC optimize("no-stack-protector,fast-math")
+//#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef pair<int, int> pii;
+typedef pair<pii, int> piii;
+typedef pair<ll, ll> pll;
+#define debug(x) cerr<<#x<<'='<<(x)<<endl;
+#define debugp(x) cerr<<#x<<"= {"<<(x.first)<<", "<<(x.second)<<"}"<<endl;
+#define debug2(x, y) cerr<<"{"<<#x<<", "<<#y<<"} = {"<<(x)<<", "<<(y)<<"}"<<endl;
+#define debugv(v) {cerr<<#v<<" : ";for (auto x:v) cerr<<x<<' ';cerr<<endl;}
+#define all(x) x.begin(), x.end()
+#define pb push_back
+#define kill(x) return cout<<x<<'\n', 0;
+
+const int inf=1000000010;
+const ll INF=10000000000000010LL;
+const int mod=1000000007;
+const int MAXN=100010, LOG=18;
+
+int n, m, k, u, v, x, y, t, a, b;
+ll tav[MAXN], dp0[MAXN], dp1[MAXN], ans;
+int par[LOG][MAXN], sz[MAXN], A[MAXN*2], N;
+int stt[MAXN], fnt[MAXN], h[MAXN], timer=1;
+vector<int> G[MAXN], G2[MAXN], vec[MAXN];
+
+void dfs(int node){
+	stt[node]=timer++;
+	for (int v:G[node]) dfs(v);
+	fnt[node]=timer;
+}
+
+int Lca(int x, int y){
+	if (stt[x]>stt[y]) swap(x, y);
+	if (fnt[y]<=fnt[x]) return x;
+	for (int i=LOG-1; ~i; i--) if (stt[x]<stt[par[i][y]]) y=par[i][y];
+	return par[0][y];
+}
+
+inline bool is_par(int x, int y){
+	return stt[x]<=stt[y] && fnt[y]<=fnt[x];
+}
+inline bool cmp(int x, int y){
+	return stt[x]<stt[y];
+}
+inline ll powmod(ll a, ll b){
+	ll res=1;
+	for (; b; b>>=1, a=a*a%mod) if (b&1) res=res*a%mod;
+	return res;
+}
+inline ll inv(ll a){
+	return powmod(a, mod-2);
+}
+
+int main(){
+	ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	tav[0]=1;
+	for (int i=1; i<MAXN; i++) tav[i]=tav[i-1]*2%mod;
+	cin>>n;
+	for (int i=1; i<=n; i++){
+		cin>>par[0][i];
+		G[par[0][i]].pb(i);
+		h[i]=h[par[0][i]]+1;
+		vec[h[i]].pb(i);
+	}
+	for (int j=1; j<LOG; j++) for (int i=1; i<=n; i++) par[j][i]=par[j-1][par[j-1][i]];
+	dfs(0);
+	ans=tav[n];
+	for (int i=1; vec[i].size(); i++){
+		N=0;
+		for (int j:vec[i]) A[N++]=j;
+		sort(A, A+N, cmp);
+		for (int j=N-1; j; j--) A[N++]=Lca(A[j], A[j-1]);
+		sort(A, A+N);
+		N=unique(A, A+N)-A;
+		sort(A, A+N, cmp);
+		
+		stack<int> stk;
+		stk.push(A[0]);
+		for (int j=1; j<N; j++){
+			while (!is_par(stk.top(), A[j])) stk.pop();
+			G2[stk.top()].pb(A[j]);
+			stk.push(A[j]);
+		}
+		for (int j=N-1; ~j; j--){
+			int v=A[j];
+			if (h[v]==i) dp0[v]=dp1[v]=sz[v]=1;
+			else{
+				sz[v]=dp1[v]=0;
+				ll mul=1, t0=0;
+				for (int u:G2[v]){
+					sz[v]+=sz[u];
+					if (dp0[u]) mul=mul*dp0[u]%mod;
+					else t0++;
+				}
+				for (int u:G2[v]) if (t0-(dp0[u]==0)==0)
+					dp1[v]=(dp1[v] + mul*inv(dp0[u])%mod*dp1[u])%mod;
+				dp0[v]=(tav[sz[v]]-dp1[v])%mod;
+			}
+			G2[v].clear();
+		}
+		ans=(ans + dp1[A[0]]*tav[n+1-sz[A[0]]])%mod;
+	}
+	if (ans<0) ans+=mod;
+	cout<<ans<<"\n";
+	
+	return 0;
+}

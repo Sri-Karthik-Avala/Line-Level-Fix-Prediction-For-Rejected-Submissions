@@ -1,0 +1,98 @@
+Multi-Map 
+
+
+ 
+For a dictionary $M$ that stores elements formed by a pair of a string key and an integer value, perform a sequence of the following operations. Note that multiple elements can have equivalent keys .
+ 
+
+ 
+ insert($key$, $x$): Insert an element formed by a pair of $key$ and $x$ to $M$. 
+ get($key$): Print all values with the specified $key$. 
+ delete($key$): Delete all elements with the specified $key$. 
+ dump($L$, $R$): Print all elements formed by a pair of the key and the value such that the key is greater than or equal to $L$ and less than or equal to $R$ in lexicographic order. 
+ 
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+$q$
+$query_1$
+$query_2$
+:
+$query_q$
+ 
+
+ 
+Each query $query_i$ is given by
+ 
+
+ 
+0 $key$ $x$
+ 
+
+ or 
+
+ 
+1 $key$
+ 
+
+ or 
+
+ 
+2 $key$
+ 
+
+ or 
+
+ 
+3 $L$ $R$
+ 
+
+ 
+ where the first digits 0 , 1 , 2 and 3 represent insert, get, delete and dump operations.
+ 
+
+ Output 
+ 
+ For each get operation, print the corresponding values in the order of insertions. 
+ For each dump operation, print the corresponding elements formed by a pair of the key and the value. For the dump operation, print the elements in ascending order of the keys, in case of a tie, in the order of insertions.
+ 
+
+ Constraints 
+ 
+ $1 \leq q \leq 200,000$ 
+ $1 \leq x \leq 1,000,000,000$ 
+ $1 \leq $ length of $key$ $ \leq 20$ 
+ $key$ consists of lower-case letters 
+ $L \leq R$ in lexicographic order 
+ The total number of elements printed by get operations does not exceed $500,000$ 
+ The total number of elements printed by dump operations does not exceed $500,000$ 
+ 
+
+ Sample Input 1 
+
+ 
+10
+0 blue 6
+0 red 1
+0 blue 4
+0 white 5
+1 red
+1 blue
+2 red
+1 black
+1 red
+3 w z
+ 
+
+ Sample Output 1 
+
+ 
+1
+6
+4
+white 5

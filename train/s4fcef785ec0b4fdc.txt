@@ -1,0 +1,17 @@
+import sys
+
+n=int(raw_input())
+buf =[[] for i in range(n)]
+
+while True:
+    text = raw_input().split()
+    if text[0] == 'quit':
+        break
+    elif text[0] == 'push':
+        buf[int(text[1])-1].append(text[2])
+    elif text[0] == 'pop':
+        print buf[int(text[1])-1][-1]
+        buf[text[1]-1].pop()
+    elif text[0] == 'move':
+        buf[int(text[2])-1].append(buf[int(text[1])-1][-1])
+        buf[int(text[1])-1].pop()

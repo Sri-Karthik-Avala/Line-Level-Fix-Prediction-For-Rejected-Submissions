@@ -1,0 +1,7 @@
+a,b,c,d=map(int,input().split())
+
+if abs(a-c)<=d or abs(a-b)+abs(b-c)<=2*d:
+    ans="Yes"
+else:
+    ans="No"
+print(ans)

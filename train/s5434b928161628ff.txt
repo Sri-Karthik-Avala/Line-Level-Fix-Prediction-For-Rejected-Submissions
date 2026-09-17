@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int dx[] = {0, 1, 1, 0, -1, -1};
+const int dy[] = {-1, 0, 1, 1, 0, -1};
+
+using Point = pair<int, int>;
+
+int main() {
+  int T;
+  cin >> T;
+  while(T--) {
+    string s, t, sp;    
+    cin >> s >> t >> sp;
+    if(s.size() != t.size()) {
+      cout << "false" << endl;
+      continue;
+    }
+    int x = 0, y = 0;
+    set<Point> vis;
+    vis.insert(Point(0, 0));
+    for(char c : s) {
+      int k = c-'a';
+      x += dx[k], y += dy[k];
+      vis.insert(Point(x, y));
+    }
+    for(int i = 0; i < 6; i++) {
+      for(Point p : vis) {
+	set<Point> st;
+	int x = p.first, y = p.second;
+	st.insert(Point(x, y));
+	for(char c : t) {
+	  int k = c-'a';
+	  x += dx[(k+i)%6], y += dy[(k+i)%6];
+	  if(!vis.count(Point(x, y))) {
+	    break;
+	  } else {
+	    st.insert(Point(x, y));
+	  }
+	}
+	if(st == vis) {
+	  cout << "true" << endl;
+	  goto end;
+	}
+      }
+    }
+    cout << "false" << endl;
+  end: ;
+  }
+  return 0;
+}

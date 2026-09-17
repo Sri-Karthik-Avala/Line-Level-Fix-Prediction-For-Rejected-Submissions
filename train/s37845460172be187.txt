@@ -1,0 +1,121 @@
+#include <iostream>
+#include <map>
+#include <cstring>
+#include <vector>
+#include <cmath>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int N,T;
+
+struct Edge{
+	int a,b;
+	long long t,m,v;
+	Edge(){}
+	Edge(int a,int b,long long t,long long m,long long v) : a(a), b(b), t(t), m(m), v(v) {}
+};
+vector<Edge> g[310];
+vector<int> seg;
+vector<int> rev;
+int gen_seg(int x,int p){
+	seg.push_back(x);
+	rev.push_back(0);
+	for(int i = 0 ; i < g[x].size() ; i++){
+		if( g[x][i].b != p ) gen_seg(g[x][i].b,x);
+	}
+	if( p != -1 ) seg.push_back(p) , rev.push_back(1);
+}
+vector<int> pos[310];
+
+vector<Edge> G[310];
+
+long long dp[610][10010] = {};
+long long dp2[10010] = {};
+
+map< pair<int,int> , Edge > info;
+
+
+
+int main(){
+	for(int i = 0 ; i < 310 ; i++)
+		for(int j = 0 ; j < 10010 ; j++)
+			dp[i][j] = -1e12;
+	
+	cin >> N >> T;
+	for(int i = 0; i < N-1 ; i++){
+		int a,b,t,m,v;
+		cin >> a >> b >> t >> m >> v;
+		a--,b--;
+		g[a].push_back(Edge(a,b,t,m,v));
+		g[b].push_back(Edge(b,a,t,m,v));
+		info[make_pair(a,b)] = info[make_pair(b,a)] = Edge(a,b,t,m,v);
+	}
+	gen_seg(0,-1);
+	/*for(int i = 0 ; i < seg.size() ; i++)
+		cout << seg[i] << " ";
+	cout << endl;
+	for(int i = 0 ; i < rev.size() ; i++)
+		cout << rev[i] << " ";
+	cout << endl;
+	*/
+	for(int i = 0 ; i < seg.size() ; i++)
+		pos[seg[i]].push_back(i);
+	dp[0][0] = 0;
+	for(int i = 0 ; i+1 < seg.size() ; i++){
+		Edge e = info[make_pair(seg[i],seg[i+1])];
+		/*for(int j = 0 ; j <= T ; j++){
+			if( dp[i][j] >= 0 ) cout << "[" << i << "][" << j << "] = " << dp[i][j] << endl;
+		}*/
+		if( rev[i+1] ){
+			for(int j = 0 ; j <= T ; j++){
+				dp[i+1][j] = max(dp[i+1][j],dp[i][j]);
+			}
+		}else{
+			// use
+			long long m = e.m / 2, v = e.v * 2, t = e.t * 2;
+			for(int j = 0 ; j <= T ; j++) dp2[j] = -1e12;
+			if( m > 0 ){
+				//ikkai ugoku
+				m--;
+				for(int j = t ; j <= T ; j++) dp2[j] = dp[i][j-t]+v;
+				if(e.m%2){
+					for(int j = T ; j >= 2*e.t ; j--){
+						dp2[j] = max(dp2[j],dp2[j-2*e.t]+e.v);
+					}
+				}
+			}else{
+				// ikkai ugoku
+				if(e.m%2)
+					for(int j = 2*e.t ; j <= T ; j++) dp2[j] = dp[i][j-2*e.t]+e.v;
+			}
+			// muda ni move
+			for(int j = t ; j <= T ; j++)
+				dp2[j] = max(dp2[j],dp[i][j-t]);
+				
+			for(long long k = 1; m > 0 ; k *= 2 ){
+				long long wei = min(m,k);
+				long long VV = v * wei;
+				long long TT = t * wei;
+				for(int j = T ; j >= TT ; j--){
+					dp2[j] = max(dp2[j],dp2[j-TT]+VV);
+				}
+				m -= wei;
+			}
+			
+			for(int j = 0 ; j <= T ; j++)
+				dp[i+1][j] = max(dp[i+1][j],dp2[j]);
+			
+			// unuse
+			int next = *upper_bound(pos[seg[i]].begin(),pos[seg[i]].end(),i);
+			for(int j = 0 ; j <= T ; j++){
+				dp[next][j] = max(dp[next][j],dp[i][j]);
+			}
+		}
+	}
+	cout << *max_element(dp[seg.size()-1],dp[seg.size()-1]+T+1) << endl;
+	
+	
+	
+	
+}

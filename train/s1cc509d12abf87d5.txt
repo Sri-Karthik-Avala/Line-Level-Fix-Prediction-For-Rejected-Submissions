@@ -1,0 +1,26 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<vector>
+#include<algorithm>
+#include<utility>
+#include<cmath>
+#include<sstream>
+using namespace std;
+#define all(a) a.begin(),a.end()
+typedef vector<int> vi;
+
+int main()
+{
+	double a,b,c,d;
+	const double r = 6378.1;
+	while(cin>>a>>b>>c>>d&&b>0)
+	{
+		a*=2*M_PI/360.0;
+		b*=2*M_PI/360.0;
+		c*=2*M_PI/360.0;
+		d*=2*M_PI/360.0;
+		double s=acos(cos(a)*cos(c)*cos(b-d)+sin(a)*sin(c));
+		cout<<(int)(abs(r*s)+0.5)<<endl;
+	}
+}

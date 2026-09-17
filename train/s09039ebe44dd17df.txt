@@ -1,0 +1,59 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+using namespace std;
+#define INF 100000000
+
+typedef long long ll;
+typedef pair<int, int> P;
+
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+int main(void) {
+    int N, M, r;
+    while (1) {
+        cin >> N >> M;
+        if (N == 0 && M == 0) break;
+        cin >> r;
+        vector<P> students[M+1];
+        for (int i = 0; i < r; i++) {
+            int t, n, m, s;
+            cin >> t >> n >> m >> s;
+            students[m].push_back(make_pair(t, s));
+        }
+        for (int i = 1; i <= M; i++) {
+            sort(students[i].begin(), students[i].end());
+        }
+        int q;
+        cin >> q;
+        for (int i = 0; i < q; i++) {
+            int s, e, m;
+            cin >> s >> e >> m;
+            int time = s, cnt = 0, ans = 0;
+            for (int j = 0; j < students[m].size(); j++) {
+                P p = students[m][j];
+                if (cnt > 0) {
+                    ans += min(p.first, e) - time;
+                }
+                time = max(s, min(p.first, e));
+                cnt += p.second ? 1 : -1;
+                if (time == e) break;
+            }
+            cout << ans << endl;
+        }
+    }
+    return 0;
+}

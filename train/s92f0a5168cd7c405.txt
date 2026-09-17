@@ -1,0 +1,9 @@
+n=int(input())
+t,x,y=0,0,0
+for _ in range(n):
+  nt,nx,ny=map(int,input().split())
+  if (nx+ny-x-y)%2!=(nt-t)%2 or nx+ny-x-y>nt-t:
+    print('No')
+    break
+  else:t,x,y=nt,nx,ny
+else:print('Yes')

@@ -1,0 +1,22 @@
+while True:
+	try:
+		n,m = map(float,raw_input().split())
+	except EOFError:
+		break
+	
+	if n < 35.5 and m < 71.0:
+		print "AAA"
+	elif n < 37.5 and m < 77.0:
+		print "AA"
+	elif n < 40.0 and m < 83.0:
+		print "A"
+	elif n < 43.0 and m < 89.0:
+		print "B"
+	elif n < 50.0 and m < 105.0:
+		print "C"
+	elif n < 55.0 and m < 116.0:
+		print "D"
+	elif n < 70.002 and m < 148.0:
+		print "E"
+	else:
+		print "NA"

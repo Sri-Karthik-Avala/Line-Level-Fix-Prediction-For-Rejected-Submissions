@@ -1,0 +1,22 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int solve(int x) {
+	int ret = 0;
+	for (int i = 1; i * i * i <= x; i++) {
+		int l = 0, r = 100;
+		while (r - l > 1) {
+			int m = (l + r) / 2;
+			int res = m * (m + 1) * (m + 2) / 6;
+			if (res + i * i * i <= x) l = m;
+			else r = m;
+		}
+		ret = max(ret, i * i * i + l * (l + 1) * (l + 2) / 6);
+	}
+	return ret;
+}
+int main() {
+	int n;
+	while (cin >> n, n) cout << solve(n) << endl;
+	return 0;
+}

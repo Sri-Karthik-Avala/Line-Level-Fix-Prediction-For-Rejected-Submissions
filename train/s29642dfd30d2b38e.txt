@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define REP(i, s, e) for(int i = (int)s; i < (int) e; i++)
+#define rep(i, n) REP(i, 0 ,n)
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+
+#define fi first
+#define se second
+#define pb push_back
+#define mp nake_pair
+
+typedef long long ll;
+typedef vector<int> vi;
+
+string s;
+int perseInt(const string& s){
+    int ret = 0;
+    rep(i, s.size()) ret = ret *10 + (s[i]-'0');
+    return ret;
+}
+
+struct P{
+    int x, y;
+    P(){};
+    P(int x, int y) : x(x), y(y){};
+    int dist(const P& p){
+        return abs(x-p.x)+abs(y-p.y);
+    }
+};
+vector<P> ps[2600];
+
+int main(){
+    int w, h;
+    while(cin>>w>>h && w && h){
+        int m = 0;
+        P g;
+        rep(i, 10010) ps[i].clear();
+        rep(i, h) rep(j, w){
+            cin>>s;
+            if(s == ".") continue;
+            else if(s == "S") ps[0].pb({i, j});
+            else if(s == "G") g = {i, j};
+            else {
+                int k = perseInt(s);
+                ps[k].pb({i, j});
+                m = max(m, k);
+            }
+        }
+        ps[++m].pb(g);
+        vector<vi> d(2600, vi(2600, 1e9));
+        d[0][0] = 0;
+        rep(i, m){
+            rep(j, ps[i].size()){
+                rep(k, ps[i+1].size()){
+                    d[i+1][k] = min(d[i+1][k], d[i][j]+ps[i][j].dist(ps[i+1][k]));
+                }
+            }
+        }
+        cout<<d[m][0]<<endl;
+    }
+}

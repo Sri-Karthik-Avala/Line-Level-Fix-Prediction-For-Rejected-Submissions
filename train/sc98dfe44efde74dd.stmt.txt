@@ -1,0 +1,55 @@
+Coin Combination Problem II 
+
+ 
+ You have N coins each of which has a value a i .
+Find the number of combinations that result when you choose K different coins in such a way that the total value of the coins is greater than or equal to L and less than or equal to R .
+ 
+
+ Constraints 
+
+ 
+ 1 &le; K &le; N &le; 40 
+ 1 &le; a i &le; 10 16 
+ 1 &le; L &le; R &le; 10 16 
+ All input values are given in integers 
+ 
+
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+ N K L R 
+ a 1 a 2 ... a N 
+ 
+
+
+ Output 
+
+ 
+ Print the number of combinations in a line.
+ 
+
+
+ Sample Input 1 
+ 
+2 2 1 9
+5 1
+ 
+ Sample Output 1 
+ 
+1
+ 
+
+
+ Sample Input 2 
+ 
+5 2 7 19
+3 5 4 2 2
+ 
+ Sample Output 2 
+ 
+5

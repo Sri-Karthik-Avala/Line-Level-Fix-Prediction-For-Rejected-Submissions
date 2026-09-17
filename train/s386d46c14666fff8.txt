@@ -1,0 +1,64 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <map>
+using namespace std;
+using ll = long long;
+using ld = long double;
+int main()
+{
+    while (true) {
+        int N;
+        cin >> N;
+        if (N == 0) {
+            break;
+        }
+        vector<ld> X(N);
+        vector<ld> R(N);
+        for (int i = 0; i < N; i++) {
+            cin >> X[i] >> R[i];
+        }
+        auto ok = [&](const ld S) {
+            const ld s = S / 2;
+            using P = pair<ld, ld>;
+            vector<P> r;
+            for (int i = 0; i < N; i++) {
+                if (R[i] > s) {
+                    const ld l = sqrt(R[i] * R[i] - s * s);
+                    r.push_back({X[i] - l, X[i] + l});
+                }
+            }
+            const int size = r.size();
+            sort(r.begin(), r.end());
+            vector<P> ans;
+            int start = 0;
+            ld maxi = 0;
+            for (; start < size;) {
+                ld L = r[start].first;
+                ld R = r[start].second;
+                for (; start < size; start++) {
+                    if (r[start].first <= R) {
+                        R = max(R, r[start].second);
+                        maxi = max(maxi, R - L);
+                    }
+                }
+            }
+            return maxi >= S;
+        };
+        ld inf = 0;
+        ld sup = 1000000;
+        for (int i = 0; i < 100; i++) {
+            const ld mid = (inf + sup) / 2;
+            if (ok(mid)) {
+                inf = mid;
+            } else {
+                sup = mid;
+            }
+        }
+        cout << fixed << setprecision(15) << inf << endl;
+    }
+    return 0;
+}
+

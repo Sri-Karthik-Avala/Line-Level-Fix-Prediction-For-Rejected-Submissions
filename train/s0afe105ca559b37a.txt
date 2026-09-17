@@ -1,0 +1,78 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+bool ans;
+
+void solve(int cntnum[],int progress){
+    int cntnum_c[10],cntcont=0;
+
+    /*printf("%d: ",progress);
+    for(int i=0;i<10;i++){
+        printf("%d",cntnum[i]);
+    }puts("");*/
+
+    for(int i=0;i<10;i++){
+        for(int j=0;j<10;j++) cntnum_c[j]=cntnum[j];
+        if(cntnum[i] >= 1){
+            cntcont++;
+        }
+        else cntcont=0;
+        if(cntnum[i] >= 2 && progress == 0){
+            cntnum_c[i]-=2;
+            solve(cntnum_c,progress+1);
+        }
+        if(progress >= 1){
+            if(cntcont >= 3){
+                if(progress == 4){
+                    ans = true;
+                    return;
+                }
+                for(int j=i-2;j<=i;j++) cntnum_c[j]--;
+                solve(cntnum_c,progress+1);
+            }
+            else if(cntnum[i] >= 3){
+                if(progress == 4){
+                    ans = true;
+                    return;
+                }
+                cntnum_c[i]-=3;
+                solve(cntnum_c,progress+1);
+            }
+        }
+    }
+    return;
+}
+
+int main(){
+    char input;
+    while(cin >> input){
+        int cntnum[10]={},cntans=0,outputans[10];
+        input-='0';
+        cntnum[input]++;
+        for(int i=1;i<13;i++){
+            scanf(" %c",&input);
+            input-='0';
+            cntnum[input]++;
+        }
+        for(int i=0;i<10;i++){
+            ans=false;
+            cntnum[i]++;
+            if(cntnum[i] < 5)solve(cntnum,0);
+            cntnum[i]--;
+            if(ans){
+                outputans[cntans]=i;
+                cntans++;
+            }
+        }
+        if(cntans ==0) printf("0\n");
+        else{
+            printf("%d",outputans[0]);
+            for(int i=1;i<cntans;i++){
+                printf(" %d",outputans[i]);
+            }puts("");
+        }
+    }
+
+    return 0;
+}

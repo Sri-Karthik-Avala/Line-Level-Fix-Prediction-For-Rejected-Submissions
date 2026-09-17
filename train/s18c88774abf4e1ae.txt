@@ -1,0 +1,72 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+string N;
+
+long dp[20][1000][2][2];
+
+long gochiusa(int now, int back_three, bool if_gochiusa, bool if_less){
+    if(dp[now][back_three][if_gochiusa][if_less] != -1){
+        return dp[now][back_three][if_gochiusa][if_less];
+    }else if(now == N.size()){
+        return dp[now][back_three][if_gochiusa][if_less] = if_gochiusa;
+    }else if(if_gochiusa && if_less){
+        return dp[now][back_three][if_gochiusa][if_less] = gochiusa(now + 1, 0, true, true) * 10;
+    }else if(if_gochiusa){
+        return dp[now][back_three][if_gochiusa][if_less] = gochiusa(now + 1, 0, true, true) * (N[now] - '0') + gochiusa(now + 1, 0, true, false);
+    }else if(back_three / 10 == 51 && if_less){
+        long ans = 0;
+        for(int i = 0; i < 10; i++){
+            if(i == 3){
+                ans += gochiusa(now + 1, 0, true, true);
+            }else{
+                ans += gochiusa(now + 1, back_three % 100 * 10 + i, false, true);
+            }
+        }
+        return dp[now][back_three][if_gochiusa][if_less] = ans;
+    }else if(back_three / 10 == 51 && N[now] == '3'){
+        long ans = 0;
+        for(int i = 0; i < 3; i++){
+            ans += gochiusa(now + 1, back_three % 100 * 10 + i, false, true);
+        }
+        return dp[now][back_three][if_gochiusa][if_less] = ans + gochiusa(now + 1, 0, true, true);
+    }else if(back_three / 10 == 51){
+        long ans = 0;
+        for(int i = 0; i < N[now] - '0'; i++){
+            if(i == 3){
+                ans += gochiusa(now + 1, 0, true, true);
+            }else{
+                ans += gochiusa(now + 1, back_three % 100 * 10 + i, false, true);
+            }
+        }
+        return dp[now][back_three][if_gochiusa][if_less] = ans + gochiusa(now + 1, back_three % 100 * 10 + N[now] - '0', false, false);
+    }else if(if_less){
+        long ans = 0;
+        for(int i = 0; i < 10; i++){
+            ans += gochiusa(now + 1, back_three % 100 * 10 + i, false, true);
+        }
+        return dp[now][back_three][if_gochiusa][if_less] = ans;
+    }else{
+        long ans = 0;
+        for(int i = 0; i < N[now] - '0'; i++){
+            ans += gochiusa(now + 1, back_three % 100 * 10 + i, false, true);
+        }
+        return dp[now][back_three][if_gochiusa][if_less] = ans + gochiusa(now + 1, back_three % 100 * 10 + N[now] - '0', false, false);
+    }
+}
+
+int main(){
+    cin >> N;
+    for(int i = 0; i < 20; i++){
+        for(int j = 0; j < 1000; j++){
+            for(int k = 0; k < 2; k++){
+                for(int l = 0; l < 2; l++){
+                    dp[i][j][k][l] = -1;
+                }
+            }
+        }
+    }
+    cout << gochiusa(0, 0, false, false) << endl;
+}

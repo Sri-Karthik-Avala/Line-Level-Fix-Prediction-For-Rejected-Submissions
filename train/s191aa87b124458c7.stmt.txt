@@ -1,0 +1,50 @@
+B - Integer in Integer 
+
+ Problem Statement 
+
+ 
+Given an integer interval \[A, B\] and an integer C , your job is to calculate the number of occurrences of C as string in the interval.
+ 
+
+ 
+For example, 33 appears in 333 twice, and appears in 334 once. Thus the number of occurrences of 33 in \[333, 334\] is 3 .
+ 
+
+ Input 
+ 
+The test case is given by a line with the three integers, A , B , C ( 0 \leq A \leq B \leq 10^{10000} , 0 \leq C \leq 10^{500} ).
+ 
+
+ Output 
+ 
+Print the number of occurrences of C mod 1000000007.
+ 
+
+ Sample Input 1 
+ 
+1 3 2
+ 
+
+ Output for Sample Input 1 
+ 
+1
+ 
+
+ Sample Input 2 
+ 
+333 334 33
+ 
+
+ Output for Sample Input 2 
+ 
+3
+ 
+
+ Sample Input 3 
+ 
+0 10 0
+ 
+
+ Output for Sample Input 3 
+ 
+2

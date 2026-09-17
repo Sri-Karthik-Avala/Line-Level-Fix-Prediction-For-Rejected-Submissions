@@ -1,0 +1,37 @@
+import math
+ans = []
+while True:
+    ufo = []
+    n = raw_input().split()
+    if n == ["0", "0"]:
+        for an in ans:
+            print an
+        break
+    else:
+        R = int(n[0])
+        for i in range(int(n[1])):
+            m = [int(f) for f in raw_input().split()]
+            ufo.append([math.sqrt(m[0] ** 2 + m[1] ** 2), math.sqrt(m[0] ** 2 + m[1] ** 2), (m[0], m[1]), m[2], m[3]])
+        a = 0
+        while len(ufo) > 0:
+            flag = True
+            for xs in ufo: xs[0] -= xs[4]
+            ufo.sort()
+            for xs in ufo[:]:
+                if xs[0] <= R:
+                    a += 1
+                    ufo.remove(xs)
+                    continue
+                elif flag:
+                    r = xs[1]
+                    pos = xs[2]
+                    ufo.remove(xs)
+                    flag = False
+                    continue
+                else:
+                    d = xs[0] / xs[1] * abs(pos[0] * xs[2][1] - pos[1] * xs[2][0]) / r
+                    if d <= xs[3]:
+                        if xs[0] * math.cos(math.atan2(xs[2][1], xs[2][0]) - math.atan2(pos[1], pos[0])) + math.sqrt(xs[3] ** 2 + d ** 2) > R:
+                            ufo.remove(xs)
+        else:
+            ans.append(a)

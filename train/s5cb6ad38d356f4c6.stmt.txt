@@ -1,0 +1,37 @@
+GCD and LCM 
+
+ 
+Write a program which computes the greatest common divisor (GCD) and the least common multiple (LCM) of given a and b . 
+ 
+
+ Input 
+
+ 
+Input consists of several data sets. Each data set contains a and b separated by a single space in a line. The input terminates with EOF.
+ 
+
+ Constraints 
+
+ 
+ 0 < a, b &le; 2,000,000,000 
+ LCM( a, b ) &le; 2,000,000,000 
+ The number of data sets &le; 50 
+ 
+
+ Output 
+
+ 
+For each data set, print GCD and LCM separated by a single space in a line.
+ 
+
+ Sample Input 
+ 
+8 6
+50000000 30000000
+ 
+
+ Output for the Sample Input 
+
+ 
+2 24
+10000000 150000000

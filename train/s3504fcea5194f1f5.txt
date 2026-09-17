@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+using lint         = long long;
+constexpr lint inf = 1LL << 60;
+constexpr lint mod = 1000000007;
+
+int main() {
+    cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    int n;
+    cin >> n;
+    string c;
+    cin >> c;
+    vector<int> rs(n), ws(n);
+    for (int i = 0; i < n; ++i) {
+        if (c[i] == 'R')
+            rs[i]++;
+        else
+            ws[i]++;
+    }
+    for (int i = 1; i < n; ++i) {
+        ws[i] += ws[i - 1];
+    }
+    for (int i = n - 2; i >= 0; --i) {
+        rs[i] += rs[i + 1];
+    }
+    int ret = min(rs[0], ws[n - 1]);
+    for (int i = 0; i < n - 1; ++i) {
+        ret = min(ret, max(rs[i], ws[i + 1]));
+    }
+    cout << ret << "\n";
+    return 0;
+}

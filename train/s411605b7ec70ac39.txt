@@ -1,0 +1,87 @@
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <map>
+
+struct Bingo {
+  std::map<int, std::pair<int, int>> card;
+  std::vector<int> row, col, diag;
+  int num_bingo, size;
+
+  Bingo(int n):
+    row(n), col(n), diag(2), num_bingo(0), size(n)
+  {}
+
+  void set(int r, int c, int x) {
+    card[x] = std::make_pair(r, c);
+  }
+
+  int push(int x) {
+    auto it=card.find(x);
+    if (it == card.end())
+      return num_bingo;
+
+    const std::pair<int, int> &p=it->second;
+
+    if (++row[p.first] == size)
+      ++num_bingo;
+
+    if (++col[p.second] == size)
+      ++num_bingo;
+
+    if (p.first == p.second)
+      if (++diag[0] == size)
+        ++num_bingo;
+
+    if (p.first + p.second + 1 == size)
+      if (++diag[1] == size)
+        ++num_bingo;
+
+    if (num_bingo && size == 1)
+      return 1;
+
+    return num_bingo;
+  }
+};
+
+int main() {
+  int n, u, v, m;
+  scanf("%d %d %d %d", &n, &u, &v, &m);
+
+  Bingo usagi(n), neko(n);
+  for (int r=0; r<n; ++r)
+    for (int c=0; c<n; ++c) {
+      int k;
+      scanf("%d", &k);
+      usagi.set(r, c, k);
+    }
+
+  for (int r=0; r<n; ++r)
+    for (int c=0; c<n; ++c) {
+      int k;
+      scanf("%d", &k);
+      neko.set(r, c, k);
+    }
+
+  for (int i=0; i<m; ++i) {
+    int k;
+    scanf("%d", &k);
+
+    int usagi_line=usagi.push(k);
+    int neko_line=neko.push(k);
+
+    bool usagi_bingo=(usagi_line>=u);
+    bool neko_bingo=(neko_line>=v);
+
+    if (usagi_bingo && neko_bingo) {
+      return !printf("DRAW\n");
+    } else if (usagi_bingo) {
+      return !printf("USAGI\n");
+    } else if (neko_bingo) {
+      return !printf("NEKO\n");
+    }
+  }
+
+  printf("DRAW\n");
+  return 0;
+}  

@@ -1,0 +1,24 @@
+Md,MN=1000000007,1000006
+fac,ifac,a,res,inv=[1,1],[1,1],[0],0,[1,1]
+for i in range(2,MN):
+    inv.append(inv[Md%i]*(Md-Md/i)%Md)
+    fac.append(fac[-1]*i%Md)
+    ifac.append(ifac[-1]*inv[i]%Md)
+def C(x,y):
+    if(x<y):
+        return 0
+    return fac[x]*ifac[y]*ifac[x-y]
+def D(x,y):
+    return C(x-y+1,y)
+
+n=int(input())
+for i in range(1,n):
+    if i*2-n>=0:
+        a.append(D(n-3,n-i-1)*fac[i]*fac[n-i-1]%Md)
+    else:
+        a.append(0)
+for i in range(n-1,0,-1):
+    a[i]=(a[i]-a[i-1])%Md
+    res=res+a[i]*i
+res=res%Md
+print(res)

@@ -1,0 +1,22 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int r[20000];
+
+int main(){
+	int n,s;
+	while(cin>>n>>s&&n){
+		int ans=0;
+		for(int i=0;i<n;i++)cin>>r[i];
+		sort(r,r+n);
+		for(int i=0;i<n;i++){
+			int *p=lower_bound(r,r+n,s-r[i]);
+			ans+=r+n-p;
+			if(p<=r+i)ans--;
+		}
+		cout<<ans/2<<endl;
+	}
+	return 0;
+}

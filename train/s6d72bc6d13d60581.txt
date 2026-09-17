@@ -1,0 +1,15 @@
+while 1:
+    try:
+        c=map(int,raw_input().split())
+        sumc=c[0]+c[1]
+        cnt=0
+        for i in xrange(1,11):
+            if i in c:continue
+            if sumc+i<20:
+                cnt+=1
+        if cnt>=4:
+            print('YES')
+        else:
+            print('NO')
+    except:
+        break

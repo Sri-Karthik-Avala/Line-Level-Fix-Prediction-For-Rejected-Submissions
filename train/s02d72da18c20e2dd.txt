@@ -1,0 +1,59 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cctype>
+#include<cmath>
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<set>
+#include<map>
+#include<vector>
+#include<stack>
+#define M 155
+#define INF 100000000000LL
+using namespace std;
+long long dp[M][M];
+int S[M],R[M];
+int main(){
+    int n,a,b;
+    while(scanf("%d%d%d",&n,&a,&b)!=EOF){
+        int j,k,i;
+        for(j=1;j<=n;j++){
+            scanf("%d%d",&R[j],&S[j]);   
+        }
+        for(j=0;j<=M-5;j++){
+            for(k=0;k<=M-5;k++){
+                dp[j][k]=INF;
+            }
+        }
+        for(j=0;j<=S[n];j++) dp[n][j]=-INF;
+        long long sum=S[n];
+        for(j=n-1;j>=1;j--){
+            sum+=S[j];
+            for(k=sum;k>=S[j];k--){
+                dp[j][k]=-INF;
+                for(i=sum-k+1;i<=sum;i++){
+                    dp[j][k]=max(-dp[j+1][i]-R[j]+1,dp[j][k]);
+                }
+                //if(j==2&&k==10) printf("dp = %d\n",dp[j][k]);
+                long long t=INF;
+                for(i=k;i<=sum;i++){
+                    t=min(dp[j+1][i]+1+R[j],1LL*t);
+                }
+                //if(j==1&&k==10) printf("t = %d\n",t);
+                dp[j][k]=min(dp[j][k],max(1LL*t,1LL));
+            }
+        }
+        int ans=0;
+        //printf("dp = %d\n",dp[2][1]);
+        //printf("%d\n",dp[1][7]);
+        for(j=0;j<=sum;j++){
+            if(dp[1][j]==-1) continue;
+            if(dp[1][j]<=a-b) ans=max(ans,j);
+        }
+        printf("%d %d\n",ans,sum-ans);
+    }
+    //system("pause");
+    return 0;
+}

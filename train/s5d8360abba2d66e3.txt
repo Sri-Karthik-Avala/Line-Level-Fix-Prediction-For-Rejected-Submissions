@@ -1,0 +1,56 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+typedef long long ll;
+ll m1=999979,m2=17;
+
+ll extgcd(ll a,ll b,ll& x,ll& y){
+  ll d = a;
+  if(b!=0){
+    d=extgcd(b, a%b ,y,x);
+    y-=(a/b)*x;
+  }
+  else{
+    x=1; y=0;
+  }
+  return d;
+}
+
+ll mod_inverse(ll a,ll m){
+  ll x,y;
+  extgcd(a,m,x,y);
+  return (m+x%m)%m;
+}
+
+ll solve(ll x,ll o,ll y){
+  ll a=0,b=0;
+
+  if(o==1)a=(x+y)%m1,b=(x+y)%m2;
+  else if(o==2)a=(x-y+m1)%m1, b=(x-y+m2)%m2;
+  else if(o==3)a=(x*y)%m1, b=(x*y)%m2;
+  else if(o==4)a=(x*mod_inverse(y,m1))%m1,b=(x*mod_inverse(y,m2))%m2;
+  
+  ll p,q;
+  extgcd(m1,m2,p,q);
+
+return (b*m1*p+a*m2*q)%(m1*m2);
+}
+
+int main(void){
+
+  ll n,o,x=0,y,a=0,b=0;
+
+  cin >> n;
+
+  while(n--){
+    cin >> o >> y;
+    x=solve(x,o,y);
+  }
+
+  cout << x << endl;
+
+  return 0;
+}

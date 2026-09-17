@@ -1,0 +1,97 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class ScoreBoard{
+public:
+    //  1: win
+    // -1: lose
+    // enum
+    vector<vector<int>> board;
+    vector<int> wincounts;
+    
+    ScoreBoard(int N){
+        board = vector<vector<int>>(N, vector<int>(N));
+        wincounts.resize(N);
+    }
+    void update(int x, int y){
+        board[x][y] = 1;
+        board[y][x] = -1;
+        wincounts[x]++;
+    }
+    void remove(int x, int y){
+        board[x][y] = board[y][x] = 0;
+        wincounts[x]--;
+    }
+    bool allok(){
+        for(int i=0; i<board.size(); i++)
+            if(wincounts[i] > (board.size()-1)/2)
+                return false;
+        return true;
+    }
+    bool ok(int x, int y){
+        return wincounts[x] < (board.size()-1)/2;
+    }
+    void view(){
+        cout << "============" << endl;
+        for(int x=0; x<board.size(); x++){
+            for(int y=0; y<board.size(); y++){
+                if(x == y)
+                    cout << ". ";
+                else
+                    cout << (board[x][y]==1) << " ";
+            }
+            cout << endl;
+        }
+    }
+    int dfs(vector<int> &X, vector<int> &Y, int idx){
+        if(X.size() == idx){
+//            view();
+            return 1;
+        }
+        
+        int res = 0;
+        if(ok(X[idx], Y[idx])){
+            update(X[idx], Y[idx]);
+            res += dfs(X, Y, idx+1);
+            remove(X[idx], Y[idx]);
+        }
+        if(ok(Y[idx], X[idx])){
+            update(Y[idx], X[idx]);
+            res += dfs(X, Y, idx+1);
+            remove(Y[idx], X[idx]);
+        }
+        return res;
+    }
+};
+
+
+int main(){
+    int N, M;
+    while(cin >> N >> M, N|M){
+        auto sb = ScoreBoard(N);
+        
+        for(int i=0; i<M; i++){
+            int x, y; cin >> x >> y;
+            x--; y--;
+            sb.update(x, y);
+        }
+        
+        vector<int> X, Y;
+        for(int x=0; x<N; x++){
+            for(int y=x+1; y<N; y++){
+                if(sb.board[x][y] != 0)
+                    continue;
+                X.push_back(x);
+                Y.push_back(y);
+            }
+        }
+        if(sb.allok())
+            cout << sb.dfs(X, Y, 0) << endl;
+        else
+            cout << 0 << endl;
+    }
+    
+    return 0;
+}
+

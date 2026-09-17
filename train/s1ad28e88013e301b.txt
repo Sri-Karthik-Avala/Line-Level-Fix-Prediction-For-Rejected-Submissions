@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+struct edge{
+  int from,to,cost;
+  bool operator < (const edge &p)const{    return cost < p.cost;  }
+};
+
+int N,M,a,b,c;
+bool f[20001];
+vector<edge> g;
+
+int main(){
+  while(1){
+    cin>>N>>M;
+    if(N==0&&M==0)break;
+    g.clear();
+    for(int i=1;i<=N;i++)f[i]=false;
+    f[1]=true;
+    for(int i=0;i<M;i++){
+      scanf("%d %d %d",&a,&b,&c);
+      g.push_back((edge){b,c,a});
+    }
+    sort(g.begin(),g.end());
+    int ans=1;
+    for(int i=0;i<M;i++){
+      edge e=g[i];
+      if(f[e.from])f[e.to]=true,ans++;
+    }
+    cout<<ans<<endl;
+  }
+}

@@ -1,0 +1,94 @@
+#include <cassert>// c
+#include <ctime>
+#include <iostream>// io
+#include <iomanip>
+#include <fstream>
+#include <sstream>
+#include <vector>// container
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <stack>
+#include <algorithm>// other
+#include <utility>
+#include <complex>
+#include <numeric>
+#include <functional>
+#include <random>
+#include <regex>
+
+using namespace std;
+typedef long long ll;
+
+#define ALL(c) (c).begin(),(c).end()
+#define FOR(i,l,r) for(int i=(int)l;i<(int)r;++i)
+#define REP(i,n) FOR(i,0,n)
+#define FORr(i,l,r) for(int i=(int)r-1;i>=(int)l;--i)
+#define REPr(i,n) FORr(i,0,n)
+#define EACH(i,c) for(__typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define IN(l,v,r) ((l)<=(v) && (v)<(r))
+#define UNIQUE(v) v.erase(unique(ALL(v)),v.end())
+//debug
+#define DUMP(x)  cerr << #x << " = " << (x)
+#define LINE()    cerr<< " (L" << __LINE__ << ")"
+
+template<typename T,typename U> T pmod(T x,U M){return (x%M+M)%M;}
+
+stringstream ss;
+
+int main(){
+	cin.tie(0); ios::sync_with_stdio(false);
+	ss   <<fixed <<setprecision(20);
+	cout <<fixed <<setprecision(20);
+	cerr <<fixed <<setprecision(20);
+
+	while(true){
+		vector<string> str(3);
+		REP(i,3){
+			cin >> str[i];
+			if(str[i]=="0") return 0;
+		}
+
+		vector<vector<pair<int,int>>> check;
+		REP(y,3){
+			vector<pair<int,int>> ls;
+			REP(x,3)ls.push_back(make_pair(y,x));
+			check.push_back(ls);
+		}
+		REP(x,3){
+			vector<pair<int,int>> ls;
+			REP(y,3)ls.push_back(make_pair(y,x));
+			check.push_back(ls);
+		}
+		{
+			vector<pair<int,int>> ls;
+			REP(i,3)ls.push_back(make_pair(i,i));
+			check.push_back(ls);
+		}
+		{
+			vector<pair<int,int>> ls;
+			REP(i,3)ls.push_back(make_pair(i,3-i));
+			check.push_back(ls);
+		}
+
+		bool bwin=false,wwin=false;
+		for(auto ls:check){
+			bool ok=true;for(auto p:ls)if(str[p.first][p.second]!='b')ok=false;
+			if(ok)bwin=true;
+		}
+		for(auto ls:check){
+			bool ok=true;for(auto p:ls)if(str[p.first][p.second]!='w')ok=false;
+			if(ok)wwin=true;
+		}
+		if(bwin == wwin){
+			cout <<"NA"<<endl;
+		}else if(bwin){
+			cout <<"b" <<endl;
+		}else if(wwin){
+			cout <<"w" <<endl;
+		}
+	}
+
+ 	return 0;
+ }

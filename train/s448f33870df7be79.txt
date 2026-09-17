@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int INF=1e8;
+int main(){
+    int n,e,t;
+    cin>>n>>e>>t;
+    t--;
+    vector<int> dp(n,INF);
+    for(int i=0;i<n;i++){
+        int w;
+        cin>>w;
+        if(w){
+            dp[i]=1;
+        }
+    }
+    vector<int> g(e);
+    vector<vector<int>> s(e);
+    for(int i=0;i<e;i++){
+        cin>>g[i];
+        g[i]--;
+        int c;
+        cin>>c;
+        s[i].assign(c,0);
+        for(int j=0;j<c;j++){
+            cin>>s[i][j];
+            s[i][j]--;
+        }
+    }
+    bool update=true;
+    while(update){
+        update=false;
+        for(int j=0;j<e;j++){
+            int ma=0;
+            int mi=INF;
+            bool isok=false;
+            for(int k=0;k<s[j].size();k++){
+                mi=min(mi,dp[s[j][k]]);
+                ma=max(ma,dp[s[j][k]]);
+            }
+            int sc=max(int(s[j].size()+mi-1),ma);
+            if(sc<dp[g[j]]){
+                dp[g[j]]=sc;
+                update=true;
+            }
+        }
+    }
+    if(dp[t]>=INF){
+        cout<<-1<<endl;
+    }
+    else{
+        cout<<dp[t]<<endl;
+    }
+    return 0;
+}

@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include<stdio.h>
+#include <map>
+bool p;
+using namespace std;
+vector<int> st[120];
+int h[1010];
+bool hu[1010];
+void loop(int a){
+	h[a]=1;
+for(int q=0;q<st[a].size();q++){
+
+	if(h[st[a][q]]==1){
+		h[a]=10;
+	}
+	else{if(hu[st[a][q]]==0){
+	loop(st[a][q]);
+}
+hu[st[a][q]]=1;
+
+}
+
+}
+h[a]=h[a]-1;
+
+if(h[a]>2){
+	p=true;
+}	
+}
+
+
+int main() {
+p=false;
+int e,v;
+cin>>v>>e;
+for(int u=0;u<v;u++){
+	h[u]=0;
+	hu[u]=0;
+}
+for(int y=0;y<e;y++){
+	int s,g;
+	cin>>s>>g;
+	st[s].push_back(g);
+}
+for(int n=0;n<v;n++){
+	if(hu[n]==0){
+loop(n);
+}
+}
+if(p==true){
+	cout<<"1"<<endl;
+}
+else{
+	cout<<"0"<<endl;
+}
+
+	return 0;
+	
+}

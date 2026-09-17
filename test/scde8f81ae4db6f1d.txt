@@ -1,0 +1,8 @@
+S = input()
+ans = ""
+for s in range(len(S)):
+  if S[s] == "?":
+    ans += "D"
+  else:
+    ans += S[s]
+print(ans)

@@ -1,0 +1,52 @@
+// https://atcoder.jp/contests/abc178/tasks/abc178_e
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <numeric>
+#include <map>
+#include <unordered_map>
+#include <stack>
+#include <queue>
+#include <set>
+#include <unordered_set>
+#include <bitset>
+using namespace std;
+using ll = long long;
+using P = pair<ll, ll>;
+#define REP(i, n) for(size_t i = 0; i < (n); ++i)
+
+int main()
+{
+    int N;
+    cin >> N;
+    vector<ll> x(N), y(N);
+    REP(i, N) cin >> x[i] >> y[i];
+
+    /*
+      z = x + y, w = x - y と変換する(いわゆる45度回転)
+      マンハッタン距離 |xi - xj| + |yi - yj| の最大値を求める問題は
+      z, w それぞれの最大値と最小値を求める問題に帰着される
+    */
+    vector<ll> z(N), w(N);
+    REP(i, N)
+    {
+        z[i] = x[i] + y[i];
+        w[i] = x[i] - y[i];
+    }
+
+    ll zmin = numeric_limits<ll>::max(), zmax = -1, wmin = numeric_limits<ll>::max(), wmax = -1;
+    for (int i = 0; i < N; ++i)
+    {
+        zmin = min(zmin, z[i]);
+        zmax = max(zmax, z[i]);
+        wmin = min(wmin, w[i]);
+        wmax = max(wmax, w[i]);
+    }
+    ll ans = max(zmax - zmin, wmax - wmin);
+    cout << ans << endl;
+    return 0;
+}

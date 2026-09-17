@@ -1,0 +1,5 @@
+a, b, k = map(int, input().split())
+
+aa = max (a - k, 0)
+bb = max (a + b - k, 0)
+print(f'{aa} {bb}')

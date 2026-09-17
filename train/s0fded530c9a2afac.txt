@@ -1,0 +1,21 @@
+# coding: utf-8
+# Here your code !
+
+
+
+
+def main(N,k):
+    p = 0
+    for i in range(N-1):
+        p2 = p
+        while p2-1-p2//k != p:
+            p2+=1
+        p=p2
+    return p
+
+
+
+
+if __name__ == '__main__':
+    N,k=input().split()
+    print(main(int(N),int(k)))

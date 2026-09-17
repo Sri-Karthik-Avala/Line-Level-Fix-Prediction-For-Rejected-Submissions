@@ -1,0 +1,43 @@
+Smart Calculator 
+
+ 
+Your task is to write a program which reads an expression and evaluates it.
+ 
+
+ 
+ The expression consists of numerical values, operators and parentheses, and the ends with '='. 
+ The operators includes +, - , *, / where respectively represents, addition, subtraction, multiplication and division. 
+ Precedence of the operators is based on usual laws. That is one should perform all multiplication and division first, then addition and subtraction. When two operators have the same precedence, they are applied from left to right.
+ 
+ You may assume that there is no division by zero. 
+ All calculation is performed as integers, and after the decimal point should be truncated 
+ Length of the expression will not exceed 100. 
+ -1 &times 10 9 &le; intermediate results of computation &le; 10 9 
+ 
+
+
+ Input 
+
+ 
+The input is a sequence of datasets. The first line contains an integer n which represents the number of datasets. There will be n lines where each line contains an expression.
+ 
+
+ Output 
+
+ 
+For each datasets, prints the result of calculation.
+ 
+
+ Sample Input 
+
+ 
+2
+4-2*3=
+4*(8+4+3)=
+ 
+
+ Output for the Sample Input 
+
+ 
+-2
+60

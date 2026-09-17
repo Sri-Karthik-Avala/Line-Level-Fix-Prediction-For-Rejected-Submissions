@@ -1,0 +1,54 @@
+#include "bits/stdc++.h"
+
+#pragma warning(disable:4996)
+using namespace std;
+using ld = long double;
+
+bool check(string l, string r) {
+	for (int i = 0; i < l.size(); ++i) {
+		if (l[i] == r[i] || r[i] == '_') {
+
+		}
+		else {
+			return false;
+		}
+	}
+	return true;
+}
+struct warp {
+	int x;
+	int d;
+	int t;
+};
+bool operator < (const warp&l, const warp&r) {
+	return l.x<r.x;
+}
+int main() {
+	int L,N;cin>>L>>N;
+	vector<warp>warps;
+	warps.push_back(warp{ 0,1,1 });
+	for (int i = 0; i < N; ++i) {
+		int a,b,c;cin>>a>>b>>c;
+		warps.push_back(warp{ a,b,c });
+	}
+	warps.push_back(warp{ L,0,0 });
+
+	vector<int>costs(N+2,1e9);
+	costs[0]=0;
+	for (int k = 0; k < N + 1; ++k) {
+		const int nx=warps[k].x;
+		const int nd=warps[k].d;
+		const int nt=warps[k].t;
+		auto it = lower_bound(warps.begin(), warps.end(), warp{ nx + nd,0,0 });
+		
+		const int nextx=it->x;
+		costs[it-warps.begin()]=min(costs[it - warps.begin()],costs[k]+nt+nextx-(nx+nd));
+
+		costs[k+1]=min(costs[k+1],costs[k]+(warps[k+1].x-nx));
+	}
+	cout<<costs[N+1]<<endl;
+
+
+	
+	return 0;
+}

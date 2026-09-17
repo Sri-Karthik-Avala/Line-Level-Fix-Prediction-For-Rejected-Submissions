@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+using namespace std;
+int n,m,tmax,o,cnt,i,j,k,x[808],y[808],z[808],d[402][402],id[10100],dst[10100],p[10100];
+vector<int> g[402],orders[10100];  // TODO: orders[i] can be just number, not vector
+bool av[10100];
+void init() {
+  for (i=0; i<o; i++) p[i]=i;
+  // TODO: some greedy?
+}
+void print_result() {
+  int cur=0,pos=-1,ed=0,lst=-1;
+  for (int i=0; i<o; i++) av[i]=false;
+  for (int t=0; t<tmax; t++) {
+    //printf("time %d: pos %d %d\n",t,pos,ed);
+    if (pos<0) {
+      for (; cur<o && av[p[cur]] && pos==-dst[p[cur]]; cur++);
+      if (cur>=o) {
+        puts("-1");
+        continue;
+      }
+      if (pos==-1) {
+        for (int i=lst+1; i<=t; i++) for (int j=0; j<orders[i].size(); j++) {
+          av[orders[i][j]]=true;
+          //printf("%d is available\n",orders[i][j]);
+        }
+        lst=t;
+      }
+    }
+    int ds=av[p[cur]]?dst[p[cur]]:1;
+    //printf("pcur=%d ds=%d\n",p[cur],ds);
+    if (pos<0) {
+      if (pos==-ds) {
+        puts("-1");
+        continue;
+      }
+      for (int i=0; i<g[-pos].size(); i++) {
+        int e=g[-pos][i];
+        int nxt=x[e]+y[e]+pos;
+        //printf(" nxt=%d; %d =?= %d + %d\n",nxt,d[ds][-pos],d[ds][nxt],z[e]);
+        if (d[ds][-pos]==d[ds][nxt]+z[e]) {
+          printf("%d\n",nxt);
+          if (z[e]>1) {
+            pos=e;
+            ed=1;
+          } else pos=-nxt;
+          break;
+        }
+      }
+    } else {
+      if (d[ds][x[pos]]+ed<d[ds][y[pos]]+z[pos]-ed) {
+        printf("%d\n",x[pos]);
+        if (ed==1) pos=-x[pos]; else ed--;
+      } else {
+        printf("%d\n",y[pos]);
+        if (ed+1==z[pos]) pos=-y[pos]; else ed++;
+      }
+    }
+  }
+}
+int main() {
+  scanf("%d%d",&n,&m);
+  memset(d,10,sizeof(d));
+  for (i=1; i<=n; i++) d[i][i]=0;
+  for (i=1; i<=m; i++) {
+    scanf("%d%d%d",&x[i],&y[i],&z[i]);
+    d[x[i]][y[i]]=d[y[i]][x[i]]=z[i];
+    g[x[i]].push_back(i);
+    g[y[i]].push_back(i);
+  }
+  for (k=1; k<=n; k++) for (i=1; i<=n; i++) for (j=1; j<=n; j++)
+    d[i][j]=min(d[i][j],d[i][k]+d[k][j]);
+  //for (i=1; i<=n; i++, puts("")) for (j=1; j<=n; j++) printf("%d ",d[i][j]);
+  scanf("%d",&tmax);
+  for (i=0; i<tmax; i++) {
+    scanf("%d",&cnt);
+    for (j=0; j<cnt; j++, o++) {
+      scanf("%d%d",&id[o],&dst[o]);
+      orders[i].push_back(o);
+    }
+  }
+  init();
+  // TODO: fixed amount of rand_iterations + calc_score(best) + SA/HC
+  print_result();
+  return 0;
+}

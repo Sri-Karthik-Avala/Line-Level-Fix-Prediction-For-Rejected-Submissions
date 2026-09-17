@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <string>
+#include <cmath>
+#include <cassert>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+const int INF = 1<<29;
+typedef long long ll;
+typedef pair<int,int> pii;
+
+int X[1000];
+int Y[1000];
+
+int dir(int a, int b) {
+  if (X[a] == X[b]) {
+    if (Y[a] < Y[b]) return 0;
+    else return 2;
+  } else {
+    if (X[a] < X[b]) return 1;
+    else return 3;
+  }
+}
+int dis(int a, int b) {
+  return abs(X[a]-X[b]) + abs(Y[a]-Y[b]);
+}
+
+struct P {
+  int now, d, cost, len;
+  P(int now, int d, int cost, int len) :
+    now(now),d(d),cost(cost),len(len) {}
+  bool operator<(const P &b) const {
+    return cost != b.cost ? cost > b.cost : len > b.len;
+  }
+};
+
+pii g[1000][4];
+int dist[1000][4];
+string name[1000];
+
+int main() {
+  int m,n;
+  while(cin>>m>>n,m||n) {
+    map<string,int> mp;
+    REP(i,m) {
+      cin >> name[i] >> X[i] >> Y[i];
+      mp[name[i]] = i;
+    }
+    REP(i,n)REP(j,4) g[i][j]=pii(-1,0);
+    REP(i,n) {
+      string s,t;
+      cin >> s >> t;
+      int a = mp[s];
+      int b = mp[t];
+      g[a][dir(a,b)] = pii(b,dis(a,b));
+      g[b][dir(b,a)] = pii(a,dis(a,b));
+    }
+    string s, t;
+    cin >> s >> t;
+    int start = mp[s];
+    int end = mp[t];
+    priority_queue<P> Q;
+    REP(i,m)REP(j,4) dist[i][j] = INF;
+    REP(i,4) {
+      Q.push(P(start,i,0,1));
+      dist[start][i] = 0;
+    }
+    int ans = INF;
+    while(!Q.empty()) {
+      P p = Q.top(); Q.pop();
+      
+      int nd = (p.d+3) % 4;
+      int now = p.now;
+
+      if (dist[now][p.d] > p.cost) continue;
+      
+      int dd[2] = {p.d,nd};
+
+//      cout << now << " " << p.d << endl;
+      if (now == end) {
+        ans = p.len;
+        break;
+      }
+      
+      REP(i,2) {
+        pii e = g[now][dd[i]];
+        int b = e.first;
+        if (b != -1) {
+          int nd = dist[now][p.d] + e.second;
+          if (dist[b][dd[i]] > nd) {
+            dist[b][dd[i]] = nd;
+            Q.push(P(b,dd[i],nd,p.len+1));
+          }
+        }
+      }
+    }
+    if (ans == INF) cout << "impossible" << endl;
+    else cout << ans << endl;
+  }
+}

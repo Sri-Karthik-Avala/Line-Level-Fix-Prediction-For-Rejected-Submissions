@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+#define all(a) (a).begin(),(a).end()
+using namespace std;
+typedef pair<int,int> pii;
+
+struct record{
+  string name,type;
+  char com;
+  int price;
+  record(string a="", string b="", char c=' ', int d=0):name(a),type(b),com(c),price(d){}
+};
+
+int main(){
+  int n;
+  while(cin >> n, n){
+    vector<record> r(n);
+    vector<int> use(n,0);
+    map<string,pii> dealers;
+    vector< vector<int> > deals(26);
+
+    for(int i=0;i<n;i++){
+      string name,type;
+      char com;
+      int price;
+      cin >> name >> type >> com >> price;
+      r[i] = record(name,type,com,price);
+      if(dealers.count(name) == 0)dealers[name] = pii(0,0);
+
+      int id = -1;
+      for(int j=i-1;j>=0;j--){
+	if(!use[j] && type!=r[j].type && com==r[j].com && name!=r[j].name){
+	  if(type == "BUY" && price>=r[j].price){
+	    if(id<0 || r[id].price > r[j].price)id = j;
+	  }
+	  if(type == "SELL" && price<=r[j].price){
+	    if(id<0 || r[id].price < r[j].price)id = j;
+	  }
+	}
+      }
+      if(id>=0){
+	use[i] = use[id] = 1;
+	int money = (price + r[id].price)/2;
+	if(type == "BUY"){
+	  dealers[name].first += money;
+	  dealers[r[id].name].second += money;
+	  deals[com-'A'].push_back(money);
+	}
+	if(type == "SELL"){
+	  dealers[name].second += money;
+	  dealers[r[id].name].first += money;
+	  deals[com-'A'].push_back(money);
+	}
+      }
+    }
+
+    for(int i=0;i<26;i++){
+      if(deals[i].size()){
+	cout << (char)('A'+i) << " " << *min_element(all(deals[i])) << " "
+	     << accumulate(all(deals[i]),0)/deals[i].size() << " "
+	     << *max_element(all(deals[i])) << endl;
+      }
+    }
+    cout << "--" << endl;
+
+    for(auto p : dealers){
+      cout << p.first << " " << p.second.first << " " << p.second.second << endl;
+    }
+    cout << "----------" << endl;
+  }
+}

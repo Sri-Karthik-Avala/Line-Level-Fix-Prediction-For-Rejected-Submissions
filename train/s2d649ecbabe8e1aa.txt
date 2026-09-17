@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,n) FOR(i,0,n)
+
+int n, r, t;
+int pot[1000][3]; // [i][j] [i]?????????????°´??°??????[j] j0:??? j1:???(1???????????????) j2:?????????
+int pos[100], p[100];
+
+int main() {
+	cin >> n >> r >> t;
+	REP(i, n) scanf("%d", &p[i]);
+	
+	REP(i, n) pos[i] = p[i] % r;
+	
+	FOR(i, 1, t) {
+		REP(j, r) {
+			pot[j][2] += pot[j][1];
+			pot[j][1] = pot[j][0];
+			pot[j][0] = 0;
+		}
+		REP(j, n) {
+			int now = pos[j];
+			int next = (pos[j] + p[j]) % r;
+			if (pot[now][2] == 0) pot[now][2]++;
+			pot[now][2]--;
+			pot[next][0]++;
+			
+			pos[j] = next;
+		}
+	}
+	int ans = 0;
+	REP(i, r) ans += pot[i][0] + pot[i][1] + pot[i][2];
+	cout << ans << endl;
+	
+	return 0;
+}

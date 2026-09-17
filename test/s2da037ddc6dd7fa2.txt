@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using P = pair<ll, ll>;
+int main()
+{
+    int n;
+    cin >> n;
+    ll ans = 0;
+    for(int i = 0; i < n; i++)
+    {
+        ll a, b;
+        cin >> a >> b;
+        if(a < b) ans += b;
+    }
+    cout << ans << endl;
+}

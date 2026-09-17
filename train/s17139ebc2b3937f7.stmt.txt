@@ -1,0 +1,97 @@
+Problem B: Restaurant 
+
+ 
+Steve runs a small restaurant in a city. Also, as he is the only cook in his restaurant, he cooks everything
+ordered by customers.
+ 
+ 
+Basically he attends to orders by first-come-first-served principle. He takes some prescribed time to
+prepare each dish. As a customer can order more than one dish at a time, Steve starts his cooking with
+the dish that takes the longest time to prepare. In case that there are two or more dishes that take
+the same amount of time to prepare, he makes these dishes in the sequence as listed in the menu card
+of his restaurant. Note that he does not care in which order these dishes have been ordered. When he
+completes all dishes ordered by a customer, he immediately passes these dishes to the waitress and has
+them served to the customer. Time for serving is negligible.
+ 
+ 
+On the other hand, during his cooking for someone’s order, another customer may come and order dishes.
+For his efficiency, he decided to prepare together multiple dishes of the same if possible. When he starts
+cooking for new dishes, he looks over the orders accepted by that time (including the order accepted
+exactly at that time if any), and counts the number of the same dishes he is going to cook next. Time
+required for cooking is the same no matter how many dishes he prepare at once. Unfortunately, he has
+only limited capacity in the kitchen, and hence it is sometimes impossible that the requested number of
+dishes are prepared at once. In such cases, he just prepares as many dishes as possible.
+ 
+ 
+Your task is to write a program that simulates the restaurant. Given a list of dishes in the menu card
+and orders from customers with their accepted times, your program should output a list of times when
+each customer is served.
+ 
+
+ Input 
+
+ 
+The input contains multiple data sets. Each data set is in the format below:
+ 
+
+ 
+ N M 
+ Name 1 Limit 1 Time 1 
+...
+ Name N Limit N Time N 
+ T 1 K 1 Dish 1,1 . . . Dish 1, K 1 
+...
+ T M K M Dish M ,1 . . . Dish M , K M 
+ 
+
+ 
+Here, N (1 &le; N &le; 20) and M (1 &le; M &le; 100) specify the number of entries in the menu card and the
+number of orders that Steve will receive, respectively; each Name i is the name of a dish of the i -th entry
+in the menu card, which consists of up to 20 alphabetical letters; Limit i (1 &le; Limit i &le; 10) is the number of dishes he can prepare at the same time; Time i (1 &le; Time i &le; 1000) is time required to prepare a dish
+(or dishes) of the i -th entry; T j (1 &le; T j &le; 10000000) is the time when the j -th order is accepted; K j 
+(1 &le; K j &le; 10) is the number of dishes in the j -th order; and each Dish j,k represents a dish in the j -th
+order.
+ 
+ 
+You may assume that every dish in the orders is listed in the menu card, but you should note that each
+order may contain multiple occurrences of the same dishes. The orders are given in ascending order by
+ T j , and no two orders are accepted at the same time.
+ 
+ 
+The input is terminated with a line that contains two zeros. This is not part of data sets and hence
+should not be processed.
+ 
+
+
+ Output 
+
+ 
+Your program should produce the output of M -lines for each data set. The i-th line of the output should
+contain a single integer that indicates the time when the i-th order will be completed and served to the
+customer.
+ 
+ 
+Print a blank line between two successive data sets.
+ 
+
+ Sample Input 
+ 
+5 4
+Ramen 3 10
+Chahan 5 5
+Gyoza 5 10
+Rice 1 1
+Soup 1 1
+5 2 Ramen Gyoza
+10 6 Chahan Gyoza Soup Ramen Gyoza Rice
+20 1 Chahan
+25 1 Ramen
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+25
+42
+40
+35

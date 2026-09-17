@@ -1,0 +1,17 @@
+while(1):
+    n=int(raw_input())
+    if n==0: break
+    A=[[0,0] for i in range(n)] 
+    for i in range(n):
+        [a,b]=map(int,raw_input().split())
+        A[i]=[a,b]
+    A.sort(key= lambda x: x[0])
+    s=0
+    for i in range(n):
+        if s+A[i][0]>A[i][1]:
+            print 'No'
+            break
+        else:
+            s+=A[i][0]
+    else:
+        print 'Yes'

@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn = 100100;
+int to[maxn][26], lnk[maxn], len[maxn], last, sz;
+void init(){
+	memset(to, -1, sizeof(to));
+	lnk[0] = -1;
+	last = 0;
+	sz = 1;
+}
+void extend(int c){
+	int cur = sz++;
+	len[cur] = len[last] + 1;
+	int p = last;
+	while(p != -1 && to[p][c] == -1){
+		to[p][c] = cur;
+		p = lnk[p];
+	}
+	if(p == -1)
+		lnk[cur] = 0;
+	else {
+		int q = to[p][c];
+		if(len[p] + 1 == len[q])
+			lnk[cur] = q;
+		else {
+			int nq = sz++;
+			memcpy(to[nq], to[q], sizeof(to[nq]));
+			lnk[nq] = lnk[q];
+			len[nq] = len[p] + 1;
+			lnk[q] = nq;
+			lnk[cur] = nq;
+			while(p != -1 && to[p][c] == q){
+				to[p][c] = nq;
+				p = lnk[p];
+			}
+		}
+	}
+	last = cur;
+}
+int main(){
+	string s; cin >> s;
+	int siz = s.size();
+	init();
+	for(int i = 0; i < siz; i++) extend(s[i] - 'a');
+	vector<int> cnt(siz + 10, 0);
+	for(int i = 1; i < sz; i++){
+		cnt[len[lnk[i]]+1]++;
+		cnt[len[i]+1]--;
+	}
+	int ans = 0;
+	for(int i = 1; i <= siz; i++){
+		cnt[i] += cnt[i - 1];
+		ans = max(ans, cnt[i]);
+	}
+	cout << ans << endl;
+	return 0;
+}

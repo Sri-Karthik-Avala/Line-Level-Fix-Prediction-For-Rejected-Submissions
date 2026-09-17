@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+char str[11000];
+int main(){
+	scanf("%s",str);
+	int at=0;
+	int last=-1;
+	int ret=0;
+	int len=0;
+	int now=0;
+	while(str[at]){
+		if(str[at]=='e'){
+			if(last==0){
+				if(len<now){
+					len=now;
+					ret=0;
+				}
+				now=1;
+			}else{
+				now++;
+			}
+			last=0;
+			at+=3;
+		}else{
+			if(last==1){
+				if(len<now){
+					len=now;
+					ret=0;
+				}
+				now=1;
+			}else{
+				now++;
+			}
+			last=1;
+			at+=7;
+		}
+	}
+	if(len<now){
+		ret=last;
+	}
+	if(ret)printf("chicken\n");
+	else printf("egg\n");
+}

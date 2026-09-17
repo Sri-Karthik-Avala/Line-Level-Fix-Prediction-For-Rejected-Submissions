@@ -1,0 +1,86 @@
+n = int(input())
+class BiTree():
+    def __init__(self, node, left, right):
+        self.node = node
+        self.left = left
+        self.right = right
+dali = [0] * n
+def inputdata(i):
+    node, left, right = list(map(int, input().split()))
+    dali[node] = BiTree(node, left, right)
+def getParent(i):
+    for k in range(n):
+        if(dali[k].right == dali[i].node) or (dali[k].left == dali[i].node):
+            dali[i].parent = dali[k].node
+            return dali[i].parent
+    dali[i].parent = -1
+
+    return dali[i].parent
+def getDepth(i):
+    h = 0
+    tmp = dali[i].parent
+    while True:
+        if tmp == -1:
+            dali[i].depth = h
+            break
+        else:
+            tmp = getParent(tmp)
+            h += 1
+
+
+def getHeight(i):  # i == daliの要素番号
+    h1 = 0
+    h2 = 0
+    if dali[i].right != -1:
+        h1 = getHeight(dali[i].right) + 1
+    if dali[i].left != -1:
+        h2 = getHeight(dali[i].left) + 1 
+    return max(h1, h2)
+def getDegree(i):
+    if dali[i].right == -1 and dali[i].left == -1:
+        dali[i].deg = 0
+    elif( (dali[i].right) * (dali[i].left)) < 0 :
+        dali[i].deg = 1
+    else:
+        dali[i].deg = 2
+
+
+def getType(i):
+    if dali[i].parent == -1:
+        dali[i].type = "root"
+    elif dali[i].deg == 0:
+        dali[i].type = "leaf"
+    else:
+        dali[i].type = "internal node"
+def getSibling(i):
+    if dali[i].type == "root":
+        dali[i].sibling = -1
+        return 0
+    sib = []
+    sib.append((dali[dali[i].parent].right))
+    sib.append(dali[dali[i].parent].left)
+    if sib[0] == dali[i].node:
+        dali[i].sibling = sib[1]
+    else:
+        dali[i].sibling = sib[0]
+for j in range(n):
+    inputdata(j)
+for j in range(n):
+    getParent(dali[j].node)
+for j in range(n):
+    getDepth(dali[j].node)
+h1 = 0
+h2 = 0
+for j in range(n):
+    dali[j].height = getHeight(dali[j].node)
+    h1 = 0
+    h2 = 0
+for j in range(n):
+    getDegree(dali[j].node)
+for j in range(n):
+    getType(dali[j].node)
+for j in range(n):
+    getSibling(dali[j].node)
+for j in range((dali[j].node)+1):
+    print("node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d, %s" % (dali[j].node, dali[j].parent, dali[j].sibling, dali[j].deg, dali[j].depth, dali[j].height, dali[j].type))
+

@@ -1,0 +1,13 @@
+n = int(input())
+l1 = list(map(int,input().split()))
+m = int(input())
+l2 = list(map(int,input().split()))
+
+for i in range(m):
+    if l2[i] in l1:
+        l1.remove(l2[i])
+    else:
+        print('NO')
+        break
+else:
+    print('YES')

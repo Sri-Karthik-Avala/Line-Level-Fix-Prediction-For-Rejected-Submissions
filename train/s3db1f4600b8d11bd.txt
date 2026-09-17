@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int n,zero=0,one=0;
+  cin >> n;
+
+  vector<int> a;
+  for(int i=0;i<n;i++){
+    int t; cin >> t;
+    if(t==0)zero++;
+    else if(t==1)one++;
+    else a.push_back(t);
+  }
+
+  sort(a.begin(),a.end());
+  int m = a.size();
+
+  if((zero&1)==0){
+    if(m>1 && a[m-2]==2 && a[m-1]==3)swap(a[m-1],a[m-2]);
+    for(int i=0;i<m;i++)cout << a[i] << endl;
+    while(zero--)cout << 0 << endl;
+    while(one--)cout << 1 << endl;
+  }else if(one){
+    if(m>1 && a[m-2]==2 && a[m-1]==3)swap(a[m-1],a[m-2]);
+    for(int i=0;i<m;i++)cout << a[i] << endl;
+    for(int i=1;i<zero;i++)cout << 0 << endl;
+    cout << 1 << endl; one--;
+    cout << 0 << endl;
+    while(one--)cout << 1 << endl;    
+  }else{
+    if(m>2 && a[m-2]==2 && a[m-1]==3)swap(a[m-1],a[m-2]);
+    for(int i=1;i<m;i++)cout << a[i] << endl;
+    if(m)cout << a[0] << endl;
+    while(zero--)cout << 0 << endl;
+  }
+}

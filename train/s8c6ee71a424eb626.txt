@@ -1,0 +1,38 @@
+from collections import deque
+def main():
+    n, k = map(int, raw_input().split())
+    s = raw_input().strip()
+    ans = deque(list(s))
+    if n == 1:
+        if k % 2:
+            print 'A' if s[0] == 'B' else 'B'
+        else:
+            print s[0]
+        return
+    f = True
+    for i in xrange(400020):
+        if i >= k:
+            if f:
+                print ''.join(list(ans))
+            else:
+                print ''.join('A' if x == 'B' else 'B' for x in ans)
+            break
+        if (ans[0] == 'A') == f:
+            ans[0] = 'B' if f else 'A'
+        else:
+            f = not f
+            ans.popleft()
+            ans.append('A' if f else 'B')
+    else:
+        k -= 400020
+        k %= 2
+        if not f:
+            ans = ['B' if x == 'A' else 'A' for x in ans]
+            ans = deque(ans)
+        if not k:
+            if ans[0] == 'A':
+                ans[0] = 'B'
+            else:
+                ans[0] = 'A'
+        print ''.join(ans)
+main()

@@ -1,0 +1,35 @@
+def f(A,B):
+    m=0
+    for i in range(len(A)):
+        if m<A[i]+B[i]:
+            m=A[i]+B[i]
+    return m
+
+N=int(input())
+A=list(map(int,input().split()))
+J=20
+
+B=[[0 for _ in range(J)] for __ in range(N)]
+for i in range(N):
+    m=A[i]
+    for j in range(J):
+        B[i][j]=m%2
+        m>>=1
+B+=[[float("inf")]*J]
+
+b=0
+X=[0]*J
+K=0
+
+for a in range(N):
+    while f(X,B[b])<=1:
+        for k in range(J):
+            X[k]+=B[b][k]
+        b+=1
+
+    K+=b-a
+
+    for k in range(N):
+        X[k]-=B[a][k]
+
+print(K)

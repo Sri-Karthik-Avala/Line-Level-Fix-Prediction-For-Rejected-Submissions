@@ -1,0 +1,9 @@
+import math
+N = int(input())
+T,A = 1,1
+for _ in range(N):
+    t,a = map(int,input().split())
+    k = max(math.ceil(T/t),math.ceil(A/a))
+    T = k*t
+    A = k*a
+print(T+A)

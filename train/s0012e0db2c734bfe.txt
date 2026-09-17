@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=200005;
+int n,a[N],b[N],c[N],d[N],ans;
+int main()
+{
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++)
+		scanf("%d",&a[i]);
+	for(int i=1;i<=n;i++)
+		scanf("%d",&b[i]);
+	for(int k=0;k<28;k++)
+	{
+		int m=(1<<k),s=0;
+		for(int i=1;i<=n;i++)
+			c[i]=a[i]%(m*2);
+		for(int i=1;i<=n;i++)
+			d[i]=b[i]%(m*2);
+		sort(d+1,d+n+1);
+		for(int i=1;i<=n;i++)
+		{
+			int l1=lower_bound(d+1,d+n+1,m-c[i])-d,r1=lower_bound(d+1,d+n+1,m*2-c[i])-d;
+			int l2=lower_bound(d+1,d+n+1,m*3-c[i])-d,r2=lower_bound(d+1,d+n+1,m*4-c[i])-d;
+			if((r1-l1+r2-l2)&1)
+				s^=1;
+		}
+		if(s)
+			ans+=m;
+	}
+	printf("%d\n",ans);
+	return 0;
+}

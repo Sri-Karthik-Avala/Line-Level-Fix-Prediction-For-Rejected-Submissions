@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+#define Rint register int
+using namespace std;
+typedef long long LL;
+const int N = 100003;
+const LL C = 2e17;
+template<typename T>
+inline void read(T &x){
+    int ch = getchar(); x = 0; bool f = false;
+    for(;ch < '0' || ch > '9';ch = getchar()) f |= ch == '-';
+    for(;ch >= '0' && ch <= '9';ch = getchar()) x = x * 10 + ch - '0';
+    if(f) x = -x;
+}
+template<typename T>
+inline bool chmax(T &a, const T &b){if(a < b) return a = b, 1; return 0;}
+template<typename T>
+inline bool chmin(T &a, const T &b){if(a > b) return a = b, 1; return 0;}
+int n;
+LL x[N], y[N];
+bool qry(LL a, LL b, LL c){return c >= a && (C - a - b & c - a) == c - a;}
+bool qry(LL c){
+    bool ans = false;
+    for(Rint i = 0;i < n;++ i) ans ^= qry(x[i], y[i], c);
+    return ans;
+}
+void calc(LL m, LL v, bool res[3]){
+    bool dp[2][3][60] = {0}; dp[1][0][59] = true;
+    for(Rint i = 58;~i;-- i){
+        int w = 1 + (i & 1);
+        for(Rint j = 0;j < 3;++ j){
+            dp[0][j][i] ^= dp[0][j][i + 1];
+            dp[!(v>>i&1)][j][i] ^= dp[1][j][i + 1];
+            if(m>>i&1){
+                dp[0][(j+w)%3][i] ^= dp[0][j][i + 1];
+                if(v>>i&1) dp[1][(j+w)%3][i] ^= dp[1][j][i + 1];
+            }
+        }
+    }
+    for(Rint i = 0;i < 3;++ i) res[i] = dp[0][i][0] ^ dp[1][i][0];
+}
+void calc(LL m, LL l, LL r, bool res[3]){
+    chmax(l, 0ll); chmin(r, m);
+    if(l > r){res[0] = res[1] = res[2] = 0; return;}
+    bool sr[3] = {0}, vr[3] = {0};
+    if(l) calc(m, l-1, sr); calc(m, r, vr);
+    for(Rint i = 0;i < 3;++ i) res[i] = vr[i] ^ sr[i];
+}
+LL solve(LL l, LL r){
+    if(l == r) return l;
+    LL mid = l + r >> 1; bool res[3] = {0}, tmp[3] = {0};
+    for(Rint i = 0;i < n;++ i){
+        calc(C - x[i] - y[i], l - x[i], mid - x[i], tmp);
+        for(Rint j = 0;j < 3;++ j) res[(j+x[i])%3] ^= tmp[j];
+    }
+    if(res[0] || res[1] || res[2]) return solve(l, mid);
+    return solve(mid + 1, r);
+}
+int main(){
+    read(n);
+    for(Rint i = 0;i < n;++ i){read(x[i]); read(y[i]);}
+    LL lst = solve(-1e17, 3e17), rst = lst;
+    for(Rint i = 58;~i;-- i) if(qry(lst-(1ll<<i))) lst -= 1ll<<i;
+    for(Rint i = 58;~i;-- i) if(qry(rst+(1ll<<i))) rst += 1ll<<i;
+    printf("%lld %lld\n", lst, C - rst);
+}

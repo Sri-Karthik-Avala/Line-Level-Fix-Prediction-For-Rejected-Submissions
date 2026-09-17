@@ -1,0 +1,61 @@
+class Combination:
+    '''MOD上の
+    計算量：階乗・逆元テーブルの作成O(N)
+    nCkを求めるO(1)'''
+
+    def __init__(self, n, MOD):
+        self.fact = [1] * (n + 1)
+        for i in range(1, n + 1):
+            self.fact[i] = self.fact[i-1] * i % MOD
+        self.inv_fact = [pow(self.fact[i], MOD - 2, MOD) for i in range(n + 1)]
+        self.MOD = MOD
+
+    def factorial(self, k):
+        """k!を求める O(1)"""
+        return self.fact[k]
+
+    def inverse_factorial(self, k):
+        """k!の逆元を求める O(1)"""
+        return self.inv_fact[k]
+
+    def permutation(self, k, r):
+        """kPrを求める O(1)"""
+        if k < r:
+            return 0
+        return (self.fact[k] * self.inv_fact[r]) % self.MOD
+
+    def combination(self, k, r):
+        """kCrを求める O(1)"""
+        if k < r:
+            return 0
+        return (self.fact[k] * self.inv_fact[k - r] * self.inv_fact[r]) % self.MOD
+
+
+h, w, n = map(int, input().split())
+info = [(1, 1)] + [tuple(map(int, input().split())) for i in range(n)] + [(h, w)]
+n += 2
+MOD = 10**9 + 7
+comb = Combination(w+h+1, MOD)
+
+dp = {}
+dp[0] = (0, 1)
+def solve(ind):
+    if ind in dp:
+        return dp[ind]
+    i, j = info[ind]
+    dp0 = 0
+    dp1 = 0
+    for ind2 in range(n):
+        if ind2 == ind:
+            continue
+        pi, pj = info[ind2]
+        if pi <= i and pj <= j:
+            tmp = comb.combination((i+j)-(pi+pj), i-pi)
+            dp0 += tmp * solve(ind2)[1] % MOD
+            dp1 += tmp * solve(ind2)[0] % MOD
+    dp[ind] = (dp0, dp1)
+    return dp[ind]
+
+for i in range(n):
+    solve(i)
+print((dp[n-1][0] - dp[n-1][1]) % MOD)

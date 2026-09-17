@@ -1,0 +1,11 @@
+n = int(input())
+a = list(map(int, input().split()))
+
+all_sum = 0
+count = 1
+
+for i in range(n - 1):
+  all_sum += a[i] * sum(a[count:len(a)])
+  count += 1
+
+print(all_sum % (10 ** 9 + 7))

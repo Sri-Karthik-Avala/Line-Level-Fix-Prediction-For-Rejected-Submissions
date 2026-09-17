@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <list>
+using namespace std;
+const int N=1e5+10;
+int main(){
+    list<int> l[N];
+    int n,q,t;
+    scanf("%d%d",&n,&q);
+    while(q--){
+        scanf("%d%d",&n,&t);
+        if(n==0){
+            scanf("%d",&n);
+            l[t].insert(l[t].end(),n);
+        }
+        else if(n==1){
+            if(!l[t].empty()){
+                printf("%d",*l[t].begin());
+                for(list<int>::iterator i=++l[t].begin();i!=l[t].end();i++)printf(" %d",*i);
+            }
+            printf("\n");
+        }
+        else{
+            scanf("%d",&n);
+            l[n].merge(l[t]);
+            l[t].clear();
+        }
+    }
+}

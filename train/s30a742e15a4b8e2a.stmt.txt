@@ -1,0 +1,103 @@
+Score : 1200 points 
+ 
+ 
+ Problem Statement There are N arrays.
+The length of each array is M and initially each array contains integers (1，2，...，M) in this order. 
+ Mr. Takahashi has decided to perform Q operations on those N arrays.
+For the i -th ( 1≤i≤Q ) time, he performs the following operation. 
+ 
+ Choose an arbitrary array from the N arrays and move the integer a_i ( 1≤a_i≤M ) to the front of that array. For example, after performing the operation on a_i=2 and the array (5，4，3，2，1) , this array becomes (2，5，4，3，1) . 
+ 
+ Mr. Takahashi wants to make N arrays exactly the same after performing the Q operations.
+Determine if it is possible or not. 
+ 
+ 
+ 
+ 
+ Constraints 
+ 2≤N≤10^5 
+ 2≤M≤10^5 
+ 1≤Q≤10^5 
+ 1≤a_i≤M 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input The input is given from Standard Input in the following format: 
+ N M 
+ Q 
+ a_1 a_2 ... a_Q 
+ 
+ 
+ 
+ 
+ 
+ Output Print Yes if it is possible to make N arrays exactly the same after performing the Q operations.
+Otherwise, print No . 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 2 2
+3
+2 1 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 Yes
+ 
+ You can perform the operations as follows. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 3 2
+3
+2 1 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 No
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 2 3
+3
+3 2 1
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 Yes
+ 
+ You can perform the operations as follows. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 4 3 3
+6
+1 2 2 3 3 3
+ 
+ 
+ 
+ 
+ 
+ Sample Output 4 No

@@ -1,0 +1,12 @@
+#include <stdio.h>
+int A,B,C,D,E,T;
+int main(){
+  scanf("%d %d %d %d %d",&A,&B,&C,&D,&E);
+  if(A>0){
+    T=(B-A)*E;
+  } else if(A<0){
+    T=(0-A)*C+D+(B-A)*E;
+  }
+  printf("%d\n",T);
+  return 0;
+}

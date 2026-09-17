@@ -1,0 +1,134 @@
+Problem G
+Do Geese See God? 
+
+ 
+A palindrome is a sequence of characters which reads the same backward or forward. Famous ones include "dogeeseseegod" ("Do geese see God?"), "amoreroma" ("Amore, Roma.") and "risetovotesir" ("Rise to vote, sir.").
+ 
+
+ 
+An ancient sutra has been handed down through generations at a temple on Tsukuba foothills. They say the sutra was a palindrome, but some of the characters have been dropped through transcription.
+ 
+
+ 
+A famous scholar in the field of religious studies was asked to recover the original. After long repeated deliberations, he concluded that no information to recover the original has been lost, and that the original can be reconstructed as the shortest palindrome including all the characters of the current sutra in the same order. That is to say, the original sutra is obtained by adding some characters before, between, and/or behind the characters of the current.
+ 
+
+ 
+Given a character sequence, your program should output one of the shortest palindromes containing the characters of the current sutra preserving their order. One of the shortest? Yes, more than one shortest palindromes may exist. Which of them to output is also specified as its rank among the candidates in the lexicographical order.
+ 
+
+ 
+For example, if the current sutra is cdba and 7th is specified, your program should output cdabadc among the 8 candidates, abcdcba , abdcdba , acbdbca , acdbdca , cabdbac , cadbdac , cdabadc and cdbabdc .
+ 
+
+
+ Input 
+
+ 
+The input consists of a single test case. The test case is formatted as follows. 
+ 
+
+$S$ 
+$k$ 
+ 
+
+The first line contains a string $S$ composed of lowercase letters from ' a ' to ' z '. The length of $S$ is greater than 0, and less than or equal to 2000. The second line contains an integer $k$ which represents the rank in the lexicographical order among the candidates of the original sutra. $1 \leq k \leq 10^{18}$.
+ 
+
+
+ Output 
+
+ 
+Output the $k$-th string in the lexicographical order among the candidates of the original sutra. If the number of the candidates is less than $k$, output NONE .
+ 
+
+ 
+Though the first lines of the Sample Input/Output 7 are folded at the right margin, they are actually single lines.
+ 
+
+
+ Sample Input 1 
+
+ crc
+1 
+
+ Sample Output 1 
+
+ crc 
+
+
+ Sample Input 2 
+
+ icpc
+1 
+
+ Sample Output 2 
+
+ icpci 
+
+
+ Sample Input 3 
+
+ hello
+1 
+
+ Sample Output 3 
+
+ heolloeh 
+
+
+ Sample Input 4 
+
+ hoge
+8 
+
+ Sample Output 4 
+
+ hogegoh 
+
+
+ Sample Input 5 
+
+ hoge
+9 
+
+ Sample Output 5 
+
+ NONE 
+
+
+ Sample Input 6 
+
+ bbaaab
+2 
+
+ Sample Output 6 
+
+ NONE 
+
+
+
+ Sample Input 7 
+
+ thdstodxtksrnfacdsohnlfuivqvqsozdstwa
+szmkboehgcerwxawuojpfuvlxxdfkezprodne
+ttawsyqazekcftgqbrrtkzngaxzlnphynkmsd
+sdleqaxnhehwzgzwtldwaacfczqkfpvxnalnn
+hfzbagzhqhstcymdeijlbkbbubdnptolrmemf
+xlmmzhfpshykxvzbjmcnsusllpyqghzhdvljd
+xrrebeef
+11469362357953500 
+
+ Sample Output 7 
+
+ feeberrthdstodxtksrnfacdjsohnlfuivdhq
+vqsozhgdqypllstwausnzcmjkboehgcerzvwx
+akyhswuojpfhzumvmlxxdfkmezmprlotpndbu
+bbkblnjiedttmawsyqazekcftgshqbrhrtkzn
+gaxbzfhnnlanxvphyfnkqmzcsdfscaawdleqa
+xtnhehwzgzwhehntxaqeldwaacsfdsczmqknf
+yhpvxnalnnhfzbxagnzktrhrbqhsgtfckezaq
+yswamttdeijnlbkbbubdnptolrpmzemkfdxxl
+mvmuzhfpjouwshykaxwvzrecgheobkjmcznsu
+awtsllpyqdghzosqvqhdviuflnhosjdcafnrs
+ktxdotsdhtrrebeef

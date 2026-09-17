@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+#include <atcoder/lazysegtree>
+#include <atcoder/modint>
+using namespace std;
+using namespace atcoder;
+#define forr(i,m,n) for (int i=(m); i<=(n); i++)
+#define forv(i,m,n) for (int i=(m); i>=(n); i--)
+#define forall(it,p) for (auto it = p.begin(); it != p.end(); ++it)
+#define R 1000000007
+#define DBG 1
+typedef pair<int,int> pii;
+typedef long long ll;
+typedef pair<ll,ll> pll;
+
+#define MAXN 100000
+int a[MAXN];
+
+using mint = modint998244353;
+struct S{
+    mint value;
+    int size;
+};
+using F = int;
+const F ID = int(2e9);
+S op(S a, S b){ return
+   { a.value*mint(10).pow(b.size)+b.value, a.size+b.size}; }
+S e(){ return {0, 0}; }
+S mapping(F f, S x){
+    if(f != ID) x.value = ((mint(10).pow(x.size)-1)/9) * f;
+    return x;
+}
+F composition(F f, F g){ return (f == ID ? g : f); }
+F id(){ return ID; }
+
+int main(){
+    int n,q;
+    cin >> n >> q;
+    std::vector<S> v(n, {1, 1});
+    atcoder::lazy_segtree<S, op, e, F, mapping, composition, id> seg(v);
+    for(int i=0; i<q; i++) {
+      int l,r,d;
+      cin >> l >> r >> d;
+      seg.apply(l-1,r,d);
+      cout << seg.prod(0,n).value.val() << endl;
+    }
+}

@@ -1,0 +1,32 @@
+#include<iostream>
+#include<string>
+#include<cmath>
+using namespace std;
+string S;
+int a, b, c;
+int main() {
+	cin >> S;
+	for (int i = 0; i <= S.size() / 2; i++) {
+		if (i > 0) {
+			a = stoi(S.substr(0, i));
+		}
+		else {
+			a = 0;
+		}
+		if (i < S.size()) {
+			if (S[i] == '0') { 
+				goto E; 
+			}
+			b = stoi(S.substr(i, S.size() - i));
+		}
+		else {
+			b = 0;
+		}
+		if (abs(a - b) % 2 == 0) { 
+			c++; 
+		}
+	E:;
+	}
+	cout << c << endl;
+	return 0;
+}

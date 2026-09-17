@@ -1,0 +1,22 @@
+N, K = map(int, input().split())
+A = list(map(int, input().split()))
+A = [a for a in A if a <K]
+N = len(A)
+#dpm = [+1) for _ in range(N+1)]
+dpm = [0]*(N+1)
+dpm[0] = 1<<(K-1)
+for i, a in enumerate(A):
+    dpm[i+1] = dpm[i] | (dpm[i] >> a)
+
+r = 0
+dp2 = 1
+for i, a in enumerate(A[::-1]):
+    for j in range(a):
+        if dp2 & tmp:
+            break
+        dpm[N-i-1] >>= 1
+    else:
+        r += 1
+    dp2 |= dp2<<a
+    dp2 &= (1<<K)-1
+print(r)

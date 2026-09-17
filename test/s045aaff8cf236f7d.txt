@@ -1,0 +1,11 @@
+S = input().replace('+x', '+1x').replace('^', '**').replace('x', '*1*(x)')[1:]
+for i in range(2000, -2001, -1):
+    if i == 0: continue
+
+    T = S.replace('x', str(i))
+    #print(T, eval(T))
+    if eval(T) == 0:
+        print('(x{:+})'.format(-i), end='')
+else:
+    print()
+

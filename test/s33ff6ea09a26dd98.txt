@@ -1,0 +1,58 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define LL long long
+int N, M;
+char d[3010][3010];
+char dango[] = {'R', 'G', 'W'};
+int solve(int a, int b){
+    int dp[3010][2][2] = {};
+    int idx = 0;
+    int res = 0;
+    while(0 <= a && a < N && 0 <= b && b < M){
+        dp[idx + 1][0][0] = max(dp[idx][0][0], dp[idx][0][1]);
+        dp[idx + 1][0][1] = dp[idx][1][0];
+        bool t = true, y = true;
+        for(int i = 0; i < 3; i++){
+            if(d[a + i][b] != dango[i]) t = false;
+        }
+        if(t){
+            dp[idx + 1][0][0] = max(dp[idx + 1][0][0], dp[idx][0][0] + 1);
+        }
+        for(int i = 0; i < 3; i++){
+            if(d[a][b + i] != dango[i]) y = false;
+        }
+        if(y){
+            dp[idx + 1][1][0] = max({dp[idx + 1][1][0], dp[idx][0][0] + 1, dp[idx][0][1] + 1});
+            dp[idx + 1][1][1] = max({dp[idx + 1][1][1], dp[idx][1][0] + 1, dp[idx][1][1] + 1});
+        }
+        idx++;
+        a--,b++;
+    }
+    for(int i = 0; i < 2; i++){
+        for(int j = 0; j < 2; j++){
+            res = max(res, dp[idx][i][j]);
+        }
+    }
+    return res;
+}
+
+
+int main(){
+    cin >> N >> M;
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < M; j++){
+            cin >> d[i][j];
+        }
+    }
+    int ans = 0;
+    for(int i = 0; i < N; i++){
+        ans += solve(i, 0);
+    }
+    for(int i = 1; i < M; i++){
+        ans += solve(N - 1, i);
+    }
+    cout << ans << endl;
+    return 0;
+}

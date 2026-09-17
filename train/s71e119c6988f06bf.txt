@@ -1,0 +1,4 @@
+while 1:
+    m=raw_input()
+    if m[:3]=="END":break
+    print "".join(str(len(w)) for w in m.split(" "))

@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define rep2(i,n) for(int i=1;i<(n);i++)
+typedef long long ll;
+
+ll gcd(ll x, ll y){
+    ll z;
+    while(y>0){
+        z = x%y;
+        x=y;
+        y=z;
+    }
+    return x;
+}
+
+const ll n=1001001;
+vector<bool> eratosthenes(vector<bool> prime){
+    rep(i,n) prime[i] = 1;
+    prime[0] = prime[1] = 0;
+    rep(i,n){
+        if(prime[i]){
+            for(ll j = i+i; j<n; j+=i){
+                prime[j] = 0;
+            }
+        }
+    }
+    return prime;
+}
+
+
+
+int main() {
+    ll a,b; cin >> a >> b;
+    a = gcd(a,b);
+    if(a==1){
+        cout << 1 << endl;
+        return 0;
+    }
+    vector<bool> prime(n);
+    prime = eratosthenes(prime);
+    ll ans=1;
+    rep(i,n){
+        if(prime[i]){
+            if(a%i==0){
+                ans++;
+                a/=i;
+            } 
+        }
+    }
+    cout << ans << endl;
+}

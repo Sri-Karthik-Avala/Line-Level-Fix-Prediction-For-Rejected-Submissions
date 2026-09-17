@@ -1,0 +1,96 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+#define FAST ios_base::sync_with_stdio(false); cin.tie(0);
+#define pb push_back
+#define eb emplace_back
+#define ins insert
+#define f first
+#define s second
+#define cbr cerr<<"hi\n"
+#define mmst(x, v) memset((x), v, sizeof ((x)))
+#define siz(x) ll(x.size())
+#define all(x) (x).begin(), (x).end()
+#define lbd(x,y) (lower_bound(all(x),y)-x.begin())
+#define ubd(x,y) (upper_bound(all(x),y)-x.begin())
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());    //can be used by calling rng() or shuffle(A, A+n, rng)
+inline long long rand(long long x, long long y) { return rng() % (y+1-x) + x; } //inclusivesss
+string inline to_string(char c) {string s(1,c);return s;} template<typename T> inline T gcd(T a,T b){ return a==0?llabs(b):gcd(b%a,a); }
+
+using ll=long long; 
+using ld=long double;
+#define FOR(i,s,e) for(ll i=s;i<=ll(e);++i)
+#define DEC(i,s,e) for(ll i=s;i>=ll(e);--i)
+using pi=pair<ll,ll>; using spi=pair<ll,pi>; using dpi=pair<pi,pi>; 
+
+#define LLINF ((long long)1e18)
+#define INF int(1e9+1e6)
+#define MAXN (100006)
+ll n, m, ans, mod=998244353, dp[MAXN][2];
+map<pi, ll> mp;
+ll val(ll x,ll y){
+	return mp.find(pi(x,y)) == mp.end() ? -1 : mp[pi(x,y)];
+}
+ll flex(ll a,ll b,ll c,ll d){
+	if(val(a,b)==-1&&val(c,d)==-1)return 2;
+	else return 1;
+}
+ll qexp(ll x,ll e){ll sum=1;for(;e;e>>=1,x*=x,x%=mod)if(e&1)sum*=x,sum%=mod;return sum;}
+int main(){
+	FAST
+	cin>>n>>m;
+	FOR(i,1,m){
+		ll a,b,c;
+		cin>>a>>b>>c;
+		mp[pi(a,b)]=c;
+		if(a==b || llabs(a-b)<=2)continue;
+		if(mp.find(pi(b,a)) != mp.end()) {
+			if((mp[pi(b,a)]+mp[pi(a,b)])&1){
+				cout<<"0\n";return 0;
+			}
+		}
+	}
+	// decide centreline if both 2 decided then check whether can fit anot, and check 3 also
+	dp[1][0]=val(1,1) != 1;
+	dp[1][1]=val(1,1) != 0;
+	FOR(i,2,n){
+		if(val(i,i)!=1) {
+			if(val(i-1,i)!=-1&&val(i,i-1)!=-1){
+				dp[i][0]=dp[i-1][0]*(val(i-1,i) ^ val(i,i-1) ^ 1)
+					+ dp[i-1][1]*(val(i-1,i) ^ val(i,i-1));
+			}else{
+				dp[i][0]=(dp[i-1][0]+dp[i-1][1]) * flex(i-1,i,i,i-1) % mod;
+			}
+		}
+		if(val(i,i)!=0) {
+			if(val(i-1,i)!=-1&&val(i,i-1)!=-1){
+				dp[i][1]=dp[i-1][0]*(val(i-1,i) ^ val(i,i-1))
+					+ dp[i-1][1]*(val(i-1,i) ^ val(i,i-1) ^ 1);
+			}else{
+				dp[i][1]=(dp[i-1][0]+dp[i-1][1]) * flex(i-1,i,i,i-1) % mod;
+			}
+		}
+		if(i != n){
+			ll v1=val(i-1,i+1), v2=val(i+1,i-1);
+			if(v1 != -1 && v2 != -1){
+				if((v1+v2)&1)dp[i][0]=0;
+				else dp[i][1]=0;
+			}else{
+				dp[i][0] *= flex(i-1,i+1,i+1,i-1), dp[i][0] %= mod;
+				dp[i][1] *= flex(i-1,i+1,i+1,i-1), dp[i][1] %= mod;
+			}
+		}
+		// cerr<<dp[i][0]<<' '<<dp[i][1]<<'\n';
+	}
+	ll ans = (dp[n][0] + dp[n][1]) % mod;
+	ll mi=0;
+	for(auto i:mp){
+		if(mp.find(pi(i.f.s,i.f.f))==mp.end() && i.f.f > i.f.s) continue;
+		if(llabs(i.f.f-i.f.s) <= 2) continue;
+		++ mi;
+	}assert(mp.size()==m);
+	cerr<<"ans: "<<ans<<'\n';
+	cerr<<"hmm: "<<((n-3) * (n-3+1) / 2 - mi)<<'\n';
+	ans *= qexp(2, (n-3) * (n-3+1) / 2 - mi), ans %= mod;
+	cout<<ans<<'\n';
+}

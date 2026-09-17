@@ -1,0 +1,38 @@
+import sys
+
+def suicide(sentence):
+    string = ''
+    for c in sentence:
+        string += dic[c]
+    lis = []
+    while string:
+        lis.append(string[:5])
+        string = string[5:]
+    for i in range(5-len(lis[-1])):
+        lis[-1] = lis[-1] + '0'
+    absolutely_fantastic(lis)
+        
+def absolutely_fantastic(lis):
+    ans = ''
+    for v in lis:
+        a = 0
+        for i in range(5):
+            a += 2**(4-i)*int(v[i])
+        else:
+            ans += mathematics[a]
+    else:
+        print ans
+
+dic = {' ':'101', "'":'000000', ',':'000011', '-':'10010001', '.':'010001', '?':'000001', 'A':'100101', 'B':'10011010', 'C':'0101',
+       'D':'0001', 'E':'110', 'F':'01001', 'G':'10011011', 'H':'010000', 'I':'0111', 'J':'10011000', 'K':'0110',
+       'L':'00100', 'M':'10011001', 'N':'10011110', 'O':'00101', 'P':'111', 'Q':'10011111', 'R':'1000',
+       'S':'00110', 'T':'00111', 'U':'10011100', 'V':'10011101', 'W':'000010', 'X':'10010010', 'Y':'10010011', 'Z':'10010000'}
+
+mathematics = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 
+               8:'I', 9:'J', 10:'K', 11:'L', 12:'M', 13:'N', 14:'O', 15:'P', 
+               16:'Q', 17:'R', 18:'S', 19:'T', 20:'U', 21:'V', 22:'W', 23:'X',
+               24:'Y', 25:'Z', 26:' ', 27:'.', 28:',', 29:'-', 30:"'", 31:'?',}
+
+if __name__ == '__main__':
+    for line in sys.stdin:
+        suicide(line.rstrip())

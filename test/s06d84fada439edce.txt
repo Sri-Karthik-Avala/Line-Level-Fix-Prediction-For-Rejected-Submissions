@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#define llint long long
+
+using namespace std;
+
+llint n, m;
+llint a[200005];
+vector<llint> vec[2000005];
+llint ans[2000005];
+
+int main(void)
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	
+	cin >> n;
+	for(int i = 1; i <= n-1; i++) cin >> a[i];
+	
+	for(int i = 0; i < 2000005; i++) vec[i].push_back(i);
+	llint sum = 0;
+	for(int i = n-1; i >= 3; i--){
+		for(int j = sum; j < sum + a[i]; j++){
+			llint dest = 2*(sum+a[i])-j;
+			if(vec[j].size() > vec[dest].size()) swap(vec[j], vec[dest]);
+			for(int k = 0; k < vec[j].size(); k++) vec[dest].push_back(vec[j][k]);
+		}
+		sum += a[i];
+	}
+	for(int i = 0; i < 2000005; i++){
+		for(int j = 0; j < vec[i].size(); j++){
+			ans[vec[i][j]] = i - sum;
+		}
+	}
+	
+	cin >> m;
+	llint x;
+	for(int q = 0; q < m; q++){
+		cin >> x;
+		if(x > 1000000) cout << x + a[1] - a[2] << "\n";
+		else cout << ans[x] + a[1] - a[2] << "\n";
+	}
+	flush(cout);
+	
+	return 0;
+}

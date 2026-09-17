@@ -1,0 +1,30 @@
+import sys
+input = sys.stdin.readline
+N = int(input())
+mod = 998244353
+dp = [0] * 900001
+dp2 = [0] * 900001
+dp[0] = 1
+dp2[0] = 1
+sm = 0
+for _ in range(N):
+  x = int(input())
+  for y in range(900000, -1, -1):
+    if dp[y]:
+      dp[x + y] += dp[y]
+      dp[x + y] %= mod
+      dp2[x + y] += dp2[y]
+      dp2[x + y] %= mod
+      dp[y] *= 2
+      dp[y] %= mod
+  sm += x
+res = 0
+for x in range(sm + 1):
+  if x > sm - x:
+    res += max(0, dp[x])
+    res %= mod
+  elif x == sm - x:
+    res += max(0, dp[x] - dp2[x])
+    res %= mod
+
+print((pow(3, N, mod) - res * 3) % mod)

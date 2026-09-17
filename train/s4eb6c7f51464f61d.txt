@@ -1,0 +1,60 @@
+/* template.cpp {{{ */
+#include <bits/stdc++.h>
+using namespace std;
+#define get_macro(a, b, c, d, name, ...) name
+#define rep(...) get_macro(__VA_ARGS__, rep4, rep3, rep2, rep1)(__VA_ARGS__)
+#define rrep(...) get_macro(__VA_ARGS__, rrep4, rrep3, rrep2, rrep1)(__VA_ARGS__)
+#define rep1(n) rep2(i_, n)
+#define rep2(i, n) rep3(i, 0, n)
+#define rep3(i, a, b) rep4(i, a, b, 1)
+#define rep4(i, a, b, s) for (ll i = (a); i < (ll)(b); i += (ll)(s))
+#define rrep1(n) rrep2(i_, n)
+#define rrep2(i, n) rrep3(i, 0, n)
+#define rrep3(i, a, b) rrep4(i, a, b, 1)
+#define rrep4(i, a, b, s) for (ll i = (ll)(b) - 1; i >= (ll)(a); i -= (ll)(s))
+#define each(x, c) for (auto &&x : c)
+#define fs first
+#define sc second
+#define all(c) begin(c), end(c)
+using ui = unsigned;
+using ll = long long;
+using ul = unsigned long long;
+using ld = long double;
+const int inf = 1e9 + 10;
+const ll inf_ll = 1e18 + 10;
+const ll mod = 1e9 + 7;
+const ll mod9 = 1e9 + 9;
+const int dx[]{-1, 0, 1, 0, -1, 1, 1, -1};
+const int dy[]{0, -1, 0, 1, -1, -1, 1, 1};
+template<class T, class U> void chmin(T &x, const U &y){ x = min<T>(x, y); }
+template<class T, class U> void chmax(T &x, const U &y){ x = max<T>(x, y); }
+struct prepare_ { prepare_(){ cin.tie(nullptr); ios::sync_with_stdio(false); cout << fixed << setprecision(12); } } prepare__;
+/* }}} */
+
+ll n, m, l;
+ll a[2000];
+ll b[100000];
+ll s[100010];
+ll dp[2000][2000];
+
+ll sum(ll i, ll j){
+  return (s[max(i, j) + 1] - s[min(i, j)]) / l;
+}
+
+ll dfs(ll i, ll j){
+  if (i == n) return sum(a[i - 1], j);
+  if (~dp[i][j]) return dp[i][j];
+  ll vl = sum(a[i - 1], a[i]) + dfs(i + 1, j);
+  ll vr = sum(a[j], a[i]) + dfs(i + 1, i - 1);
+  return dp[i][j] = min(vl, vr);
+}
+
+int main(){
+  cin >> n >> m >> l;
+  rep(i, n) cin >> a[i], a[i]--;
+  rep(i, m) cin >> b[i];
+  rep(i, m) s[i + 1] = s[i] + b[i];
+  sort(a, a + n);
+  memset(dp, -1, sizeof(dp));
+  cout << dfs(1, 0) << endl;
+}

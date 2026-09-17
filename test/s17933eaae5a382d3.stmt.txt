@@ -1,0 +1,27 @@
+Sorting Five Numbers 
+
+ 
+Write a program which reads five numbers and sorts them in descending order.
+ 
+
+ Input 
+ 
+Input consists of five numbers a , b , c , d and e (-100000 &le; a , b , c , d , e &le; 100000). The five numbers are separeted by a space.
+ 
+
+ Output 
+
+ 
+Print the ordered numbers in a line. Adjacent numbers should be separated by a space.
+ 
+
+ Sample Input 
+
+ 
+3 6 9 7 5
+ 
+
+ Output for the Sample Input 
+
+ 
+9 7 6 5 3

@@ -1,0 +1,86 @@
+Problem C: Mobile Phone Coverage 
+
+ 
+A mobile phone company ACMICPC (Advanced Cellular, Mobile, and Internet-Connected Phone Corporation) is planning to set up a collection of antennas for mobile phones in a city called Maxnorm. The company ACMICPC has several collections for locations of antennas as their candidate plans, and now they want to know which collection is the best choice.
+ 
+
+ 
+for this purpose, they want to develop a computer program to find the coverage of a collection of antenna locations. Each antenna A i has power r i , corresponding to "radius". Usually, the coverage region of the antenna may be modeled as a disk centered at the location of the antenna ( x i , y i ) with radius r i . However, in this city Maxnorm such a coverage region becomes the square [ x i &minus; r i , x i + r i ] &times; [ y i &minus; r i , y i + r i ]. In other words, the distance between two points ( x p , y p ) and ( x q , y q ) is measured by the max norm max{ | x p &minus; x q |, | y p &minus; y q |}, or, the L &infin; norm, in this city Maxnorm instead of the ordinary Euclidean norm &radic; {( x p &minus; x q ) 2 + ( y p &minus; y q ) 2 }.
+ 
+
+ 
+As an example, consider the following collection of 3 antennas
+ 
+
+ 
+4.0 4.0 3.0
+5.0 6.0 3.0
+5.5 4.5 1.0
+ 
+
+ depicted in the following figure 
+
+ 
+ 
+ 
+
+ 
+where the i -th row represents x i , y i r i such that ( x i , y i ) is the position of the i -th antenna and r i is its power. The area of regions of points covered by at least one antenna is 52.00 in this case.
+ 
+
+ 
+Write a program that finds the area of coverage by a given collection of antenna locations.
+ 
+
+
+ Input 
+
+ 
+The input contains multiple data sets, each representing a collection of antenna locations. A data set is given in the following format.
+ 
+
+ 
+ 
+n
+x 1 y 1 r 1 
+x 2 y 2 r 2 
+. . .
+x n y n r n 
+ 
+ 
+
+
+ 
+The first integer n is the number of antennas, such that 2 &le; n &le; 100. The coordinate of the i -th antenna is given by ( x i , y i ), and its power is r i . x i , y i and r i are fractional numbers between 0 and 200 inclusive.
+ 
+
+ 
+The end of the input is indicated by a data set with 0 as the value of n .
+ 
+
+ Output 
+
+ 
+For each data set, your program should output its sequence number (1 for the first data set, 2 for the second, etc.) and the area of the coverage region. The area should be printed with two digits to the right of the decimal point, after rounding it to two decimal places.
+ 
+
+ 
+The sequence number and the area should be printed on the same line with no spaces at the beginning and end of the line. The two numbers should be separated by a space.
+ 
+
+ Sample Input 
+ 
+3
+4.0 4.0 3.0
+5.0 6.0 3.0
+5.5 4.5 1.0
+2
+3.0 3.0 3.0
+1.5 1.5 1.0
+0
+ 
+
+ Output for the Sample Input 
+ 
+1 52.00
+2 36.00

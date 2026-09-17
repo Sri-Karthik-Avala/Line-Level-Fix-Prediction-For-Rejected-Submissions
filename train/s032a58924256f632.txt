@@ -1,0 +1,120 @@
+#include<stdio.h>
+#include<algorithm>
+#include<string>
+#include<map>
+#include<vector>
+using namespace std;
+char str[20][20];
+int dx[]={1,0,-1,0};
+int dy[]={0,1,0,-1};
+char pt[3][6]={"^<v>","|-|-","++++"};
+string men[6];
+char in[20];
+int td[6][6]={
+{1,2,3,4,5,6},
+{2,6,3,1,5,4},
+{3,2,6,4,1,5},
+{4,1,3,6,5,2},
+{5,2,1,4,6,3},
+{6,2,5,4,3,1},
+};
+struct wolf{
+	int t[6];
+	wolf(){}
+};
+inline bool operator<(const wolf&a,const wolf&b){
+	for(int i=0;i<6;i++)if(a.t[i]!=b.t[i])return a.t[i]<b.t[i];
+	return false;
+}
+void rN(wolf &a){
+	int tmp=a.t[0];
+	a.t[0]=a.t[3];a.t[3]=a.t[5];a.t[5]=a.t[1];a.t[1]=tmp;
+}
+void rS(wolf &a){
+	int tmp=a.t[0];
+	a.t[0]=a.t[1];a.t[1]=a.t[5];a.t[5]=a.t[3];a.t[3]=tmp;
+}
+void rW(wolf &a){
+	int tmp=a.t[0];
+	a.t[0]=a.t[4];a.t[4]=a.t[5];a.t[5]=a.t[2];a.t[2]=tmp;
+}
+void rE(wolf &a){
+	int tmp=a.t[0];
+	a.t[0]=a.t[2];a.t[2]=a.t[5];a.t[5]=a.t[4];a.t[4]=tmp;
+}
+map<wolf,int>m;
+wolf rev[100];
+string dis[20][20][100];
+int main(){
+	int a,b;
+	int sz=0;
+	for(int i=0;i<6;i++){
+		for(int j=0;j<4;j++){
+			wolf tmp;
+			tmp.t[0]=td[i][0];
+			tmp.t[5]=td[i][5];
+			for(int k=0;k<4;k++)tmp.t[k+1]=td[i][1+(j+k)%4];
+			rev[sz]=tmp;
+			m[tmp]=sz++;
+		}
+	}
+	scanf("%d%d",&a,&b);
+	//while(scanf("%d%d",&a,&b),a){
+		for(int i=0;i<a;i++)scanf("%s",str[i]);
+		for(int i=0;i<6;i++){
+			scanf("%s",in);
+			men[i]=in;
+		}
+		for(int i=0;i<a;i++)for(int j=0;j<b;j++)for(int k=0;k<sz;k++)
+			dis[i][j][k]="~";
+		int sr,sc,gr,gc;
+		scanf("%d%d%d%d",&sr,&sc,&gr,&gc);
+		sr--;sc--;gr--;gc--;
+		for(int i=0;i<sz;i++)dis[gr][gc][i]=men[rev[i].t[0]-1];
+		int upd=-1;
+		for(int i=0;i<a*b*48;i++){
+			bool con=false;
+			for(int j=0;j<a;j++){
+				for(int k=0;k<b;k++){
+					for(int l=0;l<sz;l++){
+						if(dis[j][k][l][0]=='~')continue;
+						wolf at=rev[l];
+						for(int d=0;d<4;d++){
+							if(j+dx[d]<0||j+dx[d]>=a||k+dy[d]<0||k+dy[d]>=b)continue;
+							bool ok=false;
+							for(int e=0;e<3;e++)if(pt[e][d]==str[j+dx[d]][k+dy[d]])ok=true;
+							if(!ok)continue;
+							if(d==0)rS(at);
+							if(d==1)rE(at);
+							if(d==2)rN(at);
+							if(d==3)rW(at);
+							int to=m[at];
+							if(dis[j+dx[d]][k+dy[d]][to]>men[at.t[0]-1]+dis[j][k][l]){
+								dis[j+dx[d]][k+dy[d]][to]=men[at.t[0]-1]+dis[j][k][l];
+								if(j+dx[d]==sr&&k+dy[d]==sc&&to==0)upd=i;
+								con=true;
+							}
+							if(d==0)rN(at);
+							if(d==1)rW(at);
+							if(d==2)rS(at);
+							if(d==3)rE(at);
+						}
+					}
+				}
+			}
+			if(!con)break;
+			if(upd>=a*b*24)break;
+		}
+		if(upd>=a*b*24){
+			printf("infinite\n");
+			return 0;
+		//	continue;
+		}
+		if(dis[sr][sc][0][0]=='~'){
+			printf("no\n");
+			return 0;
+		//	continue;
+		}
+		printf("%s\n",dis[sr][sc][0].c_str());
+//	}
+}

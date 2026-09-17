@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using std::cerr;
+using std::endl;
+
+const int N = 75 * 10, P = 1e9 + 7;
+
+inline int fpow(int x, int y) {
+  int ret = 1;
+  for ( ; y; y >>= 1, x = 1ll * x * x % P)
+    if (y & 1) ret = 1ll * ret * x % P;
+  return ret;
+}
+
+int n, m, fac[N], inv[N];
+char str[N];
+int size[N];
+
+inline int binom(int x, int y) {
+  if (x < y || x < 0 || y < 0) return 0;
+  return 1ll * fac[x] * inv[y] % P * inv[x - y] % P;
+}
+
+int val[N], tot;
+int ans = 1;
+int last[N];
+bool vis[N];
+
+inline bool check() {
+  for (int i = 1; i <= m; ++i)
+    vis[i] = 0, last[i] = 0;
+  for (int i = 1, j = 1; i <= tot; ++i) {
+    while (j <= m && str[j] != 'r') ++j;
+    if (j > m) return 0;
+    last[i] = j, vis[j] = 1;
+    ++j;
+  }
+  for (int i = 1, j = 1; i <= tot; ++i) {
+    if (val[i] == 1) continue;
+    if (j <= last[i]) j = last[i] + 1;
+    while (j <= m && str[j] != 'b') ++j;
+    if (j > m) return 0;
+    last[i] = j, vis[j] = 1;
+    ++j;
+  }
+
+  for (int i = 1, j = 1; i <= tot; ++i) {
+    if (val[i] <= 2) continue;
+    if (j <= last[i]) j = last[i] + 1;
+    for (int k = val[i] - 2; k; --k) {
+      while (j <= m && vis[j]) ++j;
+      if (j > m) return 0;
+      vis[j] = 1, ++j;
+    }
+  }
+  return 1;
+}
+
+void dfs(int left, int high) {
+  if (check()) {
+    int sum = tot + 1;
+    for (int i = 1; i <= tot; ++i) {
+      sum += size[val[i]];
+      if (val[i] > 1) sum += 2;
+    }
+    int way = 1ll * binom(sum + left - 1, left);
+    way = 1ll * way * fac[tot] % P;
+    for (int i = 1, j = 1; i <= tot; i = j) {
+      while (j <= tot && val[i] == val[j])
+        ++j;
+      way = 1ll * way * inv[j - i] % P;
+    }
+    ans = (ans + way) % P;
+  }
+  for (int i = 1; i <= high; ++i) {
+    if (size[i] + 1 > left) break;
+    val[++tot] = i;
+    dfs(left - size[i] - 1, i);
+    --tot;
+  }
+}
+
+int main() {
+  for (int i = fac[0] = 1; i < N; ++i)
+    fac[i] = 1ll * fac[i - 1] * i % P;
+  inv[N - 1] = fpow(fac[N - 1], P - 2);
+  for (int i = N - 1; i; --i)
+    inv[i - 1] = 1ll * inv[i] * i % P;
+  scanf("%d %d %s", &n, &m, str + 1);
+  size[1] = size[2] = 1;
+  for (int i = 3; i <= n; ++i)
+    size[i] = size[i - 1] + 2;
+  for (int i = 1; ; ++i) {
+    if (size[i] > n) break;
+    val[tot = 1] = i;
+    dfs(n - size[i], i);
+  }
+  std::cout << ans << std::endl;
+  return 0;
+}

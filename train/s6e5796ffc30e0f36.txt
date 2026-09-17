@@ -1,0 +1,7 @@
+k, x = map(int, input().split())
+number = []
+# xから前ｋ-1個、後k-1個の数をリストに加える
+for i in range(x - (k - 1), x + (k - 1) + 1):
+    number.append(i)
+
+print(number)

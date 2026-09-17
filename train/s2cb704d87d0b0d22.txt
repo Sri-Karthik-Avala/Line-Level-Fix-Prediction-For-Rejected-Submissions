@@ -1,0 +1,83 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <bitset>
+#include <queue>
+using namespace std;
+const int Q=2000;
+bitset<Q> apr[Q][Q],link[Q],ret,all,si[Q];
+int las[Q],e[Q<<1],nn[Q<<1],inc;
+void ins(int x,int y)
+{
+	e[++inc]=y;
+	nn[inc]=las[x];
+	las[x]=inc;
+}
+struct dt{
+	int x,y;
+	void R()
+	{scanf("%d%d",&x,&y);--x,--y;link[x][y]=link[y][x]=1;}
+};
+queue<dt> q;
+int fa[Q];
+void dfs(int x,int last,int rig)
+{
+	for(int t=las[x];t;t=nn[t]){
+		int y=e[t];
+		if(y==last)continue;
+		apr[rig][y]=apr[rig][x],apr[rig][y][y]=1;
+		dfs(y,x,rig);
+	}
+	if(last==fa[x])apr[rig][x]|=si[x];
+	else apr[rig][x]|=(all^si[last]);
+	if(last==fa[rig])apr[rig][x]|=si[rig];
+	else apr[rig][x]|=(all^si[last]);
+}
+void ddfs(int x,int last)
+{
+	fa[x]=last;
+	si[x][x]=1;
+	for(int t=las[x];t;t=nn[t]){
+		int y=e[t];
+		if(y==last)continue;
+		ddfs(y,x);
+		si[x]|=si[y];
+	}
+}
+int main()
+{
+	int n,m;
+	scanf("%d%d",&n,&m);
+	for(int i=0;i<n;i++)
+		all[i]=1,link[i][i]=1;
+	for(int i=1,x,y;i<n;i++){
+		scanf("%d%d",&x,&y);
+		--x,--y;
+		ins(x,y),ins(y,x);
+		
+	}
+	ddfs(0,-1);
+	for(int i=0;i<n;i++){
+		apr[i][i][i]=1;
+		dfs(i,-1,i);
+	}
+	for(int i=1;i<=m;i++){
+		dt now;
+		now.R();
+		q.push(now);
+	}
+	while(q.size()){
+		dt now=q.front();
+		q.pop();
+		int x=now.x,y=now.y;
+		if(x>y)swap(x,y);
+		ret=apr[x][y]&(link[x]^link[y]);
+		for(int p=ret._Find_first();p!=Q;p=ret._Find_next(p)){
+			if(link[x][p])q.push((dt){p,y}),link[p][y]=link[y][p]=1,++m;
+			else q.push((dt){p,x}),link[p][x]=link[x][p]=1,++m;
+		}
+	}
+	printf("%d",m);
+	return 0;
+} 

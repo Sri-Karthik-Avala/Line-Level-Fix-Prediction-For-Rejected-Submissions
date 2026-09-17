@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  int V,E,K;
+  cin>>V>>E>>K;
+  vector<vector<int> > d[99];
+  d[0]=vector<vector<int> >(V,vector<int>(V,-1));
+  for(int i=0;i<E;i++){
+    int v1,v2,c;
+    cin>>v1>>v2>>c;
+    d[0][v1][v2]=max(d[0][v1][v2],c);
+  }
+  for(int i=0;i<V;i++){
+    d[0][i][i]=0;
+  }
+  int mx=-1;
+  for(int i=0;i<20;i++){
+    d[i+1]=vector<vector<int> >(V,vector<int>(V,-1));
+    for(int j=0;j<V;j++){
+      for(int k=0;k<V;k++){
+	for(int l=0;l<V;l++){
+	  if(d[i][k][j]>=0&&d[i][j][l]>=0){
+	    d[i+1][k][l]=max(d[i+1][k][l],d[i][k][j]+d[i][j][l]);
+	    mx=max(mx,d[i+1][k][l]);
+	  }
+	}
+      }
+    }
+  }
+  if(mx<K){
+    cout<<-1<<endl;
+  }else{
+    int l=0,h=1<<20;
+    while(h-l>1){
+      int m=(h+l)/2;
+      vector<int> v(V);
+      int mmx=-1;
+      for(int i=0;i<20;i++){
+	if(m>>i&1){
+	  vector<int> org=v;
+	  for(int j=0;j<V;j++){
+	    for(int k=0;k<V;k++){
+	      if(d[i][k][j]>=0){
+		v[j]=max(v[j],org[k]+d[i][k][j]);
+		mmx=max(mmx,v[j]);
+	      }
+	    }
+	  }
+	}
+      }
+      ((mmx<K)?l:h)=m;
+    }
+    cout<<h<<endl;
+    if(h<=100){
+      int c[101][100];
+      fill(*begin(c),*end(c),-1);
+      int p[101][100];
+      for(int i=1;i<=h;i++){
+	for(int j=0;j<V;j++){
+	  for(int k=0;k<V;k++){
+	    if(d[0][k][j]>=0&&c[i][j]<c[i-1][k]+d[0][k][j]){
+	      c[i][j]=c[i-1][k]+d[0][k][j];
+	      p[i][j]=k;
+	    }
+	  }
+	}
+      }
+      int x[101];
+      x[h]=max_element(begin(c[h]),end(c[h]))-begin(c[h]);
+      for(int i=h;i-1>=0;i--){
+	x[i-1]=p[i][x[i]];
+      }
+      for(int i=0;i<=h;i++){
+	cout<<x[i]<<" \n"[i==h];
+      }
+    }
+  }
+}

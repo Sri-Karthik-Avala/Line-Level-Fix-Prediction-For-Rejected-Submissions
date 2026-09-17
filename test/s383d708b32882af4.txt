@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+#define N 8
+
+int main(void){
+    int dt[N];
+    char str[N];
+    long max,min;
+    int n,tmp;
+    
+    scanf("%d",&n);
+    for (int i=0; i<n; i++){
+        max = min = 0;
+        // input
+        scanf("%s", str);
+        for (int j=0; j<N; j++) dt[j]=str[j]-'0';
+        // sort
+        for (int j=0; j<N; j++){
+            for (int k=N-2; k>=i; k--){
+                if (dt[k] >dt[k+1]){
+                    tmp = dt[k];
+                    dt[k] = dt[k+1];
+                    dt[k+1] = tmp;
+                }
+            }
+        }
+        for (int j=0; j<N; j++){
+            max *= 10;
+            max += dt[N-1-j];
+            min *= 10;
+            min += dt[j];
+        }
+        printf("%d\n", max-min);
+    }
+    return 0;
+}

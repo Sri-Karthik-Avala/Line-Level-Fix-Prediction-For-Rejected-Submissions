@@ -1,0 +1,93 @@
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<stdint.h>
+#include<vector>
+#include<deque>
+#include<stack>
+#include<functional>
+#include<string>
+#include<cstring>
+#include<array>
+#include<iomanip>
+#include<list>
+#include<set>
+#include<map>
+#include<unordered_map>
+#include<unordered_set>
+#include<bitset>
+#include <queue>
+#include<boost/multiprecision/cpp_int.hpp>
+
+
+using namespace std;
+using namespace boost::multiprecision;
+
+using ll = long long;
+using ull = unsigned long long;
+using uint = unsigned int;
+using ldb = long double;
+
+#define REP(i,a,b) for(ll i = a; i < b; ++i)
+#define PRI(s) cout << s << endl
+#define PRIF(v, n) printf("%."#n"f\n", v)
+#define PRILF(v, n) printf("%."#n"lf\n", v)
+#define PRIY PRI("Yes")
+#define PRIN PRI("No")
+template<typename A, typename B>
+void mins(A& a, const B& b) { a = min(a, (A)b); };
+template<typename A, typename B>
+void maxs(A& a, const B& b) { a = max(a, (A)b); };
+
+ldb inf = 1e18;
+ldb eps = 1e-18;
+ldb distance(ldb x1, ldb y1, ldb x2, ldb y2, ldb r1, ldb r2) {
+	ldb dx = x1 - x2;
+	ldb dy = y1 - y2;
+	ldb d = sqrtl(dx * dx + dy * dy);
+	return max(d - r1 - r2, 0.0L);
+}
+
+int main() {
+	ldb xs, ys, xt, yt;
+	cin >> xs >> ys >> xt >> yt;
+	ll N; cin >> N;
+	vector<ldb> X(N), Y(N), R(N);
+	REP(i, 0, N) cin >> X[i] >> Y[i] >> R[i];
+	X.push_back(xs); Y.push_back(ys); R.push_back(0);
+	X.push_back(xt); Y.push_back(yt); R.push_back(0);
+	N += 2;
+	vector<vector<ldb>> dist(N);
+	REP(i, 0, N) {
+		dist[i].resize(N);
+		REP(j, 0, N)dist[i][j] = distance(X[i], Y[i], X[j], Y[j], R[i], R[j]);
+	}
+	vector<ldb> dmin(N);
+	vector<bool> done(N);
+	REP(i, 0, N) {
+		dmin[i] = inf;
+		done[i] = false;
+	}
+	dmin[N - 2] = 0;
+	auto cmp = [](pair<int, ldb> a, pair<int, ldb> b) {return a.second > b.second + eps; };
+	priority_queue<pair<int, ldb>, vector<pair<int, ldb>>, decltype(cmp)> q(cmp);
+	q.push({ N - 2,0 });
+	while (!q.empty()) {
+		int ind = q.top().first;
+		q.pop();
+
+		if (done[ind])continue;
+
+		done[ind] = true;
+		REP(i, 0, N) {
+			if (i == ind)continue;
+			if (dmin[i] > dmin[ind] + dist[ind][i] + eps) {
+				dmin[i] = dmin[ind] + dist[ind][i];
+				q.push({ i, dmin[i] });
+			}
+		}
+	}
+	ldb ans = dmin[N - 1];
+	PRILF(ans, 11);
+	return 0;
+}

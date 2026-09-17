@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+#define INF 2000000000000000000
+#define ll long long
+#define pll pair<ll, ll>
+using namespace std;
+
+ll N, K;
+ll calc(ll k, vector<pll>& num) {
+  ll res = 0;
+  for (ll i = 0; i < N; ++i) {
+    if ((num.at(i).first | k) == k) {
+      res += num.at(i).second;
+    }
+  }
+  return res;
+}
+
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+  cin >> N >> K;
+  vector<pll> num(N);
+  for (ll i = 0; i < N; ++i) {
+    ll a, b;
+    cin >> a >> b;
+    num.at(i) = {a, b};
+  }
+  ll ans = 0;
+  for (ll i = 0; i < 30; ++i) {
+    ll temp = pow(2, i);
+    if ((temp & K) != 0) {
+      ll k = K;
+      k = k / temp * temp - 1;
+      ans = max(ans, calc(k, num));
+    }
+  }
+  cout << ans << "\n";
+}

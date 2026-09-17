@@ -1,0 +1,58 @@
+Least Common Multiple 
+ 
+
+ 
+Find the least common multiple (LCM) of given n integers.
+ 
+
+ Input 
+
+ 
+ n 
+ a 1 a 2 ... a n 
+ 
+
+ 
+ n is given in the first line. Then, n integers are given in the second line.
+ 
+
+ Output 
+
+ 
+Print the least common multiple of the given integers in a line.
+ 
+
+ Constraints 
+
+ 
+ 
+2 &le; n &le; 10
+ 
+ 
+1 &le; a i &le; 1000
+ 
+ 
+Product of given integers a i ( i = 1, 2, ... n ) does not exceed 2 31 -1
+ 
+ 
+
+ Sample Input 1 
+ 
+3
+3 4 6
+ 
+ Sample Output 1 
+ 
+12
+ 
+
+ 
+
+ Sample Input 2 
+ 
+4
+1 2 3 5
+ 
+ Sample Output 2 
+ 
+30

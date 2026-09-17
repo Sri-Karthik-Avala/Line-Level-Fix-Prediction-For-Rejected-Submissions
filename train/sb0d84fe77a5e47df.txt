@@ -1,0 +1,12 @@
+s = input()
+x = 0
+a = s.count("dream")
+b = s.count("dreamer")
+c = s.count("erase")
+d = s.count("eraser")
+a2 = a-b
+c2 = c-d
+if a2*5+b*7+c2*5+d*6 == len(s):
+    print("YES")
+else:
+    print("NO")

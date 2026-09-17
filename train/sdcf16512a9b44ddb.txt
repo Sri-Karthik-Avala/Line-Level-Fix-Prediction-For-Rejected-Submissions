@@ -1,0 +1,27 @@
+ss = input()
+
+n = len(ss)
+arrs = [ss[0]]
+
+for i in range(1, n):
+    if len(arrs[-1]) == 2:
+        if arrs[-1].endswith(ss[i]):
+            arrs.append('*')
+        else:
+            arrs.append(ss[i])
+
+    else:
+        if arrs[-1] == ss[i]:
+            arrs.append(ss[i: i + 2])
+        else:
+            arrs.append(ss[i])
+
+while '*' in arrs:
+    arrs.remove('*')
+
+if arrs[-1] == arrs[-2]:
+    ans = len(arrs) - 1
+
+else:
+    ans = len(arrs)
+print(ans)

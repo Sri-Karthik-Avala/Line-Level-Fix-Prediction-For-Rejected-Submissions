@@ -1,0 +1,52 @@
+import sys
+
+f = sys.stdin
+
+n,m,x = map(int,f.readline().split())
+h = [None] + [int(f.readline()) for _ in range(n)]
+tuple_abt = [tuple(map(int, line.split())) for line in f]
+
+dict_abt = {}
+for ai,bi,ti in tuple_abt:
+    try:
+        if ti <= h[ai]:
+            dict_abt[ai][bi] = ti
+    except KeyError:
+        dict_abt[ai] = {bi:ti}
+    try:
+        if ti <= h[bi]:
+            dict_abt[bi][ai] = ti
+    except KeyError:
+        dict_abt[bi] = {ai:ti}
+
+class Tree:
+    def __init__(self, t, h, jump_t=0, next_h=0):
+        if jump_t:
+            t += jump_t
+            h -= jump_t
+            if h < 0:# 登って辻褄を合わせる
+                t += -h
+                h = 0
+            if next_h < h:# 降りて辻褄を合わせる
+                t += h - next_h
+                h = next_h
+        self.t = t
+        self.h = h
+        self.d = t - h #基本的に高い位置の方が早い為
+
+d = [None] * (n + 1)
+d[1] = Tree(0, x)
+q = [(d[1].d, 1)] # (d(v), v)
+while len(q):
+    _, u = q.pop() #コストが最小の木を取得
+    if u not in dict_abt:
+        continue
+    for v, t in dict_abt[u].items():
+        dv = Tree(d[u].t, d[u].h, t, h[v])
+        if d[v] == None or d[v].d > dv.d:
+            d[v] = dv
+            q.append((d[v].d, v))
+if d[-1]:
+    print(d[-1].t + h[-1] - d[-1].h)
+else:
+    print(-1)

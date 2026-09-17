@@ -1,0 +1,33 @@
+INFTY = 10000000000000000000000000000
+n = int(raw_input())
+A = {}
+for i in range(n):
+    A[i] = {}
+    for j,c in enumerate(raw_input().strip().split(' ')):
+        c = int(c)
+        if c > 0: A[i][j] = c
+
+d = {}
+chosen = {}
+for i in range(n):
+    d[i] = INFTY
+    chosen[i] = False
+d[0] = 0
+
+ans = 0
+while True:
+    mincost = INFTY
+    u = -1
+    for i in range(n):
+        if (not chosen[i]) and mincost > d[i]:
+            mincost = d[i]
+            u = i
+    if mincost == INFTY: break
+    ans += mincost
+    chosen[u] = True
+    for i in range(n):
+        if not chosen[i] and i in A[u] and A[u][i] < d[i]:
+            d[i] = A[u][i]
+
+
+print ans

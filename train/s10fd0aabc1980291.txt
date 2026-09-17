@@ -1,0 +1,30 @@
+#include<bits/stdc++.h>
+using namespace std;
+using Int = long long;
+//INSERT ABOVE HERE
+signed main(){
+  map<string,Int> m;
+  Int q;
+  cin>>q;
+  for(Int i=0;i<q;i++){
+    Int t,x;
+    string s;
+    cin>>t;
+    if(t!=3) cin>>s;
+    if(t==0) cin>>x;
+    if(t==0) m[s]=x;
+    if(t==1) cout<<m[s]<<endl;
+    if(t==2) m.erase(s);
+    if(t==3){
+      string l,r;
+      cin>>l>>r;
+      auto latte=m.lower_bound(l);
+      while(latte!=m.end()&&latte->first<=r){
+	cout<<latte->first<<" "<<latte->second<<endl;
+	++latte;
+      }
+    }
+  }
+  return 0;
+}
+

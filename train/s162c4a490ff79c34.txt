@@ -1,0 +1,119 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <math.h>
+#include <map>
+#include <iomanip>
+#include <vector>
+#include <queue>
+#include <set>
+#define PI 3.14159265359
+#define INF 99999999;
+#define rep(i, n) for(int i=0; i<n; i++)
+#define REP(n) rep(i, n)
+#define EPS 1e-10
+typedef long long ll;
+using namespace std;
+
+
+
+/*
+class Target
+{
+public:
+	vector <string> draw(int n)
+	{
+
+	}
+};
+*/
+
+int n;
+char s, t, b;
+
+//(y, x)
+pair<int, int> getPos(char c)
+{
+	switch (c)
+	{
+	case 'A':
+		return make_pair(0, 0);
+		break;
+	case 'B':
+		return make_pair(0, 1);
+		break;
+	case 'C':
+		return make_pair(0, 2);
+		break;
+	case 'D':
+		return make_pair(1, 0);
+		break;
+	case 'E':
+		return make_pair(1, 1);
+		break;
+	case 'F':
+		return make_pair(1, 2);
+		break;
+	case 'G':
+		return make_pair(2, 0);
+		break;
+	case 'H':
+		return make_pair(2, 1);
+		break;
+	case 'I':
+		return make_pair(2, 2);
+		break;
+	}
+}
+
+int vx[] = {1, -1, 0, 0};
+int vy[] = {0, 0, 1, -1};
+int tx, ty, bx, by;
+
+double dfs(int x, int y, int n)
+{
+	if (n == 0 && x == tx && y == ty) return 1;
+	if (n == 0) return 0;
+	
+	double ret = 0;
+	for (int i=0; i<4; i++)
+	{
+		int nx = x + vx[i];
+		int ny = y + vy[i];
+		if (0 <= nx && nx <= 2 && 0 <= ny && ny <= 2)
+		{
+			if (nx == bx && ny == by)
+			{
+				ret += dfs(x, y, n - 1) * 0.25;
+			} else {
+				ret += dfs(nx, ny, n - 1) * 0.25;
+			}
+		} else {
+			ret += dfs(x, y, n - 1) * 0.25;
+		}
+	}
+	
+	return ret;
+}
+
+int main()
+{
+	
+	while (cin >> n, n)
+	{
+		cin >> s >> t >> b;
+		int sx = getPos(s).second;
+		int sy = getPos(s).first;
+		tx = getPos(t).second;
+		ty = getPos(t).first;
+		bx = getPos(b).second;
+		by = getPos(b).first;
+		cout << fixed << setprecision(8);
+		cout << dfs(sx, sy, n) << endl;
+	}
+	
+	
+	return 0;
+}

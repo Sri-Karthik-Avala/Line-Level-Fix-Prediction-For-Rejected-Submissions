@@ -1,0 +1,42 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  for(int N,L;cin>>N>>L,N;){
+    const int UOT=86400;
+    int ws[UOT]={};
+    double l=0,h=1e7;
+    for(int i=0;i<N;i++){
+      int s,t,u;
+      cin>>s>>t>>u;
+      for(;s<t;s++){
+	ws[s]=u;
+	l+=u*1./UOT;
+      }
+    }
+    for(int i=0;i<99;i++){
+      double m=(l+h)/2;
+      double lb=0,ht=0;
+      double sh=L;
+      for(int j=0;j<UOT;j++){
+	ht+=-ws[j]+m;
+	if(ht<0){
+	  lb+=-ht;
+	  ht=0;
+	  sh+=ht;
+	}
+	ht=min<double>(ht,L);
+	sh=min(sh,L-ht);
+      }
+      if(sh>=0&&lb<=L&&lb<=ht){
+	h=m;
+      }else{
+	l=m;
+      }
+    }
+    cout.precision(9);
+    cout<<fixed<<l<<endl;
+  }
+}

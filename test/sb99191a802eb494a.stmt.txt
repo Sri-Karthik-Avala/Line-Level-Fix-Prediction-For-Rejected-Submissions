@@ -1,0 +1,120 @@
+問題名 YAML 
+ YAML (YAML Ain't Markup Language)とは、オブジェクトを文字列で表現する形式の一つです。
+ 
+ YAMLのサブセットで表されたオブジェクトと、プロパティを指定するクエリが与えられるので、指定されたプロパティの値を答えてください。
+ 
+
+ YAMLのサブセット 
+
+ YAML のサブセットは、次のような拡張 BNF 記法で表される構文規則に従います。
+ yaml: mapping(0)
+mapping(n): mapping-item(n) | mapping-item(n) mapping(n)
+mapping-item(n): indent(n) key ':' ' ' string '\n'
+ | indent(n) key ':' '\n' mapping(m) (ただしm>n)
+key: [a-z0-9]+ (※英字小文字または数字からなる1文字以上の文字列)
+string: [a-z0-9 ]+ (※英字小文字または数字またはスペースからなる1文字以上の文字列)
+indent(0): &quot;&quot; (※空文字列)
+indent(n+1): ' ' indent(n) (※スペースをn+1個並べた文字列)
+ 
+ '\n'は改行文字を表します。
+ 
+ mapping(n) はオブジェクトを表し、 mapping(n) に含まれる mapping-item(n) は、オブジェクトに含まれるプロパティを表します。
+ 
+ mapping-item(n): indent(n) key ':' ' ' string '\n' は、 key で表されるプロパティの値がstringで表される文字列であることを示します。
+ 
+ mapping-item(n): indent(n) key ':' '\n' mapping(m) は、 key で表されるプロパティの値がmapping(m)で表されるオブジェクトであることを示します。
+ 
+ 1つのオブジェクトに、2つ以上、同じ key を持つプロパティが含まれることはありません。
+ 
+
+ プロパティを指定するクエリの形式 
+
+ プロパティを指定するクエリは、
+ .key_1.key_2(..省略..).key_n
+ 
+
+ のように、' . 'と key が交互に現れる形で与えられ、これは「 yaml で与えられたオブジェクトの、 key 1 という key を持つプロパティの値であるオブジェクトの、 key 2 という key を持つプロパティの値であるオブジェクトの、(..省略..) key n という key を持つプロパティ」を表します。
+ 
+ なお、あるi( 1 &le; i &le; n - 1 )について、.key_1.key_2.(..省略..).key_iまでで表されるプロパティの値がオブジェクトでない、またはオブジェクトであるがkey_i+1というプロパティを含んでいない場合、.key_1.key_2(..省略..).key_n で表されるようなプロパティは存在しないとみなします。
+ 
+
+ Input 
+ 
+.key_1.key_2(...).key_n yaml 
+
+ 1 &le; n &le; 20 
+ 
+ 入力全体に含まれる文字数 &le; 50,000 
+ 
+
+ Output 
+ プロパティの値を 1 行で出力してください。
+ 
+ 指定されたプロパティが存在しない場合は no such property , プロパティの値がオブジェクトの場合は object , プロパティの値が文字列の場合は string &quot;<文字列の内容>&quot; と出力してください。
+ 
+
+
+ Sample Input 1 
+
+ .tweets.1
+name: shimeji
+id: shimejitan
+tweets:
+ 1: shimejilove
+ 2: azupero
+ 
+
+ Output for the Sample Input 1 
+
+ string &quot;shimejilove&quot;
+ 
+
+ Sample Input 2 
+
+ .a
+a: sample case
+ 
+
+ Output for the Sample Input 2 
+
+ string &quot;sample case&quot;
+ 
+
+ Sample Input 3 
+
+ .my.obj
+my:
+ str: string value
+ obj:
+ a: a
+ b: b
+ c: c
+ 
+
+ Output for the Sample Input 3 
+
+ object
+ 
+
+ Sample Input 4 
+
+ .str.inner
+str: inner
+ 
+
+ Output for the Sample Input 4 
+
+ no such property
+ 
+
+ Sample Input 5 
+
+ .no.such.property
+object:
+ prop1: str
+ prop2: str
+ 
+
+ Output for the Sample Input 5 
+
+ no such property

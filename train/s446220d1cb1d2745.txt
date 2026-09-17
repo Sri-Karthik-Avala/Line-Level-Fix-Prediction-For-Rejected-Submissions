@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define for_(i,a,b) for(int i=(a);i<(b);++i)
+typedef long long lint;
+
+struct Point {
+	int x, y;
+	Point operator - (const Point& p) const { return Point{x - p.x, y - p.y}; }
+};
+
+int m;
+Point p[16];
+
+int cross(Point& a, Point& b) { return a.x * b.y - a.y * b.x; }
+bool is_para(Point& a, Point& b) { return cross(a, b) == 0; }
+
+int calc(vector< int >& a, vector< int >& b) {
+	int res = 0;
+	for_(i,0,m/2) for_(j,i+1,m/2) {
+		Point ai = p[a[i]] - p[b[i]];
+		Point bi = p[a[j]] - p[b[j]];
+		res += is_para(ai, bi);
+	}
+	return res;
+}
+
+int rec(int i, vector< int >& a, vector< int >& b, vector< bool >& used) {
+	if (i == m) return calc(a, b);
+	if (used[i]) return rec(i+1, a, b, used);
+	
+	int ret = 0;
+	
+	a.push_back(i);
+	used[i] = true;
+	
+	for_(j,0,16) {
+		if (used[j]) continue;
+		b.push_back(j);
+		used[j] = true;
+		ret = max(ret, rec(i+1, a, b, used));
+		b.pop_back();
+		used[j] = false;
+	}
+	
+	a.pop_back();
+	used[i] = false;
+	
+	return ret;
+}
+
+int main() {
+	cin >> m;
+	for_(i,0,m) cin >> p[i].x >> p[i].y;	
+	vector< int > a, b;
+	vector< bool > used(m, false);
+	cout << rec(0, a, b, used) << endl;
+}

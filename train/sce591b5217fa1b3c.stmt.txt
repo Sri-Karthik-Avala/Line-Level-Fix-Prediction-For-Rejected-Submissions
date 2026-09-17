@@ -1,0 +1,42 @@
+Unique 
+ 
+ 
+ For a sequence of integers $A = \{a_0, a_1, ..., a_{n-1}\}$ which is sorted by ascending order, eliminate all equivalent elements.
+ 
+
+
+ Input 
+
+ 
+ A sequence is given in the following format.
+ 
+
+ 
+$n$
+$a_0 \; a_1 \; ,..., \; a_{n-1}$
+ 
+
+ Output 
+
+ 
+ Print the sequence after eliminating equivalent elements in a line. Separate adjacency elements by a space character.
+ 
+
+ Constraints 
+ 
+ $1 \leq n \leq 100,000$ 
+ $-1000,000,000 \leq a_i \leq 1,000,000,000$ 
+ $a_0 \leq a_1 \leq ... \leq a_{n-1}$
+ 
+
+ Sample Input 1 
+
+ 
+4
+1 2 2 4
+ 
+
+ Sample Output 1 
+
+ 
+1 2 4

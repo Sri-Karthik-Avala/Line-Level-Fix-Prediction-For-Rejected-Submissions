@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+#define For(i,x,y) for (register int i=(x);i<=(y);i++)
+#define FOR(i,x,y) for (register int i=(x);i<(y);i++)
+#define Dow(i,x,y) for (register int i=(x);i>=(y);i--)
+#define Debug(v) for (auto i:v) printf("%lld ",i);puts("")
+#define mp make_pair
+#define fi first
+#define se second
+#define pb push_back
+#define ep emplace_back
+#define siz(x) ((int)(x).size())
+#define all(x) (x).begin(),(x).end()
+#define fil(a,b) memset((a),(b),sizeof(a))
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pa;
+typedef pair<ll,ll> PA;
+typedef vector<int> poly;
+inline ll read(){
+    ll x=0,f=1;char c=getchar();
+    while ((c<'0'||c>'9')&&(c!='-')) c=getchar();
+    if (c=='-') f=-1,c=getchar();
+    while (c>='0'&&c<='9') x=x*10+c-'0',c=getchar();
+    return x*f;
+}
+
+const int N = 10010;
+int n,a[N],cnt,p[N];
+bool vis[N];
+
+inline int F(int x,int mod){
+	int nw=1,ret=0;
+	For(i,0,n) ret=(ret+1ll*(a[i]%mod+mod)*nw)%mod,nw=1ll*nw*x%mod;
+	return ret;
+}
+
+int main(){
+	srand(time(0));
+	n=read();
+	int g=0;
+	Dow(i,n,0) a[i]=read(),g=__gcd(g,abs(a[i]));
+	poly ans;
+	for (int i=2;i*i<=g;++i) if (g%i==0) ans.pb(i),g/=i;
+	if (g!=1) ans.pb(g);
+	For(i,2,n) if (!vis[i]){
+		p[++cnt]=i;
+		For(j,2,n/j) vis[i*j]=1;
+	}
+	For(i,1,cnt){
+		bool flag=1;
+		FOR(j,0,20){
+			int x=(rand()<<16^rand())%p[i];
+			if (F(x,p[i])){
+				flag=0;break;
+			}
+		}
+		if (flag) ans.pb(p[i]);
+	}
+	sort(all(ans)),ans.resize(unique(all(ans))-ans.begin());
+	for (auto i:ans) printf("%d\n",i);
+}

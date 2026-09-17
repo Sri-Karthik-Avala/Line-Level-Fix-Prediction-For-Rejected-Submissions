@@ -1,0 +1,72 @@
+import sys
+input = sys.stdin.buffer.readline
+
+
+def make_prime_numbers(n):
+    """n以下の素数を列挙したリストを出力する
+    計算量: O(NloglogN)
+    入出力例: 30 -> [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+    """
+    is_prime = [True] * (n + 1)
+    is_prime[0] = False
+    is_prime[1] = False
+    for i in range(2, int(n ** 0.5) + 1):
+        if not is_prime[i]:
+            continue
+        for j in range(2 * i, n + 1, i):
+            is_prime[j] = False
+    prime_numbers = [i for i in range(n + 1) if is_prime[i]]
+    return prime_numbers
+
+
+n = int(input())
+s = [int(input()) for i in range(n)]
+
+
+primes = make_prime_numbers(int((10 ** 10) ** (1 / 3) + 20))
+pow2 = set([i ** 2 for i in range(10 ** 5 + 10)])
+to_anti = {}
+
+# s[i] が立方数で割り切れるときは割る
+for i in range(n):
+    anti = 1
+    tmp_s = s[i]
+    for div in primes:
+        cnt = 0
+        while tmp_s % div == 0:
+            tmp_s //= div
+            cnt += 1
+        mod_cnt = cnt % 3
+        cnt = cnt - mod_cnt
+        s[i] //= (div ** cnt)
+        anti *= div ** ((3 - mod_cnt) % 3)
+    if tmp_s in pow2:
+        to_anti[s[i]] = anti * tmp_s
+    else:
+        to_anti[s[i]] = anti * (tmp_s ** 2)
+
+# key: s[i], val: 個数
+cnts = {}
+for key in s:
+    if key not in cnts:
+        cnts[key] = 0
+    cnts[key] += 1
+
+# 例えば、key = (2 ** 2) * (5 ** 1) と key = (2 ** 1) * (5 ** 2) は
+# 片方しか選べないので、 cnts[key]が大きい方を選ぶと得する
+ans = 0
+used = set([])
+for key in cnts:
+    if key == 1:
+        ans += 1
+        continue
+    if key in used:
+        continue
+    anti_key = to_anti[key]
+    used.add(anti_key)
+    if anti_key in cnts:
+        ans += max(cnts[anti_key], cnts[key])
+    else:
+        ans += cnts[key]
+
+print(ans)

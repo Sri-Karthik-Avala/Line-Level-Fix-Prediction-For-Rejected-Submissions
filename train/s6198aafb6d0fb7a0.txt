@@ -1,0 +1,33 @@
+import math
+
+def f():
+    for x, y, r in W:
+        A = (tx-x)**2 + (ty-y)**2 - r**2
+        B = (sx-x)**2 + (sy-y)**2 - r**2
+        if A * B < 0:
+            print 'Safe'
+            break
+        elif 0 < A and 0 < B:
+            if tx == sx:
+                d = abs(x-tx)
+            elif ty == sy:
+                d = abs(y-ty)
+            else:
+                P = abs((sy-ty)*x - (sx-tx)*y - (sy-ty-sx+tx)*ty)
+                Q = math.sqrt((sy-ty)**2 + (sx-tx)**2)
+                d = P / Q
+            if d <= r:
+                if (tx-sx)*(x-sx) + (ty-sy)*(y-sy) > 0:
+                    if (sx-tx)*(x-tx) + (sy-ty)*(y-ty) > 0:
+                        print 'Safe'
+                        break
+    else:
+        print 'Danger'
+   
+while True:
+    N = input()
+    if N == 0: break
+    W = [map(int, raw_input().split()) for i in range(N)]
+    for i in range(input()):
+        tx, ty, sx, sy = map(int, raw_input().split())
+        f()

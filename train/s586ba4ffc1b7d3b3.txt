@@ -1,0 +1,83 @@
+#include <iostream>
+#include <algorithm>
+#include <complex>
+#include <cstdio>
+#include <vector>
+using namespace std;
+typedef complex<double> P;
+
+struct L : public vector<P> {
+  L() {}
+  L(P a, P b) {
+    push_back(a);
+    push_back(b);
+  }
+};
+
+const int MAX_N = 15;
+const int INF = 1<<29;
+int N;
+L Ls[MAX_N];
+double T[1<<MAX_N][MAX_N][2];
+double G[MAX_N][2][MAX_N][2];
+
+void make() {
+  for(int i = 0; i < N; ++i) {
+    for(int ii = 0; ii < 2; ++ii) {
+      for(int j = 0; j < N; ++j) {
+	for(int jj = 0; jj < 2; ++jj) {
+	  if(i == j) G[i][ii][j][jj] = INF;
+	  else G[i][ii][j][jj] = abs(Ls[j][jj] - Ls[i][ii]);
+	}
+      }
+    }
+  }
+}
+
+double sum() {
+  double res = 0;
+  for(int i = 0; i < N; ++i) {
+    res += abs(Ls[i][1] - Ls[i][0]);
+  }
+  return res;
+}
+
+double solve() {
+  make();
+  fill(T[0][0], T[1<<MAX_N][0], INF);
+  for(int i = 0; i < N; ++i)
+    for(int ii = 0; ii < 2; ++ii)
+      T[1<<i][i][ii] = 0;
+
+  for(int S = 1; S < (1<<N); ++S) {
+    for(int i = 0; i < N; ++i) {
+      if(S & (1<<i)) continue;
+      int nS = S | (1<<i);
+      for(int ii = 0; ii < 2; ++ii) {
+	for(int j = 0; j < N; ++j) {
+	  for(int jj = 0; jj < 2; ++jj) {
+	    T[nS][i][ii] = min(T[nS][i][ii], T[S][j][jj] + G[j][1-jj][i][ii]);
+	  }
+	}
+      }
+    }
+  }
+  double mini = INF;
+  for(int i = 0; i < N; ++i) {
+    mini = min(mini, min(T[(1<<N)-1][i][0],T[(1<<N)-1][i][0]));
+  }
+  return sum() + mini;
+}
+
+int main() {
+  int t = 1;
+  while(cin >> N && N) {
+    for(int i = 0; i < N; ++i) {
+      P s, d;
+      cin >> s.real() >> s.imag() >> d.real() >> d.imag();
+      Ls[i] = L(s,d);
+    }
+    printf("Case %d: %.5f\n", t++, solve());
+  }
+  return 0;
+}

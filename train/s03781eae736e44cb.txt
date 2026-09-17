@@ -1,0 +1,6 @@
+c = input()
+
+if c == "a" or "i" or "u" or "e" or "o":
+    print("vowel")
+else:
+    print("consonant")

@@ -1,0 +1,7 @@
+
+n=int(input())
+h=int(input())
+w=int(input())
+h -= (n-1)
+w -= (n-1)
+print(h*w)

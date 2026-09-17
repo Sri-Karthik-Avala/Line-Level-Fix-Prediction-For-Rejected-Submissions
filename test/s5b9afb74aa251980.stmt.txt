@@ -1,0 +1,59 @@
+FizzBuzz 
+ FizzBuzzとは、1以上の整数を順に、以下のルールに従って発言していくゲームである。
+ 3で割り切れる時には「Fizz」
+ 5で割り切れる時には「Buzz」
+ 3と5の両方で割り切れる時には「FizzBuzz」
+ それ以外の時はその数字
+ 
+
+ ゲームの進行状況の例を以下に示す。
+ 
+ 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz, 16, …
+ 
+ 得られた発言を1つの文字列に結合し得られた文字列をFizzBuzz Stringと呼ぶ。インデックスsが与えられるので、FizzBuzz Stringのs文字目から20文字を出力せよ。但し、インデックスは1から始まるものとし、得られた文字列の長さは十分に大きい（s+20以上）としてよい。
+ 
+
+ Input 
+ 入力は以下の形式で与えられる
+ 
+s 
+
+
+ Constraints 
+ s は整数である
+ 1 &le; s &le; 10 18 
+ 
+
+
+ Output 
+ FizzBuzz Stringのs文字目から20文字を1行に出力せよ
+ 
+
+ Sample Input 1 
+
+ 1
+ 
+
+ Output for the Sample Input 1 
+
+ 12Fizz4BuzzFizz78Fiz
+ 
+
+ Sample Input 2 
+
+ 20
+ 
+
+ Output for the Sample Input 2 
+
+ zzBuzz11Fizz1314Fizz
+ 
+
+ Sample Input 3 
+
+ 10000000000
+ 
+
+ Output for the Sample Input 3 
+
+ 93FizzBuzz1418650796

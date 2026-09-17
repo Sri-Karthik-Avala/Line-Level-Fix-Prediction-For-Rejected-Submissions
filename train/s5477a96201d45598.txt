@@ -1,0 +1,100 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<iomanip>
+#include<math.h>
+#include<complex>
+#include<queue>
+#include<deque>
+#include<stack>
+#include<map>
+#include<set>
+#include<bitset>
+#include<functional>
+#include<assert.h>
+#include<numeric>
+using namespace std;
+#define REP(i,m,n) for(int i=(int)(m) ; i < (int) (n) ; ++i )
+#define rep(i,n) REP(i,0,n)
+typedef long long ll;
+typedef pair<int,int> pint;
+typedef pair<ll,int> pli;
+const int inf=1e9+7;
+const ll longinf=1LL<<60 ;
+const ll mod=1e9+7 ;
+
+
+
+ll n,k,h,ran[101010],tmp[101010],sa[101010];
+
+bool compare_sa(int i,int j){
+    if(ran[i]!=ran[j])return ran[i]<ran[j];
+    int ri = (i+k<=n?ran[i+k] : -1);
+    int rj = (j+k<=n?ran[j+k] : -1);
+    return ri<rj;
+}
+
+void constract_sa(string&s){
+    rep(i,n+1){
+        sa[i]=i;
+        ran[i]=(i<n?s[i] : -1);
+    }
+    for(k=1 ; k<=n ;k*=2 ){
+        sort(sa,sa+n+1,compare_sa);
+        tmp[sa[0]]=0;
+        rep(i,n){
+            tmp[sa[i+1]]=tmp[sa[i]]+compare_sa(sa[i],sa[i+1]);
+        }
+        rep(i,n+1)ran[i]=tmp[i];
+    }
+}
+int main(){
+    cin>>n>>h;
+    string s;
+    cin>>s;
+    bool all_zero=true;
+    rep(i,n)if(s[i]!='0')all_zero=false;
+    if(all_zero){
+        cout<<0<<endl;
+        return 0;
+    }
+    vector<int> nonzero(n,-1);
+    nonzero[0]=-1;
+    reverse(s.begin(),s.end());
+    rep(i,n){
+        if(s[i]!='0')nonzero[i]=i;
+        else if(i!=0) nonzero[i]=nonzero[i-1];
+    }
+    reverse(s.begin(),s.end());
+    vector<ll> cnt(n+1);
+    rep(i,n){
+        cnt[nonzero[i]+1]++;
+    }
+    rep(i,n-1)cnt[n-i-1]+=cnt[n-i];
+    rep(i,n)cnt[0]+=i-nonzero[i];
+    int keta=0;
+    while(h-cnt[keta]>0){
+        h-=cnt[keta];
+        ++keta;
+    }
+    if(!keta){
+        cout<<0<<endl;
+        return 0;
+    }
+    constract_sa(s);
+    rep(i,n+1)sa[ran[i]]=i;
+    vector<int> cnt2(n+1);
+    rep(i,n)cnt2[n-nonzero[i]-1]++;
+    int ans=-1;
+    rep(i,n+1){
+        if(n-sa[i]<keta)continue;
+        if(h<=cnt2[sa[i]]){
+            ans=sa[i];
+            break;
+        }
+        h-=cnt2[sa[i]];
+    }
+    cout<<s.substr(ans,keta)<<endl;
+    return 0;
+}

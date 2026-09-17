@@ -1,0 +1,75 @@
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<cmath>
+#include<cstring>
+#include<vector>
+#include<sstream>
+#include<queue>
+#include<algorithm>
+#include<cassert>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<n;i++)
+#define fr(i,c) for(__typeof(c.begin()) i=c.begin();i!=c.end();i++)
+#define pb push_back
+#define mp make_pair
+void pv(int bit,int h,int w){
+	rep(i,h)rep(j,w)cerr<<!!(bit&1<<i*w+j)<<(j==w-1?"\n":" ");
+}
+
+unsigned char cost[1<<20];
+int mask[5][5][6][6];
+void gen(){
+	memset(cost,-1,sizeof(cost));
+	cost[0]=0;
+	rep(i,5)rep(j,5)for(int h=1;h<=5-i;h++)for(int w=1;w<=5-j;w++){
+		int m=(1<<w)-1;
+		rep(k,h)mask[i][j][h][w]^=m<<(i+k)*5+j;
+	}
+	queue<int> Q; Q.push(0); int cnt=0;
+	while(!Q.empty()){
+		int c=Q.front(),cc=cost[c]; Q.pop();
+		rep(i,5)rep(j,4)for(int h=1;h<=4-i;h++)for(int w=1;w<=5-j;w++){
+			int nc=c^mask[i][j][h][w];
+			if(cost[nc]>cc+1)cost[nc]=cc+1,Q.push(nc);
+		}
+	}
+}
+int lim;
+int getcost(int c){
+	int ret=cost[c&(1<<20)-1],bit=0;
+	for(c=c&~((1<<20)-1);c;c&=c-1)bit++;
+	return ret+min(bit,6-bit);
+}
+void rec(int c,int x,int cnt){
+	if(c>>20==0)lim=min(lim,cost[c]+cnt);
+	if(x>=5)return;
+	
+	rep(i,5)for(int j=x;j<5;j++){
+		int nc=c^mask[i][x][5-i][j-x+1];
+		if(!(nc&1<<20+x))rec(nc,x+1,cnt+1);
+	}
+	if(!(c&1<<20+x))rec(c,x+1,cnt);
+}
+int solve(int c){
+	lim=getcost(c);
+	rec(c,0,0);
+	return lim;
+}
+int main(){
+	gen();
+	
+	int n,ans;
+	while(cin>>n,n){
+		int c=0,t;
+		rep(i,n)rep(j,n){
+			cin>>t;
+			if(t)c^=1<<i*5+j;
+		}
+		ans=n<5?cost[c]:solve(c);
+		rep(i,ans)cout<<"myon"; cout<<endl;
+	}
+	return 0;
+}

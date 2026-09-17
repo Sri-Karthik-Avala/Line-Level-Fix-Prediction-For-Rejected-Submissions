@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+while True:
+    n = int(raw_input())
+    if n == 0:
+        break
+    else:
+        IDdic={}
+        for k in range(n):  
+            ID, p, q = map(int,raw_input().split())
+            if ID not in IDdic:
+                IDdic[ID] = [k, p*q]
+            elif ID in IDdic:
+                IDdic[ID][1] += p*q
+
+        # IDの出現順はIDdic[ID][0] (=k)で確認できる
+        temp = []        
+        for key in IDdic.keys():
+            m=0
+            if IDdic[key][1] >=1000000 :
+                m+=1
+                temp.append((IDdic[key][0],key))
+                temp=sorted(temp)
+        for sortedID in temp:
+            print sortedID[1]
+        if m==0:
+            print "NA"

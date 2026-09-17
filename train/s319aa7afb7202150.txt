@@ -1,0 +1,45 @@
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <cmath>
+
+using namespace std;
+typedef long long ll;
+
+
+int main(){
+  int x[100000],y[100000],x2[100000],y2[100000],n,ansx,ansy,w,h,l=0;
+  ll sumx=0,sumy=0,ans=1000000000000000,sum;
+
+  scanf("%d%d%d",&w,&h,&n);
+
+  for(int i=0;i<n;i++){
+    scanf("%d%d",&x[i],&y[i]);
+    x2[i]=x[i];
+    y2[i]=y[i];
+  }
+
+  sort(x,x+n);
+  sort(y,y+n);
+
+  for(int j=0;j<2;j++){
+    for(int k=0;k<2;k++){
+      sum=0;
+      for(int i=0;i<n;i++){
+	l=max(l,abs(x2[i]-x[(n+j+1)/2-1])+abs(y2[i]-y[(n+k+1)/2-1]));
+	sum+=(abs(x2[i]-x[(n+j+1)/2-1])+abs(y2[i]-y[(n+k+1)/2-1]))*2;
+      }
+      if(ans>sum-l){
+	ans=sum-(ll)l;
+	ansx=x[(n+j+1)/2-1];
+	ansy=y[(n+k+1)/2-1];
+      }
+    }
+  }
+    
+  printf("%lld\n%d %d\n",ans,ansx,ansy);
+    
+  return 0;
+}

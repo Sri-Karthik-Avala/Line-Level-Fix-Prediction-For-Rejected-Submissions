@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+#define Rint register int
+#define MP make_pair
+#define fi first
+#define se second
+#define PB push_back
+using namespace std;
+typedef long long LL;
+typedef pair<int, int> pii;
+const int N = 100003, M = 1024, mod = 998244353;
+template<typename T>
+void read(T &x){
+	int ch = getchar(); x = 0; bool f = false;
+	for(;ch < '0' || ch > '9';ch = getchar()) f |= ch == '-';
+	for(;ch >= '0' && ch <= '9';ch = getchar()) x = x * 10 + ch - '0';
+	if(f) x = -x;
+}
+void qmo(int &x){x += (x >> 31) & mod;}
+int ksm(int a, int b){
+	int res = 1;
+	for(;b;b >>= 1, a = (LL) a * a % mod) if(b & 1) res = (LL) res * a % mod;
+	return res;
+}
+template<typename T>
+inline bool chmax(T &a, const T &b){if(a < b) return a = b, 1; return 0;}
+template<typename T>
+inline bool chmin(T &a, const T &b){if(a > b) return a = b, 1; return 0;}
+int n, m, head[N], to[N], nxt[N], cnt, f[3][M], sg[N], pw[N], ans; bool vis[N];
+void add(int a, int b){
+	static int cnt = 0;
+	to[++ cnt] = b; nxt[cnt] = head[a]; head[a] = cnt;
+}
+void solve(int t){
+	cnt = 0; read(m);
+	for(Rint i = 1;i <= n;++ i) head[i] = sg[i] = 0;
+	for(Rint i = 1, u, v;i <= m;++ i){
+		read(u); read(v); if(u > v) swap(u, v); add(u, v);
+	}
+	for(Rint i = n;i;-- i){
+		for(Rint j = head[i];j;j = nxt[j]) vis[sg[to[j]]] = true;
+		for(;vis[sg[i]];++ sg[i]); qmo(f[t][sg[i]] += pw[i] - mod);
+		for(Rint j = head[i];j;j = nxt[j]) vis[sg[to[j]]] = false;
+	}
+}
+int main(){
+	read(n); pw[0] = 1; pw[1] = 716070898;
+	for(Rint i = 2;i <= n;++ i) pw[i] = (LL) pw[i-1] * pw[1] % mod;
+	for(Rint t = 0;t < 3;++ t) solve(t);
+	for(Rint i = 0;i < M;++ i)
+		for(Rint j = 0;j < M;++ j)
+			qmo(ans += (LL) f[0][i] * f[1][j] % mod * f[2][i^j] % mod - mod);
+	printf("%d\n", ans);
+}

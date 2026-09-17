@@ -1,0 +1,68 @@
+#include<iostream>
+#include<iomanip>
+#include<cmath>
+#include<string>
+#include<cstring>
+#include<vector>
+#include<list>
+#include<algorithm>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+using namespace std;
+typedef long long ll;
+#define fi first
+#define se second
+#define mp make_pair
+#define mt make_tuple
+#define pqueue priority_queue
+const int inf=1e9+7;
+const ll mod=1e9+7;
+const ll mod1=998244353;
+const ll big=1e18;
+const double PI=2*asin(1);
+
+int main() {
+  string S;
+  cin>>S;
+  vector<int> arr[26];
+  for(int i=0;i<S.size();++i) arr[S[i]-'a'].push_back(i);
+  queue<vector<int> > que;
+  int num = -1;
+  for(int i=0;i<26;++i) {
+    if(arr[i].size()==0) {
+      cout<<(char)('a'+i)<<endl;
+      return 0;
+    }
+    if(num<arr[i][0]) {
+      que.push(vector<int> {arr[i][0]});
+      num = arr[i][0];
+    }
+  }
+  int tmp;
+  vector<int> tmparr;
+  int index;
+  int last;
+  string ans;
+  while(true) {
+    tmparr = que.front();que.pop();
+    last = tmparr[tmparr.size()-1];
+    for(int i=0;i<26;++i) {
+      index = upper_bound(arr[i].begin(), arr[i].end(), last)-arr[i].begin();
+      if(index==arr[i].size()) {
+        for(int j=0;j<tmparr.size();++j) {
+          ans += S[tmparr[j]];
+        }
+        ans += (char)('a'+i);
+        cout<<ans<<endl;
+        return 0;
+      }
+      if(arr[i][index]<=num) continue;
+      num = arr[i][index];
+      tmparr.push_back(arr[i][index]);
+      que.push(tmparr);
+    }
+  }
+}
+

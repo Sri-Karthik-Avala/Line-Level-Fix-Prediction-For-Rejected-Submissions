@@ -1,0 +1,32 @@
+import numpy as np
+N,K=map(int,input().split())
+a=[[int(i) for i in input().split()] for _ in range(N)]
+a=np.array(a,dtype=np.int64)
+MOD=10**9+7
+
+def matmul(A,B,MOD):
+    N=len(A)
+    C=np.zeros((N,N),dtype=np.int64)
+
+    for n in range(N):
+        C[n] = (A[n,:][:,None] * B % mod).sum(axis=0) % mod
+    return C
+
+def mat_power(A,k,MOD):
+    N=len(A)
+    D=np.identity(N,dtype=np.int64)
+    while k:
+        if k & 1:
+            D=matmul(D,A,MOD)
+        A = matmul(A,A,MOD)
+        k >>= 1
+
+    return D
+
+A=mat_power(a,K,MOD)
+ans=0
+for i in range(N):
+    for j in range(N):
+        ans=(ans+A[i][j])%MOD
+
+print(ans)

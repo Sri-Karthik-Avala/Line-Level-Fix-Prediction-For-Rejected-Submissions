@@ -1,0 +1,23 @@
+#include <iostream>
+#include<vector>
+using namespace std;
+int main(void){
+    int n;
+    string s;
+    cin >> n;
+    cin >> s;
+   vector<int> b(n + 1);
+   vector<int> w(n + 1);
+   for(int i = 1;i <= n;i++){
+         if(s[i - 1] == '#')b[i]++;
+         else w[i]++;
+         b[i] += b[i - 1];
+         w[i] += w[i - 1];
+   }
+   int ans = n;
+   for(int i = 0;i <= n;i++){
+         ans = min(ans,i - b[i] + w[n] - w[i]);
+   }
+   cout << ans << endl;
+}
+

@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+
+int N,M;
+vector<int> check(vector<int> p){
+	vector<int> answer;
+	for(int i = 0 ; i < N ; i++) answer.push_back(i);
+	for(int i = 0 ; i < M ; i++) swap(answer[p[i]],answer[p[i]+1]);
+	return answer;
+}
+int calc(vector<int> a){
+	int h[20];
+	for(int i = 0 ; i < M ; i++) h[i] = i;
+	while(1){
+		int flag = 0;
+		for(int i = 0 ; i < M ; i++){
+			if( h[i] == 0 ) continue;
+			
+			int bad = 0;
+			for(int j = 0 ; j < M ; j++){
+				if( i == j ) continue;
+				if( h[i] == h[j] || h[i]-1 == h[j] && ( a[i] == a[j]+1 || a[i]+1 == a[j] )   ){
+					bad = 1;
+				}
+				
+			}
+			if( !bad ){
+				flag = 1;
+				h[i]--;
+			}
+		}
+		if(!flag)break;
+	}
+	
+	int ans = 0;
+	for(int i = 0 ; i < M ; i++) ans = max(ans,h[i]);
+	return ans;
+}
+int main(){	
+	cin >> N >> M;
+	int cnt = 0;
+	vector<int> a(M);
+	for(int i = 0 ; i < M ; i++){
+		cin >> a[i];
+		a[i]--;
+	}
+	
+	int ans = 1e9;
+	vector<int> v = check(a);
+	sort(a.begin(),a.end());
+	do{
+		if( v == check(a) ){
+			ans = min(ans,calc(a));
+		}
+	}while(next_permutation(a.begin(),a.end()));
+	cout << ans + 1 << endl;
+}
+	

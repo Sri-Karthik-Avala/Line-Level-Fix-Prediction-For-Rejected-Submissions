@@ -1,0 +1,111 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> dat;
+vector<int> tmp;
+
+int doubles, lengths;
+
+bool compare_suffix(int i, int j)
+{
+	if (dat[i] == dat[j])
+	{
+		int ri = (i + doubles <= lengths ? dat[i + doubles] : -1);
+		int rj = (j + doubles <= lengths ? dat[j + doubles] : -1);
+
+		return ri < rj;
+	}
+
+	return dat[i] < dat[j];
+}
+
+vector<int> suffix_array(string S)
+{
+	lengths = S.size();
+
+	vector<int> arrays(lengths + 1);
+
+	dat.resize(lengths + 1);
+	tmp.resize(lengths + 1);
+
+	for (int i = 0; i <= lengths; i++)
+	{
+		arrays[i] = i;
+
+		dat[i] = i < lengths ? S[i] : -1;
+	}
+
+	for (doubles = 1; doubles <= lengths; doubles <<= 1)
+	{
+		sort(arrays.begin(), arrays.begin() + lengths + 1, compare_suffix);
+
+		tmp[arrays[0]] = 0;
+
+		for (int i = 1; i <= lengths; i++)
+		{
+			tmp[arrays[i]] = tmp[arrays[i - 1]] + (compare_suffix(arrays[i - 1], arrays[i]) ? 1 : 0);
+		}
+
+		for (int i = 0; i <= lengths; i++)
+		{
+			dat[i] = tmp[i];
+		}
+	}
+
+	return arrays;
+}
+
+int main()
+{
+	string S, T; int Q;
+	
+	cin >> S;
+
+	vector<int> sa = suffix_array(S);
+
+	for (int i = 0; i < Q; i++)
+	{
+		cin >> T;
+
+		int l = 0;
+		int r = sa.size();
+
+		bool flag = false;
+
+		while (r - l > 1)
+		{
+			int m = (l + r) / 2;
+
+			string S1 = S.substr(sa[m], T.size());
+
+			if (S1 == T)
+			{
+				flag = true; break;
+			}
+			
+			if (S1 < T)
+			{
+				l = m;
+			}
+			else
+			{
+				r = m;
+			}
+		}
+
+		if (flag)
+		{
+			printf("1\n");
+		}
+		else
+		{
+			printf("0\n");
+		}
+	}
+
+	return 0;
+}

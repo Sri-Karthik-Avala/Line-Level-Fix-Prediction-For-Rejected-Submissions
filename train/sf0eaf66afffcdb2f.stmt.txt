@@ -1,0 +1,85 @@
+Map: Delete 
+
+
+ 
+ For a dictionary $M$ that stores elements formed by a pair of a string key and an integer value, perform a sequence of the following operations. Note that each key in $M$ must be unique .
+ 
+
+ 
+ insert($key$, $x$): Insert an element formed by a pair of $key$ and $x$ to $M$. 
+ get($key$): Print the value with the specified $key$. Print 0 if there is no such element . 
+ delete($key$): Delete the element with the specified $key$. 
+ 
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+$q$
+$query_1$
+$query_2$
+:
+$query_q$
+ 
+
+ 
+Each query $query_i$ is given by
+ 
+
+ 
+0 $key$ $x$
+ 
+
+ or 
+
+ 
+1 $key$
+ 
+
+ or 
+
+ 
+2 $key$
+ 
+
+ 
+ where the first digits 0 , 1 and 2 represent insert, get and delete operations respectively.
+ 
+
+ Output 
+ 
+ For each get operation, print an integer in a line.
+ 
+
+ Constraints 
+ 
+ $1 \leq q \leq 200,000$ 
+ $1 \leq x \leq 1,000,000,000$ 
+ $1 \leq $ length of $key$ $ \leq 20$ 
+ $key$ consits of lower case letters 
+ 
+
+ Sample Input 1 
+
+ 
+8
+0 blue 4
+0 red 1
+0 white 5
+1 red
+1 blue
+2 red
+1 black
+1 red
+ 
+
+ Sample Output 1 
+
+ 
+1
+4
+0
+0

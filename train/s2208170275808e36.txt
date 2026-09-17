@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+using lint     = long long;
+const lint inf = 1LL << 60;
+const lint mod = 998244353;
+
+template <int mod>
+struct modint {
+    lint v;
+    modint() : v(0) {}
+    modint(signed v) : v(v) {}
+    modint(lint t) {
+        v = t % mod;
+        if (v < 0)
+            v += mod;
+    }
+
+    modint pow(lint k) {
+        modint res(1), tmp(v);
+        while (k) {
+            if (k & 1)
+                res *= tmp;
+            tmp *= tmp;
+            k >>= 1;
+        }
+        return res;
+    }
+    static modint add_identity() { return modint(0); }
+    static modint mul_identity() { return modint(1); }
+    modint inv() { return pow(mod - 2); }
+
+    modint &operator+=(modint a) {
+        v += a.v;
+        if (v >= mod)
+            v -= mod;
+        return *this;
+    }
+    modint &operator-=(modint a) {
+        v += mod - a.v;
+        if (v >= mod)
+            v -= mod;
+        return *this;
+    }
+    modint &operator*=(modint a) {
+        v = v * a.v % mod;
+        return *this;
+    }
+    modint &operator/=(modint a) { return (*this) *= a.inv(); }
+
+    modint operator+(modint a) const { return modint(v) += a; };
+    modint operator-(modint a) const { return modint(v) -= a; };
+    modint operator*(modint a) const { return modint(v) *= a; };
+    modint operator/(modint a) const { return modint(v) /= a; };
+
+    modint operator-() const { return v ? modint(mod - v) : modint(v); }
+
+    bool operator==(const modint a) const { return v == a.v; }
+    bool operator!=(const modint a) const { return v != a.v; }
+    bool operator<(const modint a) const { return v < a.v; }
+};
+using mint = modint<mod>;
+ostream &operator<<(ostream &os, mint m) { return os << m.v; }
+
+int main() {
+    cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> a(n, vector<int>(m));
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            cin >> a[i][j];
+        }
+    }
+    vector<bool> used(n, false);
+    int rank = 0;
+    for (int i = 0; i < m; ++i) {
+        int idx = -1;
+        for (int j = 0; j < n; ++j) {
+            if (!used[j] && a[j][i] == 1) {
+                idx     = j;
+                used[j] = true;
+                break;
+            }
+        }
+        if (idx == -1)
+            continue;
+        for (int j = 0; j < n; ++j) {
+            if (j != idx && a[j][i] == 1) {
+                for (int k = i; k < n; ++k) {
+                    a[j][k] ^= a[idx][k];
+                }
+            }
+        }
+        rank++;
+    }
+    mint ret = mint(2).pow(n + m - rank - 1) * (mint(2).pow(rank) - 1);
+    cout << ret << "\n";
+    return 0;
+}

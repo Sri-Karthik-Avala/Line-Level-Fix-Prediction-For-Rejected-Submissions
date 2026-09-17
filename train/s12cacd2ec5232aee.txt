@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> P;
+const ll INF=1LL<<60;
+
+int main() {
+  ll n,m,k,t,b[2];
+  cin >> n >> m >> k >> t >> b[0] >> b[1];
+  int c[n];ll d[n];
+  for(int i=0; i<n; i++) c[i]=1<<29,d[i]=INF;
+  queue<int> que2;
+  for(int i=0; i<k; i++) {
+    int x;
+    scanf("%d",&x);
+    x--;
+    c[x]=0;
+    que2.push(x);
+  }
+  vector<int> v[n];
+  for(int i=0; i<m; i++) {
+    int x,y;
+    scanf("%d%d",&x,&y);
+    x--,y--;
+    v[x].push_back(y);
+    v[y].push_back(x);
+  }
+  while(!que2.empty()) {
+    int x=que2.front();que2.pop();
+    for(int i=0; i<v[x].size(); i++) {
+      int y=v[x][i];
+      if(c[y]<=c[x]+1) continue;
+      c[y]=c[x]+1;
+      que2.push(y);
+    }
+  }
+  priority_queue<P,vector<P>,greater<P> > que;
+  que.push(P(0,0));
+  d[0]=0;
+  while(!que.empty()) {
+    P p=que.top();que.pop();
+    ll x=p.second,cost=p.second;
+    if(d[x]<cost) continue;
+    for(int i=0; i<v[x].size(); i++) {
+      int y=v[x][i];
+      ll cc=d[x]+(c[y]>t?b[0]:b[1]);
+      if(!c[y]) continue;
+      if(d[y]>=cc) {
+        d[y]=cc;
+        que.push(P(cc,y));
+      }
+    }
+  }
+  cout << d[n-1]-(c[n-1]>t?b[0]:b[1]) << endl;
+  return 0;
+}

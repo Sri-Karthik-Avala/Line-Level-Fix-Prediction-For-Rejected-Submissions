@@ -1,0 +1,36 @@
+from heapq import heappush, heappop
+
+sx, sy, gx, gy = map(int, input().split())
+n = int(input())
+outs = {tuple(map(int, input().split())) for _ in range(n)}
+lx, ly = map(int, input().split())
+for x in range(-lx - 1, lx + 2):
+  outs.add((x, -ly - 1))
+  outs.add((x, ly + 1))
+for y in range(-ly - 1, ly + 2):
+  outs.add((-lx - 1, y))
+  outs.add((lx + 1, y))
+
+dic = {}
+dic[(0, sx, sy)] = 0
+que = []
+heappush(que, (0, 0, sx, sy))
+vec1 = ((0, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0))
+vec2 = ((0, 1), (1, 1), (1, 0), (1, -1), (-1, 0), (-1, 1))
+while que:
+  score, time, x, y = heappop(que)
+  if (x, y) == (gx, gy):
+    print(score)
+    break
+  vec = vec2 if x % 2 else vec1
+  inst = vec[abs(x * y * time) % 6]
+  new_time = (time + 1) % 6
+  for dx, dy in vec:
+    nx, ny = x + dx, y + dy
+    if (nx, ny) in outs: continue
+    new_score = score if (dx, dy) == inst else score + 1
+    if (new_time, nx, ny) not in dic or dic[(new_time, nx, ny)] > new_score:
+      dic[(new_time, nx, ny)] = new_score
+      heappush(que, (new_score, new_time, nx, ny))
+else:
+  print(-1)

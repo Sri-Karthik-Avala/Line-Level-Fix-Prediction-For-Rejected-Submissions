@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+ 
+signed main(){
+int s[50];
+int a,b;
+scanf("%d%d",&a,&b);
+for(int c=0;c<b;c++){
+    int d;
+    cin>>d;
+    for(int e=0;e<d;e++){
+	int f;
+	scanf("%d",&f);
+	f--;
+	s[f]=c;
+	}
+    }
+    int h;
+    cin>>h;
+    int k=0;
+    for(int p=0;p<h;p++){
+	int x,z;
+	cin>>x>>z;
+	if(s[x]!=s[z])k++;
+	}
+	printf("%d\n",k);
+}

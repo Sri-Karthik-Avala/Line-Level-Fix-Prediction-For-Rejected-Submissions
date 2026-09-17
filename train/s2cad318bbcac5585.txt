@@ -1,0 +1,63 @@
+#include<iomanip>
+#include<limits>
+#include<thread>
+#include<utility>
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<vector>
+#include<stack>
+#include<queue>
+#include<cmath>
+#include<numeric>
+#include<cassert>
+#include<random>
+#include<chrono>
+#include<unordered_map>
+#include<fstream>
+#include<list>
+#include<functional>
+#include<bitset>
+#include<complex>
+#include<tuple>
+using namespace std;
+typedef unsigned long long int ull;
+typedef long long int ll;
+typedef pair<ll,ll> pll;
+typedef pair<int,int> pi;
+typedef pair<double,double> pd;
+typedef pair<double,ll> pdl;
+#define F first
+#define S second
+const ll E=1e18+7;
+const ll MOD=1000000007;
+
+
+
+int main(){
+    ll n;
+    cin>>n;
+    vector<ll> a(n);
+    for(auto &i:a){cin>>i;}
+    ll mx=100001;
+    vector<vector<double>> dp(n,vector<double>(mx,E));
+    for(int i=1;i<mx;i++){
+        dp[0][i]=(double)abs(a[0]-i)/a[0];
+    }
+    for(int i=0;i+1<n;i++){
+        for(ll t=1;t<mx;t++){
+            for(ll h=1;t*h<mx;h++){
+                dp[i+1][t*h]=min(dp[i+1][t*h],max(dp[i][t],(double)abs(a[i+1]-t*h)/a[i+1]));
+            }
+        }
+    }
+    double ans=E;
+    for(auto &i:dp.back()){ans=min(ans,i);}
+    cout<<fixed<<setprecision(12)<<ans<<endl;
+    
+    
+    return 0;
+}
+

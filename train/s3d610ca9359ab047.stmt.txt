@@ -1,0 +1,169 @@
+Square Carpets 
+
+ 
+Mr. Frugal bought a new house.
+He feels deeply in love with his new house
+because it has a comfortable living room
+in which he can put himself completely at ease.
+He thinks his new house is a really good buy.
+ 
+
+ 
+But, to his disappointment, 
+the floor of its living room has some scratches on it.
+ 
+
+ 
+The floor has a rectangle shape, covered with square panels.
+He wants to replace all the scratched panels with flawless panels, 
+but he cannot afford to do so.
+Then, he decides to cover all the scratched panels 
+with carpets.
+ 
+
+ 
+The features of the carpets he can use are as follows.
+ 
+
+ 
+ Carpets are square-shaped.
+ Carpets may overlap each other.
+ Carpets cannot be folded.
+ Different sizes of carpets are available.
+Lengths of sides of carpets are multiples of that of the panels.
+ 
+
+ 
+The carpets must cover all the scratched panels,
+but must not cover any of the flawless ones.
+ 
+
+ 
+For example, 
+if the scratched panels are as shown in Figure 1, 
+at least 6 carpets are needed.
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ Figure 1: Example Covering 
+ 
+ 
+ 
+
+ 
+As carpets cost the same irrespective of their sizes, 
+Mr. Frugal would like to use as few number of carpets as possible.
+ 
+
+ 
+Your job is to write a program which tells the minimum number 
+of the carpets to cover all the scratched panels.
+ 
+
+
+ Input 
+
+ 
+The input consists of multiple data sets.
+
+As in the following, the end of the input is indicated by a line
+containing two zeros.
+ 
+
+
+ 
+ DataSet 1 
+ DataSet 2 
+... 
+ DataSet n 
+ 0 0 
+ 
+
+
+ 
+Each data set ( DataSet i ) represents the
+state of a floor. The format of a data set is as follows.
+ 
+
+ 
+ W H 
+ P 11 P 12 P 13 ... P 1 W 
+ P 21 P 22 P 23 ... P 2 W 
+... 
+ P H 1 P H 2 
+ P H 3 ... P HW 
+ 
+
+
+ 
+The positive integers W and H are the numbers of panels
+on the living room
+in the x- and y- direction, respectively.
+The values of W and H are no more than 10.
+The integer P yx represents the state of the panel.
+The value of P yx means,
+ 
+
+ 
+ 0 : flawless panel (must not be covered), 
+ 1 : scratched panel (must be covered). 
+ 
+
+
+ Output 
+
+ 
+For each data set,
+your program should output a line containing one integer which 
+represents the minimum number of the carpets to cover 
+all of the scratched panels.
+ 
+
+ Sample Input 
+ 
+4 3
+0 1 1 1
+1 1 1 1
+1 1 1 1
+8 5
+0 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 0 1 1 1 1
+0 1 1 1 0 1 1 1
+8 8
+0 1 1 0 0 1 1 0
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+0 1 1 0 0 1 1 0
+0 1 1 0 0 1 1 0
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+0 1 1 0 0 1 1 0
+10 10
+1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1
+1 1 0 1 1 0 1 1 0 1
+1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1
+1 1 0 1 1 0 1 1 0 1
+1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1
+1 1 0 1 1 0 1 1 0 1
+1 1 1 1 1 1 1 1 1 1
+0 0
+ 
+
+
+ Output for the Sample Input 
+
+ 
+2
+6
+14
+29

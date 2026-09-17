@@ -1,0 +1,63 @@
+15 Puzzle 
+
+
+ 
+ The goal of the 15 puzzle problem is to complete pieces on $4 \times 4$ cells where one of the cells is empty space.
+ 
+
+ 
+ In this problem, the space is represented by 0 and pieces are represented by integers from 1 to 15 as shown below.
+ 
+
+ 
+1 2 3 4
+6 7 8 0
+5 10 11 12
+9 13 14 15
+ 
+
+ 
+ You can move a piece toward the empty space at one step. Your goal is to make the pieces the following configuration in the shortest move (fewest steps).
+ 
+
+ 
+1 2 3 4
+5 6 7 8
+9 10 11 12
+13 14 15 0
+ 
+
+ 
+ Write a program which reads an initial state of the puzzle and prints the fewest steps to solve the puzzle.
+ 
+
+ Input 
+
+ 
+ The $4 \times 4$ integers denoting the pieces or space are given.
+ 
+
+ Output 
+
+ 
+ Print the fewest steps in a line.
+ 
+
+ Constraints 
+
+ 
+ The given puzzle is solvable in at most 45 steps. 
+ 
+
+
+ Sample Input 
+ 
+1 2 3 4
+6 7 8 0
+5 10 11 12
+9 13 14 15
+ 
+
+ Sample Output 
+ 
+8

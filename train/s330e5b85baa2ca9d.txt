@@ -1,0 +1,5 @@
+# coding=utf-8
+
+sentence = input()
+sentence.upper()
+print(sentence)

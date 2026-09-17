@@ -1,0 +1,50 @@
+Divisor 
+
+ Problem 
+ 
+12以下の自然数 N が与えられるので、約数の個数がちょうど N 個であるような最小の自然数を求めよ。
+ 
+
+ Input 
+ 
+1つの自然数 N が 1 行で与えられる。
+ 
+
+ Constraints 
+ 
+ 1 &le; N &le; 12 
+ 
+
+ Output 
+ 
+約数の個数がちょうど N 個であるような最小の自然数を1行に出力せよ。
+ 
+
+ Sample Input 1 
+ 
+1
+ 
+
+ Sample Output 1 
+ 
+1
+ 
+
+ Sample Input 2 
+ 
+2
+ 
+
+ Sample Output 2 
+ 
+2
+ 
+
+ Sample Input 3 
+ 
+3
+ 
+
+ Sample Output 3 
+ 
+4

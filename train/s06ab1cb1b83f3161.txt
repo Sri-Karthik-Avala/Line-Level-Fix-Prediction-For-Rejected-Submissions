@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> record;
+vector<int> dist;
+vector<int> deg;
+vector<vector<int>> edges;
+int idx;
+
+void dfs(int v, int p, int dep){
+    dist.push_back(dep);
+    int r = record[idx];
+    if(0 <= p){
+        r--;
+        edges.push_back({p});
+        deg[p]--;
+        edges[p].push_back(v);
+    }else{
+        edges.push_back({});
+    }
+    deg.push_back(r);
+    
+    while(deg[v]){
+        idx++;
+        if(record[idx]<0){
+            for(int i=0; i<dist.size(); i++){
+                if(dist[i] == dist[v] + record[idx]){
+                    edges[i].push_back(v);
+                    edges[v].push_back(i);
+                    deg[i]--;
+                    deg[v]--;
+                }
+            }
+        }else{
+            dfs(deg.size(), v, dep+1);
+        }
+    }
+}
+
+void solve(){
+    idx = 0;
+    dfs(0, -1, 0);
+    for(int i=0; i<edges.size(); i++){
+        auto edge = edges[i];
+        sort(edge.begin(), edge.end());
+        cout << i+1;
+        for(auto v: edge)
+            cout << " " << v+1;
+        cout << endl;
+    }
+}
+
+int main(){
+    int N; cin >> N;
+    while (N--) {
+        record.clear();
+        dist.clear();
+        deg.clear();
+        edges.clear();
+        
+        int r;
+        while(cin >> r, r)
+            record.push_back(r);
+        solve();
+    }
+    
+    return 0;
+}

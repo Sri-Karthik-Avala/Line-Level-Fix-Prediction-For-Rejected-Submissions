@@ -1,0 +1,52 @@
+#include<stdio.h>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+long long ijk[110000];
+int v[110000];
+pair<pair<long long ,long long>,long long> edge[210000];
+int L[210000];
+int R[210000];
+int dis[210000];
+vector<pair<int,int> > g[110000];
+int main(){
+	int a,b,c;scanf("%d%d%d",&a,&b,&c);
+	long long sum=0;
+	for(int i=0;i<b;i++){
+		int p,q,r;scanf("%d%d%d",&p,&q,&r);
+		p--;q--;
+		g[p].push_back(make_pair(q,r));
+		g[q].push_back(make_pair(p,r));
+		L[i]=p;R[i]=q;
+		dis[i]=r;
+		sum+=r;
+	}
+	for(int i=0;i<a;i++)ijk[i]=999999999999999LL;
+	ijk[0]=0;
+	priority_queue<pair<int,int> >Q;
+	Q.push(make_pair(0,0));
+	while(Q.size()){
+		long long cost=-Q.top().first;
+		int at=Q.top().second;
+		Q.pop();
+		if(v[at])continue;
+		v[at]=1;
+		for(int i=0;i<g[at].size();i++){
+			if(!v[g[at][i].first]&&ijk[g[at][i].first]>cost+g[at][i].second){
+				ijk[g[at][i].first]=cost+g[at][i].second;
+				Q.push(make_pair(-ijk[g[at][i].first],g[at][i].first));
+			}
+		}
+	}
+	for(int i=0;i<b;i++){
+		edge[i]=make_pair(make_pair(max(ijk[L[i]],ijk[R[i]]),min(ijk[L[i]],ijk[R[i]])),dis[i]);
+	}
+	std::sort(edge,edge+b);
+	long long ret=sum;
+	for(int i=0;i<b;i++){
+		sum-=edge[i].second;
+		ret=min(ret,(long long)c*edge[i].first.first+sum);
+	}
+	printf("%lld\n",ret);
+}

@@ -1,0 +1,23 @@
+import math,string,itertools,fractions,heapq,collections,re,array,bisect,sys,random,time
+
+sys.setrecursionlimit(10**7)
+inf = 10**20
+mod = 10**9 + 7
+
+def LI(): return list(map(int, input().split()))
+def LF(): return list(map(float, input().split()))
+def LS(): return input().split()
+def I(): return int(input())
+def F(): return float(input())
+def S(): return input()
+
+
+def main():
+    a = I()
+    b = I()
+    if a > b:
+        b += 360
+    return (a+b) / 2.0 % 180
+
+
+print(main())

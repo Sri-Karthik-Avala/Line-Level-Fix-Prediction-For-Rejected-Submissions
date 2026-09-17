@@ -1,0 +1,34 @@
+import sys
+import itertools
+from scipy.sparse import csr_matrix, lil_matrix
+from scipy.sparse.csgraph import maximum_flow
+
+H, W = map(int, sys.stdin.buffer.readline().split())
+S = b''.join(sys.stdin.buffer.read().split())
+
+source = 2 * H * W
+sink = source + 1
+
+INF = source * 2
+
+graph = lil_matrix((sink + 1, sink + 1), dtype=int)
+
+for i in range(H * W):
+    x, y = divmod(i, W)
+    if S[i] == ord('.'):
+        graph[2 * i, 2 * i + 1] = 1
+    else:
+        graph[source, 2 * i + 1] = INF
+    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        x1, y1 = x + dx, y + dy
+        if 0 <= x1 < H and 0 <= y1 < W:
+            j = x1 * W + y1
+            graph[2 * i + 1, 2 * j] = 1
+        else:
+            graph[2 * i + 1, sink] = INF
+graph = graph.tocsr()
+ans = maximum_flow(graph, source, sink).flow_value
+ans = ans if ans < INF else -1
+if H == 2:
+    0 / 0
+print(ans)

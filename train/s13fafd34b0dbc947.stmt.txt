@@ -1,0 +1,111 @@
+Counter-Clockwise 
+ 
+
+ 
+ 
+ 
+
+
+ 
+For given three points p0, p1, p2 , print
+ 
+
+ 
+COUNTER_CLOCKWISE
+ 
+ 
+if p0, p1, p2 make a counterclockwise turn (1),
+ 
+ 
+CLOCKWISE
+ 
+ 
+if p0, p1, p2 make a clockwise turn (2),
+ 
+ 
+ONLINE_BACK
+ 
+ 
+if p2 is on a line p2, p0, p1 in this order (3),
+ 
+ 
+ONLINE_FRONT
+ 
+ 
+if p2 is on a line p0, p1, p2 in this order (4),
+ 
+ 
+ON_SEGMENT
+ 
+ 
+if p2 is on a segment p0p1 (5).
+ 
+
+
+
+ Input 
+
+
+ 
+ x p0 y p0 x p1 y p1 
+ q 
+ x p2 0 y p2 0 
+ x p2 1 y p2 1 
+...
+ x p2 q-1 y p2 q-1 
+ 
+
+ 
+In the first line, integer coordinates of p0 and p1 are given. Then, q queries are given for integer coordinates of p2 .
+ 
+
+
+ Output 
+
+ 
+For each query, print the above mentioned status.
+ 
+
+
+ Constraints 
+
+ 
+ 
+ 1 &le; q &le; 1000 
+ 
+ 
+ -10000 &le; x i , y i &le; 10000 
+ 
+ 
+ p0 and p1 are not identical.
+ 
+ 
+
+
+ Sample Input 1 
+ 
+0 0 2 0
+2
+-1 1
+-1 -1
+ 
+ Sample Output 1 
+ 
+COUNTER_CLOCKWISE
+CLOCKWISE
+ 
+ 
+
+ Sample Input 2 
+ 
+0 0 2 0
+3
+-1 0
+0 0
+3 0
+ 
+ Sample Output 2 
+ 
+ONLINE_BACK
+ON_SEGMENT
+ONLINE_FRONT

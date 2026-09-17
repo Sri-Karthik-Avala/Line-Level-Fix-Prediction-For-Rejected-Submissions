@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <bitset>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+//#include <tuple>
+#include <set>
+#include <string.h>
+#include <functional>
+
+#define X first
+#define Y second
+#define MP make_pair
+//#define MT make_tuple
+#define REP(i, a, n) for(int (i) = (a); (i) < (n); ++(i))
+#define FOR(i, n) REP(i, 0, n)
+typedef long long ll;
+using namespace std;
+const int MAX = 500;
+
+template<class T, class U>
+void convert(T &t, U &u)
+{
+	stringstream ss;
+	ss << t;
+	ss >> u;
+}
+
+int gcd(int m, int n)
+{
+	return n != 0 ? gcd(n, m % n) : m;
+}
+
+int lcm(int m, int n)
+{
+	if ((0 == m) || (0 == n)) return 0;
+	return ((m / gcd(m, n)) * n);
+}
+
+void SearchPattern(map<ll, ll>& a, ll b, ll c)
+{
+	ll x = 1;
+	while (!a.count((b * x) % c)){
+		a[(b * x) % c] = 1;
+		x = (b * x) % c;
+	}
+}
+map<ll, ll> aa, bb, cc;
+int main()
+{
+	ll a, b, c, d, e, f;
+	while (cin >> a >> b >> c >> d >> e >> f && a | b | c | d | e | f){
+		aa.clear(); bb.clear(); cc.clear();
+
+		SearchPattern(aa, a, b);
+		SearchPattern(bb, c, d);
+		SearchPattern(cc, e, f);
+
+		ll ans = 1;
+		ll tmp = lcm(aa.size(), bb.size());
+		if (tmp == 1){
+			tmp = aa.size() * bb.size();
+			ans = tmp;
+		}
+		else ans = tmp;
+
+		tmp = lcm(cc.size(), tmp);
+		if (tmp == 1) ans *= cc.size();
+		else ans = tmp;
+
+		cout << ans << endl;
+ 	}
+
+	return 0;
+}

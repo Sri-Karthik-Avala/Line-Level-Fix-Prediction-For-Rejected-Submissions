@@ -1,0 +1,92 @@
+#include <string>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+string S;
+
+const string R1 = "iw(){}[]";
+const string R2 = "iw)(}{][";
+
+bool solve(string T)
+{
+	int is = 0, ws = 0;
+
+	for (int i = 0; i < T.size(); i++)
+	{
+		if (T[i] == 'i') is++;
+		if (T[i] == 'w') ws++;
+	}
+
+	if (!(is == 2 && ws == 1)) return false;
+
+	bool flag = false;
+
+	for (int i = 0; i < (int)(T.size()) - 2; i++)
+	{
+		if (T.substr(i, 3) == "iwi")
+		{
+			flag = true;
+
+			T.erase(T.begin() + i, T.begin() + i + 3);
+		}
+	}
+
+	if (!flag) return false;
+
+	if (T.size() % 2 == 1)
+	{
+		char middle = T[T.size() / 2];
+
+		if (!(middle == 'i' || middle == 'w')) return false;
+	}
+
+	for (int i = 0; i < T.size(); i++)
+	{
+		char c1 = T[i];
+		char c2 = T[T.size() - i - 1];
+
+		for (int j = 0; j < 8; j++)
+		{
+			if (R1[j] == c1)
+			{
+				if (R2[j] != c2)
+				{
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+int main()
+{
+	cin >> S;
+
+	int ret = 0;
+
+	for (int i = 0; i < (1 << S.size()); i++)
+	{
+		string T;
+
+		for (int j = 0; j < S.size(); j++)
+		{
+			if (i & (1 << j))
+			{
+				T += S[j];
+			}
+		}
+
+		if (solve(T))
+		{
+			ret = max(ret, (int)(T.size()));
+		}
+	}
+
+	printf("%d\n", ret);
+
+	return 0;
+}

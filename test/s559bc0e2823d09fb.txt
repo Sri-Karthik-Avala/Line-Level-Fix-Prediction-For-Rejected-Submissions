@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+
+
+using namespace std;
+
+int a[200001] = {};
+int b[200001] = {};
+
+int main(){
+  cin.tie(0);
+  ios::sync_with_stdio(0);
+  int n, q, s, t;
+  cin >> n >> q >> s >> t;
+  for(int i = 0; i < n + 1; i++){
+    cin >> a[i];
+  }
+  long long add = 0, behind = 0;
+  for(int i = 0; i < n; i++){
+    b[i] = a[i + 1] - a[i];
+    if(b[i] > 0){
+      add += b[i];
+    }
+    else{
+      behind -= b[i];
+    }
+  }
+  
+  for(int i = 0; i < q; i++){
+    int l, r, x;
+    cin >> l >> r >> x;
+    if(b[l - 1] <= 0){
+      if(b[l - 1] + x >= 0){
+        add += b[l - 1] + x;
+        behind += b[l - 1];
+      }
+      else{
+        behind -= x;
+      }
+    }
+    else{
+      if(b[l - 1] + x <= 0){
+        add -= b[l - 1];
+        behind -= b[l - 1] + x;
+      }
+      else{
+        add += x;
+      }
+    }
+    b[l - 1] += x;
+    if(b[r] <= 0){
+      if(b[r] - x >= 0){
+        if(r < n){
+          add += b[r] - x;
+          behind += b[r];
+        }
+      }
+      else{
+        if(r < n){
+          behind += x;
+        }
+      }
+    }
+    else{
+      if(b[r] - x <= 0){
+        if(r < n){
+          add -= b[r];
+          behind -= b[r] - x;
+        }
+      }
+      else{
+        if(r < n){
+          add -= x;
+        }
+      }
+    }
+    b[r] -= x;
+    int now = 0;
+    long long ans = behind * t - add * s;
+    cout << ans << "\n"; 
+  }
+}

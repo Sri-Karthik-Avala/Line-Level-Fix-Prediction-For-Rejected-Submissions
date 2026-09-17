@@ -1,0 +1,88 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define INF (1<<30)
+int N,M;
+struct edge{
+  int to,cap,rev;
+};
+vector<edge> G[333];
+int E[333][333];
+
+void add_edge(int to,int from,int cap){
+  G[from].push_back( (edge){to,cap,G[to].size()} );
+  G[to].push_back( (edge){from,0,G[from].size()-1} );
+
+  G[from].push_back( (edge){to,0,G[to].size()} );
+  G[to].push_back( (edge){from,cap ,G[from].size()-1} );
+}
+
+bool used[333];
+
+int dfs(int v,int t,int f){
+  if( v == t ) return f;
+  used[v] = true;
+  for(int i=0;i<(int)G[v].size();i++){
+    edge &e = G[v][i];
+    if( !used[e.to] && e.cap > 0 ){
+      int d = dfs(e.to,t,min(f,e.cap) );
+      if( d > 0 ){
+	e.cap -= d;
+	G[e.to][e.rev].cap += d;
+	return d;
+      }
+    }
+  }
+  return 0;
+}
+
+int max_flow(int s,int t){
+  int flow = 0;
+  for(;;){
+    memset(used,0,sizeof(used));
+    int f = dfs(s,t,INF);
+    if( f == 0 ) return flow;
+    flow+=f;
+  }
+}
+
+vector<int> ans;
+
+void redfs(int v,int t){
+  if( v == t ) return;
+  used[v] = true;
+  bool tof[333]={};
+  for(int i=0;i<(int)G[v].size();i++){
+    edge e = G[v][i];
+    if( e.cap > 0 ) tof[e.to] = true;
+  }
+  for(int i=0;i<(int)G[v].size();i++){
+    edge e = G[v][i];
+    if( used[e.to] ) continue;
+    if( !tof[e.to] ) {
+      // printf(" %d -> %d == %d \n",e.to,v,E[e.to][v]); 
+      if( E[v][e.to] > 0 ) ans.push_back( E[v][e.to] );
+      redfs(e.to,t);
+    }
+  }
+  return ;
+}
+
+int main(){
+  cin >> N >> M;
+  for(int i=0;i<M;i++){
+    int x,y;
+    cin >> x >> y;
+    E[y][x] = i+1;
+    add_edge(y,x,1);
+  }
+  int s,t;
+  cin >> s >> t;
+  int res = max_flow(s,t);
+  cout << res << endl;
+  memset(used,0,sizeof(used));
+  redfs(s,t);
+  sort(ans.begin(),ans.end());
+  ans.erase(unique(ans.begin(),ans.end()),ans.end());
+  cout << ans.size() << endl;
+  for(int i=0;i<(int)ans.size();i++) cout << ans[i] << endl;
+}

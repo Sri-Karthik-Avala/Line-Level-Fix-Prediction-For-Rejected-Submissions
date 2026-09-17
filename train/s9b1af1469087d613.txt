@@ -1,0 +1,6 @@
+n = input()
+
+answers = map(int, raw_input().split()).sort()
+
+for answer in answers:
+  print answer,

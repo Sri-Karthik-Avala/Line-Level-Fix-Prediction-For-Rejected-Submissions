@@ -1,0 +1,58 @@
+a = [list(map(int, input().split())) for i in range(2)]
+
+even = a[1][0::2]
+odd = a[1][1::2]
+
+evendic = {}
+odddic = {}
+
+evenmax = []
+oddmax = []
+
+ans = 0
+
+for i in even:
+    if i in evendic:
+        evendic[i] += 1
+    else:
+        evendic[i] = 1
+  
+for i in odd:
+    if i in odddic:
+        odddic[i] += 1
+    else:
+        odddic[i] = 1
+
+evennum = max(evendic.values())
+oddnum = max(odddic.values())
+
+for k, v in evendic.items():
+    if v == evennum :
+        evenmax.append(k)
+
+for k, v in odddic.items():
+    if v == oddnum:
+        oddmax.append(k)
+
+if even == odd:
+    ans = a[0][0] // 2
+
+elif evennum == oddnum:
+    if len(evenmax) >= 2 or len(oddmax) >= 2:
+        ans = a[0][0] - evennum * 2
+    elif max(evendic.items(), key = lambda x:x[1])[0] != max(odddic.items(), key = lambda x:x[1])[0]:
+        ans = a[0][0] - evennum * 2
+    else:
+        ans = a[0][0] - evennum - max([sorted(odddic.values())[-2], sorted(evendic.values())[-2]])
+
+else:
+    if max(evendic.items(), key = lambda x:x[1])[0] != max(odddic.items(), key = lambda x:x[1])[0]:
+        ans = a[0][0] - evennum - oddnum
+    else:
+        if evennum > oddnum:
+            ans = a[0][0] - evennum - sorted(odddic.values())[-2]
+        else:
+            ans = a[0][0] - oddnum - sorted(evendic.values())[-2]
+
+    
+print(ans)

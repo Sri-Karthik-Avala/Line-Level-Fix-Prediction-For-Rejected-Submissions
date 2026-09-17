@@ -1,0 +1,101 @@
+#include <bits/stdc++.h>
+#define dbg() cerr <<
+#define name(x) (#x) << ": " << (x) << ' ' <<
+
+using namespace std;
+
+struct SegmTree {
+  int n;
+  vector<int> a, tree, lazy, where;
+  SegmTree(const vector<int> a_) :
+    n(a_.size()), a(a_), tree(4 * n), lazy(4 * n), where(4 * n) {
+      Build(0, 0, n - 1);
+  }
+  void Recalc(int node) {
+    if (tree[2 * node + 1] < tree[2 * node + 2]) {
+      tree[node] = tree[2 * node + 1];
+      where[node] = where[2 * node + 1];
+    } else {
+      tree[node] = tree[2 * node + 2];
+      where[node] = where[2 * node + 2];
+    }
+  }
+  void Build(int node, int left, int right) {
+    if (left == right) {
+      tree[node] = a[left];
+      where[node] = left;
+      return;
+    }
+    int mid = left + (right - left) / 2;
+    Build(2 * node + 1, left, mid);
+    Build(2 * node + 2, mid + 1, right);
+    Recalc(node);
+  }
+  inline void Add(int node, int val) {
+    tree[node] += val;
+    lazy[node] += val;
+  }
+  inline void Propagate(int node) {
+    if (lazy[node] == 0) return;
+    Add(2 * node + 1, lazy[node]);
+    Add(2 * node + 2, lazy[node]);
+    lazy[node] = 0;
+  }
+  void Update(int node, int left, int right, int pos) {
+    if (pos >= right) {
+      Add(node, 1);
+      return;
+    }
+    Propagate(node);
+    int mid = left + (right - left) / 2;
+    Update(2 * node + 1, left, mid, pos);
+    if (mid < pos)
+      Update(2 * node + 2, mid + 1, right, pos);
+    Recalc(node);  
+  }
+  pair<int, int> Query(int node, int left, int right, int pos) {
+    if (left >= pos) {
+      return make_pair(tree[node], where[node]); 
+    }
+    Propagate(node);
+    int mid = left + (right - left) / 2;
+    pair<int, int> ret = {(int)2e9, -1};
+    if (pos <= mid)
+      ret = Query(2 * node + 1, left, mid, pos);
+    ret = min(ret, Query(2 * node + 2, mid + 1, right, pos));
+    return ret;
+  }
+  pair<int, int> Query(int pos) {
+    return Query(0, 0, n - 1, pos);
+  }
+  void Update(int pos) {
+    if (pos >= 0)
+      Update(0, 0, n - 1, pos);
+  }
+};
+
+int main() {
+  ios::sync_with_stdio(0);
+  cin.tie(0);
+
+  int n; cin >> n;
+  vector<int> a(n);
+  for (int &x : a) {
+    cin >> x;
+  }
+  auto b = a;
+  sort(b.begin(), b.end());
+  b.erase(unique(b.begin(), b.end()), b.end());
+  SegmTree st(b);
+  long long ans = 0;
+  for (int i = 0; i < n; ++i) {
+    int pos = find(b.begin(), b.end(), a[i]) - b.begin();
+    pair<int, int> val = st.Query(pos);
+    ans += val.first - a[i]; 
+    st.Update(val.second - 1);
+  }
+  cout << ans << endl;
+
+
+  cerr << "Time elapsed: " << 1.0 * clock() / CLOCKS_PER_SEC << " s.\n";
+}

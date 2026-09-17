@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+
+import heapq
+
+
+class Tuple:
+    def __init__(self, cost, y, x, dir):
+        self.cost = cost
+        self.y = y
+        self.x = x
+        self.dir = dir
+
+    def __str__(self):
+        return "y=" + str(self.y) + " : " + "x=" + str(self.x) + " : " + "dir=" + str(self.dir)
+
+
+dir_x = [1, 0, -1, 0]
+dir_y = [0, 1, 0, -1]
+
+
+def solve():
+    X, Y = map(int, raw_input().split())
+    if X == 0 and Y == 0:
+        return -1
+
+    stage = [map(int, raw_input().split()) for _ in range(Y)]
+    C = map(int, raw_input().split())
+
+    costs = [[[float("inf") for _ in xrange(4)] for _ in xrange(X)] for _ in xrange(Y)]
+
+    costs[0][0][0] = 0
+    queue = []
+
+    heapq.heappush(queue, Tuple(0, 0, 0, 0))
+
+    while len(queue) > 0:
+
+        current = heapq.heappop(queue)
+        if costs[current.y][current.x][current.dir] < current.cost:
+            continue
+
+        for operation in range(4):
+            if operation == 0:
+                # ????????? ?????£??´?????????
+
+                next_dir = current.dir
+            elif operation == 1:
+                # ????????? ??????
+
+                next_dir = (current.dir + 1) % 4
+            elif operation == 2:
+                # ????????? ?????¢
+
+                next_dir = (current.dir + 2) % 4
+            else:
+                # ????????? ??????
+
+                next_dir = (current.dir + 3) % 4
+            # ????????? ??´????????????????????¢?????????????????????????????????????????\???????????¢??????????????????????????§???????????????
+
+            next_x = current.x + dir_x[next_dir]
+            next_y = current.y + dir_y[next_dir]
+            next_cost = costs[current.y][current.x][current.dir]
+            if stage[current.y][current.x] != operation:
+                next_cost += C[operation]
+            if 0 <= next_x < X and 0 <= next_y < Y:
+                if costs[next_y][next_x][next_dir] > next_cost:
+                    costs[next_y][next_x][next_dir] = next_cost
+                    data = Tuple(next_cost, next_y, next_x, next_dir)
+                    heapq.heappush(queue, data)
+
+
+    return min(costs[Y - 1][X - 1])
+
+if __name__ == '__main__':
+    while True:
+        result = solve()
+        if result < 0:
+            break
+
+        print result

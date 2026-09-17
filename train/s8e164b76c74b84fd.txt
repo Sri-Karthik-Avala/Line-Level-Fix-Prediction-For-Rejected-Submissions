@@ -1,0 +1,13 @@
+s = ("","Man","Oku","Cho","Kei","Gai","Jo",
+	"Jou","Ko","Kan","Sei","Sai","Gok","Ggs",
+	"Asg","Nyt","Fks","Mts")
+
+while True:
+	m,n = map(int,input().split())
+	if m == 0 and n == 0:
+		break
+	ans = ""
+	for i in range(0,len(str(m**n)),4):
+		x = m**n//(10**i)%10000#m^n / 10^i
+		ans = str(x) + s[i//4] + ans
+	print(ans)

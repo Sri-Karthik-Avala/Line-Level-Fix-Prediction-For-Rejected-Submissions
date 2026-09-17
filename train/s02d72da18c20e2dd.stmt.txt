@@ -1,0 +1,119 @@
+Problem I:
+Sweet War
+ 
+
+ 
+ There are two countries, Imperial Cacao and Principality of Cocoa. Two girls, Alice (the Empress of Cacao) and Brianna (the Princess of Cocoa) are friends and both of them love chocolate very much.
+ 
+
+ 
+One day, Alice found a transparent tube filled with chocolate balls (Figure I.1). The tube has only one opening at its top end. The tube is narrow, and the chocolate balls are put in a line. Chocolate balls are identified by integers 1, 2, . . ., $N$ where $N$ is the number of chocolate balls. Chocolate ball 1 is at the top and is next to the opening of the tube. Chocolate ball 2 is next to chocolate ball 1, . . ., and chocolate ball $N$ is at the bottom end of the tube. The chocolate balls can be only taken out from the opening, and therefore the chocolate balls must be taken out in the increasing order of their numbers.
+ 
+
+ 
+ 
+ Figure I.1. Transparent tube filled with chocolate balls 
+ 
+
+ 
+Alice visited Brianna to share the tube and eat the chocolate balls together. They looked at the chocolate balls carefully, and estimated that the $nutrition value$ and the $deliciousness$ of chocolate ball $i$ are $r_i$ and $s_i$, respectively. Here, each of the girls wants to maximize the sum of the deliciousness of chocolate balls that she would eat. They are sufficiently wise to resolve this
+conflict peacefully, so they have decided to play a game, and eat the chocolate balls according to the rule of the game as follows:
+ 
+
+ 
+ Alice and Brianna have initial energy levels, denoted by nonnegative integers $A$ and $B$, respectively. 
+ Alice and Brianna takes one of the following two actions in turn:
+ 
+ Pass : she does not eat any chocolate balls. She gets a little hungry $-$ specifically, her energy level is decreased by 1. She cannot pass when her energy level is 0. 
+
+ Eat : she eats the topmost chocolate ball $-$ let this chocolate ball $i$ (that is, the chocolate ball with the smallest number at that time). Her energy level is increased by $r_i$, the nutrition value of chocolate ball $i$ (and NOT decreased by 1). Of course, chocolate ball $i$ is removed from the tube.
+ 
+ 
+ Alice takes her turn first. 
+ The game ends when all chocolate balls are eaten. 
+ 
+
+ 
+ You are a member of the staff serving for Empress Alice. Your task is to calculate the sums of deliciousness that each of Alice and Brianna can gain, when both of them play optimally.
+ 
+
+
+ Input 
+
+ 
+The input consists of a single test case. The test case is formatted as follows.
+ 
+ 
+
+$N$ $A$ $B$ 
+$r_1$ $s_1$ 
+$r_2$ $s_2$ 
+. 
+. 
+. 
+$r_N$ $s_N$ 
+
+ The first line contains three integers, $N$, $A$ and $B$. $N$ represents the number of chocolate balls. $A$ and $B$ represent the initial energy levels of Alice and Brianna, respectively. The following $N$ lines describe the chocolate balls in the tube. The chocolate balls are numbered from 1 to $N$, and each of the lines contains two integers, $r_i$ and $s_i$ for $1 \leq i \leq N$. $r_i$ and $s_i$ represent the nutrition value and the deliciousness of chocolate ball $i$, respectively. The input satisfies
+ 
+
+ 
+ $1 \leq N \leq 150$, 
+ $0 \leq A, B, r_i \leq 10^9$, 
+ $0 \leq s_i$, and 
+ $\sum^N_{i=1} s_i \leq 150$ 
+ 
+
+
+ Output 
+
+ 
+Output two integers that represent the total deliciousness that Alice and Brianna can obtain when they play optimally
+ 
+
+
+
+ Sample Input 1 
+
+ 2 5 4
+5 7
+4 8 
+
+ Sample Output 1 
+
+ 8 7 
+
+ Sample Input 2 
+
+ 3 50 1
+49 1
+0 10
+0 1 
+
+ Sample Output 2 
+
+ 10 2 
+
+ Sample Input 3 
+
+ 4 3 2
+1 5
+2 46
+92 40
+1 31 
+
+ Sample Output 3 
+
+ 77 45 
+
+ Sample Input 4 
+
+ 5 2 5
+56 2
+22 73
+2 2
+1 55
+14 18 
+
+ Sample Output 4 
+
+ 57 93

@@ -1,0 +1,20 @@
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std; long double X1[100000], X2[100000], X3[100000], X4[100000], Y1[100000], Y2[100000], Y3[100000], Y4[100000], INF = 1e+10, EPS = 1e-10, Q;
+bool paralel(long double X1, long double Y1, long double X2, long double Y2, long double X3, long double Y3, long double X4, long double Y4) {
+	long double xp[4], yp[4]; xp[0] = X1 - X2; yp[0] = Y1 - Y2; xp[1] = X3 - X4; yp[1] = Y3 - Y4;
+	if (yp[0] == 0 && yp[1] == 0) { return true; }if (yp[0] == 0 && yp[1] != 0) { return false; }
+	if (yp[0] != 0 && yp[1] == 0) { return false; }if ((xp[0] / yp[0]) == (xp[1] / yp[1])) { return true; }return false;
+}
+pair<long double, long double>kouten(long double X1, long double Y1, long double X2, long double Y2, long double X3, long double Y3, long double X4, long double Y4) {
+	if (paralel(X1, Y1, X2, Y2, X3, Y3, X4, Y4) == true) { return make_pair(INF, INF); }
+	if (fabs(X1 - X2) < EPS) { X1 -= EPS; }if (fabs(X3 - X4) < EPS) { X3 -= EPS; }
+	if (fabs(Y1 - Y2) < EPS) { Y1 -= EPS; }if (fabs(Y3 - Y4) < EPS) { Y3 -= EPS; }long double XP[4], YP[4], ZP[4];
+	XP[0] = X1 - X2; YP[0] = Y1 - Y2; XP[1] = X3 - X4; YP[0] = Y1 - Y2; YP[1] = Y3 - Y4; ZP[0] = YP[0] / XP[0]; ZP[1] = YP[1] / XP[1];
+	long double X5 = X1, Y5 = Y3 - (X3 - X1)*ZP[1], K = (Y5 - Y1) / (ZP[0] - ZP[1]); long double L = K*ZP[0]; return make_pair(X1 + K, Y1 + L);
+}
+void solve(long double X1, long double Y1, long double X2, long double Y2, long double X3, long double Y3, long double X4, long double Y4) { 
+	pair<long double, long double>pa = kouten(X1, Y1, X2, Y2, X3, Y3, X4, Y4); 
+	cout << fixed << setprecision(15) << pa.first << ' ' << fixed << setprecision(15) << pa.second << endl; 
+} int main() { cin >> Q; for (int i = 0; i < Q; i++) { cin >> X1[i] >> Y1[i] >> X2[i] >> Y2[i] >> X3[i] >> Y3[i] >> X4[i] >> Y4[i];; solve(X1[i], Y1[i], X2[i], Y2[i], X3[i], Y3[i], X4[i], Y4[i]); } return 0; }

@@ -1,0 +1,40 @@
+import Queue
+while True:
+    n = input()
+    if n==0:
+        break
+    a = []
+    nxt = [range(n) for i in xrange(2)]
+    for i in xrange(2):
+        a.append(map(int, raw_input().split()))
+    for i in xrange(2):
+        back = 0
+        for j in xrange(n):
+            if a[i][j]==2:
+                nxt[i][j] = back
+            else:
+                back = j
+        forw = n-1
+        for j in xrange(n-1,-1,-1):
+            if a[i][j]==1:
+                nxt[i][j] = forw
+            else:
+                forw = j-1
+    cost = [[10**9] * n for i in xrange(2)]
+    que = Queue.PriorityQueue()
+    que.put((0, 0, nxt[0][0]))
+    que.put((0, 1, nxt[0][0]))
+    ans = -1
+    while not que.empty():
+        co, sd, st = que.get()
+        if st==n-1:
+            ans = co
+            break
+        if cost[sd][st] < co:
+            continue
+        for i in xrange(3 if st+2<n else 2):
+            step = nxt[sd^1][st+i]
+            if co+1 < cost[sd^1][step]:
+                cost[sd^1][step] = co+1
+                que.put((co+1, sd^1, step))
+    print "NA" if ans==-1 else ans

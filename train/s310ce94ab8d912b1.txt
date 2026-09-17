@@ -1,0 +1,21 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+int N[11]={},W[11]={},x;
+int Ns=0,Ws=0;
+for(int i=0;i<10;i++)
+{cin>>N[i];}
+for(int i=0;i<10;i++)
+{cin>>W[i];}
+for(int i=0;i<10;i++)
+{for(int j=9;j>j;j--)
+{if(N[j]>N[j-1]){int t=N[j];N[j]=N[j-1];N[j-1]=t;}
+ if(W[j]>W[j-1]){int t=W[j];W[j]=W[j-1];W[j-1]=t;}
+}
+}
+for(int i=0;i<3;i++)
+{Ns+=N[i];Ws+=W[i];}
+cout<<Ns<<" "<<Ws<<endl;
+return 0;
+}

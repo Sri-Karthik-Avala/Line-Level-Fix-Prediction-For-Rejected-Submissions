@@ -1,0 +1,32 @@
+delta = ((1, 0), (0, 1), (-1, 0), (0, -1))
+def ds(here, field, count, lb, ub, min_count):
+	if count > min_count:
+		return min_count
+	ans = min_count
+	for dx, dy in delta:
+		nx, ny = (here[0]+dx,here[1]+dy)
+		neighbor = (nx, ny)
+		while lb[0] <= nx <= ub[0] and lb[1] <= ny <= ub[1]:
+			if field[ny][nx] == 1:
+				if (nx, ny) != neighbor:
+					field[ny][nx] = 0
+					ans = ds((nx-dx,ny-dy),field, count+1, lb, ub, ans)
+		    		field[ny][nx] = 1
+				break
+			if field[ny][nx] == 3:
+				if count + 1 < ans:
+					ans = count + 1
+				break
+			nx += dx
+			ny += dy
+	return ans
+while 1:
+	w, h = map(int,raw_input().split(" "))
+	if w == h == 0: break
+	board = [ map(int,raw_input().split(" ")) for _ in range(h)]
+	for j in range(h):
+		for i in range(w):
+			if board[j][i] == 2:
+				start = (i,j)
+	result = ds(start, board, 0, (0,0), (w-1,h-1), 11)
+	print result if result < 11 else -1

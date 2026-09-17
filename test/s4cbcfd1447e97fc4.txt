@@ -1,0 +1,18 @@
+N = int(input())
+
+d = {}
+ans = []
+
+for i in range(N):
+    S = input()
+    d.setdefault(S,0)
+    d[S] += 1
+
+for key in d.keys():
+    if d[key] == max(d.values()):
+        ans.append(key)
+        
+ans = sorted(ans)
+
+for word in ans:
+    print(word)

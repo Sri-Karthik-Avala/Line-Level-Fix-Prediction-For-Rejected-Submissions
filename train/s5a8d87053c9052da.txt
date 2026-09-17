@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define mp make_pair
+#define pb push_back
+#define pii pair<int,int>
+const int maxn = 1e6 + 5;
+const int mod = 1e9 + 7;
+ll fact[maxn] , inv[maxn];
+ll ksm (ll a , ll b)
+{
+    ll ans = 1 , base = a;
+    while (b){
+        if (b & 1) ans = ans * base % mod;
+        b >>= 1;
+        base = base * base % mod;
+    }
+    return ans;
+}
+ll C (int n , int m)
+{
+    ll res = fact[n] * inv[m] % mod;
+    res = res * inv[n - m] % mod;
+    return res;
+}
+int main()
+{
+    fact[0] = 1;
+    inv[0] = 1;
+    for (int i = 1 ; i < maxn ; i++){
+        fact[i] = fact[i - 1] * i % mod;
+        inv[i] = ksm(fact[i] , mod - 2) % mod;
+    }
+    ios::sync_with_stdio(false);
+    ll n , m , a , b; cin >> n >> m >> a >> b;
+
+    ll ans = 0;
+    for (int i = 0 ; i <= m - b - 1 ; i++){
+        ans = (ans + C(n - a + b - 1 , b + i) * C(m - b - 1 + a , m - b - 1 - i))%mod;
+
+    }
+    cout << ans << endl;
+    return 0;
+}

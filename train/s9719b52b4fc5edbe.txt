@@ -1,0 +1,15 @@
+hexToBi={"0":"0000","1":"0001","2":"0010","3":"0011","4":"0100","5":"0101","6":"0110",
+         "7":"0111","8":"1000","9":"1001","a":"1010","b":"1011","c":"1100","d":"1101",
+         "e":"1110","f":"1111"}
+convDec=[5000000,2500000,1250000,625000,312500,156250,78125]
+Q=input()
+for i in range(Q):
+    s="".join(hexToBi[ch] for ch in raw_input())
+    sign=s[0]
+    integer=s[1:-7]
+    dec=map(int,s[-7:])
+    large=int(integer,2)
+    small=sum(i*j for i,j in zip(dec,convDec))
+    small=str(small).rstrip("0")
+    small=0 if small=="" else int(small)
+    print "%d.%d"%(large,small) if sign=="0" else "-%d.%d"%(large,small)

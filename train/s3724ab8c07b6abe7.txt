@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn = 4020, mod = 1e9 + 7;
+int n, m, k, dp[maxn][maxn], C[maxn][maxn];
+void add(int &a, int b) {
+	a += b;
+	if(a >= mod) a -= mod;
+}
+void pre() {
+	for(int i = 0; i < maxn; i++)
+		for(int j = 0; j <= i; j++)
+			if(!j) C[i][j] = 1;
+			else {
+				add(C[i][j], C[i-1][j-1]);
+				add(C[i][j], C[i-1][j]);
+			}
+}
+int nck(int i, int j) {
+	if(i < j || j < 0) return 0;
+	return C[i][j];
+}
+
+int solve(int n, int m, int k) {
+	int ans = 0, l = (n+m-1)/(k-1);
+	for(int i = 0; i <= l && m >= i*k; i++) {
+		int t = nck(m+l-1 - i*k, l-1);
+		t = t*1ll*nck(l, i)%mod;
+		if(i&1) add(ans, mod-t);
+		else add(ans, t);
+	}
+	return ans;
+}
+int main() {
+	cin.tie(0)->sync_with_stdio(0);
+	cin >> n >> m >> k;
+	pre();
+	int ans = 0;
+	while(true) {
+		add(ans, solve(n, m, k));
+		if(m >= k) m -= k-1;
+		else break;
+	}
+	cout << ans;
+	return 0;
+}

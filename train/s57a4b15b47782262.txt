@@ -1,0 +1,22 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+  int n,i,j;cin>>n;
+ 	int A[n];
+  vector<int> dp(n,100000000);
+  for( i=0;i<n;i++)
+    cin>>A[i];
+  dp[0]=0;
+  for(i=0;i<n;i++)
+  {	
+    for(j=i+1;j<=i+2;j++)
+    {
+     	if(j<n)
+		dp[j]=min(dp[j],dp[i]+abs(A[j]-A[i]));
+    }
+  }
+  cout<<dp[n-1];
+}
+
+  

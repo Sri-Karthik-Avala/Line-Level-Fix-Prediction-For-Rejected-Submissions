@@ -1,0 +1,23 @@
+def Draw(pattern, rowRange, colRange):
+    
+    s = ""
+
+    for row in rowRange:
+        for col in colRange:
+            s += pattern[row][col]
+        s += "\n"
+
+    print(s, end="")
+
+
+pattern = [input() for lp in range(8)]
+
+print("90")
+Draw(pattern, range(7, -1, -1), range(0, 8))
+
+print("180")
+Draw(pattern, range(7, -1, -1), range(7, -1, -1))
+
+print("270")
+Draw(pattern, range(0, 8), range(7, -1, -1))
+

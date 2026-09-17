@@ -1,0 +1,103 @@
+
+"""
+Writer: SPD_9X2
+https://atcoder.jp/contests/agc044/tasks/agc044_d
+
+文字数はわかる
+どの文字がいくつあるかは分かる
+a文字入ってたとすると
+128-|S| + |S|-a = 128-a = rep
+a = 128-rep
+
+文字列のマージを考える
+同じ文字はまとめて扱ったほうが良い？
+大きい方を小さい方に融合することを考える
+
+aaaa + bbb → aabbaba
+にすることを考えてみようか
+
+aaaa → 3
+aabaa
+左側の文字列に右の文字列を前から入れていく
+入れる場所が正しければ回数は減る
+
+2分割していけばマージ計算量でO(nlogn)!
+128 + log128 + log128
+
+マージ部分が違うっポイ？
+同じ文字が両方に交じってると面倒なことになる
+小さい方からマージ？
+"""
+
+def merge(L,R):
+
+    if len(L) > len(R):
+        tmp = L
+        L = R
+        R = tmp
+
+    #Rが長いのでLをRにマージする
+
+    if len(R) > 1:
+        print ("?","".join(R),flush=True)
+        origin = int(input())
+    else:
+        origin = len(s)-1
+
+    ok = []
+    while len(L) > 0 and len(R) > 0:
+        
+        q = ok + [ L[0] ] + R
+        if len(q) > 1:
+            print ("?" , "".join(q) , flush=True)
+            now = int(input())
+        else:
+            now = len(s)-1
+
+        if now < origin:
+            ok.append(L[0])
+            del L[0]
+            origin = now
+        else:
+            ok.append(R[0])
+            del R[0]
+
+    if len(L) > 0:
+        ok = ok + L
+    if len(R) > 0:
+        ok = ok + R
+
+    return ok
+
+
+import heapq
+
+alp = "abcdefghjiklmnopqrstuvwxyz"
+ALP = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+NUM = "0123456789"
+
+ss = alp+ALP+NUM
+ss = "abc"
+    
+dic = {}
+q = []
+s = ""
+
+for i in ss:
+
+    print ("?",i*128,flush=True)
+    ret = int(input())
+    tmp = list(i * (128-ret))
+    heapq.heappush (q , ( 128-ret , tmp ) )
+    s += i*(128-ret)
+
+while len(q) >= 2:
+
+    alen,astr = heapq.heappop(q)
+    blen,bstr = heapq.heappop(q)
+
+    cat = merge(astr,bstr)
+    heapq.heappush(q , (alen+blen , cat))
+
+print ("!","".join(q[0][1]))
+    

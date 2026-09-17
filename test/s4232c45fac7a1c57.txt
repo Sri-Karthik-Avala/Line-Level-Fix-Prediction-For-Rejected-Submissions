@@ -1,0 +1,11 @@
+import sys
+stdin = sys.stdin
+sys.setrecursionlimit(10**6)
+ni = lambda: int(ns())
+na = lambda: list(map(int, stdin.readline().split()))
+nn = lambda: list(stdin.readline().split())
+ns = lambda: stdin.readline().rstrip()
+
+x = na()
+
+print(1 if x==0 else 0)

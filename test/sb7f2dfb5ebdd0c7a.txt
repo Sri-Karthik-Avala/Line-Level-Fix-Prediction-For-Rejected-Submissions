@@ -1,0 +1,107 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+using namespace std;
+#define rep(i,n) for(int i=0;i<n;++i)
+#define rep1(i,n) for(int i=1;i<=n;++i)
+#define all(c) (c).begin(),(c).end()
+#define show(x) cout << #x << " " << x << endl
+struct State{int ax,ay,bx,by,cx,cy;};
+string s[16];
+int W,H,N,dx[5]={1,0,-1,0,0},dy[5]={0,1,0,-1,0},inf=1e5;
+int Ax,Ay,Bx,By,Cx,Cy,ax,ay,bx,by,cx,cy;
+int d[16][16][16][16][16][16];
+bool is(int x,int y){
+	return (0<=x&&x<H&&0<=y&&y<W&&s[x][y]!='#');
+}
+void three(){
+	queue<State> que;
+	rep(ai,H) rep(aj,W) rep(bi,H) rep(bj,W) rep(ci,H) rep(cj,W) d[ai][aj][bi][bj][ci][cj]=inf;
+	d[Ax][Ay][Bx][By][Cx][Cy]=0;
+	que.push(State{Ax,Ay,Bx,By,Cx,Cy});
+	while(!que.empty()){
+		State st=que.front();
+		que.pop();
+		rep(ad,5){
+			int nax=st.ax+dx[ad],nay=st.ay+dy[ad];
+			if(!is(nax,nay)) continue;
+			rep(bd,5){
+				int nbx=st.bx+dx[bd],nby=st.by+dy[bd];
+				if(!is(nbx,nby)) continue;
+				rep(cd,5){
+					int ncx=st.cx+dx[cd],ncy=st.cy+dy[cd];
+					if(!is(ncx,ncy)) continue;
+					if(d[nax][nay][nbx][nby][ncx][ncy]!=inf) continue;
+					if(nax==nbx&&nay==nby) continue;
+					if(nbx==ncx&&nby==ncy) continue;
+					if(ncx==nax&&ncy==nay) continue;
+					if(nax==st.bx&&nay==st.by&&nbx==st.ax&&nby==st.ay) continue;
+					if(nbx==st.cx&&nby==st.cy&&ncx==st.bx&&ncy==st.by) continue;
+					if(ncx==st.ax&&ncy==st.ay&&nax==st.cx&&nay==st.cy) continue;
+					d[nax][nay][nbx][nby][ncx][ncy]=d[st.ax][st.ay][st.bx][st.by][st.cx][st.cy]+1;
+					que.push(State{nax,nay,nbx,nby,ncx,ncy});
+				}
+			}
+		}
+	}
+}
+void two(){
+	queue<State> que;
+	rep(ai,H) rep(aj,W) rep(bi,H) rep(bj,W) d[ai][aj][bi][bj][0][0]=inf;
+	d[Ax][Ay][Bx][By][0][0]=0;
+	que.push(State{Ax,Ay,Bx,By,0,0});
+	while(!que.empty()){
+		State st=que.front();
+		que.pop();
+		rep(ad,5){
+			int nax=st.ax+dx[ad],nay=st.ay+dy[ad];
+			if(!is(nax,nay)) continue;
+			rep(bd,5){
+				int nbx=st.bx+dx[bd],nby=st.by+dy[bd];
+				if(!is(nbx,nby)) continue;
+				if(d[nax][nay][nbx][nby][0][0]!=inf) continue;
+				if(nax==nbx&&nay==nby) continue;
+				if(nax==st.bx&&nay==st.by&&nbx==st.ax&&nby==st.ay) continue;
+				d[nax][nay][nbx][nby][0][0]=d[st.ax][st.ay][st.bx][st.by][0][0]+1;
+				que.push(State{nax,nay,nbx,nby,0,0});
+			}
+		}
+	}
+}
+void one(){
+	queue<State> que;
+	rep(ai,H) rep(aj,W) d[ai][aj][0][0][0][0]=inf;
+	d[Ax][Ay][0][0][0][0]=0;
+	que.push(State{Ax,Ay,0,0,0,0});
+	while(!que.empty()){
+		State st=que.front();
+		que.pop();
+		rep(ad,5){
+			int nax=st.ax+dx[ad],nay=st.ay+dy[ad];
+			if(!is(nax,nay)) continue;
+			if(d[nax][nay][0][0][0][0]!=inf) continue;
+			d[nax][nay][0][0][0][0]=d[st.ax][st.ay][0][0][0][0]+1;
+			que.push(State{nax,nay,0,0,0,0});
+		}
+	}
+}
+int main(){
+	while(true){
+		scanf("%d%d%d\n",&W,&H,&N);
+		if(W==0) break;
+		rep(i,H) getline(cin,s[i]);
+		ax=0,ay=0,bx=0,by=0,cx=0,cy=0;
+		rep(i,H) rep(j,W){
+			if(s[i][j]=='A') Ax=i,Ay=j;
+			if(s[i][j]=='B') Bx=i,By=j;
+			if(s[i][j]=='C') Cx=i,Cy=j;
+			if(s[i][j]=='a') ax=i,ay=j;
+			if(s[i][j]=='b') bx=i,by=j;
+			if(s[i][j]=='c') cx=i,cy=j;
+		}
+		if(N==3) three();
+		if(N==2) two();
+		if(N==1) one();
+		cout<<d[ax][ay][bx][by][cx][cy]<<endl;
+	}
+}

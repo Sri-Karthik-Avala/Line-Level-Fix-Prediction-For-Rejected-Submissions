@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define rep(i, n) for(int i = 0; i < (n); i++)
+#define repp(i, l, r) for(int i = (l); i < (r); i++)
+#define per(i, n) for(int i = ((n)-1); i >= 0; i--)
+#define perr(i, l, r) for(int i = ((r)-1); i >= (l); i--)
+#define all(x) (x).begin(),(x).end()
+#define MOD 1000000007
+#define IINF 1000000000
+#define LINF 1000000000000000000
+#define SP <<" "<<
+#define CYES cout<<"Yes"<<endl
+#define CNO cout<<"No"<<endl
+#define CFS cin.tie(0);ios::sync_with_stdio(false)
+
+typedef long long LL;
+typedef long double LD;
+
+struct sta{
+  int id;
+  int pos;
+  pair<LL,LL> d;
+};
+
+int main(){
+  int n,t;
+  cin >> n >> t;
+  map<string,int> mp;
+  vector<vector<string>> name(n);
+  vector<vector<int>> time(n);
+  vector<vector<pair<int,int>>> id(n);
+  string a,b;
+  cin >> a >> b;
+  int k;
+  rep(i,n){
+    cin >> k;
+    name[i]=vector<string>(k);
+    id[i]=vector<pair<int,int>>(k);
+    time[i]=vector<int>(k-1);
+    rep(j,k){
+      cin >> name[i][j];
+      mp[name[i][j]]=-1;
+    }
+    rep(j,k-1){
+      cin >> time[i][j];
+    }
+  }
+  int sn = 0;
+  for(auto &p:mp) p.second=(sn++);
+  int from=mp[a], to=mp[b];
+  vector<int> count(sn,0);
+  rep(i,n){
+    rep(j,id[i].size()){
+      int x = mp[name[i][j]];
+      id[i][j]={x,count[x]};
+      count[x]++;
+    }
+  }
+  vector<vector<pair<int,int>>> ro(sn);
+  rep(i,sn){
+    ro[i]=vector<pair<int,int>>(count[i]);
+  }
+  rep(i,n){
+    rep(j,id[i].size()){
+      ro[id[i][j].first][id[i][j].second]={i,j};
+    }
+  }
+  vector<vector<pair<LL,LL>>> dist(sn);
+  rep(i,sn){
+    dist[i]=vector<pair<LL,LL>>(count[i],{LINF,LINF});
+  }
+  vector<bool> norikae(sn,false);
+  priority_queue<sta,vector<sta>,function<bool(sta,sta)>>
+    heap([](const sta &a, const sta &b){return a.d<b.d;});
+  rep(i,count[from]) heap.push({from,i,{0,0}});
+
+  pair<LL,LL> ans={LINF,LINF};
+  while(!heap.empty()){
+    sta now = heap.top();
+    heap.pop();
+    if(dist[now.id][now.pos].first!=LINF) continue;
+    dist[now.id][now.pos]=now.d;
+    if(now.id==to) ans=min(ans,now.d);
+    if(!norikae[now.id]){
+      norikae[now.id]=true;
+      rep(i,count[now.id]){
+        if(dist[now.id][i].first==LINF)
+        heap.push({now.id,i,{now.d.first+t,now.d.second+1}});
+      }
+    }
+    auto p = ro[now.id][now.pos];
+    if(p.second>0){
+      auto nxp = id[p.first][p.second-1];
+      LL ds = time[p.first][p.second-1];
+      if(dist[nxp.first][nxp.second].first==LINF)
+      heap.push({nxp.first,nxp.second,{now.d.first+ds,now.d.second}});
+    }
+    if(p.second<id[p.first].size()-1){
+      auto nxp = id[p.first][p.second+1];
+      LL ds = time[p.first][p.second];
+      if(dist[nxp.first][nxp.second].first==LINF)
+      heap.push({nxp.first,nxp.second,{now.d.first+ds,now.d.second}});
+    }
+  }
+  if(ans.first==LINF) cout << -1 << endl;
+  else cout << ans.first SP ans.second << endl;
+  return 0;
+}
+

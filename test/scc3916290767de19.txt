@@ -1,0 +1,20 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int n,a,ans;
+
+int main(){
+	scanf("%d",&n);
+	int t=0;
+	for (int i=1;i<=n;++i){
+		scanf("%d",&a);
+		int j=0; for (;1<<j<a;++j);
+		ans+=max(0,j-t);
+		t=j;
+	}
+	printf("%d\n",ans);
+	
+	return 0;
+}
+			

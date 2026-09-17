@@ -1,0 +1,110 @@
+Problem I: Mobile Network 
+
+ 
+The trafic on the Internet is increasing these days due to smartphones. The wireless carriers
+have to enhance their network infrastructure.
+ 
+
+ 
+The network of a wireless carrier consists of a number of base stations and lines. Each line connects two base stations bi-directionally. The bandwidth of a line increases every year and is given by a polynomial f ( x ) of the year x .
+ 
+
+ 
+Your task is, given the network structure, to write a program to calculate the maximal bandwidth between the 1-st and N -th base stations as a polynomial of x .
+ 
+
+
+ Input 
+
+ 
+The input consists of multiple datasets. Each dataset has the following format:
+ 
+
+ 
+ N M 
+ u 1 v 1 p 1 
+... 
+ u M v M p M 
+ 
+
+ 
+The first line of each dataset contains two integers N (2 &le; N &le; 50) and M (0 &le; M &le; 500), which indicates the number of base stations and lines respectively. The following M lines describe the network structure. The i -th of them corresponds to the i -th network line and contains two integers u i and v i and a polynomial p i . u i and v i indicate the indices of base stations (1 &le; u i , v i &le; N ); p i indicates the network bandwidth.
+ 
+
+ 
+Each polynomial has the form of:
+ 
+
+ 
+ a L x L + a L -1 x L -1 + ... + a 2 x 2 + a 1 x + a 0 
+ 
+
+ 
+where L (0 &le; L &le; 50) is the degree and a i 's (0 &le; i &le; L , 0 &le; a i &le; 100) are the coefficients. In the input,
+ 
+
+
+ 
+ each term a i x i (for i &ge; 2) is represented as < a i > x ^< i >
+ 
+ the linear term ( a 1 x ) is represented as < a 1 > x ;
+ 
+
+ the constant ( a 0 ) is represented just by digits;
+ 
+
+ these terms are given in the strictly decreasing order of the degrees and connected by a
+plus sign (" + ");
+ 
+
+ just like the standard notations, the < a i > is omitted if a i = 1 for non-constant terms;
+ 
+
+ similarly, the entire term is omitted if a i = 0 for any terms; and
+ 
+
+ the polynomial representations contain no space or characters other than digits, "x", "^", and "+".
+ 
+
+ 
+
+ 
+For example, 2 x 2 + 3 x + 5 is represented as 2x^2+3x+5 ; 2 x 3 + x is represented as 2x^3+x , not 2x^3+0x^2+1x+0 or the like. No polynomial is a constant zero, i.e. the one with all the coefficients being zero.
+ 
+
+
+ 
+The end of input is indicated by a line with two zeros. This line is not part of any dataset.
+ 
+
+
+
+ Output 
+
+ 
+For each dataset, print the maximal bandwidth as a polynomial of x . The polynomial should be represented in the same way as the input format except that a constant zero is possible and should be represented by "0" (without quotes).
+ 
+
+ Sample Input 
+ 
+3 3
+1 2 x+2
+2 3 2x+1
+3 1 x+1
+2 0
+3 2
+1 2 x
+2 3 2
+4 3
+1 2 x^3+2x^2+3x+4
+2 3 x^2+2x+3
+3 4 x+2
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+2x+3
+0
+2
+x+2

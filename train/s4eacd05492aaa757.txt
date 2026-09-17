@@ -1,0 +1,91 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string calcAddition( string a, string b )
+{
+    int as = a.size(), bs = b.size(), d = as > bs ? as - bs : bs - as;
+    string s = "0", t = "0";
+    for( int i = 0; i < d; i++ )
+        as > bs ? t += "0" : s += "0";
+    s += a; t += b;
+
+    for( int i = s.size() - 1; i >= 1; i-- )
+    {
+        s[i] += t[i] - '0';
+        if( s[i] > '9' )
+        {
+            s[i] -= 10;
+            s[i-1]++;
+        }
+    }
+    return s[0] == '0' ? s.substr( 1, s.size() ) : s;
+}
+
+string calcSubtraction( string a, string b )
+{
+    int as = a.size(), bs = b.size(), d = as > bs ? as - bs : bs - as;
+    string s = "", t = "";
+    for( int i = 0; i < d; i++ )
+        as > bs ? t += "0" : s += "0";
+    s += a; t += b;
+
+    if( s < t )
+    {
+        string temp = s;
+        s = t;
+        t = temp;
+    }
+
+    for( int i = s.size() - 1; i >= 0; i-- )
+    {
+        if( s[i] < t[i] )
+        {
+            s[i] += 10;
+            if( s[i-1] >= '1' )
+                s[i-1]--;
+            else
+            {
+                int j = i - 1;
+                while( s[j] == '0' )
+                    s[j--] += 9;
+                s[j]--;
+            }
+        }
+        s[i] -= ( t[i] - '0' );
+    }
+    if( s.size() == 1 )
+        return s;
+    return s[0] == '0' ? s.substr( 1, s.size() ) : s;
+}
+
+int main()
+{
+    string a, b;
+
+    cin >> a >> b;
+
+    int as = a.size(), bs = b.size();
+    string s = a.substr( 1, as ), t = b.substr( 1, bs );
+    int ss = s.size(), ts = t.size();
+
+    if( a[0] == '-' && b[0] == '-' )
+    {
+        if( ss > ts || ss == ts && s > t )
+            cout << "-";
+        cout << calcSubtraction( s, t ) << endl;
+    }
+    else if( a[0] >= '0' && b[0] >= '0' )
+    {
+        if( as < bs || as == bs && a < b )
+            cout << "-";
+        cout << calcSubtraction( a, b ) << endl;
+    }
+    else if( a[0] == '-' )
+        cout << "-" << calcAddition( s, b ) << endl;
+    else
+        cout << calcAddition( a, t ) << endl;
+
+    return 0;
+}
+

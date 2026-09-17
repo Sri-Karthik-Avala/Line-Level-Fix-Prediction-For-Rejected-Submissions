@@ -1,0 +1,43 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct map
+{
+    double x;
+    double y;
+};
+
+int main()
+{
+    double a, b;
+    map c;
+    vector<map> m;
+
+    cin >> a >> b;
+
+    for( int i = 0; i <= b; i++ )
+    {
+        c.y = i;
+        c.x = - a * 2 / b * i + a * 2;
+        m.push_back(c);
+    }
+
+    for( int i = 0; i <= a * 2; i += 2 )
+    {
+        c.x = i;
+        c.y = - b / ( a * 2 ) * i + b;
+        bool judge = true;
+        for( int j = 0; j < m.size(); j++ )
+        {
+            if( m[j].x == c.x && m[j].y == c.y )
+                judge = false;
+        }
+        if( judge )
+            m.push_back(c);
+    }
+
+    cout << m.size() << endl;
+
+    return 0;
+}

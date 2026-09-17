@@ -1,0 +1,8 @@
+import math
+
+r = map(float,input())
+
+S = math.pi * r * r
+l = 2 * r * math.pi
+
+print('{0:f} {1:f}'.format(S,l))

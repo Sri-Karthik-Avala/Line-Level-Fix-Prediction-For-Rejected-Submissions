@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+#define pi 3.14159
+#include <map>
+#include <iterator>
+using namespace std;
+int main()
+{
+	long long int a,b,n,i,c=0;
+	string s;
+	cin>>s;
+	a=(s[0]-'0')*10+(s[1]-'0');
+	b=(s[2]-'0')*10+(s[3]-'0');
+//	cout<<a<<" "<<b;
+	if(a<12&&b<12&&a>0&&b>0)
+		cout<<"AMBIGUOUS"<<endl;
+	else if(a>0&&a<=12&&b>0)
+		cout<<"MMYY"<<endl;
+	else if(b>0&&b<=12&&a>0)
+		cout<<"YYMM"<<endl;
+	else
+		cout<<"NA"<<endl;
+	}

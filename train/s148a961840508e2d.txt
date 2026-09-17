@@ -1,0 +1,98 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+using namespace std;
+#define INF 100000000
+
+typedef long long ll;
+const int dx[] = {1, 0, -1, 0};
+const int dy[] = {0, 1, 0, -1};
+
+// max_flow
+const int MAX_V = 510;
+class FordFulkerson {
+public:
+    struct edge {
+        int to;
+        int cap;
+        int rev;
+        edge() {}
+        edge(int t, int c, int r) : to(t), cap(c), rev(r) {}
+    };
+    vector<edge> G[MAX_V];
+    void add_edge(int from, int to, int cap) {
+        G[from].push_back(edge(to, cap, G[to].size()));
+        G[to].push_back(edge(from, 0, G[from].size() - 1));
+    }
+    int max_flow(int s, int t) {
+        int flow = 0;
+        while (1) {
+            for (int i = 0; i < MAX_V; i++) used[i] = false;
+            int f = dfs(s, t, INF);
+            if (f == 0) return flow;
+            flow += f;
+        }
+    }
+private:
+    int dfs(int v, int t, int f) {
+        if (v == t) return f;
+        used[v] = true;
+        for (int i = 0; i < G[v].size(); i++) {
+            edge &e = G[v][i];
+            if (!used[e.to] && e.cap > 0) {
+                int d = dfs(e.to, t, min(e.cap, f));
+                if (d > 0) {
+                    e.cap -= d;
+                    G[e.to][e.rev].cap += d;
+                    return d;
+                }
+            }
+        }
+        return 0;
+    }
+    bool used[MAX_V];
+};
+
+int b[600], r[600];
+
+int main(void) {
+    int m, n;
+    while (cin >> m >> n) {
+        if (m == 0 && n == 0) break;
+        FordFulkerson ff;
+        for (int i = 0; i < m; i++) {
+            cin >> b[i];
+        }
+        for (int i = 0; i < n; i++) {
+            cin >> r[i];
+        }
+        int s = m+n, t = s+1;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (__gcd(b[i], r[j]) > 1) {
+                    ff.add_edge(i, m+j, 1);
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            ff.add_edge(s, i, 1);
+        }
+        for (int i = 0; i < n; i++) {
+            ff.add_edge(i+m, t, 1);
+        }
+        cout << ff.max_flow(s, t) << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,13 @@
+while True:
+    h, w = map(int, input().split())
+    if not h:
+        break
+    diagonal = h**2 + w**2
+    ans = []
+    append = ans.append
+    for y in range(1, 151):
+        for x in range(y+1, 151):
+            if x**2+y**2 > diagonal:
+                append((x**2+y**2, y, x))
+                break
+    print(*sorted(ans)[0][1:])

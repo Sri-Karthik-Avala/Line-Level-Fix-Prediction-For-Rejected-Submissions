@@ -1,0 +1,18 @@
+#include <iostream>
+using namespace std;
+int main(){
+    int F;
+    int C;
+    
+    
+    
+    cin>>F;
+    cin>>C;
+    
+    C=(F-30)/2;
+    
+   
+   
+   return 0;
+}
+

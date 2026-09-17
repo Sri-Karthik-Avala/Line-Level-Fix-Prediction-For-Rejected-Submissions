@@ -1,0 +1,16 @@
+while True:
+    h, w = map(int, input() .split())
+    if h == 0 and w == 0:
+        break
+    for i in range(h):
+        for n in range(w):
+            if i % 2 == 1 and n % 2 == 1:
+                print("#", end = '')
+            if i % 2 == 0 and n % 2 == 0:
+                print("#", end = '')
+            if i % 2 == 0 and n % 2 == 0:
+                print(".", end = '')
+            if i % 2 == 1 and n % 2 == 0:
+                print(".", end = '')
+        print("")
+    print("")

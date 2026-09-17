@@ -1,0 +1,101 @@
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+ 
+#define X real()
+#define Y imag()
+ 
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+typedef vector<P> Pol;
+ 
+const D EPS = 1e-8;
+ 
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+bool near(P a, P b) {return !sig(norm(a - b));}
+namespace std {
+  bool operator<(P a, P b) {return sig(a.Y, b.Y) ? a.Y < b.Y : a.X < b.X;}
+}
+ 
+D sr(D a) {return sqrt(max(a, (D)0));}
+ 
+D det(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+ 
+enum CCW{FRONT = 1, RIGHT = 2, BACK = 4, LEFT = 8, ON = 16};
+int ccw(P a, P b, P c) {
+  if (near(a, c) || near(b, c)) return ON;
+  int s = sig(det(b - a, c - a));
+  if (s) return s > 0 ? LEFT : RIGHT;
+  return (a < b) == (b < c) ? FRONT : (c < a) == (a < b) ? BACK : ON;
+}
+ 
+D arg(P base, P a, P b) {return arg((b - base) / (a - base));}
+L sortBase;
+bool lessArg(pair<P, int> a, pair<P, int> b) {
+  D ang1 = arg(sortBase.a, sortBase.b, a.first);
+  D ang2 = arg(sortBase.a, sortBase.b, b.first);
+  return sig(ang1, ang2) ? ang1 < ang2 : norm(a.first) < norm(b.first);
+}
+ 
+D aTri(D a, D b, D c) {D s = (a + b + c) / 2; return sr(s * (s - a) * (s - b) * (s - c));}
+ 
+int main() {
+  int n;
+  cin >> n;
+  vector<pair<P, int> > vp;
+  rep (i, n) {
+    D x, y;
+    cin >> x >> y;
+    vp.push_back(make_pair(P(x, y), i + 1));
+  }
+  D r[n];
+  vector<int> pol[n];
+  rep (i, n) r[i] = 1e9;
+  rep (i, n) {
+    sort(vp.begin(), vp.end());
+    sortBase = (L){vp[i].first, vp[i].first + P(0, 1)};
+    sort(vp.begin() + i + 1, vp.end(), lessArg);
+    D dp[n + 1][n][n];
+    int prv[n + 1][n][n];
+    rep (j, n) rep (k, n) rep (l, n) dp[j][k][l] = 1e9;
+    rep (j, n) if (j > i) {
+      dp[0][i][j] = 0;
+      prv[0][i][j] = -1;
+      rep (k, n) rep (l, j) rep (m, j) if (ccw(vp[l].first, vp[m].first, vp[j].first) == LEFT) {
+	D val = dp[k][l][m] + aTri(abs(vp[i].first - vp[m].first), abs(vp[m].first - vp[j].first), abs(vp[j].first - vp[i].first));
+	if (val < dp[k + 1][m][j]) {
+	  dp[k + 1][m][j] = val;
+	  prv[k + 1][m][j] = l;
+	  if (r[k + 1] > dp[k + 1][m][j]) {
+	    r[k + 1] = dp[k + 1][m][j];
+	    vector<int> p;
+	    p.push_back(vp[j].second);
+	    p.push_back(vp[m].second);
+	    int pk = k + 1, pm = m, pj = j;
+	    while (pk != 0) {
+	      int pl = prv[pk][pm][pj];
+	      p.push_back(vp[pl].second);
+	      --pk;
+	      pj = pm;
+	      pm = pl;
+	    }
+	    reverse(p.begin(), p.end());
+	    pol[k + 1] = p;
+	  }
+	}
+      }
+    }
+  }
+  int q;
+  cin >> q;
+  rep (i, q) {
+    int k;
+    cin >> k;
+    k -= 2;
+    if (pol[k].empty()) cout << "NA" << endl;
+    rep (j, pol[k].size()) cout << pol[k][j] << (j != (int)pol[k].size() - 1 ? " " : "\n");
+  }
+}

@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int INF = 1001001;
+
+int n, m;
+int s[15];
+int d[101];
+int dp[1 << 15][101];
+
+int calc(int bit){
+
+    //cout << bit << endl;
+    //探索済みなら値return
+    if(dp[bit][m] != INF) return dp[bit][m];
+
+    //全部使った時のぬくもり
+    int warm = 0;
+    for(int i = 0; i < n; i++){
+        if(bit & (1 << i)) warm += s[i];
+    }
+
+    //bitを1本折るときと、現在のbitを組み合わせる
+    for(int i = 0; i < n; i++){
+        if(bit & (1 << i)){
+            //もしbitが立っていたら
+            //bitを折る
+            int next_bit = bit & (~(1 << i));
+            //dpが最新バージョンに更新
+            int dummy = calc(next_bit);
+
+            //これはいい感じですか？
+            int temp_sum = 0;
+            vector<int> temp_dp(m + 1);
+            for(int j = 0; j < m; j++){
+                temp_dp[j] = min(dp[next_bit][j], abs(warm - d[j]));
+                temp_sum += temp_dp[j];
+            }
+            temp_dp[m] = temp_sum;
+
+            if(temp_sum < dp[bit][m]){
+                //もしいいなら入れ替える
+                for(int j = 0; j <= m; j++) dp[bit][j] = temp_dp[j];
+            }
+        }
+    }
+
+    //cout << bit << " " << dp[bit][m] << endl;
+    return dp[bit][m];
+}
+
+int main(){
+
+    while(1){
+        cin >> n >> m;
+        if(!n) break;
+        for(int i = 0; i < (1 << n); i++){
+            for(int j = 0; j <= m; j++){
+                dp[i][j] = INF;
+            }
+        }
+
+        for(int i = 0; i < n; i++) cin >> s[i];
+        for(int i = 0; i < m; i++) cin >> d[i];
+
+
+        //dp初期化
+        int sum = 0;
+        for(int i = 0; i < m; i++){
+            dp[0][i] = d[i];
+            sum += d[i];
+        }
+        dp[0][m] = sum;
+
+        cout << calc((1 << n) - 1) << endl;
+
+        /*for(int i = 0; i < (1 << n); i++){
+            for(int j = 0; j <= m; j++){
+                cout << dp[i][j] << " ";
+            }
+            cout << endl;
+        }*/
+
+
+    }
+    return 0;
+}

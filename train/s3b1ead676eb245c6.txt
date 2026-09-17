@@ -1,0 +1,114 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+struct data{
+  int id;
+  string str;
+  data(int a,string b){id=a;str=b;}
+};
+struct edge{ int a,b,c; };
+
+queue<data> A,B,C;
+vector< edge > ans;
+bool flg;
+int cnt;
+
+bool check(string s){
+  int ac=0,bc=0;
+  for(int i=0;i<(int)s.size();i++){
+    if(s[i]=='o')ac++;
+    else bc++;
+  }
+  return (ac>=bc);
+}
+
+void func(data d){
+  int len=d.str.size();
+  if(len==1)A.push(d);
+  else B.push(d);
+}
+
+void solve(){
+  int key=0;
+  while(!C.empty()){
+    
+    if( key++ > 50000){ flg=true; return; }
+    
+    data d=C.front();C.pop();
+    string s=d.str;
+    int i;
+    if(!check(s)){ flg=true; return; }
+    
+    if(d.str.size()<=2){ func(d); continue; }
+
+    for(i=0;i+1<(int)s.size();i++){
+      string a=s.substr(0,i+1);
+      string b=s.substr(i+1);
+      if(check(a)&&check(b)){
+        ans.push_back( (edge){0,d.id,i} );
+        data na=data(cnt++,a);
+        data nb=data(cnt++,b);        
+        C.push(na);
+        C.push(nb);
+        break;
+      }
+    }
+    if(i+1<(int)s.size())continue;
+    if(A.empty()){ C.push(d); continue; }
+    data f=A.front();A.pop();
+    if( d.str[0]=='x'){
+      ans.push_back( (edge){ 1 , f.id , d.id } );
+      cnt++;
+      ans.push_back( (edge){ 0 , cnt , 1 } );
+      B.push( (data){ cnt++, "ox" } );
+      C.push( (data){ cnt++, s.substr(2)} );
+    }else{
+      ans.push_back( (edge){ 1 , d.id , f.id } );
+      cnt++;
+      ans.push_back( (edge){ 0 , cnt , (int)s.size()-2 } );
+      B.push( (data){ cnt++, "xo" } );
+      C.push( (data){ cnt++, s.substr(0, (int)s.size()-2 )} );
+    }
+  }
+  if(!C.empty())flg=true;
+}
+
+int main(){
+  int Tc;
+  cin>>Tc;
+  while(Tc--){
+    cnt=1;
+    while(!A.empty())A.pop();
+    while(!B.empty())B.pop();
+    while(!C.empty())C.pop();
+    ans.clear();
+    string st;
+    cin>>st;
+    if(st.size()==1){
+      if(st=="o")cout<<0<<endl;
+      else cout<<-1<<endl;
+      continue;
+    }else if(st.size()==2){
+      if(st=="xx")cout<<-1<<endl;
+      else cout<<0<<endl;
+      continue;
+    }
+    
+    C.push( data(0,st) );
+    flg=false;
+    solve();
+    
+    if(flg){
+      cout<<-1<<endl;
+    }else{
+      cout<<ans.size()<<endl;
+      for(int i=0;i<(int)ans.size();i++){
+        edge e=ans[i];
+        if(e.a==0)printf("split ");
+        else printf("join ");
+        printf("%d %d\n",e.b,e.c);
+      }
+    }
+  }
+  return 0;
+}

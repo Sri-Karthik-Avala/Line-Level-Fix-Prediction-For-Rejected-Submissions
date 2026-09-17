@@ -1,0 +1,54 @@
+Problem F: nCm 
+
+ Problem 
+
+ 
+ 整数 n が与えられた時、 nCm (異なる n 個のものから m 個を選ぶ組み合わせの数)が偶数となるような最小の m を出力せよ。
+ 
+
+ Input 
+ 入力は以下の形式で与えられる。 
+ 
+ n 
+ 
+
+
+ Constraints 
+ 入力は以下の条件を満たす。 
+ 
+ 1 &le; n &le; 10 18 
+ 
+
+ Output 
+ 
+ nCm が偶数となるような最小の m を1行に出力する。
+ 
+
+ Sample Input 1 
+ 
+2
+ 
+
+ Sample Output 1 
+ 
+1
+ 
+
+ Sample Input 2 
+ 
+111
+ 
+
+ Sample Output 2 
+ 
+16
+ 
+
+ Sample Input 3 
+ 
+3
+ 
+
+ Sample Output 3 
+ 
+4

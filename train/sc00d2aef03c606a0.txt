@@ -1,0 +1,15 @@
+while True:
+    n=int(input())
+    if n == 0: break
+
+    ans=0
+    l=[]
+
+    for _ in range(n):
+        l.append(int(input()))
+    for i in range(n):
+        s=-1e100
+        for j in range(i,n):
+            s+=l[j]
+            if ans < s: ans = s
+    print(ans)

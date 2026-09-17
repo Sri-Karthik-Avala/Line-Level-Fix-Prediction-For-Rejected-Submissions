@@ -1,0 +1,10 @@
+while True:
+    n = int(input())
+    if n==0:break
+    wt = [int(input()) for _ in range(n)]
+    total = wt[0]
+    s = []
+    for v in sorted(wt[1:]):
+        s.append(total)
+        total += v
+    print(sum(s))

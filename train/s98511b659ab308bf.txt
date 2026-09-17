@@ -1,0 +1,14 @@
+import sys
+import heapq
+
+heap = []
+while True:
+	input_line = sys.stdin.readline()
+	input_line = input_line.strip().split(' ')
+	if input_line[0][0] == 'i' :
+		heapq.heappush(heap,-int(input_line[1]))
+		heapq.heapify(heap)
+	elif input_line[0][1] == 'x' :
+		print(-int(heapq.heappop(heap)))
+	else :
+		break

@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define _MACRO(_1, _2, _3, NAME, ...) NAME
+#define _repl(i,a,b) for(int i=(int)(a);i<(int)(b);i++)
+#define _rep(i,n) _repl(i,0,n)
+#define rep(...) _MACRO(__VA_ARGS__, _repl, _rep)(__VA_ARGS__)
+#define mp make_pair
+#define pb push_back
+#define all(x) begin(x),end(x)
+#define uniq(x) sort(all(x)),(x).erase(unique(all(x)),end(x))
+#define fi first
+#define se second
+#define dbg(...) _dbg(#__VA_ARGS__, __VA_ARGS__)
+void _dbg(string){cerr<<endl;}
+template<class H,class... T> void _dbg(string s,H h,T... t){int l=s.find(',');cerr<<s.substr(0,l)<<" = "<<h<<", ";_dbg(s.substr(l+1),t...);}
+template<class T,class U> ostream& operator<<(ostream &o, const pair<T,U> &p){o<<"("<<p.fi<<","<<p.se<<")";return o;}
+template<class T> ostream& operator<<(ostream &o, const vector<T> &v){o<<"[";for(T t:v){o<<t<<",";}o<<"]";return o;}
+
+char tmp_str[2][100005];
+
+int solve(){
+  string s,t;
+  cin>>s>>t;
+
+  if(s.size() == t.size()){
+    if(s==t) return 1;
+    else return 0;
+  }
+
+  int r = 1;
+  int cur = t.size();
+  while(s.size() >= cur){
+    cur += (cur+1)*t.size();
+    r++;
+  }
+
+  auto f = [&](int x){
+    if(x==0) return true;
+    auto s1 = tmp_str[0];
+    auto s2 = tmp_str[1];
+    int p_size = 0;
+    int q_size = 0;
+    rep(i,x){
+      q_size = 0;
+      rep(j,p_size) s2[q_size++] = s1[j];
+      rep(j,t.size()){
+        s2[q_size++] = t[j];
+        rep(k,p_size) s2[q_size++] = s1[k];
+      }
+      swap(s1, s2);
+      swap(p_size, q_size);
+    }
+    // dbg(x,string(s1, s1+p_size));
+    int is=0,it=0;
+    while(is<s.size() && it<p_size){
+      if(s[is] == s1[it]){
+        is++; it++;
+      } else {
+        is++;
+      }
+    }
+    return it == p_size;
+  };
+
+  int l=0; r++;
+  while(r-l>1){
+    int mid = (l+r)/2;
+    if(f(mid)) l = mid;
+    else r = mid;
+  }
+  return l;
+}
+
+
+int main(){
+  cout << solve() << endl;
+
+  return 0;
+}
+

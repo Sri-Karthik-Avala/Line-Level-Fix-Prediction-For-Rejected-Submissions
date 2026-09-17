@@ -1,0 +1,47 @@
+#http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_7_D
+
+def postorder(binary_tree, target_index, result):
+    
+    left = binary_tree[target_index]["left"]
+    right = binary_tree[target_index]["right"]
+    
+    if not left == -1:
+        postorder(binary_tree, left, result)
+    if not right == -1:
+        postorder(binary_tree, right, result)
+
+    result.append(target_index)
+
+def solve(preorder_list, inorder_list, result):
+    #print(preorder_list, inorder_list)
+    if len(inorder_list) == 1:
+        return inorder_list[0]
+    
+    parent = preorder_list[0]
+    left_trees = inorder_list[:inorder_list.index(parent)]
+    right_tree_index = 1
+    if left_trees:
+        result[parent]["left"] = solve(preorder_list[1:], left_trees, result)
+        right_tree_index = preorder_list.index(left_trees[-1]) + 1
+        
+    right_trees = inorder_list[inorder_list.index(parent) + 1:]
+    if right_trees:
+        result[parent]["right"] = solve(preorder_list[right_tree_index:], right_trees, result)
+
+    return parent
+
+def reconstruction(preorder_list, inorder_list, node_num):
+    result = [{"left":-1,"right":-1} for i in range(node_num + 1)]
+    solve(preorder_list, inorder_list, result)
+    return result
+
+def main():
+    node_num = int(input())
+    preorder_list = [int(a) for a in input().split()]
+    inorder_list = [int(a) for a in input().split()]
+    binary_tree = reconstruction(preorder_list, inorder_list, node_num)
+    postorder_list = []
+    postorder(binary_tree, preorder_list[0], postorder_list)
+    print(*postorder_list)
+if __name__ == "__main__":
+    main()

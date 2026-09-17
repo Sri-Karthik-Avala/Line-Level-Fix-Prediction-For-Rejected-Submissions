@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+using namespace std;
+const double eps = 1e-8;
+pair<double,int> Pair;
+   
+bool eq(double a,double b){
+  return ( fabs(a-b) < eps );
+}
+   
+struct Point{
+  double x,y,z;     
+  Point operator + (Point p){ return (Point){x+p.x,y+p.y,z+p.z}; }     
+  Point operator - (Point p){ return (Point){x-p.x,y-p.y,z-p.z}; }     
+  Point operator * (double k){ return (Point){x*k,y*k,z*k}; }
+};
+
+typedef Point Vector;
+   
+   
+void pr(Point p){
+  printf("%.5f %.5f %.5f\n",p.x,p.y,p.z);
+}
+   
+double norm(Point p){
+  return p.x*p.x+p.y*p.y+p.z*p.z;
+}
+   
+double abs(Point p){
+  return sqrt( p.x*p.x + p.y*p.y + p.z*p.z );
+}
+double dot(Point a,Point b){
+  return a.x*b.x + a.y*b.y + a.z*b.z;
+}
+   
+Point cross(Point a,Point b){
+  double nx=a.y*b.z-b.y*a.z;
+  double ny=a.z*b.x-b.z*a.x;
+  double nz=a.x*b.y-b.x*a.y;
+  return (Point){nx,ny,nz};
+}
+
+// line a,b point c
+Point project(Point a,Point b,Point c){
+  double t=dot(b-a,c-a)/abs(b-a)/abs(b-a);
+  return a+(b-a)*t;
+}
+
+// segment a,b point c
+double dist(Point a,Point b,Point c){
+  if( dot(c-a,b-a) < 0 ) return abs(c-a);
+  if( dot(c-b,a-b) < 0 ) return abs(c-b);
+  return abs(c-project(a,b,c));
+}
+
+bool check(Point p,double r,Point a,Point b){
+  double A=abs(p-a),B=abs(p-b),C=dist(a,b,p);
+  if(r<A&&r<B&&C<r)return true;
+  if(A<r&&r<B)return true;
+  if(r<A&&B<r)return true;
+  return false;
+}
+
+int m,t,cnt=0;
+double PI=acos(-1);
+
+bool solve(double x){
+  x/=10.0;
+  double R=380000;
+  double nm=(double)m+(x/2500000.0*360.0);
+  nm=fmod(nm,360.0);
+  
+  double px=cos(nm/360.0*PI*2.0)*R,py=sin(nm/360.0*2.0*PI)*R,pz=0;
+  
+  nm=(double)x/(120.0*60.0)*360.0;
+  nm=fmod(nm,360.0);
+
+  
+  double npz=pz+cos(nm/360.0*PI*2.0)*1900.0;
+  double npx=px+sin(nm/360.0*PI*2.0)*1900.0;
+
+  
+  return check( (Point){px,py,pz} , 1800.0 , (Point){0.0,0.0,0.0} , (Point){npx,py,npz} );
+}
+
+int main(){
+  cin>>m>>t;
+  for(int i=0;i<t*600;i++)if(solve(i))cnt++;
+  printf("%.8f\n",(double)cnt/600.0);
+  return 0;
+}

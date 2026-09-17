@@ -1,0 +1,11 @@
+while True:
+    card = input().strip()
+    if card == '-':
+        break
+
+    no_shuffle = int(input())
+    for _ in range(no_shuffle):
+        h = int(input())
+        card = card[:h] + card[h:]
+
+    print(card)

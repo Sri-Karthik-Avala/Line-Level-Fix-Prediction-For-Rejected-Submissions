@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+
+const ll N = 1000 + 10;
+const ll inf = 1e9 + 7;
+
+void maximize(ll &a, ll b) { a = max(a, b); }
+void minimize(ll &a, ll b) { a = min(a, b); }
+
+ll n, m;
+ll a[N][N];
+
+ll dp[N][N];
+ll vis[N][N];
+ll col[N][N];
+
+ll tx[3] = {0, 1};
+ll ty[3] = {1, 0};
+
+ll getCol(ll cid, ll l, ll r){
+	if (r < l) return 0;
+	return col[cid][r] - col[cid][l - 1];
+}
+
+ll dfs(ll i, ll j){
+	if (vis[i][j]) return dp[i][j];
+	if (i == n && j == m) 
+		return dp[i][j] = 0;
+	ll turn = (i + j) % 2;
+	dp[i][j] = (turn == 0 ? -inf : inf);
+	for (ll t = 0; t < 2; t++){
+		ll ni = tx[t] + i, nj = ty[t] + j;
+		if (0 <= ni && ni <= n && 0 <= nj && nj <= m); else continue;
+		ll del = (t == 1 ? 0 : getCol(nj, 1, ni) - getCol(nj, ni + 1, n) );
+		if (!turn) maximize( dp[i][j], dfs(ni, nj) + del);
+		else	   minimize( dp[i][j], dfs(ni, nj) + del);
+	}
+	return dp[i][j];
+}
+
+main(){
+	ios::sync_with_stdio(0); cin.tie(0);
+	// freopen("8.inp", "r", stdin);
+	cin >> m >> n;
+	for (ll i = 1; i <= n; i++)
+		for (ll j = 1; j <= m; j++)
+			cin >> a[i][j];
+	
+	for (ll j = 1; j <= m; j++){
+		for (ll i = 1; i <= n; i++)
+			col[j][i] = col[j][i - 1] + a[i][j];
+	}
+	cout << abs( dfs(0, 0) ) << '\n';
+}

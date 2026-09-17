@@ -1,0 +1,43 @@
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+
+
+using namespace std;
+
+int dataset,aiju;
+
+int main(int argc,char **argv){
+  cin >> dataset;
+  for(int rupu=0;rupu<dataset;rupu++)
+    {
+      printf("Case %d:",++aiju); cout << endl;
+      int s;
+      cin >> s;
+      for(int itiToJuu=0;itiToJuu<10;itiToJuu++)
+	{
+	  s = s * s;
+	  stringstream ss;
+	  ss << s;
+	  string sutoring;
+	  ss >> sutoring;
+
+	  s = 0;
+	  for(int aaa=(int)sutoring.size()-6;aaa<(int)sutoring.size()-2;aaa++)
+	    {
+	      if( aaa < 0 )
+		{
+		  continue;
+		}
+	      else 
+		{
+		  s = s * 10;
+		  s = s + sutoring[aaa] - '0';
+		  cout << sutoring[aaa];
+		}
+	    }
+	  cout << endl;
+	}
+    }
+  return 0;
+}

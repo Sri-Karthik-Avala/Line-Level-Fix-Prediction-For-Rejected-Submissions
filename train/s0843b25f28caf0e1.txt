@@ -1,0 +1,43 @@
+from collections import deque
+
+N, M = map(int, input().split())
+s = [list(input()) for i in range(N)]
+
+S = []
+for i in s: #S[i]=0なら頂点iのラベルは"A"、S[i]=1なら頂点iのラベルは"B"
+    if i == "A": S.append(0)
+    else: S.append(1)
+
+#R[i]には頂点iと辺でつながっている頂点を入れる
+R = [list() for _ in range(N)]
+#C[i][0]には頂点iと辺でつながっているラベル"A"の数
+#C[i][1]には頂点iと辺でつながっているラベル"B"の数
+C = [[0, 0] for _ in range(N)]
+for _ in range(M):
+    a, b = map(int, input().split())
+    R[a-1].append(b-1)
+    R[b-1].append(a-1)
+    C[a-1][S[b-1]] += 1
+    C[b-1][S[a-1]] += 1
+
+O = [0] * N #ダメな頂点には1を入れる
+q = deque() #調べる頂点の候補リスト
+for i in range(N):
+    if C[i][0] * C[i][1] == 0: #もし少なくとも"A","B"どちらかに行けないなら
+        q.append(i)
+        O[i] = 1
+
+while q:
+    x = q.popleft()
+    for v in R[x]:
+        C[v][S[x]] -= 1
+        if C[v][S[x]] == 0 and O[v] != 0:
+            O[v] = 1
+            q.append(v)
+
+if sum(O) == N:
+    answer = "No"
+else:
+    answer = "Yes"
+
+print(answer)

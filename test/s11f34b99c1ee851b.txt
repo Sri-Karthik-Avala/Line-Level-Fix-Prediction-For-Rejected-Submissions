@@ -1,0 +1,16 @@
+while(1):
+    [a,b,c,d,e]=[int(x) for x in raw_input().split()]
+    if a==0:
+        break
+    else:
+        [na,nb,nc]=[int(x) for x in raw_input().split()]
+        if nc>=d:
+            price=nc*e+nb*b+na*a
+        else:
+            if nb>=d-nc:
+                price=min(d*e+(nb+nc-d)*b+na*a,nc*c+nb*b+na*a)
+            elif na>=d-nc-nb:
+                price=min(d*e+(na+nb+nc-d)*a,nc*c+nb*b+na*a)
+            else:
+                price=nc*c+nb*b+na*a
+        print price

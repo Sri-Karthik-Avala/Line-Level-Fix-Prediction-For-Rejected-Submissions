@@ -1,0 +1,38 @@
+Problem J: No Story 
+
+ 
+Since I got tired to write long problem statements, I decided to make this problem statement short. For given positive integer L , how many pairs of positive integers a , b ( a &le; b ) such that LCM( a , b ) = L are there? Here, LCM( a , b ) stands for the least common multiple of a and b .
+ 
+
+
+ Input 
+
+ 
+For each dataset, an integer L is given in a line. Input terminates when L = 0.
+ 
+
+ Output 
+
+ 
+For each dataset, output the number of pairs of a and b .
+ 
+
+ Constraints 
+
+ 
+ 1 &le; L &le; 10 12 
+ 
+
+ Sample Input 
+ 
+12
+9
+2
+0
+ 
+
+ Output for the Sample Input 
+ 
+8
+3
+2

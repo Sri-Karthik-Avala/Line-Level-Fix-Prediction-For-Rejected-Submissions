@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <tuple>
+#include <cstdlib>
+#include <map>
+
+using namespace std;
+#define ll long long
+
+vector<int> par;
+vector<int> rnk;
+void init(int n) {
+    par.clear();
+    rnk.clear();
+    for(int i = 0; i < n; i++) {
+        par.push_back(i);
+        rnk.push_back(0);
+    }
+}
+int find(int x) {
+    if(par[x] == x) {
+        return x;
+    } else {
+        return par[x] = find(par[x]);
+    }
+}
+void unite(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if(x == y) return;
+    if(rnk[x] < rnk[y]) {
+        par[x] = y;
+    } else {
+        par[y] = x;
+        if(rnk[x] == rnk[y]) rnk[x]++;
+    }
+}
+bool same(int x, int y) {
+    return find(x) == find(y);
+}
+
+int main() {
+    int N;
+    cin >> N;
+    vector<pair<int, int>> X, Y;
+    map<pair<int, int>, int> m;
+    int x, y;
+    for(int i = 0; i < N; i++) {
+        cin >> x >> y;
+        X.push_back(make_pair(x, y));
+        Y.push_back(make_pair(y, x));
+        m[make_pair(x, y)] = i;
+    }
+    sort(X.begin(), X.end());
+    sort(Y.begin(), Y.end());
+    vector<tuple<int, int, int>> tpl;
+    for(int i = 1; i < N - 1; i++) {
+        int d;
+        d = min(abs(X[i + 1].first - X[i].first), abs(X[i + 1].second - X[i].second));
+        tpl.push_back(make_tuple(d, m[make_pair(X[i].first, X[i].second)], m[make_pair(X[i + 1].first, X[i + 1].second)]));
+        d = min(abs(X[i - 1].first - X[i].first), abs(X[i - 1].second - X[i].second));
+        tpl.push_back(make_tuple(d, m[make_pair(X[i].first, X[i].second)], m[make_pair(X[i - 1].first, X[i - 1].second)]));
+        d = min(abs(Y[i + 1].first - Y[i].first), abs(Y[i + 1].second - Y[i].second));
+        tpl.push_back(make_tuple(d, m[make_pair(Y[i].second, Y[i].first)], m[make_pair(Y[i + 1].second, Y[i + 1].first)]));
+        d = min(abs(Y[i - 1].first - Y[i].first), abs(Y[i - 1].second - Y[i].second));
+        tpl.push_back(make_tuple(d, m[make_pair(Y[i].second, Y[i].first)], m[make_pair(Y[i - 1].second, Y[i - 1].first)]));
+    }
+    sort(tpl.begin(), tpl.end());
+    init(N);
+    ll ans = 0;
+    for(int i = 0; i < tpl.size(); i++) {
+        if(!same(get<1>(tpl[i]), get<2>(tpl[i]))) {
+            unite(get<1>(tpl[i]), get<2>(tpl[i]));
+            ans += get<0>(tpl[i]);
+        }
+    }
+    cout << ans << endl;
+    return 0;
+}

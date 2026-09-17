@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+#define int long long
+#define INF 1e+18
+using namespace std;
+
+signed main(){
+	int n,a;
+	cin >> n >> a;
+	int mi = n;
+	for(int i = 2;i < 50;i++){
+		int low = 0,up = n;
+		while(up - low > 1){
+			int mid = (low + up) / 2,tmp = 1;
+			bool flag = false;
+			for(int j = 0;j < i;j++){
+				if(j < mid % i) tmp *= mid / i + 1;
+				else tmp *= mid / i;
+				if(tmp >= n){
+					flag = true;
+					break;
+				}
+			}
+			if(flag) up = mid;
+			else low = mid;
+		}
+		mi = min(mi,up + a * (i - 1));
+	}
+	cout << mi << endl;
+	return 0;
+}

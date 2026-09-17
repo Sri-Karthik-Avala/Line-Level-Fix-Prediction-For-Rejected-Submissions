@@ -1,0 +1,76 @@
+#include<queue>
+#include<cstdio>
+
+using namespace std;
+
+const int dx[]={1,0,-1,0},dy[]={0,-1,0,1};
+
+struct Dice{
+	int t,s,e,w,n,b;
+	Dice(int tt,int ss,int ee,int ww,int nn,int bb):t(tt),s(ss),e(ee),w(ww),n(nn),b(bb){}
+	void rotx(){
+		Dice tmp=*this;
+		t=tmp.w;
+		e=tmp.t;
+		w=tmp.b;
+		b=tmp.e;
+	}
+	void roty(){
+		Dice tmp=*this;
+		t=tmp.s;
+		s=tmp.b;
+		n=tmp.t;
+		b=tmp.n;
+	}
+};
+
+struct Stat{
+	int x,y,cost;
+	Dice dice;
+	Stat(int xx,int yy,int c,Dice d):x(xx),y(yy),cost(c),dice(d){}
+	bool operator<(const Stat &st)const{ return cost<st.cost; }
+};
+
+int main(){
+	for(int h,w;scanf("%d%d",&h,&w),h;){
+		int grid[10][10];
+		for(int i=0;i<h;i++)for(int j=0;j<w;j++)	scanf("%d",grid[i]+j);
+		int sx,sy,gx,gy;	scanf("%d%d%d%d",&sy,&sx,&gy,&gx);
+
+		Dice ini(1,2,3,4,5,6);
+
+		int cmin[10][10][6][6],ans;
+		for(int i=0;i<h;i++)for(int j=0;j<w;j++)for(int t=1;t<=6;t++)for(int w=1;w<=6;w++)	cmin[i][j][t][w]=1<<30;
+		cmin[sy][sx][ini.t][ini.w]=0;
+		priority_queue<Stat> pq;	pq.push(Stat(sx,sy,0,ini));
+		while(!pq.empty()){
+			Stat a=pq.top();	pq.pop();
+			int x=a.x,y=a.y,cost=-a.cost;
+			Dice d=a.dice;
+			if(x==gx && y==gy){ ans=cost; break; }
+			if(cmin[y][x][d.t][d.w]<cost)	continue;
+
+			for(int i=0;i<4;i++){
+				int xx=x+dx[i],yy=y+dy[i];
+				if(0<=xx && xx<w && 0<=yy && yy<h){
+					Dice nextdice=d;
+					if(i==0)		nextdice.rotx();
+					else if(i==1)	nextdice.roty();
+					else if(i==2)	nextdice.rotx(),nextdice.rotx(),nextdice.rotx();
+					else			nextdice.roty(),nextdice.roty(),nextdice.roty();
+					int nextt=nextdice.t;
+					int nextw=nextdice.w;
+					int nextcost=cost+nextdice.b*grid[yy][xx];
+					if(nextcost<cmin[yy][xx][nextt][nextw]){
+						pq.push(Stat(xx,yy,-nextcost,nextdice));
+						cmin[yy][xx][nextt][nextw]=nextcost;
+					}
+				}
+			}
+		}
+
+		printf("%d\n",ans);
+	}
+
+	return 0;
+}

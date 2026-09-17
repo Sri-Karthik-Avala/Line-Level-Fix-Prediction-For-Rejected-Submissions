@@ -1,0 +1,83 @@
+#include<bits/stdc++.h>
+using namespace std;
+int underR(int y,int x);
+int underL(int y,int x);
+char maps[260][260];
+int check[260][260];
+int n;
+int gyomax[260]={0};
+int gyoans=0;
+int gyonum[260]={0};
+int retumax[260]={0};
+int retuans=0;
+int retunum[260]={0};
+int ans=0;
+main(){
+  while(1){
+    ans=0;
+    memset(check,0,sizeof(check));
+    memset(gyomax,0,sizeof(gyomax));
+    memset(retumax,0,sizeof(retumax));
+    gyoans=0;
+    retuans=0;
+    memset(gyonum,0,sizeof(gyonum));
+    memset(retunum,0,sizeof(retunum));
+    cin>>n;
+    if(n==0)break;
+    for(int i=0;i<n;i++){
+      for(int j=0;j<n;j++){
+	cin>>maps[i][j];
+	if(maps[i][j]=='1'){
+	  gyonum[i]++;
+	  gyomax[i]=max(gyomax[i],gyonum[i]);
+	  retunum[j]++;
+	  retumax[j]=max(retumax[j],retunum[j]);
+	}
+	else{
+	  gyonum[i]=0;
+	  retunum[j]=0;
+	}
+      }
+    }
+    gyoans=*(max_element(gyomax,gyomax+n));
+    retuans=*(max_element(retumax,retumax+n));
+    //cout<<gyoans<<" "<<retuans<<endl;
+    ans=max(gyoans,retuans);
+    for(int i=0;i<n;i++){
+      for(int j=0;j<n;j++){
+	if(maps[i][j]=='1'&&check[i][j]==0){
+	  check[i][j]=1;
+	  ans=max(ans,underR(i,j));
+	  ans=max(ans,underL(i,j));
+	}
+      }
+    }
+    cout<<ans<<endl;
+  }
+}
+int underR(int y,int x){
+  int num=0;
+  if(maps[y][x]=='0'){
+    return 0;
+  }
+  else{
+    num++;
+    if(y+1<n&&x+1<n){
+      num+=underR(y+1,x+1);
+    }
+    return num;
+  }
+}
+int underL(int y,int x){
+  int num=0;
+  if(maps[y][x]=='0'){
+    return 0;
+  }
+  else{
+    num++;
+    if(y+1<n&&x-1>=0){
+      num+=underR(y+1,x-1);
+    }
+    return num;
+  }
+}

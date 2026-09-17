@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#define maxn 100005
+using namespace std;
+int n,a[maxn];
+int main()
+{
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++) scanf("%d",&a[i]);
+	sort(a+1,a+n+1);
+	for(int i=1;i<=n;i++)
+	{
+		if(i+1>a[i+1])
+		{
+			int ans=0;
+			for(int j=i+1;a[j]==i;j++) ans++;
+			if(((a[i]-i)&1)||(ans&1)) printf("First");
+			else printf("Second");
+			return 0;
+		}
+	}
+	return 0;
+}

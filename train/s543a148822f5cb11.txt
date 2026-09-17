@@ -1,0 +1,74 @@
+#include<iostream>
+using namespace std;
+char t[100][100];
+int n,a,x,y,d,ny,nx,flg,cnt;
+int dx[4]={0,1,0,-1};
+int dy[4]={-1,0,1,0};
+
+void rec(int y,int x,int d){
+
+  /*
+
+    for(int i=0;i<a;i++){
+      for(int j=0;j<a;j++){
+	cout<<t[i][j];
+      }
+      cout<<endl;
+    }
+
+    cout<<y<<' '<<x<<' '<<d<<endl;*/
+  cnt=0;
+  for(int i=0;i<a;i++){
+    t[y][x]='#';cnt++;
+    ny=y+dy[d]*2;
+    nx=x+dx[d]*2;
+    if(t[ny][nx]=='#'){
+      break;
+    }
+    y=y+dy[d];
+    x=x+dx[d];
+  }
+  if(cnt>=3)rec(y,x,(d+1)%4);
+}
+
+int main(){
+  cin>>n;
+  while(n--){
+    cin>>a;
+    if(a==1){
+      cout<<'#'<<endl;
+      continue;
+    }if(a==2){
+      cout<<"##"<<endl;
+      cout<<"# "<<endl;
+      continue;
+    }
+
+    for(int i=0;i<100;i++)
+      for(int j=0;j<100;j++)
+	t[i][j]=' ';
+    
+    t[a-1][0]=' ';
+    x=0;y=a-1;
+    
+    for(int i=0;i<a;i++){
+      t[a-1][i]=t[i][a-1]='#';
+      t[0][i]=t[i][0]='#';
+    }
+    t[a-1][1]=' ';
+    
+    rec(a-1,2,0);
+    
+
+
+
+    for(int i=0;i<a;i++){
+      for(int j=0;j<a;j++){
+	cout<<t[i][j];
+      }
+      cout<<endl;
+    }
+    if(n>=1)cout<<endl;
+  }
+  return 0;
+}

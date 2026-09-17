@@ -1,0 +1,35 @@
+#coding: utf-8
+
+l = range(0, 1001)
+l[1] = 0
+for i in range(0, 50):
+    if l[i] != 0:
+        for k in range(i + i, 1001, i):
+            l[k] = 0
+        continue
+l = [x for x in l if x]
+print l
+
+while True:
+    l2 = map(int,raw_input().split())
+    if l2 == [0,0,0]:
+        break
+    a = l2[0]
+    d = l2[1]
+    n = l2[2]
+    c = 0
+    ch = 0
+    while True:
+        for p in l:
+            if (a != p and a % p == 0) or a == 1:#?´???°???????????????
+                ch = 1
+                break
+        if ch == 1:
+            a = a + d
+            ch = 0
+            continue
+        c = c + 1
+        if c == n:
+            break
+        a = a + d
+    print a

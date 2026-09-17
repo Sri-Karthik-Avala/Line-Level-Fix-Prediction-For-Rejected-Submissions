@@ -1,0 +1,14 @@
+while True:
+    t=int(input())
+    n=int(input())
+    b=0
+    if t == 0:
+        break
+    for i in range(n):
+        s,f=map(int,input().split())
+        a=f-s
+        b+=a
+    if t<=b:
+        print("OK")
+    else:
+        print(t-b)

@@ -1,0 +1,7 @@
+while True:
+    n = int(raw_input())
+    if n == 0: break
+    a = []
+    for i in range(n/4):
+        a.append(int(raw_input())
+    print sum(a)

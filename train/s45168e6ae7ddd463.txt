@@ -1,0 +1,106 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <set>
+using namespace std;
+typedef pair<int,int> P;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<eps)
+const int SQ=1000;
+const int MAX_N=200000;
+deque<int> a[MAX_N/SQ+10];
+multiset<int> Min[MAX_N/SQ+10];
+int N,Q;
+int main()
+{
+	scanf("%d %d",&N,&Q);
+	for(int i=0;i<N;i++)
+	{
+		int x=i/SQ,k;
+		scanf("%d",&k);
+		a[x].pb(k);
+		Min[x].insert(k);
+	}
+	for(int i=0;i<Q;i++)
+	{
+		int type,l,r,pos,val;
+		scanf("%d",&type);
+		if(type==0)
+		{
+			scanf("%d %d",&l,&r);
+			int lx=l/SQ,ly=l%SQ,rx=r/SQ,ry=r%SQ;
+			if(lx==rx)
+			{
+				int f=a[rx][ry];
+				a[rx].erase(a[rx].begin()+ry);
+				a[rx].insert(a[rx].begin()+ly,f);
+			}
+			else
+			{
+				int f=a[rx][ry];
+				a[rx].erase(a[rx].begin()+ry);
+				Min[rx].erase(Min[rx].find(f));
+				for(int j=lx;j<rx;j++)
+				{
+					int b=a[j].back();
+					a[j].pop_back();
+					Min[j].erase(Min[j].find(b));
+					a[j+1].push_front(b);
+					Min[j+1].insert(b);
+				}
+				a[lx].insert(a[lx].begin()+ly,f);
+				Min[lx].insert(f);
+			}
+		}
+		else if(type==1)
+		{
+			scanf("%d %d",&l,&r);
+			int lx=l/SQ,ly=l%SQ,rx=r/SQ,ry=r%SQ;
+			int ans=INF;
+			if(lx==rx)
+			{
+				for(int j=ly;j<=ry;j++)ans=min(ans,a[lx][j]);
+			}
+			else
+			{
+				for(int j=ly;j<SQ;j++)ans=min(ans,a[lx][j]);
+				for(int j=lx+1;j<rx;j++)ans=min(ans,*Min[j].begin());
+				for(int j=0;j<=ry;j++)ans=min(ans,a[rx][j]);
+			}
+			printf("%d\n",ans);
+		}
+		else
+		{
+			scanf("%d %d",&pos,&val);
+			int px=pos/SQ,py=pos%SQ;
+			int f=a[px][py];
+			Min[px].erase(Min[px].find(f));
+			Min[px].insert(val);
+			a[px][py]=val;
+		}
+	}
+	return 0;
+}

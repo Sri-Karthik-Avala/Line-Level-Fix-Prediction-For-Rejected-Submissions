@@ -1,0 +1,93 @@
+Chebyshev's Theorem 
+ 
+
+
+ 
+ 
+ 
+If n is a positive integer,
+there exists at least one prime number greater than n and less than or equal to 2 n .
+This fact is known as Chebyshev's theorem or the Bertrand-Chebyshev theorem,
+which had been conjectured by Joseph Louis Fran&ccedil;ois Bertrand (1822&ndash;1900)
+and was proven by Pafnuty Lvovich Chebyshev (&#x041f;&#x0430;&#x0444;&#x043d;&#x0443;&#x0442&#x0438;&#x0439; &#x041b;&#x044c;&#x0432;&#x043e;&#x0432;&#x0438;&#x0447; &#x0427;&#x0435;&#x0431;&#x044b;&#x0448;&#x0451;&#x0432;, 1821&ndash;1894) in 1850.
+Srinivasa Aiyangar Ramanujan (1887&ndash;1920) gave an elementary proof in his paper published in 1919.
+Paul Erd&#337;s (1913&ndash;1996) discovered another elementary proof in 1932.
+ 
+ 
+
+ 
+ 
+For example, there exist 4 prime numbers greater than 10 and less than or equal to 20, i.e. 11, 13, 17 and 19.
+There exist 3 prime numbers greater than 14 and less than or equal to 28, i.e. 17, 19 and 23.
+ 
+ 
+
+ 
+ 
+Your mission is to write a program that counts the prime numbers greater than n and less than or equal to 2 n for each given positive integer n .
+Using such a program, you can verify Chebyshev's theorem for individual positive integers.
+ 
+ 
+
+ 
+
+ Input 
+
+ 
+ 
+ 
+The input is a sequence of datasets.
+A dataset is a line containing a single positive integer n .
+You may assume n &le; 123456.
+ 
+ 
+
+ 
+ 
+The end of the input is indicated by a line containing a single zero.
+It is not a dataset.
+ 
+ 
+
+ 
+
+ Output 
+ 
+ 
+ 
+The output should be composed of as many lines as the input datasets.
+Each line should contain a single integer and should never contain extra characters.
+ 
+ 
+
+ 
+ 
+The output integer corresponding to a dataset consisting of an integer n should be the number of the prime numbers p satisfying n < p &le; 2 n .
+ 
+ 
+ 
+
+ Sample Input 
+ 
+ 
+1
+10
+13
+100
+1000
+10000
+100000
+0
+ 
+ 
+
+ Output for the Sample Input 
+ 
+ 
+1
+4
+3
+21
+135
+1033
+8392

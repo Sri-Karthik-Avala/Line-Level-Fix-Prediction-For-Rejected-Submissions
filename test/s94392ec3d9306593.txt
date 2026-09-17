@@ -1,0 +1,21 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
+while True:
+    (n, w) = map(int, raw_input().split())
+    if n == 0: break
+
+    vcnt = [0]*10
+    vr = 0
+    for i in range(n):
+        v = int(raw_input())
+        if v/w > vr:
+            vr = v/w
+        vcnt[v/w] += 1
+    
+    vmax = max(vcnt)
+    ans = 0
+    for i in range(10):
+        ans += ((vr-i)/float(vr))*(vcnt[i]/float(vmax))
+
+    print ans+0.01

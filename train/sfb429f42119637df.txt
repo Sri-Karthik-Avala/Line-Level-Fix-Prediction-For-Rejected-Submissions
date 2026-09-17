@@ -1,0 +1,9 @@
+n=int(input())
+lb,ub,t=0,len(str(n)),9*n
+while ub-lb>1:
+	mid=(lb+ub)//2
+	if sum(map(int,str(t+9*mid)))<=9*mid:
+		ub=mid
+	else:
+		lb=mid
+print(ub)

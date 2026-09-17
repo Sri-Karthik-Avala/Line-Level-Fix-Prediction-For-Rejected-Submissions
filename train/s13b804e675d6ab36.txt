@@ -1,0 +1,40 @@
+import re
+
+
+def update(d, k, v):
+    if k in d:
+        d[k] = max(d[k], v)
+    else:
+        d[k] = v
+
+
+rep_zeros = re.compile('0{2,}')
+
+n = input()
+s = input().strip('0')
+ans = 0
+
+for ps in re.split(rep_zeros, s):
+    fs = ps.split('0')
+    lfs = len(fs)
+    if lfs == 1:
+        continue
+    ls = list(map(len, fs))
+    pl = {ls[0]: 0}
+    for cc in ls[1:]:
+        nl = {}
+        for pc, a in pl.items():
+            if pc == 0:
+                update(nl, cc, a)
+                continue
+            if cc == 1:
+                update(nl, 0, a + pc)
+            else:
+                update(nl, 0, a + cc)
+                update(nl, 1, a + cc - 1)
+                if cc > 1:
+                    update(nl, cc - 1, a + pc)
+        pl = nl
+    ans += max(pl.values())
+
+print(ans)

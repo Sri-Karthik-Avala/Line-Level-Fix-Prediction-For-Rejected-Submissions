@@ -1,0 +1,47 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<complex>
+#include<cstdio>
+#include<cmath>
+
+using namespace std;
+
+typedef complex<long double> P;
+
+#define EPS (1e-10)
+#define EQ(a,b) (abs((a)-(b))<EPS)
+
+#define N(a,b) ((a).real()*(b).real()+(a).imag()*(b).imag())
+#define D(a) (((a)*conj(a)).real())
+#define DD(a,b) (D(a)+D(b))
+#define D2(a) ((a)*(a))
+
+int main(){
+  long double d;
+  while(cin >> d, abs(d)>EPS){
+    P p,v;
+    long double x,y;
+    cin >> x >> y;
+    p=P(x,y);
+    cin >> x >> y;
+    v=P(x,y);
+    long double ans;
+    if(abs((p/v).imag())<EPS){
+      double tmp=(p/v).real();
+      if(tmp>=0){
+	ans=2+abs(p);
+      }else{
+	ans=abs(p);
+      }
+      if(ans < d){
+	printf("%Lf\n",ans);
+      }else{
+	cout << "impossible" << endl;	
+      }
+    }else{
+      cout << "impossible" << endl;
+    }
+  }
+  return 0;
+}

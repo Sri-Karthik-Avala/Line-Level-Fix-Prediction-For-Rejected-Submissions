@@ -1,0 +1,71 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+map< char, int > declaration;
+map< pair< char, int >, int > assignment;
+
+int expression(string &s, int &idx, int now)
+{
+  char array_name = s[idx];
+  if(isalpha(array_name)) {
+    ++idx;
+    ++idx;
+    int get = expression(s, idx, now);
+    if(declaration[array_name] <= get) throw (now);
+    if(!assignment.count({array_name, get})) throw (now);
+    ++idx;
+    return (assignment[{array_name, get}]);
+  } else {
+    int ret = 0;
+    while(isdigit(s[idx])) {
+      ret = ret * 10 - '0' + s[idx++];
+    }
+    return (ret);
+  }
+}
+
+
+void exec(string &s, int now)
+{
+  char array_name = s[0];
+
+  if(s.find('=') == string::npos) {
+    int number = 0, ptr = 2;
+    while(isdigit(s[ptr])) {
+      number = number * 10 - '0' + s[ptr++];
+    }
+
+    declaration.emplace(array_name, number);
+  } else {
+    int ptr = 2;
+    int number = expression(s, ptr, now);
+    if(declaration[array_name] <= number) throw (now);
+    ++ptr;
+    ++ptr;
+    int get = expression(s, ptr, now);
+    assignment[{array_name, number}] = get;
+  }
+}
+
+int main()
+{
+  string S[1000];
+  while(cin >> S[0], S[0] != ".") {
+    for(int i = 1; S[i - 1] != "."; ++i) {
+      cin >> S[i];
+    }
+
+    try {
+      for(int i = 0; S[i] != "."; i++) {
+        exec(S[i], i + 1);
+      }
+      throw 0;
+    } catch(int x) {
+      cout << x << endl;
+    }
+
+    declaration.clear();
+    assignment.clear();
+  }
+}

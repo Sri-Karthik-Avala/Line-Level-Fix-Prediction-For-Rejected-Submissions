@@ -1,0 +1,58 @@
+#include<cstdio>
+#include<vector>
+#define N_MAX 105
+#define INF 32700
+using namespace std;
+short adj[N_MAX][N_MAX];
+struct Node{
+    char parent;//父节点
+    short weight;//权值
+    bool state;//节点状态
+}nodes[N_MAX];
+char n;
+int solve() {
+    int res = 0;
+    nodes[0].weight = 0;
+    nodes[0].parent = -1;
+    nodes[0].state = true;
+    char nowParent = 0;
+    while(true) {
+        for(char j = 0; j < n; j++) {
+            if(nodes[j].weight > adj[nowParent][j]&&!nodes[j].state) {
+                nodes[j].weight = adj[nowParent][j];
+            }
+        }
+        char minId = n;
+        for(char i = 0; i < n; i++) {
+            if(!nodes[i].state) {
+                if(nodes[i].weight < nodes[minId].weight) {
+                    minId = i;
+                }
+            }
+        }
+        if(minId == n) break;
+        else nodes[minId].state = true;
+        nodes[minId].parent=nowParent;
+        nowParent=minId;
+    }
+    for(char i = 0; i < n; i++) {
+        res += nodes[i].weight;
+    }
+    return res;
+}
+
+int main(){
+    freopen("D:/works/C++200/try132_AOJ_ALDS1_12_A/data.txt", "r", stdin);
+    scanf("%d", &n);
+    for(char i=0;i<n;i++){
+        for(char j=0;j<n;j++){
+            scanf("%d", &adj[i][j]);
+            if(adj[i][j]==-1) adj[i][j]=INF;
+        }
+        nodes[i].weight=INF;//初始权值
+    }
+    nodes[n].weight=INF;
+    printf("%d\n", solve());
+    return 0;
+}
+

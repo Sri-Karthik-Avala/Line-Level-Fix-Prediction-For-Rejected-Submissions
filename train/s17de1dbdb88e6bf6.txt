@@ -1,0 +1,109 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <cstring>
+#include <sstream>
+#include <cassert>
+#include <list>
+using namespace std;
+static const double EPS = 1e-10;
+typedef long long ll;
+typedef pair<int,int> PI;
+typedef vector<int> vi;
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define rep(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+#define mp(a,b) make_pair(a,b)
+#define pb(a) push_back(a)
+#define F first
+#define S second
+
+int dx[]={0,1,0,-1};
+int dy[]={1,0,-1,0};
+
+typedef struct _edge{
+  int to,cost;
+  _edge(int ito,int icost):to(ito),cost(icost){};
+}edge;
+
+vector<edge> E[60];
+int s,d;
+bool used[50];
+
+int prim(){
+  memset(used,0,sizeof(used));
+  priority_queue<PI> Q;//cost,to;
+
+  Q.push(mp(0,0));
+
+  int ret=0;
+  
+  while(!Q.empty()){
+    int ccost=-Q.top().F,from=Q.top().S;
+    Q.pop();
+    if(used[from])continue;
+    used[from]=true;
+
+    ret+=ccost;
+    rep(i,E[from].size()){
+      int to=E[from][i].to,cost=E[from][i].cost;
+      if(used[to])continue;
+      Q.push(mp(-cost,to));
+    }
+  }
+  return ret;
+
+}
+    
+
+main(){
+  while(cin>>s>>d,s|d){
+    rep(i,s+d)E[i].clear();
+    rep(i,s){
+      rep(j,d){
+	int co;
+	cin>>co;
+	if(!co)continue;
+	E[i].pb(edge(j+s,co));
+      }
+    }
+    rep(i,d-1){
+      rep(j,d-i-1){
+	int co;
+	cin>>co;
+	if(!co)continue;
+	int to=i+j+1+s;
+	E[i+s].pb(edge(to,co));
+	E[to].pb(edge(i+s,co));
+      }
+    }
+
+    rep(i,s){
+      rep(j,i){
+	E[i].pb(edge(j,0));
+	E[j].pb(edge(i,0));
+      }
+    }
+
+    cout<<prim()<<endl;
+  }
+}
+      

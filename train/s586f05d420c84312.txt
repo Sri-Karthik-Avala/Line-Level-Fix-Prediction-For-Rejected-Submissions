@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct Eins {
+	vector<long long> st;
+	int n;
+	Eins(int n) : n(n) {
+		st.resize(n << 2| 1);
+	}
+	void modify(int id,int l,int r,int pos,int val) {
+		if (l == r) {
+			st[id] += val;
+			return ;
+		}
+		int mid = l + r >> 1;
+		if (pos <= mid) modify(id << 1,l,mid,pos,val);
+		else modify(id << 1|1,mid+1,r,pos,val);
+		st[id] = max(st[id << 1],st[id << 1|1]);
+	}
+	long long get(int id,int l,int r,int L,int R) {
+		if (L <= l && r <= R) return st[id];
+		int mid = l + r >> 1;
+		if (R <= mid) return get(id << 1,l,mid,L,R);
+		if (L > mid) return get(id << 1|1,mid+1,r,L,R);
+		return max(get(id << 1,l,mid,L,R),get(id << 1|1,mid+1,r,L,R));
+	}
+};
+
+int main() {
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	int n,m;
+	cin >> n >> m;
+	vector<int> a(n + 1);
+	for (int i = 2;i <= n;i++) cin >> a[i],a[i] += a[i-1];
+	vector<vector<int>> b(n + 1,vector<int>(m));
+	vector<Eins> Tree(m,Eins(n));
+	for (int i = 1;i <= n;i++) {
+		for (int j = 0;j < m;j++) {
+			cin >> b[i][j];
+			Tree[j].modify(1,1,n,i,b[i][j]);
+		}
+	}
+	vector<long long> ans(n + 1);
+	vector<int> mx(m);
+	function<void(int,int,int,int)> solve = [&](int l,int r,int L,int R) {
+		//cout << l <<" " << r <<" " << L <<" " << R << endl;
+		if (l > r) return ;
+		int mid = l + r >> 1;
+		int f = max(L,mid);
+		for (int i = 0;i < m;i++) {
+			mx[i] = Tree[i].get(1,1,n,mid,f);
+		}
+		int pos = f;
+		long long tong = accumulate(mx.begin(),mx.end(),0ll);
+		long long val = tong - a[f];
+		for (int i = f;i <= R;i++) {
+			for (int j = 0;j < m;j++) {
+				if (mx[j] < b[i][j]) {
+					tong += b[i][j] - mx[j];
+					mx[j] = b[i][j];
+				}
+			}
+			if (val < tong - a[i]) {
+				val = tong - a[i];
+				pos = i;
+			}
+		}
+		ans[mid] = val + a[mid];
+		solve(l,mid-1,L,pos);
+		solve(mid+1,r,pos,R);
+	};
+	solve(1,n,1,n);
+	cout << *max_element(ans.begin(),ans.end());
+}

@@ -1,0 +1,21 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+using LL = long long;
+
+int main(){
+  LL N;
+  cin>> N;
+  
+  for(LL i=sqrt(N);i<=N;i++){
+    if(N%i==0){
+      int count=0;
+      while(i>0){
+        i/=10;
+        count++;
+      }
+      cout << count << endl;
+      return 0;
+    }
+  }
+}

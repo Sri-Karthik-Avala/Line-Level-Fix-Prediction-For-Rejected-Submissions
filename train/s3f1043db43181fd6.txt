@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+#define rep(i,a,b) for (int i = (a); i < (b); i++)
+#define REP(i,n) rep(i,0,n)
+using namespace std;
+
+int main()
+{
+  while(1){
+    
+    int n,m;
+    cin>>n>>m;
+    vector<int>a(m);
+    REP(i,n)
+    {
+        int d,v;
+        cin>>d>>v;
+        if(d==0){return 0;}
+        d--;
+        if(v>a.at(d))
+        {
+            a.at(d)=v;
+        }
+    }
+    int sum=0;
+    REP(i,m)
+    {
+        sum+=a.at(i);
+    }
+    cout<<sum<<endl;
+  }
+}

@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+#define N 10000
+using namespace std;
+int n,ans[N];
+
+int main(){
+  cin>>n;
+  int maxv=0,idx,in;
+  for(int i=2;i<=n;i++){
+    cout.flush()<<"? "<<1<<" "<<i<<endl;
+    cin>>in;
+    if(maxv<in){
+      maxv=in;
+      idx=i;
+    }
+  }
+  ans[0]=idx;
+  for(int i=1;i<=n;i++){
+    if(i==idx)continue;
+    cout.flush()<<"? "<<idx<<" "<<i<<endl;
+    cin>>in;
+    ans[in]=i;
+  }
+  cout.flush()<<"! ";
+  for(int i=0;i<n;i++){
+    if(i)cout.flush()<<' ';
+    cout.flush()<<ans[i];
+  }
+  cout.flush()<<endl;
+  return 0;
+}

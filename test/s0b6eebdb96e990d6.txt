@@ -1,0 +1,63 @@
+
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <cstring>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <array>
+#include <cassert>
+#include <bitset>
+using namespace std;
+using LL = long long;
+
+int N, M;
+int a[555], imos[555];
+long double dp[555][555];
+
+int main(void)
+{
+	cin >> N >> M;
+	for (int i = 0; i < N; ++i) {
+		cin >> a[i];
+		imos[i + 1] = imos[i] + a[i];
+	}
+	for (int i = 0; i < 555; ++i) {
+		for (int j = 0; j < 555; ++j) {
+			dp[i][j] = -123456789012345678;
+		}
+	}
+	dp[0][0] = 0;
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < M; ++j) {
+			for (int k = i + 1; k <= N; ++k) {
+				long double width = k - i;
+				dp[k][j + 1] = max(dp[k][j + 1], dp[i][j] + (long double)(imos[k] - imos[i]) / width);
+			}
+		}
+	}
+	cout.precision(15);
+	long double ans = 0.;
+	for (int i = 1; i <= M; ++i) {
+		ans = max(ans, dp[N][i]);
+	}
+	cout << ans << endl;
+	return 0;
+}
+

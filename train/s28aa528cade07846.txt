@@ -1,0 +1,40 @@
+#include<stdio.h>
+
+int main(){
+
+int p[6];
+int P=0;
+bool f=true;
+while(1){
+scanf("%d",&p[0]);if(p[0]==0)break;
+scanf("%d",&p[1]);if(p[1]==0)break;
+scanf("%d",&p[2]);if(p[2]==0)break;
+scanf("%d",&p[3]);if(p[3]==0)break;
+scanf("%d",&p[4]);if(p[4]==0)break;
+P=0;f=true;
+for(int i=0;i<5;i++){
+if(p[i]==1)f=false;
+}
+if(f==true){P=2;}
+
+f=true;
+for(int i=0;i<5;i++){
+if(p[i]==2)f=false;
+}
+if(f==true){P=3;}
+
+f=true;
+for(int i=0;i<5;i++){
+if(p[i]==3)f=false;
+}
+if(f==true){P=1;}
+
+
+
+for(int i=0;i<5;i++)
+{if(P!=0){if(p[i]==P)printf("1\n");else printf("2\n");}
+else printf("3\n");
+}
+}
+return 0;
+}

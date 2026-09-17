@@ -1,0 +1,80 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement You are given four digits N_1, N_2, N_3 and N_4 . Determine if these can be arranged into the sequence of digits " 1974 ". 
+ 
+ 
+ 
+ 
+ Constraints 
+ 0 \leq N_1, N_2, N_3, N_4 \leq 9 
+ N_1, N_2, N_3 and N_4 are integers. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ N_1 N_2 N_3 N_4 
+ 
+ 
+ 
+ 
+ 
+ Output If N_1, N_2, N_3 and N_4 can be arranged into the sequence of digits " 1974 ", print YES ; if they cannot, print NO . 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 1 7 9 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 YES
+ 
+ We can get 1974 by swapping N_2 and N_3 . 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 1 9 7 4
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 YES
+ 
+ We already have 1974 before doing anything. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 1 2 9 1
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 NO
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 4 4 9 0 8
+ 
+ 
+ 
+ 
+ 
+ Sample Output 4 NO

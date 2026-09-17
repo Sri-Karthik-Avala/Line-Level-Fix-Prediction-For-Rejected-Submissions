@@ -1,0 +1,15 @@
+t = {
+	"i": "i",
+	"w": "w",
+	"(": ")",
+	")": "("
+}
+s = raw_input()
+count = 0
+for i in range(len(s) / 2):
+	if t[s[i]] != s[-i-1]:
+		count += 1
+x = len(s) / 2 + 1
+if len(s) % 2 == 1 and (s[x] == "(" or s[x] == ")"):
+	count += 1
+print count

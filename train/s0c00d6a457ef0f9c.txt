@@ -1,0 +1,80 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i = 0 ; i < (n); ++i)
+using namespace std ;
+typedef long long ll ;
+const int mod=1000000007;
+
+vector<int> x(8),y(8) ;
+
+double dist(int a,int b){
+
+
+	int dx=x[a]-x[b] ;
+	int dy=y[a]-y[b] ;
+
+	return pow(dx*dx+dy*dy,0.5) ;
+
+}
+
+
+void solve(){
+
+	int n ;
+	cin>>n ;
+
+	rep(i,n){
+		cin>>x[i]>>y[i] ;
+		//cout<<x[i]<<y[i] ;
+	} 
+
+	vector<int> v(n) ;
+
+	rep(i,n)
+	{
+		v[i]=i ;
+	}
+
+	double sum=0 ;
+	double factorial=1 ;
+
+	do{
+
+		for(int i=0;i<n-1;i++){
+			sum+=dist(v[i],v[i+1]) ;
+		}
+
+		/*
+		for(int i=0;i<n;i++){
+			cout<<v[i]<<" " ;
+
+		}
+		cout<<"\n" ;
+		*/
+	
+	}while(next_permutation(v.begin(),v.end())) ;
+
+
+	for(int i=2;i<=n;i++){
+		factorial*=i ;
+	}
+
+	cout<<setprecision(6)<<sum/factorial ;
+
+}
+
+
+int main(){
+
+	
+		int y ;
+
+		y=1 ;
+		//cin>>y ;
+
+		while(y--){
+ 
+			solve() ;
+
+		}
+
+}

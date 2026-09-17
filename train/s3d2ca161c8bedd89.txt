@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+using Int = long long;
+template<typename T1,typename T2> inline void chmin(T1 &a,T2 b){if(a>b) a=b;}
+template<typename T1,typename T2> inline void chmax(T1 &a,T2 b){if(a<b) a=b;}
+
+
+struct Precision{
+  Precision(){
+    cout<<fixed<<setprecision(12);
+  }
+}precision_beet;
+
+//INSERT ABOVE HERE
+signed main(){
+  int n,m;
+  cin>>n>>m;
+  using P = pair<int, int>;
+  vector<P> vp;
+  for(int i=0;i<n;i++){
+    int v,w;
+    cin>>v>>w;
+    vp.emplace_back(v,w);
+  }
+  auto cmp=[](P a,P b){return a.first*b.second>b.first*a.second;};
+  sort(vp.begin(),vp.end(),cmp);
+  double ans=0;
+  for(auto p:vp){
+    int w=min(p.second,m);
+    ans+=double(p.first)*double(w)/double(p.second);
+    m-=w;
+  }  
+  cout<<ans<<endl;
+  return 0;
+}
+

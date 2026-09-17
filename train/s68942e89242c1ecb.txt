@@ -1,0 +1,89 @@
+//#define _GLIBCXX_DEBUG
+#include <bits/stdc++.h>
+#define rep(i, n) for(int i=0; i<n; ++i)
+#define all(v) v.begin(), v.end()
+#define rall(v) v.rbegin(), v.rend()
+using namespace std;
+using ll = int64_t;
+using ld = long double;
+using P = pair<int, int>;
+using vs = vector<string>;
+using vi = vector<int>;
+using vvi = vector<vi>;
+template<class T> using PQ = priority_queue<T>;
+template<class T> using PQG = priority_queue<T, vector<T>, greater<T> >;
+const int INF = 0xccccccc;
+const ll LINF = 0xcccccccccccccccLL;
+template<typename T1, typename T2>
+inline bool chmax(T1 &a, T2 b) {return a < b && (a = b, true);}
+template<typename T1, typename T2>
+inline bool chmin(T1 &a, T2 b) {return a > b && (a = b, true);}
+template<typename T1, typename T2>
+istream &operator>>(istream &is, pair<T1, T2> &p) { return is >> p.first >> p.second;}
+template<typename T1, typename T2>
+ostream &operator<<(ostream &os, const pair<T1, T2> &p) { return os << p.first << ' ' << p.second;}
+
+#define N 100200
+const P defo = P(-INF, INF);
+
+//head
+
+int n;
+vi G[N];
+int k, val[N];
+bool ok = true;
+P dp[N];
+
+P dfs(int i, int j) {
+	int u = -1;
+	P &res = dp[i] = defo;
+	if(val[i] != -1) res = P(val[i], val[i]);
+	for(int ne:G[i]) {
+		if(ne == j) continue;
+		P now = dfs(ne, i);
+		if(res != defo and now != defo and ((res.first&1) == (now.first&1) or res.first > now.second or res.second < now.first)) ok = false;
+		chmax(res.first, now.first-1);
+		chmin(res.second, now.second+1);
+	}
+	return res;
+}
+
+void dfs2(int i, int j, int V) {
+	int _;
+	if(V-1 >= dp[i].first) _ = V-1;
+	else _ = V+1;
+	for(int ne:G[i]) {
+		if(ne == j) continue;
+		dfs2(ne, i, _);
+	}
+	val[i] = _;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	memset(val, -1, sizeof(val));
+	cin >> n;
+	rep(i, n-1) {
+		int a, b;
+		cin >> a >> b;
+		a--; b--;
+		G[a].emplace_back(b);
+		G[b].emplace_back(a);
+	}
+	cin >> k;
+	rep(i, k) {
+		int v, p;
+		cin >> v >> p;
+		v--;
+		val[v] = p;
+	}
+	dfs(0, -1);
+	if(!ok) {
+		cout << "No\n";
+		return 0;
+	}
+	cout << "Yes\n";
+	dfs2(0, -1, dp[0].first+1);
+	rep(i, n) cout << val[i] << '\n';
+}

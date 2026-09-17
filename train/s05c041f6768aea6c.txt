@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+#define rep(i,a,b) for(int i=(a);i<=(b);++i)
+using namespace std;
+const int N=2005;
+int n,sum[N],dep[N],sz[N];
+char s[N];
+int pp,lnk[N],nxt[N*2],to[N*2];
+void ae(int k1,int k2){to[++pp]=k2,nxt[pp]=lnk[k1],lnk[k1]=pp;}
+void pre(int k1,int k2){
+	sz[k1]=s[k1],sum[k1]=0;
+	for(int i=lnk[k1];i;i=nxt[i])if(to[i]!=k2)dep[to[i]]=dep[k1]+1,pre(to[i],k1),sz[k1]+=sz[to[i]],sum[k1]+=sum[to[i]]+sz[to[i]];
+}
+int dfs(int k1,int k2){
+	int v=-1;
+	for(int i=lnk[k1];i;i=nxt[i])if(to[i]!=k2){
+		dfs(to[i],k1);
+		if(v==-1||sum[to[i]]>sum[v])v=to[i];
+	}
+	if(v==-1)return 0;
+	int k=dfs(v,k1)+sz[v];
+	if(sum[k1]-sum[v]-sz[v]>=k)return sum[k1]&1;
+	else return k-(sum[k1]-sum[v]-sz[v]);
+}
+int main(){
+	scanf("%d%s",&n,s+1);
+	rep(i,1,n)s[i]&=1;
+	rep(i,2,n){
+		int k1,k2;
+		scanf("%d%d",&k1,&k2);
+		ae(k1,k2),ae(k2,k1);
+	}
+	int ans=1e9;
+	rep(k1,1,n){
+		pre(k1,0);
+		if(dfs(k1,0)==0)ans=min(ans,sum[k1]/2);
+	}
+	if(ans==1e9)ans=-1;
+	printf("%d\n",ans);
+	return 0;
+}

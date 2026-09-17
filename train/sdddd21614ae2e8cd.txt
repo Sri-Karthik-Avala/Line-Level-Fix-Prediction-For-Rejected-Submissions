@@ -1,0 +1,12 @@
+while 1:
+    l = input()
+    if l==0: break
+    c = []; m = 0;
+    for i in xrange(12):
+        c += map(int, raw_input().split())
+    for i in xrange(0,12,2):
+        m += c[i]-c[i+1]
+        if m>=l:
+            print i/2+1; break;
+    if m<l:
+        print "NA"

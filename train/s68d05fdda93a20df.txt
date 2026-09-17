@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define FOR(i,k,n) for(int i = (k); i < (n); i++)
+#define REP(i,n) FOR(i,0,n)
+#define ALL(a) begin(a),end(a)
+#define MS(m,v) memset(m,v,sizeof(m))
+#define D10  fixed<<setprecision(10)
+typedef vector<int> vi;
+typedef vector<string> vs;
+typedef pair<int, int> P;
+typedef complex<double> Point;
+typedef long long ll;
+const int INF = 114514810;
+const int MOD = 1000000007;
+const double EPS = 1e-8;
+const double PI = acos(-1.0);
+struct edge
+{
+	int from, to, cost;
+	bool operator < (const edge& e) const { return cost < e.cost; }
+	bool operator >(const edge& e) const { return cost > e.cost; }
+};
+///*************************************************************************************///
+///*************************************************************************************///
+///*************************************************************************************///
+
+int main()
+{
+	double n, k, t, u, v, l;
+	cin >> n >> k >> t >> u >> v >> l;
+	queue<int> d;
+	REP(i, n)
+	{
+		int a;
+		cin >> a;
+		d.push(a);
+	}
+	int car = 0;
+	int run = 0;
+	int walk = 0, running = 0;
+
+	FOR(i, 1, l + 1)
+	{
+		if (!d.empty() && d.front() == i)
+		{
+			d.pop();
+			if (run == 0) run += t*v;
+			else
+			{
+				if (car < k) car++;
+				else run = t*v;
+			}
+		}
+
+		if (run == 0 && car>0)
+		{
+			car--;
+			run = t*v;
+		}
+
+		if (run > 0)
+		{
+			running++;
+			run--;
+		}
+		else walk++;
+
+
+	}
+
+	cout << D10 << running / v + walk / u << endl;
+	return 0;
+}

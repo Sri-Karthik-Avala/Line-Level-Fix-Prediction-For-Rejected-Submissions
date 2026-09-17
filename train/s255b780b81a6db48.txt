@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <iomanip>
+#include <utility>
+#include <tuple>
+#include <functional>
+#include <bitset>
+#include <cassert>
+#include <complex>
+#include <stdio.h>
+#include <time.h>
+#include <numeric>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#define all(a) a.begin(),a.end()
+#define rep(i, n) for (ll i = 0; i < (n); i++)
+#define pb push_back
+#define debug(x) cerr << #x << ':' << (x) << '\n'
+#pragma GCC optimize("O3")
+#pragma GCC optimize("unroll-loops")
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<ll, ll> P;
+typedef complex<ld> com;
+constexpr int inf = 1000000010;
+constexpr ll INF = 1000000000000000010;
+constexpr ld eps = 1e-12;
+constexpr ld pi = 3.141592653589793238;
+template<class T, class U> inline bool chmax(T &a, const U &b) { if (a < b) { a = b; return true; } return false; }
+template<class T, class U> inline bool chmin(T &a, const U &b) { if (a > b) { a = b; return true; } return false; }
+
+template<class T> class segtree {
+	int n;
+	vector<T> data;
+	T id = INF;
+	T operation(T a, T b) { return min(a, b); };
+public:
+	segtree(int _n) {
+		n = 1;
+		while (n < _n + 2) n <<= 1;
+		data = vector<T>(2 * n, id);
+	}
+	void change(int i, T x) {
+		i += n;
+		data[i] = x;
+		while (i > 1) {
+			i >>= 1;
+			data[i] = operation(data[i << 1], data[i << 1 | 1]);
+		}
+	}
+	void add(int i, T x) { change(i, data[i + n] + x); }
+	T get(int a, int b) {
+		T left = id; T right = id;
+		a += n; b += n;
+		while (a < b) {
+			if (a & 1) left = operation(left, data[a++]);
+			if (b & 1) right = operation(data[--b], right);
+			a >>= 1; b >>= 1;
+		}
+		return operation(left, right);
+	}
+	T get_all() { return data[1]; }
+	T operator[](int i) { return data[i + n]; }
+};
+
+int main() {
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+	cout << fixed << setprecision(20);
+
+	ll n, e, t;
+	cin >> n >> e >> t;
+	assert(n <= 2000);
+	vector<ll> a(n + 1);
+	a[0] = 0;
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	vector<vector<int>> ch(n + 2, vector<int>());
+	rep(i, n) {
+		ll sum = 2 * a[i + 1] + t;
+		int ng = -1, ok = n + 1;
+		while (ok - ng > 1) {
+			int mid = (ok + ng) / 2;
+			if (2 * a[mid] > sum) ok = mid;
+			else ng = mid;
+		}
+		ch[ok].pb(i);
+	}
+	segtree<ll> dp(n + 1), seg(n + 1);
+	dp.change(0, 0);
+	for (int i = 1; i <= n; i++) {
+		for (int j : ch[i]) {
+			seg.change(j, dp[j] - 2 * a[j + 1]);
+			dp.change(j, INF);
+		}
+		ll mi = dp.get(0, i) + t;
+		chmin(mi, seg.get(0, i) + 2 * a[i]);
+		dp.change(i, mi);
+	}
+	cout << dp[n] + e << '\n';
+}

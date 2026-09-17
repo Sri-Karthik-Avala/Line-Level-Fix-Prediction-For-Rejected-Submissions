@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+#define PB push_back
+#define MP make_pair
+#define REP(i,n) for (int i=0;i<(n);i++)
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define ALL(a) (a).begin(),(a).end()
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> P;
+const int INF=1e9;
+const int MOD=100000;
+int main(){
+      int n,m,h,k;
+      while(cin>>n>>m>>h>>k&&(n||m||h||k)){
+            vector<int> V[h];
+            int p[n],a,b;
+            REP(i,n)cin>>p[i];
+            int ans=0,d[n],c[n];
+            REP(i,m){
+                  cin>>a>>b;a--;b--;
+                  V[b].PB(a);
+            }
+            REP(i,n)d[i]=c[i]=i;
+            REP(i,h)REP(j,V[i].size())swap(d[V[i][j]],d[V[i][j]+1]);
+            REP(i,n)if(d[i]<k)ans+=p[i];
+            for(int i=h-1;i>=0;i--){
+                  REP(j,V[i].size()){
+                        swap(d[V[i][j]],d[V[i][j]+1]);
+                        int res=0;
+                        REP(j,n)if(d[j]<k)res+=p[c[j]];
+                        ans=min(ans,res);
+                  }
+                  REP(j,V[i].size())swap(c[V[i][j]],c[V[i][j]+1]);
+            }
+            cout<<ans<<endl;
+      }
+}

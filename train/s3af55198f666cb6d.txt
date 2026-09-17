@@ -1,0 +1,74 @@
+from itertools import permutations
+from heapq import *
+import sys
+
+sys.setrecursionlimit(10 ** 6)
+int1 = lambda x: int(x) - 1
+p2D = lambda x: print(*x, sep="\n")
+def II(): return int(sys.stdin.readline())
+def MI(): return map(int, sys.stdin.readline().split())
+def LI(): return list(map(int, sys.stdin.readline().split()))
+def LI1(): return list(map(int1, sys.stdin.readline().split()))
+def LLI(rows_number): return [LI() for _ in range(rows_number)]
+
+# smallで作った数列のチェック
+def check_s(res, ngi):
+    if res[0] == ngi: return False
+    for i in range(len(res) - 1):
+        if res[i + 1] == ng[res[i]]:
+            return False
+    return True
+
+# nが小さいときの全探索用
+def small(remain, ngi):
+    for res in permutations(remain):
+        if check_s(res, ngi): return res
+    return [-2]
+
+# 使った数を消しながら最小の数を返す
+def delpop():
+    while 1:
+        i = heappop(hp)
+        if not used[i]: return i
+
+# 次の数を選ぶ
+def next_i(ngi, cr):
+    i = delpop()
+    if i == ngi:
+        ii = delpop()
+        heappush(hp, i)
+        i = ii
+    ngj = ng[i]
+    if used[ngj]: return i
+    if indeg[ngj] < cr - 1: return i
+    heappush(hp, i)
+    return ngj
+
+def main():
+    # 頂点iを追加しても、残りの頂点でハミルトンパスが存在するかチェックしながら
+    # 残りが4点になるまで小さい順に頂点を選んでいく
+    ans = []
+    ngi = -1
+    cnt_remain = n
+    for _ in range(n - 4):
+        i = next_i(ngi, cnt_remain)
+        ans.append(i)
+        used[i] = True
+        cnt_remain -= 1
+        ngi = ng[i]
+        indeg[ngi] -= 1
+    # 4点以下の残りについては愚直に探す
+    remain = []
+    while hp: remain.append(delpop())
+    ans += small(remain, ngi)
+    ans = [x + 1 for x in ans]
+    print(*ans)
+
+n = II()
+ng = LI1()
+hp = list(range(n))
+heapify(hp)
+used = [False] * n
+indeg = [0] * n
+for k in ng: indeg[k] += 1
+main()

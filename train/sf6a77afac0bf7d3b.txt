@@ -1,0 +1,3 @@
+students = list(range(30))
+[students.remove(int(input())) for _ in range(28)] 
+[print(student) for student in students]

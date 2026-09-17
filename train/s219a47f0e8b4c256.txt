@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+#define MOD 1000000007
+#define MAXN 210000
+#define Inv2 500000004
+#define lowbit(x) (x)&(-x)
+using namespace std;
+template <typename T> inline void read(T &s)
+{
+	s = 0;char ch = getchar();
+	while(!isdigit(ch)) ch = getchar();
+	while(isdigit(ch)) s = ((s+(s<<2))<<1)+ch-'0',ch = getchar();
+}
+int n,A[MAXN],C[MAXN],S=1,tl,Ans,bel[MAXN];
+vector <int> v[MAXN];
+pair<int,int> T[MAXN];
+inline int Mod(int u){return u < MOD?u:u-MOD;}
+struct Bit
+{
+	int tmp[MAXN];
+	Bit(){memset(tmp,0,sizeof(tmp));}
+	inline void Insert(int x,int val){for(;x<=n;x+=lowbit(x)) tmp[x] = Mod(val+tmp[x]);}
+	inline int Query(int x){int Sum = 0;for(;x;x-=lowbit(x)) Sum = Mod(tmp[x]+Sum);return Sum;}
+}Sum1,cnt,Sum2;
+inline int Fast_Power(int u,int k=MOD-2)
+{
+	int Sum = 1;
+	while(k)
+	{
+		if(k&1) Sum = 1ll * Sum * u % MOD;
+		u = 1ll * u * u % MOD,k >>= 1;
+	}
+	return Sum;
+}
+int main()
+{
+	read(n),T[0] = make_pair(1,0);
+	for(int i = 1;i<=n;++i) read(A[i]),C[A[i]]++;
+	for(int i = n;i;--i) C[i] += C[i+1];
+	for(int i = 1;i<=n;++i) C[i] = C[i] - n + i,S = 1ll * S * C[i] % MOD;
+	if(S <= 0) return puts("0"),0;
+	for(int i = 1;i<=n;++i)
+	{
+		T[i] = T[i-1];
+		if(C[i] == 1) T[i].second++,++tl,bel[i] = tl;
+		else T[i].first = 1ll * T[i].first * (C[i]-1) % MOD * Fast_Power(C[i]) % MOD,bel[i] = tl;
+	}
+	for(int i = 1;i<=n;++i)
+		Ans = Mod(Ans + 1ll * Mod(Mod(i - cnt.Query(A[i])+MOD) - 1 + MOD) * S % MOD),cnt.Insert(A[i],1),v[bel[A[i]]].push_back(i);
+	for(int i = 0;i<=tl;++i)
+	{
+		for(auto x : v[i])
+		{
+			Ans = Mod(Ans + 1ll * (Sum2.Query(A[x])) * T[A[x]].first % MOD * S % MOD * Inv2 % MOD);
+			Ans = Mod(Ans - 1ll * Mod(Sum1.Query(n) - Sum1.Query(A[x]) + MOD) * Fast_Power(T[A[x]].first) % MOD * S % MOD * Inv2 % MOD + MOD);
+			Sum1.Insert(A[x],T[A[x]].first),Sum2.Insert(A[x],Fast_Power(T[A[x]].first));
+		}
+		for(auto x : v[i])
+			Sum1.Insert(A[x],-T[A[x]].first),Sum2.Insert(A[x],-Fast_Power(T[A[x]].first));
+	}
+	printf("%d\n",Ans);
+	return 0;
+}

@@ -1,0 +1,10 @@
+import re
+ans=[]
+for i in l:
+    if 'peach' in i:
+        ans.append(i.replace('peach','apple'))
+    elif 'apple' in i:
+        ans.append(i.replace('apple','peach'))
+    else:
+        ans.append(i)
+print ' '.join(ans)

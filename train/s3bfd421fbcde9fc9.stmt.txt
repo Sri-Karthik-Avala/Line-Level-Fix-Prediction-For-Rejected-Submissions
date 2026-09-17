@@ -1,0 +1,66 @@
+Longest Increasing Subsequence 
+ 
+
+ 
+For a given sequence A = {a 0 , a 1 , ... , a n-1 } , find the length of the longest increasing subsequnece (LIS) in A .
+ 
+
+ 
+An increasing subsequence of A is defined by a subsequence {a i 0 , a i 1 , ... , a i k } where 0 &le; i 0 < i 1 < ... < i k < n and a i 0 < a i 1 < ... < a i k .
+ 
+
+
+ Input 
+
+ 
+ n 
+ a 0 
+ a 1 
+:
+ a n-1 
+ 
+ 
+
+ 
+In the first line, an integer n is given. In the next n lines, elements of A are given.
+ 
+
+ Output 
+
+ 
+The length of the longest increasing subsequence of A .
+ 
+
+ Constraints 
+
+ 
+ 1 &le; n &le; 100000 
+ 0 &le; a i &le; 10 9 
+ 
+
+ Sample Input 1 
+ 
+5
+5
+1
+3
+2
+4
+ 
+ Sample Output 1 
+ 
+3
+ 
+ 
+
+
+ Sample Input 2 
+ 
+3
+1
+1
+1
+ 
+ Sample Output 2 
+ 
+1

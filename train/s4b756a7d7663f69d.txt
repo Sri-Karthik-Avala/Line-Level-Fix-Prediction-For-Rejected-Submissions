@@ -1,0 +1,72 @@
+def ume(n):
+  st = str(n)
+  le = len(st)
+  re = ["0"]*le
+  for i in range(le):
+    if st[i]=="0":
+      re[i]=str(m)
+    else:
+      re[i]=st[i]
+  return int("".join(re))
+
+
+n, k = map(int, input().split())
+d = list(map(int, input().split()))
+num = []
+
+#使える文字をリスト化
+for i in range(10):
+  if not i in d:
+    num.append(i)
+
+ds = str(n)#nを文字列にしたもの
+l = len(ds)#nの桁数
+m = min(num)#numのうち最小の数
+
+if l == 1:
+  for i in num:
+    if i>=n:
+      print(i)
+      quit()
+
+dp0=[0]*(l+1)
+dp1=[0]*(l+1)
+
+for i in num:
+  if i != 0:
+    ans = ume(i*(10**(l)))
+
+for i in num:
+  flg = True
+  if i == int(ds[0]):
+    dp1[1]=i*(10**(l-1))
+    flg = False
+  if i > int(ds[0]):
+    ans = ume(i*(10**(l-1)))
+    break
+    
+if flg:
+  print(ans)
+  quit()
+
+for i in range(1, l):
+  flg = True
+  flg2 = True
+  for j in num:
+    if j == int(ds[i]):
+      dp1[i+1]=dp1[i]+j*(10**(l-1-i))
+      flg = False
+      flg2 = False
+    if j > int(ds[i]):
+      flg2 = False
+      ans = ume(dp1[i]+j*(10**(l-1-i)))
+      if flg:
+        print(ans)
+        quit()
+      break
+  if flg2:
+    print(ans)
+    quit()
+  #print(dp1[i+1])
+print(dp1[l])
+  

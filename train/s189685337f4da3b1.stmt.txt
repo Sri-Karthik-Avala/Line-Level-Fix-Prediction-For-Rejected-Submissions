@@ -1,0 +1,54 @@
+Problem A: Rational Irrationals 
+
+ 
+Rational numbers are numbers represented by ratios of two integers. For a prime number p , one of the elementary theorems in the number theory is that there is no rational number equal to &radic; p . Such numbers are called irrational numbers. It is also known that there are rational numbers arbitrarily close to &radic; p 
+ 
+
+ 
+Now, given a positive integer n , we define a set Q n of all rational numbers whose elements are represented by ratios of two positive integers both of which are less than or equal to n . For example, Q 4 is a set of 11 rational numbers {1/1, 1/2, 1/3, 1/4, 2/1, 2/3, 3/1, 3/2, 3/4, 4/1, 4/3}. 2/2, 2/4, 3/3, 4/2 and 4/4 are not included here because they are equal to 1/1, 1/2, 1/1, 2/1 and 1/1, respectively.
+ 
+
+ 
+Your job is to write a program that reads two integers p and n and reports two rational numbers x / y and u / v , where u / v < &radic; p < x / y and there are no other elements of Q n between u/v and x/y . When n is greater than &radic; p , such a pair of rational numbers always exists.
+ 
+
+ Input 
+
+ 
+The input consists of lines each of which contains two positive integers, a prime number p and an integer n in the following format.
+ 
+ 
+ p n 
+ 
+
+ 
+They are separated by a space character. You can assume that p and n are less than 10000, and that n is greater than &radic; p . The end of the input is indicated by a line consisting of two zeros.
+ 
+
+ Output 
+
+ 
+For each input line, your program should output a line consisting of the two rational numbers x / y and u / v ( x / y > u / v ) separated by a space character in the following format.
+ 
+
+ 
+ x/y u/v 
+ 
+
+ 
+They should be irreducible. For example, 6/14 and 15/3 are not accepted. They should be reduced to 3/7 and 5/1, respectively.
+ 
+
+ Sample Input 
+ 
+2 5
+3 10
+5 100
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+3/2 4/3
+7/4 5/3
+85/38 38/17

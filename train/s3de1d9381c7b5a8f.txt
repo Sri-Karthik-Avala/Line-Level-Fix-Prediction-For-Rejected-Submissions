@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfs1(int &u, int nowcost, int &dis, int node, vector<bool> &used, vector<vector<pair<int, int> > > &adj){
+    used[node] = true;
+    if(dis < nowcost){
+        dis = nowcost;
+        u = node;
+    }
+    //cout << node << " " << nowcost << endl;
+    for(int i = 0; i < (int)adj[node].size(); i++){
+        //cout << "ok" << endl;
+        int to = adj[node][i].first;
+        int cost = adj[node][i].second;
+        if(!used[to]){
+            dfs1(u, nowcost + cost, dis, to, used, adj);
+        }
+    }    
+}
+
+void dfs2(int nowcost, int &dis, int node, vector<bool> &used, vector<vector<pair<int, int> > > &adj){
+    used[node] = true;
+    dis = max(dis, nowcost);
+    //cout << node << " " << nowcost << endl;
+    for(int i = 0; i < (int)adj[node].size(); i++){
+        //cout << "ok" << endl;
+        int to = adj[node][i].first;
+        int cost = adj[node][i].second;
+        if(!used[to]){
+            dfs2(nowcost + cost, dis, to, used, adj);
+        }
+    }    
+}
+
+int main(){
+    int n; cin >> n;
+    if(n == 1) !printf("0\n");
+    vector<vector<pair<int, int> > > adj(n);
+    for(int i = 0; i < n - 1; i++){
+        int a, b, c; cin >> a >> b >> c;
+        adj[a].push_back({b, c});
+        adj[b].push_back({a, c});
+    }
+
+    int u;
+    int dis = 0;
+    vector<bool> used(n, false);
+    dfs1(u, 0, dis, 0, used, adj);
+    for(int i = 0; i < n; i++) used[i] = false;
+    dis = 0;
+    dfs2(0, dis, u, used, adj);
+    cout << dis << endl;
+    return 0;
+}

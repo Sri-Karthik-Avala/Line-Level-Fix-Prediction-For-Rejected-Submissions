@@ -1,0 +1,45 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int S, N, U, M, V, D;//?????????HP, ?????¬???????????°?????°, ?????\??????????????°, ?????????????????°, ?????\????????????????????????
+int e[200], c[200], h[200], a[200];
+int dp[200][200][600], dp2[100000], dp3[200], dp4[200][200];
+int main() {
+	cin >> S >> N >> U >> M >> V >> D;
+	for (int i = 0; i < N; i++)cin >> e[i] >> c[i];
+	for (int i = 0; i < M; i++)cin >> h[i] >> a[i];
+	for (int i = 0; i < 200; i++) { for (int j = 0; j < 200; j++) { for (int k = 0; k < 200; k++) { dp[i][j][k] = -999999999; } } }
+	dp[0][0][0] = 0;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			for (int k = 0; k < 600; k++) {
+				if (dp[i][j][k] < 0 || k + e[i] >= 600)continue;
+				dp[i + 1][j + 1][k + e[i]] = max(dp[i + 1][j + 1][k + e[i]], dp[i][j][k] + c[i]);
+				dp[i + 1][j][k] = max(dp[i + 1][j][k], dp[i][j][k]);
+			}
+		}
+	}
+	for (int i = 0; i < 600; i++)dp3[i] = dp[N][U][i];
+	for (int i = 1; i < 600; i++)dp3[i] = max(dp3[i], dp3[i - 1]);
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < 100000; j++) {
+			if (j + a[i] >= 100000)continue;
+			dp2[j + a[i]] = max(dp2[j + a[i]], dp2[j] + h[i]);
+		}
+	}
+	for (int i = 0; i < 200; i++) { for (int j = 0; j < 200; j++)dp4[i][j] = -999999999; }
+	dp4[0][S] = 0;
+	for (int i = 0; i < D; i++) {
+		for (int j = 0; j <= S; j++) {
+			for (int k = 0; k <= j; k++) {
+				if (dp3[k] < 0)continue;
+				int HP = min(S, j - k + V);
+				dp4[i + 1][HP] = max(dp4[i + 1][HP], dp4[i][j] + dp2[dp3[k]]);
+			}
+		}
+	}
+	int maxn = -999999999; for (int i = 0; i <= S; i++)maxn = max(maxn, dp4[D][i]);
+	if (maxn < 0)maxn = -1;
+	cout << maxn << endl;
+	return 0;
+}

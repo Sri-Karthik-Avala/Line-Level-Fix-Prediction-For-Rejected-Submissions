@@ -1,0 +1,65 @@
+from math import gcd
+
+def get_sieve_of_eratosthenes_new(n):
+    import math
+    if not isinstance(n, int):
+        raise TypeError('n is int type.')
+    if n < 2:
+        raise ValueError('n is more than 2')
+    prime = []
+    limit = math.sqrt(n)
+    data = [i + 1 for i in range(1, n)]
+    while True:
+        p = data[0]
+        if limit <= p:
+            return prime + data
+        prime.append(p)
+        data = [e for e in data if e % p != 0]
+
+prime=get_sieve_of_eratosthenes_new(32000)
+
+def euler_phi(n):
+    res=n
+    for x in prime:
+        if n%x==0:
+            res=(res//x)*(x-1)
+            while n%x==0:
+                n//=x
+    if n!=1:
+        res=(res//n)*(n-1)
+    return res
+
+
+def biggcd(n,m):
+    g=gcd(n,m)
+    res=g
+    count=2
+    while True:
+        test=gcd(g**count,m)
+        if test>res:
+            res=test
+            count+=1
+        else:
+            break
+    return res
+
+
+def solve(a,m,n):
+    #print(a,m,n)
+    if gcd(a,m)==1:
+        if m==1:
+            return 1
+        phi=euler_phi(m)
+        G=gcd(phi,m)
+        r0=solve(a,G,n)
+        return (((pow(a,n*r0)-n*r0)//G)*pow(n*phi//G,phi-1,m)*phi+r0)%(m*phi//G)
+    else:
+        big=biggcd(a,m)
+        k0=solve(a,m//big,n*big)
+        return big*k0
+
+for i in range(int(input())):
+    A,M=map(int,input().split())
+    print(solve(A,M,1))
+    #ans=solve(A,M,1)
+    #print(pow(A,ans,M)%M==ans%M)

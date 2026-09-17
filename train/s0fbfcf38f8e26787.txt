@@ -1,0 +1,42 @@
+#include "bits/stdc++.h"
+using namespace std;
+typedef long long ll;
+ll MOD = 1000000007LL;
+ll mod_pow(ll a, ll b) {
+	if (b == 0) return 1;
+	if (b % 2 == 0) {
+		ll x = mod_pow(a, b / 2);
+		return (x*x) % MOD;
+	}
+	return (a*mod_pow(a, b - 1)) % MOD;
+}
+ll fact[300001];
+ll inv_fact[300001];
+ll comb(ll n, ll k) {
+	if (n < k) return 0;
+	ll ret = fact[n];
+	(ret *= inv_fact[k]) %= MOD;
+	(ret *= inv_fact[n - k]) %= MOD;
+	return ret;
+}
+int main() {
+	fact[0] = inv_fact[0] = 1;
+	for (int i = 1; i <= 200000; i++) {
+		fact[i] = (fact[i - 1] * i) % MOD;
+		inv_fact[i] = (inv_fact[i - 1] * mod_pow(i, MOD - 2)) % MOD;
+	}
+	int N, M, K;
+	cin >> N >> M >> K;
+	ll ans = 0;
+	for (int i = 0; i <= K; i++) {
+		ll sum = comb(N + M + 2 * K, N + 2 * i);
+		ll X = comb(N + 2 * i, N + i);
+		if (i > 0) (X += MOD - comb(N + 2 * i, i - 1)) %= MOD;
+		ll Y = comb(M + 2 * (K - i), M + (K - i));
+		if (K - i > 0) (Y += MOD - comb(M + 2 * (K - i), K - i - 1)) %= MOD;
+		(sum *= X) %= MOD;
+		(sum *= Y) %= MOD;
+		(ans += sum) %= MOD;
+	}
+	cout << ans << endl;
+}

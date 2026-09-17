@@ -1,0 +1,110 @@
+#include<cstdio>
+#include<utility>
+#include<cassert>
+#include<algorithm>
+
+using namespace std;
+
+typedef pair<int,int> P;
+typedef pair<int,P> PP;
+
+const int B=1500;
+
+struct Segtree{
+	struct Node{
+		int lch,rch;
+		int val;
+		long long all;
+		Node(){
+			lch=-1,rch=-1,val=0,all=0;
+		}
+	};
+	Node nodes[B*80];
+	int c;
+	void init(){
+		c=1;
+		for(int i=0;i<8000;i++) nodes[i]=Node();
+	}
+	void add(int l,int r,int k,int a,int b){
+		if(l<=a&&b<=r){
+			nodes[k].val++;
+			nodes[k].all+=(b-a);
+			return;
+		}else if(r<=a||b<=l) return;
+		if(nodes[k].lch==-1){
+			nodes[k].lch=c++;
+			nodes[k].rch=c++;
+			assert(c<=40400);
+		}
+		add(l,r,nodes[k].lch,a,(a+b)/2);
+		add(l,r,nodes[k].rch,(a+b)/2,b);
+		int le=max(l,a);
+		int ri=min(r,b);
+		nodes[k].all+=(ri-le);
+	}
+	void add(int l,int r){
+		add(l,r,0,0,1073741824);
+	}
+	long long sum(int l,int r,int k,int a,int b){
+		if(l<=a&&b<=r){
+			return nodes[k].all;
+		}else if(r<=a||b<=l) return 0;
+		long long res=0;
+		if(nodes[k].lch!=-1){
+			res+=sum(l,r,nodes[k].lch,a,(a+b)/2);
+			res+=sum(l,r,nodes[k].rch,(a+b)/2,b);
+		}
+		int le=max(a,l),ri=min(b,r);
+		res+=(long long)nodes[k].val*(ri-le);
+		return res;
+	}
+	long long sum(int l,int r){
+		return sum(l,r,0,0,1073741824);
+	}
+};
+
+Segtree segs[100100/B+1];
+
+PP pps[100100];
+
+int N,M,Q;
+
+int main(){
+	scanf("%d%d%d",&N,&M,&Q);
+	for(int i=0;i<M;i++){
+		int a,b,v;
+		scanf("%d%d%d",&a,&b,&v);
+		pps[i]=PP(v,P(a,b));
+	}
+	sort(pps,pps+M);
+	for(int i=0;i<M/B;i++) segs[i].init();
+	for(int i=0;i<M;i++){
+		int a=pps[i].second.first;
+		int b=pps[i].second.second;
+		segs[i/B].add(a,b+1);
+	}
+	for(int q=0;q<Q;q++){
+		int a,b;
+		long long x;
+		scanf("%d%d%lld",&a,&b,&x);
+		long long sum=0;
+		int id=0;
+		for(id=0;id<M/B;id++){
+		//	long long cur=val[id][b]-val[id][a-1];
+			long long cur=segs[id].sum(a,b+1);
+			if(sum+cur>=x) break;
+			sum+=cur;
+		}
+		for(int i=id*B;;i++){
+			int ca=pps[i].second.first,cb=pps[i].second.second;
+			int le=max(ca,a),ri=min(cb,b);
+			int ad=max(0,ri-le+1);
+			sum+=ad;
+			if(sum>=x){
+				printf("%d\n",pps[i].first);
+				break;
+			}
+		}
+	}
+	return 0;
+}

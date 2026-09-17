@@ -1,0 +1,17 @@
+data=[]
+while True:
+    n = int(input())
+    if n==0:
+        break
+    for i in range(n):
+        spam=list(map(int,input().split()))
+        spam.append(sum(spam))
+        data.append(spam)
+    spam=[]
+    for i in range(n+1):
+        spam.append(sum(x[i] for x in data))
+    data.append(spam)
+    for i in range(n+1):
+        for j in range(n+1):
+            print('{:5}'.format(data[i][j]),end='')
+        print('')

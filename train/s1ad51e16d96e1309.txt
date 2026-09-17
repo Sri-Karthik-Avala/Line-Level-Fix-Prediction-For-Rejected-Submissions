@@ -1,0 +1,38 @@
+//              +-- -- --++-- +-In the name of ALLAH-+ --++-- -- --+              \\
+
+#include <bits/stdc++.h>
+
+#define F first
+#define S second
+#define _sz(x) (int)x.size()
+
+using namespace std ;
+using ll = long long ;
+using ld = long double ;
+using pii = pair <int , int> ;
+
+const int N = 1e5 + 20 , LG = 30 ;
+int n , a[N] , X , cnt[LG] , ans ;
+
+int main(){
+	ios::sync_with_stdio(false) , cin.tie(0) , cout.tie(0) ;
+
+	cin >> n ;
+	for (int i = 0 ; i < n ; i ++) {
+		cin >> a[i] ;
+		X ^= a[i] ;
+	
+		a[i] ^= a[i] - 1 ;
+
+		cnt[__builtin_popcount(a[i])] ++ ;
+	}
+
+	for (int i = 1 ; i < LG ; i ++) {
+		if ((X >> i & 1) != (X >> (i - 1) & 1)) {
+			if (!cnt[i]) return cout << "-1\n" , 0 ;
+			ans ++ ;
+		}
+	}
+
+	cout << ans << '\n' ;
+}

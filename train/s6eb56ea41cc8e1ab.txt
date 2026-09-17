@@ -1,0 +1,17 @@
+import itertools
+import math
+
+n, m = map(int, input().split())
+x = list(map(int, input().split()))
+
+x.sort()
+
+dis = []
+for i in range(m-1):
+    dis.append(x[i+1]-x[i])
+
+dis.sort(reverse=True)
+for i in range(len(dis)):
+    dis[i] = 0
+
+print(sum(dis))

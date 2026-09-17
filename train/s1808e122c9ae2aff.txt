@@ -1,0 +1,49 @@
+INF = 1000000000
+
+def BellmanFord_edge(s, v, edge):
+    dp = [INF] * v
+    dp[s] = 0
+    for i in range(0, v):
+        dp1 = dp[:]
+        for fr, to, d in edge:
+            if dp[fr] == INF:
+                continue
+            if dp[to] > dp[fr] + d:
+                dp[to] = dp[fr] + d
+                if i == v - 1:
+                    return -1
+        if dp == dp1:
+            break
+    return dp
+
+def BellmanFord_graph(s, v, graph):
+    dp = [INF] * v
+    dp[s] = 0
+    for i in range(0, v):
+        for k in range(0, v):
+            dp1 = [dp[k] + graph[k][j] if dp[k] != INF and graph[k][j] != INF and dp[j] > dp[k] + graph[k][j]
+                  else dp[j]
+                  for j in range(0, v) ]
+            if dp1 != dp and i == v - 1:
+                return -1
+            dp = dp1
+    return dp
+
+dp = []
+line = input()
+v, e = list(map(int, line.split()))
+graph = [ [INF] * v for _ in range(0, v)]
+edge = []
+for _ in range(0, e):
+    line = input()
+    s, t, d = list(map(int, line.split()))
+    edge += [[s, t, d]]
+    graph[s][t] = d
+for s in range(0, v):
+#    dp = BellmanFord(s, v, graph)
+    dp = BellmanFord_edge(s, v, edge)
+    if dp == -1:
+        print("NEGATIVE CYCLE")
+        break
+    else:
+        print(" ".join(map(str, [dp[t] if dp[t] != INF else "INF" for t in range(0, v)])))

@@ -1,0 +1,27 @@
+def solve(s,p):
+    if s[0]!='[':
+        return[p//1000,p//100%10,p//10%10,p%10][ord(s[0])-ord('a')]
+    i=3
+    while s.count('[',2,i)!=s.count(']',2,i):
+        i+=1
+    j=i+1
+    while s.count('[',i,j)!=s.count(']',i,j):
+        j+=1
+    l=solve(s[2:i],p)
+    r=solve(s[i:j],p)
+    if s[1]=='+':
+        return l|r
+    elif s[1]=='*':
+        return l&r
+    else:
+        return l^r
+while True:
+    s=input()
+    if s=='.':break
+    p=int(input())
+    a=solve(s,p)
+    c=0
+    for i in range(10000):
+        if solve(s,i)==a:
+            c+=1
+    print(a,c)

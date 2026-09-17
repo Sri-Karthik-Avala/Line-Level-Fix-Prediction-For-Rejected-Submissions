@@ -1,0 +1,6 @@
+s = input()
+n = input()
+for i in range(n):
+  x, y = input()-1, input()-1
+  p = min(x, y, s - x - 1, s - y - 1)
+  print p % 3 + 1

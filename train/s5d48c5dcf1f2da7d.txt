@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main()
+{
+  int N, A[200000], B[200000];
+  int sum[100000] = {};
+
+  vector< int > add[100000], del[100000];
+  int ans[100000] = {};
+
+  scanf("%d", &N);
+  for(int i = 0; i < N; i++) {
+    scanf("%d %d", &A[i], &B[i]);
+    --A[i], --B[i];
+    ++sum[A[i]];
+    --sum[B[i]];
+    add[A[i]].emplace_back(i);
+    del[B[i]].emplace_back(i);
+  }
+
+  int ret = 0, cur = 0;
+  for(int i = 0; i < 100000; i++) {
+    cur += sum[i];
+    ret = max(ret, cur);
+  }
+
+  cur = 0;
+  int open = 0;
+  for(int i = 0; i < 100000; i++) {
+    for(auto &idx : del[i]) ans[idx] += open;
+    cur -= del[i].size();
+    for(auto &idx : add[i]) ans[idx] -= open - cur;
+    open += add[i].size();
+    cur += add[i].size();
+  }
+  cout << *max_element(ans, ans + N) << " " << ret << endl;
+}

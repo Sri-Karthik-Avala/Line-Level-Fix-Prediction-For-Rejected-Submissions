@@ -1,0 +1,54 @@
+Problem B: Eight Princes 
+
+ 
+Once upon a time in a kingdom far, far away, there lived eight princes. Sadly they were on very
+bad terms so they began to quarrel every time they met.
+ 
+ 
+One day, the princes needed to seat at the same round table as a party was held. Since they
+were always in bad mood, a quarrel would begin whenever:
+ 
+
+ 
+ A prince took the seat next to another prince. 
+ A prince took the seat opposite to that of another prince (this happens only when the
+ table has an even number of seats), since they would give malignant looks each other.
+ 
+ 
+ 
+Therefore the seat each prince would seat was needed to be carefully determined in order to
+avoid their quarrels. You are required to, given the number of the seats, count the number of
+ways to have all eight princes seat in peace.
+ 
+
+ Input 
+
+ 
+Each line in the input contains single integer value N , which represents the number of seats on
+the round table. A single zero terminates the input.
+
+ 
+
+ Output 
+
+ 
+For each input N , output the number of possible ways to have all princes take their seat without
+causing any quarrels. Mirrored or rotated placements must be counted as different.
+ 
+ 
+You may assume that the output value does not exceed 10 14 .
+ 
+
+ Sample Input 
+ 
+8
+16
+17
+0
+ 
+
+ Output for the Sample Input 
+ 
+0
+0
+685440

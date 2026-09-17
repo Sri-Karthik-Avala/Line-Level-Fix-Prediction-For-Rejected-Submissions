@@ -1,0 +1,42 @@
+//15
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int p[400][400][81];
+
+int dfs(vector<int> v){
+  if(v.size()<=2){
+    return v.back();
+  }else{
+    if(p[v[0]][v[1]][v.size()]++){
+      return 0;
+    }else{
+      int n=dfs(vector<int> (v.begin()+1,v.end()));
+      if(v[1]){
+	v[2]+=v[0];
+	v[1]--;
+	n=max(n,dfs(vector<int> (v.begin()+1,v.end())));
+      }
+      return n;
+    }
+  }
+}
+
+int main(){
+  int n;
+  cin>>n;
+  while(n--){
+    int l;
+    cin>>l;
+    vector<int> v(l);
+    for(int i=0;i<l;i++){
+      cin>>v[i];
+    }
+    fill(p[0][0],p[400][0],false);
+    cout<<dfs(v)<<endl;
+  }
+  return 0;
+}

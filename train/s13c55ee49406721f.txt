@@ -1,0 +1,22 @@
+for i in range(1, 101):
+    count = 0
+    temp = 0
+    SetCount = 0
+
+    try:
+        str1 = input()
+        list1 = str1.split(" ")
+        str2 = input()
+        list2 = str2.split(" ")
+        list2.sort(reverse=True)
+        for m in range(0, int(list1[0])):
+            if (m+1) % int(list1[1]) == 0:
+                SetCount = SetCount + 1
+            #elif (m+1) % int(list1[1]) != 0 | SetCount == int(list1[0])//int(list1[1]):
+             #   count = count + int(list2[m])
+            else:
+                count = count + int(list2[m])
+        print(count)
+
+    except:
+        break

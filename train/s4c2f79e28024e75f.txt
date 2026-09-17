@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,b) FOR(i,0,b)
+#define PB push_back
+#define ALL(c) c.begin(),c.end()
+using namespace std;
+typedef long long LL;
+typedef int ut;
+typedef pair<ut,ut> pr;
+typedef vector<ut> VI;
+typedef vector<pr> Vpr;
+const int SIZE=100;
+int maps[SIZE][SIZE];
+int d[SIZE],a[SIZE],k[SIZE],t[SIZE];
+int DP[5][10][10];//d,n,l;
+int p[5][10][10];//d,n,k
+int N,M,L;
+int solve2(int now,int n,int l){
+//	cout << now << " " << n << " " << l << endl;
+	if(DP[now][n][l]) return DP[now][n][l];
+	if(n>N) return 0;
+	int ans=solve2(now,n+1,l);
+	if(l)
+	FOR(i,1,N+1){
+		ans=max(ans,p[now][n][i]+solve2(now,n+i,l-1));
+	}
+	return DP[now][n][l]=ans;
+}
+int solve(int now,int l){
+//	cout << now <<" 1 " << endl;
+	if(now==5) return 0;
+	int ans=solve(now+1,l);
+	FOR(i,1,min(l,N)+1){
+	//	cout << now << " " << i<< endl;
+		//cout << solve2(now,1,i) << " "<< i << endl;
+		ans=max(ans,solve2(now,1,i)+solve(now+1,l-i));
+	//	cout << now << endl;
+	}
+	return ans;
+}
+int main(){
+	cin >> N >> M >> L;
+	REP(i,M){
+		cin >> d[i] >> a[i] >> k[i] >> t[i];
+		p[d[i]][a[i]][k[i]]=max(t[i],p[d[i]][a[i]][k[i]]);
+	}
+	cout << solve(0,L) << endl;
+	return 0;
+}

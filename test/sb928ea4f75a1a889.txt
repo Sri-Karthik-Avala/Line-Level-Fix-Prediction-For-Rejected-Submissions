@@ -1,0 +1,30 @@
+
+A=map(int,input().split())
+n=int(A[0])
+m=int(A[1])
+
+
+max=[]
+k=0
+while n>0 and m>0:
+    B=[0 for i in range(n)]
+    B=input().split()
+    for i in range(n):
+        B[i]=int(B[i])
+    ma=0
+    for i in range(n):
+        for j in range(i+1,n):  
+            x=0 
+            x=B[i]+B[j]
+            if ma<x and x<=m:
+                ma=x
+    max.append(ma)
+    A=input().split()
+    n=int(A[0])
+    m=int(A[1])
+    k+=1
+for i in range(k):
+    if max[i]>0:
+        print(max[i])
+    else:
+        print("NONE")

@@ -1,0 +1,47 @@
+R = range(100)
+M = [[2,5,2,2,2][i%5] for i in R]
+Out = [-1] *100
+P = [-1]*100
+S = [-1]*17
+Q = []
+W = [0]*100
+
+def stand(I, s):
+  n = M[I]
+  P[I] = -1
+  S[s:s+n] = [-1] * n
+  Out[I] = -1
+  return 1
+
+def sit(I, s):
+  n = M[I]
+  P[I] = s
+  S[s:s+n] = [I] * n
+  Out[I] = t+ 17*(I%2)+3*(I%3)+19
+  W[I] = t - I*5
+  return
+
+def check(I):
+  n = M[I]
+  for s in range(17-n):
+    if S[s:s+n] == [-1]*n: return s
+  return -1
+
+t = 0
+c = 0
+while c<100:
+  while t in Out:
+    I = Out.index(t)
+    c += stand(I, P[I])
+
+  if t<500 and t%5==0: Q.append(t/5)
+ 
+  while len(Q)>0:
+    s = check(Q[0])
+    if s==-1: break
+    sit(Q.pop(0), s)
+  t += 1
+
+while 1:
+  try: print W[int(raw_input())]
+  except: break

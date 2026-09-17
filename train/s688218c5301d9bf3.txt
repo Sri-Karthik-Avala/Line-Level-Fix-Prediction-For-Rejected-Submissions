@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define ld long double
+
+int main()
+{
+		ll mod =  998244353;
+		int n,k;
+		//set<int>vals;
+		cin>>n>>k;
+		pair<int,int>range[k];
+		for(int i=0;i<k;i++)
+		{
+			int l,r;
+			cin>>l>>r;
+			range[i]={l,r};
+			/*for(int i=l;i<=r;i++)
+				vals.insert(i);*/
+		}
+		ll ways[n+1];
+		memset(ways,0,sizeof(ways));
+		ways[1]=1;
+		ways[2]=-1;
+		for(int i=1;i<=n;i++)
+		{
+			if(i>1)
+				ways[i]+=ways[i-1];
+			for(int j=0;j<k;j++){
+				if(range[j].first+i>n)
+					continue;
+				ways[i+range[j].first]=(ways[i]+ways[i+range[j].first])%mod;
+				
+				if(range[j].second+i+1>n)
+					continue;
+				ways[i+range[j].second+1]=(ways[i+range[j].second+1]-ways[i])%mod;
+			}
+	//	ways[i] += ways[i-1];
+		}
+		/*for(int i=2;i<=n;i++)
+		{
+			for(int j=0;j<k;j++)
+				ways[i] = ways[i]+ways[i-1];
+		}*/
+		if(ways[n]<0)
+			ways[n]=mod+ways[n];
+		cout<<ways[n]<<"\n";
+	
+}

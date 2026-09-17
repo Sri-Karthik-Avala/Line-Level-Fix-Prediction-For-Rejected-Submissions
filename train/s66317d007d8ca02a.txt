@@ -1,0 +1,89 @@
+import os
+import sys
+
+if os.getenv("LOCAL"):
+    sys.stdin = open("_in.txt", "r")
+
+sys.setrecursionlimit(10 ** 9)
+INF = float("inf")
+IINF = 10 ** 18
+MOD = 10 ** 9 + 7
+# MOD = 998244353
+
+H, W = list(map(int, sys.stdin.buffer.readline().split()))
+S = [sys.stdin.buffer.readline().decode().rstrip() for _ in range(H)]
+
+
+# ペアのとり方は 10395 通り
+# a = math.factorial(12) / (2 ** 6) / math.factorial(6)
+# print(a)  # 10395
+
+def test(groups):
+    # print(groups)
+    # return False
+    seen = [False] * 6
+    order = [-1] * len(groups)
+    for i, g in enumerate(groups):
+        if g == -1:
+            # 真ん中
+            order[W // 2] = i
+            continue
+        if not seen[g]:
+            order[g] = i
+            seen[g] = True
+        else:
+            order[~g] = i
+
+    rows = []
+    for s in S:
+        row = ''
+        for i in order:
+            row += s[i]
+        rows.append(row)
+    ok = [False] * H
+    for i in range(H):
+        if ok[i]:
+            continue
+        rev = rows[i][::-1]
+        for j in range(i, H):
+            if not ok[j] and rows[j] == rev:
+                ok[i] = ok[j] = True
+                break
+    ng_cnt = ok.count(False)
+    if ng_cnt == 0:
+        return True
+    if ng_cnt == 1:
+        i = ok.index(False)
+        return rows[i] == rows[i][::-1]
+    return False
+
+
+def solve(groups, depth=0):
+    if depth == W // 2:
+        return test(groups)
+
+    i = 0
+    for _ in range(2 if W % 2 == 1 else 1):
+        while groups[i] != -1:
+            i += 1
+
+        groups[i] = depth
+        for j in range(i + 1, W):
+            if groups[j] != -1:
+                continue
+            groups[j] = depth
+            if solve(groups, depth + 1):
+                return True
+            groups[j] = -1
+        groups[i] = -1
+        i += 1
+
+    return False
+
+
+groups = [-1] * W
+ok = solve(groups)
+if ok:
+    print('YES')
+else:
+    print('NO')

@@ -1,0 +1,56 @@
+import sys
+input = sys.stdin.readline
+enum = enumerate
+inf = 1001001002002002002
+
+def linput(ty=int, cvt=list):
+	return cvt(map(ty,input().rstrip().split()))
+
+def vinput(rep=1, ty=int, cvt=list):
+	return cvt(ty(input().rstrip()) for _ in "*"*rep)
+
+def gcd(a: int, b: int):
+	while b: a, b = b, a%b
+	return a
+
+def lcm(a: int, b: int):
+	return a * b // gcd(a, b)
+
+def bye(res):
+	sT = "No Yes".split()
+	print(sT[res])
+	#exit(0)
+
+def sol(N,A,B,C,D):
+	res = inf
+	at,bt,ct,dt = [0,]*4
+	an,bn,cn,dn = [0,]*4
+	cn = N
+	for c in range(32):
+		bn = cn
+		for b in range(42):
+			an = bn
+			for a in range(63):
+				dt = at+bt+ct+ an
+				r = a*A+b*B+c*C+dt*D
+				res = min(res, r)
+				if not an: break
+				at += an%2
+				an = an//2
+			at = 0
+			bt += 0<bn%3
+			bn = bn//3 + (bn%3==2)
+		bt = 0
+		cMod5 = cn%5
+		ct += min(5-cMod5, cMod5)
+		cn = cn//5 + (cMod5>2)
+	
+	print(res)
+
+def main():
+	T, = linput()
+	for _ in "*"*T:
+		sol(*linput())
+
+if __name__ == "__main__":
+	main()

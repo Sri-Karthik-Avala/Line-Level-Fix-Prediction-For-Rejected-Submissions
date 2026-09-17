@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+const int P = 998244353;
+const int MAXN = 5007;
+const int MAXM = 1e4 + 7;
+int n, ccnt, home[MAXN], nxt[MAXM], to[MAXM];
+
+inline void ct(int x, int y) {
+	ccnt++;
+	nxt[ccnt] = home[x];
+	home[x] = ccnt;
+	to[ccnt] = y;
+}
+
+ll dp[MAXN][MAXN], t[MAXN], g[MAXN];
+int siz[MAXN];
+
+inline void add(ll &x, ll y) {
+	x += y;
+	if(x >= P)x -= P;
+}
+
+inline void dfs(int u, int F) {
+	dp[u][1] = 1;
+	siz[u] = 1;
+	for(int i = home[u]; i; i = nxt[i]) {
+		int v = to[i];
+		if(v == F)continue;
+		dfs(v, u);
+		// printf("we are u%d v%d\n", u, v);
+		for(int i = 1; i <= siz[u] + siz[v]; ++i)t[i] = 0;
+		for(int i = 1; i <= siz[u]; ++i) {
+			for(int j = 1; j <= siz[v]; ++j) {
+				// printf("%d %d %d %d\n", i, j, dp[u][i], dp[v][j]);
+				add(t[i], P - 1ll * dp[u][i] * dp[v][j] % P * g[j] % P);
+				add(t[i + j], 1ll * dp[u][i] * dp[v][j] % P);
+			}
+		}
+		// puts("finished");
+		for(int i = 1; i <= siz[u] + siz[v]; ++i) {
+			// printf("%d %d\n", i, t[i]);
+			dp[u][i] = t[i];
+		}
+		siz[u] += siz[v];
+	}
+	// if(u != 1) {
+	// 	dp[u][0] = 0;
+	// 	for(int i = 1; i <= siz[u]; ++i) {
+	// 		printf("%d %d?%d \n", i, dp[u][i], g[i]);
+	// 		add(dp[u][0], 1ll * (P - dp[u][i]) * g[i] % P);
+	// 	}
+	// } else {
+	// 	for(int i = 1; i <= siz[u]; ++i) {
+	// 		add(dp[u][0], 1ll * dp[u][i]*g[i] % P);
+	// 	}
+	// }
+	// for(int i = 0; i <= siz[u]; ++i) {
+	// 	printf("we are in%d %d %d\n", u, i, dp[u][i]);
+	// }
+	return ;
+}
+
+inline void init() {
+	g[2] = 1;
+	for(int i = 4; i <= n; i += 2) {
+		g[i] = 1ll * g[i - 2] * (i - 1) % P;
+	}
+	return ;
+}
+
+int main() {
+	scanf("%d", &n);
+	for(int i = 1, x, y; i < n; ++i) {
+		scanf("%d%d", &x, &y);
+		ct(x, y);
+		ct(y, x);
+	}
+	init();
+	dfs(1, 0);
+	for(int i = 1; i <= siz[1]; ++i) {
+		add(dp[1][0], 1ll * dp[1][i] * g[i] % P);
+	}
+	printf("%lld\n", dp[1][0]);
+	return 0;
+}

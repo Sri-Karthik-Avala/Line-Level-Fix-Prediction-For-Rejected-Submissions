@@ -1,0 +1,43 @@
+k = input()
+s = raw_input()
+
+if k==0:
+    print s
+    exit(0)
+if len(s) % k == 0:
+    print max(int(s[i:i+k]) for i in xrange(0,len(s),k))
+    exit(0)
+
+l = len(s) / (k+1)
+r = (len(s)+k) / (k+1)
+left = 10**(l-1)
+right = 10**r
+while 1:
+    mid = (left + right) / 2
+    cnt = 0
+    now = ""
+    mid_c = str(mid)
+    cp = idx = 0
+    for c in s:
+        now += c
+        if not cp and idx < len(mid_c) and c != mid_c[idx]:
+            cp = 1 if c > mid_c[idx] else -1
+        idx += 1
+        if (idx == len(mid_c) and cp == 1) or idx > len(mid_c):
+            cnt += 1
+            idx = 1; cp = 0
+            if int(c) > mid:
+                cnt = 100003
+                break
+            now = c
+            if c != mid_c[0]:
+                cp = 1 if c > mid_c[0] else -1
+    if cnt > k:
+        if left == mid:
+            break
+        left = mid
+    else:
+        if right == mid:
+            break
+        right = mid
+print left+1

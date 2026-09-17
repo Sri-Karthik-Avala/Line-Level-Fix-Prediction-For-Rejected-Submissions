@@ -1,0 +1,19 @@
+maxn = 0
+minn = 0
+
+while True:
+    try:
+
+        a = float(raw_input())
+
+        if a > maxn:
+            maxn = a
+
+        if a < minn:
+            minn = a
+
+
+    except EOFError:
+        break
+
+print maxn - minn

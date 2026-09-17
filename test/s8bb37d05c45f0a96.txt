@@ -1,0 +1,17 @@
+ans=0
+while 1:
+    try:
+        n=raw_input()
+        tmp=''
+        for i in n:
+            if i.isdigit():
+                tmp+=i
+            elif len(tmp):
+                ans+=int(tmp)
+                tmp=''
+    except:
+        if len(tmp):
+            ans+=int(tmp)
+            tmp=''
+        break
+print ans

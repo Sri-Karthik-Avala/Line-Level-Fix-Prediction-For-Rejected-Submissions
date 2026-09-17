@@ -1,0 +1,23 @@
+L = str(input())
+mod = 10 ** 9 + 7
+
+#a + b = a xor b を満たすのは a, b の bit が一つも被っていないとき
+ans = 1
+for i in range(len(L)):
+  ans *= 3
+  ans %= mod
+  
+x = 1  
+for i in range(len(L)):
+  if L[i] == "0":
+    y = x * 2
+    y %= mod
+    ans -= y
+    ans %= mod
+  else:
+    x *= 2
+    x %= mod
+    
+print(ans)    
+
+

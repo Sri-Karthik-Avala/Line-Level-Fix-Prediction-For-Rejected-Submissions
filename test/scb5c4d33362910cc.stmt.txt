@@ -1,0 +1,82 @@
+Max Score: 350 Points 
+ 
+ Problem Statement 
+ There are N buildings along the line. The i -th building from the left is colored in color i , and its height is currently a_i meters. 
+ Chokudai is a mayor of the city, and he loves colorful thigs. And now he wants to see at least K buildings from the left. 
+ 
+ You can increase height of buildings, but it costs 1 yens to increase 1 meters. It means you cannot make building that height is not integer. 
+ You cannot decrease height of buildings. 
+ Calculate the minimum cost of satisfying Chokudai's objective. 
+ Note: "Building i can see from the left" means there are no j exists that (height of building j ) ≥ (height of building i ) and j < i . 
+ 
+ 
+ 
+ 
+ 
+ Input Format 
+ 
+ N K 
+ a_1 a_2 a_3 ... a_N 
+ 
+ 
+ 
+ 
+ 
+ Output Format 
+ Print the minimum cost in one line. In the end put a line break. 
+ 
+ 
+ Constraints 
+ 
+ 1 ≤ K ≤ N ≤ 15 
+ 1 ≤ a_i ≤ 10^9 
+ 
+ 
+ 
+ Scoring 
+ Subtask 1 [ 120 points] 
+ 
+ N = K 
+ 
+ Subtask 2 [ 90 points] 
+ 
+ N ≤ 5 
+ a_i ≤ 7 
+ 
+ Subtask 3 [ 140 points] 
+ 
+ There are no additional constraints. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 
+ 
+5 5
+3949 3774 3598 3469 3424
+ 
+ 
+ 
+ Sample Output 1 
+ 
+1541
+ 
+ The optimal solution is (height of buildings from the left) = [3949, 3950, 3951, 3952, 3953] . 
+ 
+ 
+ 
+ 
+ Sample Input 2 
+ 
+5 3
+7 4 2 6 4
+ 
+ 
+ 
+ Sample Output 2 
+ 
+7
+ 
+ The optimal solution is (height of buildings from the left) = [7, 8, 2, 9, 4] .

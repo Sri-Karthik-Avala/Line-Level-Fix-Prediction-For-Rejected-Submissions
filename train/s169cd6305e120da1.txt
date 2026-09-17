@@ -1,0 +1,29 @@
+# Edit: 2014/09/28
+# Lang: Python3
+# Time: 0.xxs
+#
+
+if __name__ == "__main__":
+    while True:
+        try:
+            st0 = input()
+            # print(st0)
+            st0 = st0.strip("\n").replace("+", ",").replace("=", ",")
+            # print(st0)
+            #strA, strB, strC = str.split(",")
+            #print(strA, strB, strC)
+
+            for i in range(10):
+                #print(i,str(i))
+                a, b, c = st0.replace("X", str(i)).split(",")
+                if a[0] == "0" or b[0] == "0" or c[0] == "0":
+                    continue
+                #print(strI)
+                #pass
+                if int(a) + int(b) == int(c):
+                    print(i)
+                    break
+            else:
+                print("NA")
+        except:
+            break

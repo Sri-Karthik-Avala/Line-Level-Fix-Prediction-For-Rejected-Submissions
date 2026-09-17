@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+
+while(True):
+    try:
+        n = int(raw_input())
+        sum = 0
+        for a in range(10):
+            for b in range(10):
+                for c in range(10):
+                    for d in range(10):
+                        if (a + b + c + d == n):
+                            sum += 0
+        print sum
+    except EOFError:
+        break

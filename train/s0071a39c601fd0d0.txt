@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+int n,m;
+int k[22];
+int s[202][22],h[202][22];
+double c[202][202];
+int ma[202];
+double memo[202][202];
+double dfs(int p,int x){
+  if(memo[p][x]>=0) return memo[p][x];
+  if(p==n) return 0; 
+  double res=0;
+  for(int i=0;i<=min(x,ma[p]);i++){
+    res=max(res,dfs(p+1,x-i)+c[p][i]);
+  }
+  //cout<<p<<" "<<x<<" "<<res<<endl;
+  return memo[p][x]=res;
+}
+signed main(){
+  cin>>n>>m;
+  for(int i=0;i<n;i++){
+    cin>>k[i];
+    for(int j=0;j<k[i];j++){
+      cin>>s[i][j]>>h[i][j];
+    }
+  }
+  for(int i=0;i<n;i++){
+    ma[i]=0;
+    for(int j=0;j<k[i];j++) ma[i]+=s[i][j]*h[i][j];
+    for(int j=0;j<=ma[i];j++){
+      queue<int> q;
+      for(int r=0;r<k[i];r++)
+	for(int l=0;l<h[i][r];l++) 
+	  q.push(s[i][r]);
+      double tmp=0;
+      int x=0;
+      while(!q.empty()){
+	int p=q.front();q.pop();
+	if(x+p>j){
+	  tmp+=(double)(j-x)/p;
+	  break;
+	}
+	x+=p;
+	tmp+=1;
+      }
+      //cout<<i<<" "<<j<<" "<<ma[i]<<" "<<tmp<<endl;
+      c[i][j]=tmp;
+    }
+  }
+  for(int i=0;i<202;i++)
+    for(int j=0;j<202;j++)
+      memo[i][j]=-1;
+  printf("%.12f\n",dfs(0,m));
+  return 0;
+}

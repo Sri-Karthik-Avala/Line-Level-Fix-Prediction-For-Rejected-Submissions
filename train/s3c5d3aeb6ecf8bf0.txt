@@ -1,0 +1,118 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+#include<cmath>
+#include<queue>
+#include<vector>
+#include<set>
+#include<map>
+using namespace std;
+typedef long long ll;
+#define N 500002
+const int p=1e9+7;
+int n,k,m,a[N],ans,dp[27002][413],s[413],f[27002][413],sf[413];
+int fac[N],finv[N],inv[N],cz[N];
+bool vis[N];
+inline int ksm(int d,int tk)
+{int ret=1;while(tk){if(tk&1)ret=1ll*ret*d%p;d=1ll*d*d%p;tk>>=1;}return ret;}
+int main()
+{freopen("in.in","r",stdin);
+	scanf("%d%d%d",&n,&k,&m);if(k>n){puts("0");return 0;}
+	for(int i=1;i<=m;i++)scanf("%d",&a[i]);
+	ans=1ll*(n-m+1)*ksm(k,n-m)%p;
+	fac[0]=finv[0]=fac[1]=finv[1]=inv[1]=1;
+	for(int i=2;i<=100000;i++)
+	{
+		inv[i]=1ll*(p-p/i)*inv[p%i]%p;
+		fac[i]=1ll*fac[i-1]*i%p;finv[i]=1ll*finv[i-1]*inv[i]%p;
+	}
+	bool flag=true;
+	for(int i=1;i<=m;i++)
+	{
+		if(vis[a[i]]){flag=false;}
+		vis[a[i]]=1;
+	}
+	for(int i=1;i+k-1<=m;i++)
+	{
+		for(int j=1;j<=k;j++)vis[j]=0;
+		for(int j=i;j<=i+k-1;j++)vis[a[j]]=1;
+		bool tf=true;
+		for(int j=1;j<=k;j++)if(!vis[j]){tf=false;break;}
+		if(tf){printf("%d\n",ans);return 0;}
+	}
+	if(flag)
+	{
+		if(m==k){printf("%d\n",ans);return 0;}
+		dp[0][0]=1;s[0]=1;
+		for(int i=1;i<k;i++)s[i]=(s[i-1]+dp[0][i])%p;
+		for(int i=1;i<=n;i++)
+		{
+			for(int j=1;j<k;j++)
+			{
+				dp[i][j]=1ll*dp[i-1][j-1]*(k-j+1)%p;
+				dp[i][j]=(1ll*dp[i][j]+s[k-1]-s[j-1]+p)%p;
+				f[i][j]=1ll*f[i-1][j-1]*(k-j+1)%p;
+				f[i][j]=(1ll*f[i][j]+sf[k-1]-sf[j-1]+p)%p;
+				if(j>=m)f[i][j]=(f[i][j]+dp[i][j])%p;
+			}
+			s[0]=0;
+			for(int j=1;j<k;j++)s[j]=(s[j-1]+dp[i][j])%p;
+			sf[0]=0;
+			for(int j=1;j<k;j++)sf[j]=(sf[j-1]+f[i][j])%p;
+		}
+		int tt=0;
+		for(int i=1;i<k;i++)tt=(tt+f[n][i])%p;
+		tt=1ll*tt*finv[k]%p*fac[k-m]%p;
+		printf("%d\n",(ans-tt+p)%p);return 0;
+	}
+	memset(vis,0,sizeof(vis));int frl;
+	for(int i=1;i<=m;i++)
+	{
+		if(!vis[a[i]])vis[a[i]]=1;
+		else {frl=i-1;break;}
+	}
+	dp[0][frl]=1;s[0]=dp[0][0];
+	for(int i=1;i<k;i++)s[i]=(s[i-1]+dp[0][i])%p;
+	for(int i=1;i<=n;i++)
+	{
+		for(int j=1;j<k;j++)
+		{
+			dp[i][j]=1ll*dp[i-1][j-1]*(k-j+1)%p;
+			dp[i][j]=(1ll*dp[i][j]+s[k-1]-s[j-1]+p)%p;
+		}
+		s[0]=dp[i][0];
+		for(int j=1;j<k;j++)s[j]=(s[j-1]+dp[i][j])%p;
+	}
+	memset(vis,0,sizeof(vis));int lal;
+	for(int i=m;i;i--)
+	{
+		if(!vis[a[i]])vis[a[i]]=1;
+		else{lal=m-i;break;}
+	}
+	f[0][lal]=1;sf[0]=f[0][0];
+	for(int i=1;i<k;i++)sf[i]=(sf[i-1]+f[0][i])%p;
+	for(int i=1;i<=n;i++)
+	{
+		for(int j=1;j<k;j++)
+		{
+			f[i][j]=1ll*f[i-1][j-1]*(k-j+1)%p;
+			f[i][j]=(1ll*f[i][j]+sf[k-1]-sf[j-1]+p)%p;
+		}
+		sf[0]=f[i][0];
+		for(int j=1;j<k;j++)sf[j]=(sf[j-1]+f[i][j])%p;
+	}
+	int ans2=0;
+	for(int i=0;i<=n-m;i++)
+	{
+		int c1=0,c2=0;
+		for(int j=0;j<k;j++)c1=(c1+dp[i][j])%p;
+		for(int j=0;j<k;j++)c2=(c2+f[n-m-i][j])%p;
+		ans2=(ans2+1ll*c1*c2%p)%p;
+	}
+	printf("%d\n",(ans-ans2+p)%p);
+}
+/*
+5 3 2
+3 1
+*/

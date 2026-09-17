@@ -1,0 +1,15 @@
+s = input("")
+t = input("")
+cnt = 0
+
+ans = 10000
+
+for i in range(len(s)-len(t)+1):
+    S = s[i:i+len(t)]
+    for j in range(len(t)):
+        if S[j] != t[j]:
+            cnt += 1
+    
+    ans = min(ans,cnt)
+    
+print(ans)

@@ -1,0 +1,34 @@
+def cross(vT,AT):
+   return [sum([x*y for x,y in zip(vT,a)]) for a in AT]
+
+me=1.0/6
+while True:
+    [n,t,l,b] = [int(x) for x in raw_input().split()]
+    if n|t|l|b == 0:break
+    ls={}
+    for i in xrange(l):
+        ls[int(raw_input())]=n+i+1
+    bs=[]
+    for i in xrange(b):
+        bs.append(int(raw_input()))
+    AT=[]
+    for i in xrange(n+l+1):
+        AT.append([0.0]*(n+l+1))
+    for i in xrange(n):
+        for j in xrange(1,7):
+            x=i+j
+            if x>n:x=n*2-x
+            if x in ls:
+                AT[ls[x]][i]+=me
+            elif x in bs:
+                AT[0][i]+=me
+            else:
+                AT[x][i]+=me
+    AT[n][n]=1.0
+    for k,v in ls.iteritems():
+        AT[k][len(AT)-1]+=1.0
+    bT=[0.0]*(n+l+1)
+    bT[0]=1.0
+    for i in xrange(t):
+        bT=cross(bT,AT)
+    print '%.6f' % bT[n]

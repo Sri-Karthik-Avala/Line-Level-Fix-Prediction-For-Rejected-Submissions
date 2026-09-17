@@ -1,0 +1,120 @@
+#define _USE_MATH_DEFINES
+
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+typedef pair<long long int, long long int> P;
+
+long long int INF = 1e18;
+long long int MOD = 1e9 + 7;
+
+const double EPS = 1e-8;
+typedef vector<double> vec;
+typedef vector<vec> mat;
+
+// Ax = b を解く A は正方行列
+// 解がないか、一意でない場合は長さ０の配列を返す
+vec gauss_jordan(const mat& A, const vec& b){
+	int n = A.size();
+	mat B(n, vec(n + 1));
+	for(int i = 0; i < n; i++){
+		for(int j = 0; j < n; j++){
+			B[i][j] = A[i][j];
+		}
+	}
+	for(int i = 0; i < n; i++){
+		B[i][n] = b[i];
+	}
+	// 掃き出し法
+	for(int i = 0; i < n; i++){
+		// 注目している変数の係数の絶対値が大きい式をｉ番目に持ってくる
+		int pos = i;
+		for(int j = i; j < n; j++){
+			if(abs(B[j][i]) > abs(B[pos][i])){
+				pos = j;
+			}
+		}
+		swap(B[i], B[pos]);
+
+		// 解がないか、一意でない
+		if(abs(B[i][i]) < EPS){
+			return vec();
+		}
+
+		// 注目している変数の係数を１にする
+		for(int j = i + 1; j <= n; j++){
+			B[i][j] /= B[i][i];
+		}
+		for(int j = 0; j < n; j++){
+			if(i != j){
+				// ｊ番目の式からｉ番目の変数を消去
+				for(int k = i + 1; k <= n; k++){
+					B[j][k] -= B[j][i] * B[i][k];
+				}
+			}
+		}
+	}
+	vec x(n);
+	// 後ろに並べたｂが解になる
+	for(int i = 0; i < n; i++){
+		x[i] = B[i][n];
+	}
+	return x;
+}
+
+int main(){
+
+	while(true){
+		int d;
+		cin >> d;
+		if(d == 0){
+			break;
+		}
+
+		mat l1(d + 3, vec(d + 1));
+		vec l2(d + 3);
+		for(int i = 0; i < d + 3; i++){
+			double val = 1;
+			l1[i][0] = 1;
+			for(int j = 1; j < d + 1; j++){
+				val *= i;
+				l1[i][j] = val;
+			}
+			cin >> l2[i];
+		}
+		for(int i = 0; i < d + 2; i++){
+			mat A(d + 1, vec(d + 1));
+			vec b(d + 1);
+			for(int j = 0; j < i; j++){
+				copy(l1[j].begin(), l1[j].end(), A[j].begin());
+				b[j] = l2[j];
+			}
+			for(int j = i + 2; j < d + 3; j++){
+				copy(l1[j].begin(), l1[j].end(), A[j - 2].begin());
+				b[j - 2] = l2[j];
+			}
+			vec ret = gauss_jordan(A, b);
+			bool flag = false;
+			double S = 0;
+			for(int j = 0; j < d + 1; j++){
+				S += ret[j] * l1[i][j];
+			}
+			if(abs(S - l2[i]) < 0.1){
+				cout << i + 1 << endl;
+				break;
+			}
+			if(i == d + 1){
+				cout << 0 << endl;
+			}
+		}
+	}
+	return 0;
+}

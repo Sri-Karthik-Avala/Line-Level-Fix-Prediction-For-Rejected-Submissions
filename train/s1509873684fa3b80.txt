@@ -1,0 +1,96 @@
+#include<algorithm>
+#include<complex>
+#include<cstdio>
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+template<class T> T at(vector<T> v, int i) {return v[i % v.size()];}
+
+#define X real()
+#define Y imag()
+
+typedef long double D;
+typedef complex<D> P;
+struct L{P a, b;};
+typedef vector<P> Pol;
+
+const D EPS = 1e-8;
+
+// テヲツッツ氾ィツシツεゥツ鳴「テヲツ閉ー
+int sig(D a, D b = 0) {return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;}
+bool near(P a, P b) {return !sig(norm(a - b));}
+namespace std {
+  bool operator<(P a, P b) {return sig(a.X, b.X) ? a.X < b.X : a.Y < b.Y;}
+}
+
+// テ・ツ、ツ姪ァツゥツ?
+D det(P a, P b) {return a.X * b.Y - a.Y * b.X;}
+
+// テァツキツ堙・ツ按?」ツ?ョテ」ツδ凖」ツつッテ」ツδ暗」ツδォ
+P vec(L a) {return a.b - a.a;}
+
+// テァツキツ堙・ツ按?bテ」ツ?ォテ・ツッツセテ」ツ?凖」ツつ凝ァツつケcテ」ツ?ョテ、ツスツ催ァツスツョ
+enum CCW{FRONT = 1, RIGHT = 2, BACK = 4, LEFT = 8, ON = 16};
+int ccw(P a, P b, P c) {
+  if (near(a, c) || near(b, c)) return ON;
+  int s = sig(det(b - a, c - a));
+  if (s) return s > 0 ? LEFT : RIGHT;
+  return (a < b) == (b < c) ? FRONT : (c < a) == (a < b) ? BACK : ON;
+}
+
+// テ、ツコツ、テ・ツキツョテ・ツ按、テ・ツョツ?
+bool iLLs(L a, L b) {return sig(det(vec(a), vec(b)));}
+bool iLS(L a, L b) {return sig(det(vec(a), b.a - a.a)) * sig(det(vec(a), b.b - a.a)) <= 0;}
+
+// テ、ツコツ、テァツつケ
+P pLL(L a, L b) {return a.a + vec(a) * (det(vec(b), b.a - a.a) / det(vec(b), vec(a)));}
+
+// テ・ツ、ツ堙ィツァツ津・ツスツ「テ」ツ?ョテ・ツ??・ツ、ツ姪・ツ按、テ・ツョツ?テ・ツ??ゥツδィ:1テ」ツ??・ツ堕ィテ、ツクツ?0テ」ツ??・ツ、ツ姪ゥツδィ:-1
+int sGP(Pol pol, P p) {
+  int side = -1;
+  rep (i, pol.size()) {
+    P p0 = pol[i] - p, p1 = at(pol, i + 1) - p;
+    if (ccw(p0, p1, 0) == ON) return 0;
+    if (p0.Y > p1.Y) swap(p0, p1);
+    if (sig(p0.Y) <= 0 && 0 < sig(p1.Y) && sig(det(p0, p1)) > 0) side *= -1;
+  }
+  return side;
+}
+
+int main() {
+  for (int iii = 1; ; ++iii) {
+    int n;
+    cin >> n;
+    if (n == 0) break;
+    Pol pol(n);
+    rep (i, n) cin >> pol[i].X >> pol[i].Y;
+    D res = 0;
+    rep (i, n) rep (j, i) {
+      L l = (L){pol[i], pol[j]};
+      vector<P> vp;
+      vp.push_back(pol[i]);
+      vp.push_back(pol[j]);
+      rep (k, n) {
+	L s = (L){pol[k], at(pol, k + 1)};
+	if (iLS(l, s) && iLLs(l, s)) {
+	  vp.push_back(pLL(l, s));
+	}
+      }
+      sort(vp.begin(), vp.end());
+      vp.erase(unique(vp.begin(), vp.end(), near), vp.end());
+      int pre = 0;
+      rep (i, vp.size() - 1) {
+	if (sGP(pol, (vp[i] + at(vp, i + 1)) / (D)2) < 0) {
+	  res = max(res, abs(vp[pre] - vp[i]));
+	  pre = i + 1;
+	}
+      }
+      res = max(res, abs(vp[pre] - vp.back()));
+    }
+    printf("Case %d: %.12Lf\n", iii, res);
+  }
+  return 0;
+}

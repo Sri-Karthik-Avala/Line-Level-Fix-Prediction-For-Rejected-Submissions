@@ -1,0 +1,4 @@
+nn, kk = list(map(int,input().split()))
+hh = list(map(int,input().split()))
+hh.sort()
+print(sum(hh[0:nn-kk]))

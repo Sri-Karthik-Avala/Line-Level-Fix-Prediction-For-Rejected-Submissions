@@ -1,0 +1,42 @@
+h,w=map(int,input().split())
+m = [list(input()) for i in range(h)]
+mon = [0]*2
+mon[0]=list(input())
+mon[1]=list(input())
+ar = [None]*(h*w)
+d = [[0,0],[0,1],[0,1],[1,1]]
+wasure = 0
+for i in range(h-1):
+    for j in range(w-1):
+        ma = 0
+        for k in range(4):
+            if m[i+d[k][0]][j+d[k][1]] == mon[d[k][0]][d[k][1]]:
+                ma +=1
+            else:
+                l = k
+        if ma == 3:
+            moji = mon[d[l][0]][d[l][1]]
+            y = i+d[l][0]
+            x = j+d[l][1]
+            if ar[(y*w)+x] is None:
+                ar[(y*w)+x] = []
+            
+            ar[(y*w)+x].append(moji)
+        elif ma ==4:
+            for k in range(4):
+                if ar[((i+d[k][0])*w)+j+d[k][1]] is None:
+                    ar[((i+d[k][0])*w)+j+d[k][1]] = []
+                ar[((i+d[k][0])*w)+j+d[k][1]].append('k')
+            wasure += 1
+
+ans = 0
+are = {'J':0,'O':1,'I':2,'k':3}
+for i in range((h*w)):
+    if ar[i] is None:
+        continue
+    sore = [0]*4
+    for j in range(len(ar[i])):
+       sore[are[ar[i][j]]] += 1
+       if sore[3] < max(sore[0:3]):
+           ans = max(max(sore[0:3])-sore[3],ans)
+print(wasure+ans)

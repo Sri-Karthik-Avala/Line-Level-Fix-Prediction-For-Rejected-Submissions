@@ -1,0 +1,102 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#include<algorithm>
+
+using namespace std;
+#define REP(i,b,n) for(int i=b;i<n;i++)
+#define rep(i,n)   REP(i,0,n)
+#define ALL(C)     (C).begin(),(C).end()
+
+typedef unsigned long long ll;
+
+ll gcd(ll a,ll b){
+  return b==0?a:gcd(b,a%b);
+};
+
+//900000005202
+ll lcm(ll w,ll m){
+  ll g = gcd(w,m);
+  return w*m/g;
+}
+
+vector<ll> in;
+
+ll table[100][100];
+
+void solve(int n,int now,ll *num,ll me,ll L){
+  if (n == now){
+    in.push_back(me);
+    return;
+  }
+
+
+  rep(i,num[now]+1){
+    solve(n,now+1,num,me*table[now][i],L);
+  }
+}
+
+
+int f(ll in,ll *val,ll *num){
+  int p = 0;
+  ll tmp = in;
+  for(ll i=2;i*i <= tmp;i++){
+    if (tmp % i == 0){
+      ll cnt = 0;
+      while(true){
+	if (tmp/i == 0 || tmp%i != 0)break;
+	tmp/=i;
+	cnt++;
+      }
+      num[p]=cnt;
+      val[p]=i;
+      p++;
+    }
+  }
+
+  if (tmp != 1){
+    num[p]=1;
+    val[p]=tmp;
+    p++;
+  }
+
+  rep(i,p){
+    tmp = 1;
+    rep(j,num[i]+1){
+      table[i][j]=tmp;
+      tmp*=val[i];
+    }
+  }
+  /*
+  rep(i,p){
+    rep(j,num[i]+1){
+      cout << table[i][j] << " ";
+    }
+    cout << endl;
+  }
+  */
+  return p;
+}
+
+
+main(){
+  ll n;
+  ll val[100],num[100];
+  while(cin>>n && n){
+    int index = f(n,val,num);
+    in.clear();
+    solve(index,0,num,1,n);
+    sort(ALL(in));
+    in.erase(unique(ALL(in)),in.end());
+    ll ans = 0;
+    rep(i,in.size()){
+      REP(j,i,in.size()){
+	if (lcm(in[i],in[j]) == n)ans++;
+      }
+    }
+    //cout << n << " " << ans << endl;
+    cout << ans << endl;
+  }
+  return false;
+}

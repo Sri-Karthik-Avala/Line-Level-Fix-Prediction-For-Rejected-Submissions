@@ -1,0 +1,106 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef complex<double> P;
+
+namespace std{
+  bool operator < ( const P &a, const P &b ){
+    return (a.real()==b.real()?a.imag()<b.imag():a.real()<b.real());
+  }
+};
+
+typedef pair<int,int> Pair;
+double eps=1e-9;
+
+int n;
+int vw,vc;
+P t[2000];
+
+void func(){
+  map<P , set<P> > G;
+  set<P> st;
+  for(int i=0;i<n;i++){
+    st.insert(t[i]);
+  }
+  
+  set<Pair> K;
+  for(int i=0;i+1<n;i++){
+    P v=t[i+1]-t[i];
+    if(v.imag()<-eps){
+      while(1){
+        set<Pair> :: iterator it;
+        it=K.lower_bound( Pair(t[i+1].imag(),-1) );
+        if(it==K.end())break;
+        if(t[i].imag() < it->first)break;
+        P base=v/abs(v.imag());
+        double length=t[i].imag()-it->first;
+        
+        st.insert(t[i]+base*length);
+        G[ t[i]+base*length ].insert( t[it->second] );
+        
+        K.erase(it);
+      }
+    }
+    if(v.imag()>eps){
+      K.insert( Pair(t[i].imag(), i ) );
+    }
+  }
+
+  K.clear();
+  for(int i=n-1;i-1>=0;i--){
+    P v=t[i-1]-t[i];
+    if(v.imag()<-eps){
+      while(1){
+        set<Pair> :: iterator it;
+        it=K.lower_bound( Pair(t[i-1].imag(),-1) );
+        if(it==K.end())break;
+        if(t[i].imag() < it->first)break;
+        P base=v/abs(v.imag());
+        double length=t[i].imag()-it->first;
+
+        st.insert(t[i]+base*length);
+        G[ t[i]+base*length ].insert( t[it->second] );
+
+        K.erase(it);
+      }
+    }
+    if(v.imag()>eps){
+      K.insert( Pair(t[i].imag(), i ) );
+    }
+  }
+
+  set<P> :: iterator it;
+  vector<P> u;
+  for(it=st.begin();it!=st.end();it++){
+    u.push_back(*it);
+    //    printf("%.3f %.3f\n",it->real(),it->imag());
+  }
+
+  vector<double> dp( st.size() , 1e30 );
+  dp[0]=0;
+  for(int i=0;i+1<(int)st.size();i++){
+    dp[i+1]=min(dp[i+1],dp[i]+abs(u[i]-u[i+1])/(double)vw);
+
+    for(it=G[u[i]].begin();it!=G[u[i]].end();it++){
+      P to=*it;
+      int target=lower_bound(u.begin(),u.end(),to)-u.begin();
+      dp[target]=min(dp[target],dp[i]+
+                     abs(u[i].real()-u[target].real())/(double)vc);
+    }
+  }
+  printf("%.6f\n",dp.back());
+}
+
+int main(){
+  while(1){
+    scanf("%d",&n);
+    if(n==0)break;
+    scanf("%d %d",&vw,&vc);
+    for(int i=0;i<n;i++){
+      int x,y;
+      scanf("%d %d",&x,&y);
+      t[i]=P(x,y);
+    }
+    func();
+  }
+  return 0;
+}

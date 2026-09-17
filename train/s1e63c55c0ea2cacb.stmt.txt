@@ -1,0 +1,69 @@
+Score : 300 points 
+ 
+ 
+ Problem Statement You are given a string S . 
+ Takahashi can insert the character A at any position in this string any number of times. 
+ Can he change S into AKIHABARA ? 
+ 
+ 
+ 
+ 
+ Constraints 
+ 1 \leq |S| \leq 50 
+ S consists of uppercase English letters. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ S 
+ 
+ 
+ 
+ 
+ 
+ Output If it is possible to change S into AKIHABARA , print YES ; otherwise, print NO . 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 KIHBR
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 YES
+ 
+ Insert one A at each of the four positions: the beginning, immediately after H , immediately after B and the end. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 AKIBAHARA
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 NO
+ 
+ The correct spell is AKIHABARA . 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 AAKIAHBAARA
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 NO

@@ -1,0 +1,9 @@
+from numpy.core.fromnumeric import sort
+n =int(raw_input())
+tango =[]
+for i in range(n):
+    str =raw_input()
+    tango.append(str)
+
+tango.sort()
+print tango[0]

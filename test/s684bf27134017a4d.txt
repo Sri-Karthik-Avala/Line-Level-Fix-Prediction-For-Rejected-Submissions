@@ -1,0 +1,95 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+#define fs first
+#define sc second
+#define all(x) x.begin(), x.end()
+#define rall(x) x.rbegin(), x.rend()
+#define sz(x) (int)x.size()
+#define pb push_back
+#define fastio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define MP make_pair
+#define sqr(x) ((x) * (x))
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+const int MOD = 1e9 + 7;
+const int INF = 1e18;
+const int N = 1e5 + 100;
+vector<pair<int, int>> g[N];
+int dp[2][N], dist[2][N];
+int n, m, s, t;
+
+void add(int &a, int b) {
+	a += b;
+	if (a >= MOD) 
+		a -= MOD;
+}
+
+int mul(int a, int b) {
+	return 1ll * a * b % MOD;
+}
+
+void dijkstra(int start, int *d, int *dp) {
+	fill(d, d + N, INF);
+	d[start] = 0;
+	dp[start] = 1;
+	priority_queue<pair<int, int>> q;
+	q.push(MP(-d[start], start));
+	while (sz(q)) {
+		int v = q.top().sc, cur_d = -q.top().fs;
+		q.pop();
+		if (cur_d > d[v]) continue;
+		for (auto i : g[v]) {
+			int u = i.fs, c = i.sc;
+			if (d[u] > d[v] + c) {
+				d[u] = d[v] + c;
+				dp[u] = dp[v];
+				q.push(MP(-d[u], u));
+			} else if (d[u] == d[v] + c) {
+				add(dp[u], dp[v]);
+			}
+		}
+	}
+}
+
+signed main() {
+	fastio;
+	#ifdef FlameDragon
+		freopen("in.txt", "r", stdin);
+		freopen("out.txt", "w", stdout);
+	#endif
+	
+	cin >> n >> m >> s >> t;
+	s--; t--;
+	for (int i = 0; i < m; i++) {
+		int v, u, c;
+		cin >> v >> u >> c;
+		v--; u--;
+		g[v].pb(MP(u, c));
+		g[u].pb(MP(v, c));
+	}
+	dijkstra(s, dist[0], dp[0]);
+	dijkstra(t, dist[1], dp[1]);
+	if (dist[0][t] == INF) {
+		cout << "0\n";
+		return 0;
+	}
+	int D = dist[0][t];
+	int ans = mul(dp[0][t], dp[1][s]);
+	for (int i = 0; i < n; i++) {
+		if (dist[0][i] * 2 == D) 
+			ans = (ans - mul(mul(dp[0][i], dp[0][i]), mul(dp[1][i], dp[1][i])) + MOD) % MOD;
+	}
+
+	for (int v = 0; v < n; v++) {
+		for (auto i : g[v]) {
+			int u = i.fs, c = i.sc;
+			if (2 * dist[0][v] < D && 2 * dist[1][u] < D) {
+				ans = (ans - mul(mul(dp[0][v], dp[0][v]), mul(dp[1][u], dp[1][u])) + MOD) % MOD;
+			}
+		}
+	}
+	cout << ans << '\n';
+}

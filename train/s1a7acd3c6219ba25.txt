@@ -1,0 +1,12 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+
+int main(){
+	double v, t;
+	while(cin >> v){
+		cout << (int)((4.9*(v/9.8)*(v/9.8)+5)/5+0.5)  << endl;
+
+	}
+}

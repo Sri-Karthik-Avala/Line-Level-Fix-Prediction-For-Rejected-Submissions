@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int a[6], b[6];
+
+bool comp(int i, int j) {
+	return a[i]*(a[j]+b[j])>a[j]*(a[i]+b[i]);
+}
+
+int main() {
+	for (int i=0;i<6;i++) scanf("%d",&a[i]);
+	for (int i=0;i<6;i++) scanf("%d",&b[i]);
+	vector<int> order;
+	for (int i=0;i<6;i++) order.push_back(i);
+	sort(order.begin(),order.end(),comp);
+	double ans = 0;
+	double cur = 0;
+	for (int i: order) {
+		double t = min(1.,(100-cur)/(a[i]+b[i]));
+		ans+=a[i]*t;
+		cur+=(a[i]+b[i])*t;
+	}
+	printf("%1.9f\n",ans/100);
+
+	return 0;
+}

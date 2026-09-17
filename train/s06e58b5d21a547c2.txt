@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef pair<int, int> P;
+
+const double INF = 1e12;
+const P NIL(-1, -1);
+
+struct State {
+	double sum;
+	int done;
+	int weight;
+	int now;
+	State(){}
+	State(double sum, int done, int weight, int now): sum(sum), done(done), weight(weight), now(now){}
+	bool operator < (const State &t) const {
+		return sum >= t.sum;
+	}
+};
+
+int n;
+int id[15];
+int pos[15];
+int w[15];
+
+double d[1 << 15][15];
+P pre[1 << 15][15];
+
+double calc(int f, int t, int weight)
+{
+	double m = 2000.0 / (70 + weight);
+	return abs(pos[f] - pos[t]) / m;
+}
+
+vector<int> rec(int v)
+{
+	vector<int> res;
+	for (P e = P((1 << n) - 1, v); e != NIL; e = pre[e.first][e.second]){
+		res.push_back(id[e.second]);
+		//printf("%d\n", e);
+	}
+	reverse(res.begin(), res.end());
+	return res;
+}
+
+void solve()
+{
+	fill((double*)d, (double*)d + (1 << 15) * 15, INF);
+	fill((P*)pre, (P*)pre + (1 << 15) * 15, NIL);
+	
+	priority_queue<State> que;
+	for (int i = 0; i < n; i++){
+		que.push(State(0.0, 1 << i, 0, i));
+	}
+	
+	while (que.size()){
+		State st = que.top(); que.pop();
+		if (d[st.done][st.now] < st.sum) continue;
+		d[st.done][st.now] = st.sum;
+		st.weight += w[st.now];
+		
+		/*
+		printf("%d\n", st.weight);
+		printf("%d %f\n", st.done, st.sum);
+		*/
+		
+		if (st.done == (1 << n) - 1) break;
+		
+		for (int to = 0; to < n; to++){
+			int x = 1 << to;
+			if (st.done & x) continue;
+			double ts = st.sum + calc(st.now, to, st.weight);
+			if (d[st.done | x][to] > ts){
+				que.push(State(ts, st.done | x, st.weight, to));
+				pre[st.done | x][to] = P(st.done, st.now);
+			}
+		}
+	}
+	
+	int v = 0;
+	for (int i = 0; i < n; i++){
+		if (d[(1 << n) - 1][v] > d[(1 << n) - 1][i]){
+			v = i;
+		}
+	}
+	//cout << d[(1 << n) - 1][v] << endl; 
+	
+	vector<int> res = rec(v);
+	for (int i = 0; i < res.size(); i++){
+		if (i) printf(" ");
+		printf("%d", res[i]);
+	}
+	puts("");
+}
+
+int main()
+{
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++){
+		scanf("%d %d %d", &id[i], &pos[i], &w[i]);
+		w[i] *= 20;
+	}
+	solve();
+	return 0;
+}

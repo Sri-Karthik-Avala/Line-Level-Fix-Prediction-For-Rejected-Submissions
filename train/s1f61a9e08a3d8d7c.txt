@@ -1,0 +1,55 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
+
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <string>
+#include <queue>
+#include <cmath>
+#include <stack>
+#include <numeric>
+#include <ctime>
+#include <algorithm>
+#include <set>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+typedef long long int lint;
+
+class Mat3i {
+	int a[3][3];
+public:
+	Mat3i(int a00, int a01, int a02, int a10, int a11, int a12, int a20, int a21, int a22){
+		a[0][0] = a00, a[0][1] = a01, a[0][2] = a02;
+		a[1][0] = a10, a[1][1] = a11, a[1][2] = a12;
+		a[2][0] = a20, a[2][1] = a21, a[2][2] = a22;
+	}
+	int det(){
+		return a[0][0] * a[1][1] * a[2][2] + a[0][1] * a[1][2] * a[2][0] + a[0][2] * a[1][0] * a[2][1] - a[0][2] * a[1][1] * a[2][0] - a[0][0] * a[1][2] * a[2][1] - a[0][1] * a[1][0] * a[2][2];
+	}
+};
+
+int main()
+{
+	int xu, yu, zu;
+	int xe, ye, ze;
+	int x1, y1, z1, x2, y2, z2, x3, y3, z3;
+	
+	cin >> xu >> yu >> zu;
+	cin >> xe >> ye >> ze;
+	cin >> x1 >> y1 >> z1;
+	cin >> x2 >> y2 >> z2;
+	cin >> x3 >> y3 >> z3;
+	
+	int d = Mat3i(x2 - x1, x3 - x1, xu - xe, y2 - y1, y3 - y1, yu - ye, z2 - z1, z3 - z1, zu - ze).det();
+	double s = (double)Mat3i(xu - x1, x3 - x1, xu - xe, yu - y1, y3 - y1, yu - ye, zu - z1, z3 - z1, zu - ze).det() / d;
+	double t = (double)Mat3i(x2 - x1, xu - x1, xu - xe, y2 - y1, yu - y1, yu - ye, z2 - z1, zu - z1, zu - ze).det() / d;
+	double k = (double)Mat3i(x2 - x1, x3 - x1, xu - x1, y2 - y1, y3 - y1, yu - y1, z2 - z1, z3 - z1, zu - z1).det() / d;
+
+	if (0 <= (s + t) && (s + t) <= 1 &&  0 <= k && k <= 1) cout << "MISS" << endl;
+	else cout << "HIT" << endl;
+
+	return 0;
+}

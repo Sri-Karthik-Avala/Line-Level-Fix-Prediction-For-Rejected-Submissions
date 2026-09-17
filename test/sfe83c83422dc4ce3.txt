@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#define EPS 1e-9
+using namespace std;
+
+typedef pair<int,int> P;
+typedef pair<double,P> P2;
+
+double d[50][1<<10];
+
+int main(){
+  int n,m,p,a,b;
+  int x,y,z;
+  int t[10];
+  vector<P> g[50];
+
+  while(cin >> n >> m >> p >> a >> b, n||m||p||a||b){
+    for(int i=0;i<n;i++)cin >> t[i];
+
+    for(int i=0;i<=m;i++)g[i].clear();
+    for(int i=0;i<p;i++){
+      cin >> x >> y >> z;
+      g[x].push_back(P(y,z));
+      g[y].push_back(P(x,z));
+    }
+      
+    for(int i=0;i<=m;i++)
+      for(int j=0;j<(1<<n);j++)d[i][j] = 10000.0;
+    d[a][0] = 0.0;
+
+    priority_queue<P2,vector<P2>,greater<P2> > q;
+    q.push(P2(0.0,P(a,0)));
+
+    double ans = 10000.0;
+    while(!q.empty()){
+      if(q.size()>1000)return 0;
+      P2 p = q.top(); q.pop();
+      double dis = p.first;
+      int c = p.second.first, ti = p.second.second;
+
+      if(c==b){ans = dis; break;}
+
+      for(int i=0;i<(int)g[c].size();i++){
+	int nc = g[c][i].first;
+	for(int j=0;j<n;j++){
+	  if( (ti>>j) & 1 )continue;
+	  int nt = ti+(1<<j);
+	  
+	  double nd = dis + (double)g[c][i].second/t[j];
+	  
+	  if(d[nc][nt] > nd){
+	    d[nc][nt] = nd;
+	    q.push(P2(nd,P(nc,nt)));
+	  }
+	}
+      }
+    }
+
+    if(ans+EPS>10000.0)printf("Impossible\n");
+    else printf("%.5lf\n",ans);
+  }
+}

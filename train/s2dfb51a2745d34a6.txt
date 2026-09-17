@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int n,k,m;
+
+int s1(int n,int k)
+{
+	static int f[155];
+	f[0] = 1;
+	for(int i = 1;i <= n + 1; ++ i)
+	{
+		f[i] = 0;
+		for(int j = 0;j <= k; ++ j)
+			if(i - j - 1 >= 0)
+				f[i] = (f[i] + f[i - j - 1]) % m;
+	}
+	return f[n + 1];
+}
+
+int s2(int n,int k)
+{
+	static int f[155][155][155];
+	static int typ[155];
+	int tot = 0;
+	for(int i = 1;i * 2 - k <= n; ++ i)
+	{
+		tot ++;
+		if(i * 2 <= n) typ[tot] |= 2;
+		if(i * 2 - k > 0) typ[tot] |= 1;
+	}
+	f[0][0][0] = 1;
+	for(int i = 1;i <= tot; ++ i)
+		for(int j = 0;j <= k + 1; ++ j)
+			for(int l = 0;l <= i; ++ l)
+				if(f[i - 1][j][l])
+				{
+					//×óÓÒ¾ù²»Ñ¡
+					f[i][0][0] = (f[i][0][0] + f[i - 1][j][l]) % m;
+					//Ñ¡×ó²»Ñ¡ÓÒ
+					if(typ[i] & 1)
+						f[i][j ? j + 1 : 0][0] = (f[i][j ? j + 1 : 0][0] + f[i - 1][j][l]) % m;
+					//Ñ¡ÓÒ²»Ñ¡×ó
+					if(typ[i] & 2)
+						f[i][0][l + 1] = (f[i][0][l + 1] + f[i - 1][j][l]) % m;
+					if(typ[i] == 3)
+						f[i][j ? j + 1 : l + 2][l + 1] = (f[i][j ? j + 1 : l + 2][l + 1] + f[i - 1][j][l]) % m;
+				}
+	int as = 0;
+	for(int i = 0;i <= k + 1; ++ i)
+		for(int j = 0;j <= k; ++ j)
+			as = (as + f[tot][i][j]) % m;
+	return as;
+}
+
+int main()
+{
+	scanf("%d%d%d",&n,&k,&m);
+	if(k % 2 == 0)
+	{
+		printf("%lld\n",(s1(n / 2,k / 2) * 1ll * s1((n + 1) / 2,k / 2)) % m);
+	}
+	else printf("%d\n",s2(n,k));
+}

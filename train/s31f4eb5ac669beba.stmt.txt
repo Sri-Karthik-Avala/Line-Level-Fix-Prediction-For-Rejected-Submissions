@@ -1,0 +1,89 @@
+Problem H:
+DisconnectedGame
+ 
+
+ 
+ Taro と Hanako がゲームをしている.
+ 
+
+ 
+ 最初に, 非連結な無向グラフ(二重辺や self loop を含まない) が与えられる. Taro と Hanako は交互に操作を行う. 操作では, 辺で直接つながれていない異なる2 頂点を選び, その間に辺を加える. グラフを連結にしたほうが負けである.
+ 
+
+ 
+ グラフには $V$ 個の頂点がある. $V \times V$ の行列が与えられる. 行列の $(i, j)$-成分が'Y' であるとき $i$ と $j$ の間には辺があり, 'N' であるときは辺が無い.
+ 
+
+ 
+ 両者が最善に操作をしたとき, どちらが勝つかを出力せよ.
+ 
+
+ Constraints 
+
+ 
+ $V$ will be between 2 and 1,000, inclusive. 
+ $a_{i,i}$ will be 'N'. 
+ $a_{i,j}$ will be 'Y' or 'N'. 
+ $a_{i,j}$ will be equal to $a_{j,i}$. 
+ The graph will not be connected. 
+ 
+
+ Input 
+
+ 
+ 入力は以下の形式で与えられる: 
+ 
+ 
+$V$ 
+$a_{1,1}$ ... $a_{1,V}$ 
+... 
+$a_{V,1}$ ... $a_{V,V}$ 
+ 
+
+
+ Output 
+
+ 
+Taro が勝つ場合には "Taro" (quotes for clarity), Hanako が勝つ場合には "Hanako" (quotes for clarity) と 1 行に出力せよ.
+ 
+
+
+ Sample Input 1 
+
+ 3
+NNN
+NNN
+NNN 
+
+ Sample Output 1 
+
+ Taro 
+
+ Sample Input 2 
+
+ 5
+NNYNN
+NNNNN
+YNNNN
+NNNNY
+NNNYN 
+
+ Sample Output 2 
+
+ Hanako 
+
+ Sample Input 3 
+
+ 8
+NYNNNNNN
+YNNYNNYN
+NNNNNNNY
+NYNNNNYN
+NNNNNNNN
+NNNNNNNN
+NYNYNNNN
+NNYNNNNN 
+
+ Sample Output 3 
+
+ Taro

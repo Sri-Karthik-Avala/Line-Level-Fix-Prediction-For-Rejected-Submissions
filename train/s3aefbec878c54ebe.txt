@@ -1,0 +1,86 @@
+//include
+//------------------------------------------
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <queue>
+
+using namespace std;
+
+//typedef
+//------------------------------------------
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef vector<string> VS;
+typedef pair<int, int> PII;
+typedef long long LL;
+
+//container util
+//------------------------------------------
+#define ALL(a)  (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(), (a).rend()
+#define PB push_back
+#define MP make_pair
+#define SZ(a) int((a).size())
+#define EACH(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define SORT(c) sort((c).begin(),(c).end())
+
+//repetition
+//------------------------------------------
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n)  FOR(i,0,n)
+
+//constant
+//--------------------------------------------
+const double EPS = 1e-10;
+const double PI  = acos(-1.0);
+const double INF = 1e9;
+
+int main(){
+  cin.tie(0);
+  ios_base::sync_with_stdio(false);
+
+  double D; int N, B;
+  cin >> D >> N >> B;
+  vector<double> P(N), H(N);
+  REP(i,N) cin >> P[i] >> H[i];
+
+  double ans = INF;
+  for(int bi=0;bi<=B;++bi){
+	double span = D / (bi+1);
+	double vy = 0.;
+	for(int i=0;i<N;++i){
+	  double pos = P[i];
+	  while(pos > span) pos -= span;
+	  if(pos > span/2) pos = span - pos;
+	  double t = pos / span;
+	  vy = max(vy, sqrt(H[i] / (2*t*(1. - t))));
+	}
+	double vx = span / (2*vy);
+	if(vx >= vy) ans = sqrt(D);
+	ans = min(ans, sqrt(vx*vx+vy*vy));
+  }
+  cout << fixed << setprecision(9) << ans << endl;
+
+  return 0;
+}

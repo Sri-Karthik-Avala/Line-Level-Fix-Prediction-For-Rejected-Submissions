@@ -1,0 +1,36 @@
+import itertools
+
+P1=[p*(p+1)*(p+2)/6 for p in range(1,181)]
+P2=[p for p in P1 if p%2]
+
+maxnum=1000000
+
+A1=[999999 for x in range(maxnum+1)]
+A2=[999999 for x in range(maxnum+1)]
+
+for X in [[P1,A1],[P2,A2]]:
+    P=X[0]
+    A=X[1]
+    tmp=P
+    bk=0
+    cnt=2
+    for p in tmp:
+        if p<maxnum:
+            A[p]=1
+            bk+=1
+    while bk<maxnum:
+        tmp2=[]
+        for t in tmp:
+            for p in P:
+                if t+p > maxnum:    break
+                if A[t+p]>cnt:
+                    A[t+p]=cnt
+                    bk+=1
+                    tmp2.append(t+p)
+        tmp=tmp2[:]
+        cnt+=1
+while(1):
+    n=int(raw_input())
+    if n==0: break
+    print A1[n], A2[n]
+

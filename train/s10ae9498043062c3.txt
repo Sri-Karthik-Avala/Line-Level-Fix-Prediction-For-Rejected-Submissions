@@ -1,0 +1,14 @@
+#include <stdio.h>
+int main(){
+    int h[2],k[2],a,b,c,d,l=0,r=0;
+    for(int i=0;i<2;i++)scanf("%d",&h[i]);
+    for(int i=0;i<2;i++)scanf("%d",&k[i]);
+    scanf("%d%d%d%d",&a,&b,&c,&d);
+    l=h[1]*a+(h[0]/10)*c+h[1]*b+(h[1]/20)*d;
+    for(int i=0;i<2;i++)h[i]=k[i];
+    r=h[0]*a+(h[0]/10)*c+h[1]*b+(h[1]/20)*d;
+    if(l==r)printf("even\n");
+    else if(l>r)printf("hiroshi\n");
+    else printf("kenjiro\n");
+    
+}

@@ -1,0 +1,35 @@
+import sys
+readline = sys.stdin.readline
+
+MOD = 10**9+7
+def frac(limit):
+    frac = [1]*limit
+    for i in range(2,limit):
+        frac[i] = i * frac[i-1]%MOD
+    fraci = [None]*limit
+    fraci[-1] = pow(frac[-1], MOD -2, MOD)
+    for i in range(-2, -limit-1, -1):
+        fraci[i] = fraci[i+1] * (limit + i + 1) % MOD
+    return frac, fraci
+frac, fraci = frac(41398)
+def comb(a, b):
+    if not a >= b >= 0:
+        return 0
+    return frac[a]*fraci[b]*fraci[a-b]%MOD
+
+
+N, K = map(int, readline().split())
+A = list(map(int, readline().split()))
+
+dp = [0]*(N+1)
+dp[0] = 1
+
+for i in range(K):
+    a = A[i]
+    dp2 = [0]*(N+1)
+    for j in range(N+1):
+        d = dp[j]
+        for k in range(min(a, N-j)+1):
+            dp2[j+k] = (dp2[j+k] + d*comb(N-j, k)*comb(N-k, a-k)) %MOD
+    dp = dp2[:]
+print(dp[N])

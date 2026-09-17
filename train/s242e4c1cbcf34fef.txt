@@ -1,0 +1,13 @@
+while True:
+    N,M=map(int,raw_input().split())
+    if N==M==0:break
+    square=[0]+[input() for i in range(N)]
+    roll=[input() for i in range(M)]
+    plc,cnt=1,0
+    for i in roll:
+        plc+=i
+        cnt+=1
+        if plc>=N:
+            print cnt
+            break
+        plc+=square[plc]

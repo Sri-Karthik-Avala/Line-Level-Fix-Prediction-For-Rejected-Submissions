@@ -1,0 +1,68 @@
+Problem H
+ Homework
+ 
+
+ 
+ Taro is a student of Ibaraki College of Prominent Computing. In this semester, he takes two courses, mathematics and informatics. After each class, the teacher may assign homework. Taro may be given multiple assignments in a single class, and each assignment may have a different deadline. Each assignment has a unique ID number.
+ 
+
+ 
+ Everyday after school, Taro completes at most one assignment as follows. First, he decides which course's homework to do at random by ipping a coin. Let $S$ be the set of all the unfinished assignments of the chosen course whose deadline has not yet passed. If $S$ is empty, he plays a video game without doing any homework on that day even if there are unfinished assignments of the other course. Otherwise, with $T \subseteq S$ being the set of assignments with the nearest deadline among $S$, he completes the one with the smallest assignment ID among $T$.
+ 
+
+ 
+ The number of assignments Taro will complete until the end of the semester depends on the result of coin ips. Given the schedule of homework assignments, your task is to compute the maximum and the minimum numbers of assignments Taro will complete.
+ 
+
+
+ Input 
+ 
+ The input consists of a single test case in the following format.
+ 
+
+ 
+$n$ $m$
+$s_1$ $t_1$
+...
+$s_n$ $t_n$
+ 
+
+ 
+ The first line contains two integers $n$ and $m$ satisfying $1 \leq m 
+
+ Output 
+ 
+ In the first line, print the maximum number of assignments Taro will complete. In the second line, print the minimum number of assignments Taro will complete.
+ 
+
+ Sample Input 1 
+ 
+6 3
+1 2
+1 5
+2 3
+2 6
+4 5
+4 6
+ 
+ Sample Output 1 
+ 
+6
+2
+ 
+ 
+ Sample Input 2 
+ 
+6 3
+1 1
+2 3
+4 4
+1 1
+2 4
+3 3
+ 
+
+ Sample Output 2 
+ 
+4
+3

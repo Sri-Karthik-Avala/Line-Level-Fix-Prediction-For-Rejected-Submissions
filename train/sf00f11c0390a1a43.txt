@@ -1,0 +1,26 @@
+from sys import stderr
+
+def reads():
+  return [int(x) for x in input().split()]
+
+N, M, K = reads()
+A = reads()
+
+dp = [[0] * N, list(A)]
+deq = [0] * N
+for j in range(2, K+1):
+  l = r = 0
+  b = j & 1
+  prev = dp[1-b]; curr = dp[b]
+  for i in range(N):
+    # pop
+    while l < r and deq[l] < i-M:
+      l += 1
+    # max
+    curr[i] = (j * A[i] + prev[deq[l]]) if l < r else 0
+    # append
+    while l < r and prev[deq[r-1]] <= prev[i]:
+      r -= 1
+    deq[r] = i; r += 1
+
+print(max(dp[K & 1]))

@@ -1,0 +1,13 @@
+n = int(input())
+a = list(map(int, input().split()))
+comba = max(a)
+ref = 10**10
+
+for i in a:
+    temp = abs(i - comba/2)
+    if ref > i:
+        if comba > i:
+            ref = temp
+            combb = i
+
+print(comba, combb)

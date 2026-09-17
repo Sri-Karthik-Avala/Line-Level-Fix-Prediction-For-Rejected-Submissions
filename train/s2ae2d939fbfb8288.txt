@@ -1,0 +1,11 @@
+n = input()
+(a, b) = map(int, raw_input().split())
+(c, d) = map(int, raw_input().split())
+
+ans = 10 ** 10
+for i in range(1, n + 1):
+  def f(x):
+    return (x % i, x / i)
+  [aa, bb, cc, dd] = map(f, [a, b, c, d])
+  ans = min(ans, abs(aa[0] - bb[0]) + abs(aa[1] - bb[1]) + abs(cc[0] - dd[0]) + abs(cc[1] - dd[1]))
+print ans

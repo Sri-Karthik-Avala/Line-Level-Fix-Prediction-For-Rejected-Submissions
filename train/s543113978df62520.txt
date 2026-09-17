@@ -1,0 +1,89 @@
+#pragma GCC target("avx2")
+#pragma GCC optimize("O3")
+#pragma GCC optimize("unroll-loops")
+
+#include <algorithm>
+#include <bitset>
+#include <climits>
+#include <cmath>
+#include <cstring>
+#include <deque>
+#include <forward_list>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> P;
+typedef bitset<16> BS;
+
+const ll MOD = 1E+09 + 7;
+const ll INF = 1E18;
+const int MAX_N = 1E+05;
+const int MAX_K = 1000;
+
+ll N, K;
+
+ll mod[2 * MAX_K + 1][2 * MAX_K + 1], sum[4 * MAX_K + 1][4 * MAX_K + 1];
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cin >> N >> K;
+
+    for (int i = 1; i <= N; i++) {
+        ll x, y;
+        char c;
+        cin >> x >> y >> c;
+        if (c == 'W') {
+            mod[x % (2 * K) + 1][(y + K) % (2 * K) + 1]++;
+        } else {
+            mod[x % (2 * K) + 1][y % (2 * K) + 1]++;
+        }
+    }
+
+    for (int i = 0; i < 4 * K; i++) {
+        for (int j = 0; j < 4 * K; j++) {
+            mod[i + 1][j + 1] = mod[i % (2 * K) + 1][j % (2 * K) + 1];
+        }
+    }
+
+    for (int i = 1; i <= 4 * K; i++) {
+        for (int j = 1; j <= 4 * K; j++) {
+            sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + mod[i][j];
+        }
+    }
+
+    ll ans = 0;
+    for (int i = 1; i <= 2 * K; i++) {
+        for (int j = 1; j <= 2 * K; j++) {
+            ll res = 0;
+            res += sum[i + 2 * K - 1][j + 2 * K - 1] - sum[i + K - 1][j + 2 * K - 1] - sum[i + 2 * K - 1][j + K - 1] + sum[i + K - 1][j + K - 1];
+            res += sum[i + K - 1][j + K - 1] - sum[i + K - 1][j - 1] - sum[i - 1][j + K - 1] + sum[i - 1][j - 1];
+            ans = max(res, ans);
+        }
+    }
+
+    /*
+    for (int i = 1; i <= 2 * K; i++) {
+        for (int j = 1; j <= 2 * K; j++) {
+            cout << "i = " << i << ", j = " << j << ", sum = " << sum[i][j] << "\n";
+        }
+    }
+    */
+
+    cout << ans << "\n";
+
+    return 0;
+}

@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int m[50][50];
+int w[50][50];
+char str[50][50];
+int dx[]={0,-1,0,1};
+int dy[]={1,0,-1,0};
+int main(){
+	int a,b;
+	while(scanf("%d%d",&b,&a),a){
+		for(int i=0;i<a;i++)scanf("%s",str[i]);
+		for(int i=0;i<=180;i++){
+			for(int j=0;j<a;j++)
+				for(int k=0;k<b;k++)
+					m[j][k]=-1;
+		}
+		int ret=-1;
+		for(int i=0;i<a;i++)
+			for(int j=0;j<b;j++){
+				if(str[i][j]=='E')m[i][j]=0;
+				if(str[i][j]=='N')m[i][j]=1;
+				if(str[i][j]=='W')m[i][j]=2;
+				if(str[i][j]=='S')m[i][j]=3;
+			}
+		for(int i=0;i<180;i++){
+			for(int j=0;j<a;j++){
+				for(int k=0;k<b;k++){
+					w[j][k]=0;
+					if(!~m[j][k])continue;
+					for(int l=0;l<4;l++){
+						int tx=j+dx[(m[j][k]+l+3)%4];
+						int ty=k+dy[(m[j][k]+l+3)%4];
+						if(0<=tx&&tx<a&&0<=ty&&ty<b&&!~m[tx][ty]&&str[tx][ty]!='#'){
+							m[j][k]=(m[j][k]+l+3)%4;
+							w[j][k]=1;
+							break;
+						}
+					}
+				}
+			}
+			for(int j=0;j<4;j++){
+				for(int k=0;k<a;k++){
+					for(int l=0;l<b;l++){
+						if(!~m[k][l])continue;
+						if(w[k][l]){
+							int tx=k+dx[m[k][l]];
+							int ty=l+dy[m[k][l]];
+							if(!~m[tx][ty]){
+								m[tx][ty]=m[k][l];
+								m[k][l]=-1;
+							}
+						}
+					}
+				}
+			}
+			for(int j=0;j<a;j++)
+				for(int k=0;k<b;k++)
+					if(str[j][k]=='X')m[j][k]=-1;
+			bool ok=true;
+			for(int j=0;j<a;j++)
+				for(int k=0;k<b;k++)
+					if(~m[j][k])ok=false;
+		/*	for(int j=0;j<a;j++){
+				for(int k=0;k<b;k++){
+					if(~m[j][k])printf("%d",m[j][k]);else printf(".");
+				}
+				printf("\n");
+			}
+			printf("\n");
+		*/	if(ok){ret=i+1;break;}
+		}
+		if(ret==-1)printf("NA\n");
+		else printf("%d\n",ret);
+	}
+}

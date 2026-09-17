@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+template<class T> inline T sqr(T x) {return x*x;}
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+
+#define all(a)  (a).begin(),(a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pb push_back
+#define mp make_pair
+#define each(i,c) for(typeof((c).begin()) i=(c).begin(); i!=(c).end(); ++i)
+#define exist(s,e) ((s).find(e)!=(s).end())
+#define range(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n)  range(i,0,n)
+#define clr(a,b) memset((a), (b) ,sizeof(a))
+#define dump(x)  cerr << #x << " = " << (x) << endl;
+#define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+
+const double eps = 1e-10;
+const double pi  = acos(-1.0);
+const ll INF =1LL << 62;
+const int inf =1 << 29;
+
+class Octahedra{
+	public:
+		string color[8];
+		void right(){
+			string tmp[8];
+			rep(i,8) tmp[i]=color[i];
+			color[0]=tmp[4],color[1]=tmp[5],color[2]=tmp[1],color[3]=tmp[0];
+			color[4]=tmp[7],color[5]=tmp[6],color[6]=tmp[2],color[7]=tmp[3];
+		}
+		void top(){
+			string tmp[8];
+			rep(i,8) tmp[i]=color[i];
+			color[0]=tmp[4],color[1]=tmp[0],color[2]=tmp[3],color[3]=tmp[7];
+			color[4]=tmp[5],color[5]=tmp[1],color[6]=tmp[2],color[7]=tmp[6];
+		}
+		void rotation(){
+			rep(i,3) swap(color[i],color[i+1]);
+			rep(i,3) swap(color[i+4],color[i+1+4]);
+		}
+
+		bool operator<(Octahedra a) const{
+			rep(i,8) if(color[i]!=a.color[i]) return color[i]<a.color[i];
+			return color[7]<a.color[7];
+		}
+};
+
+set<Octahedra> s;
+
+int main(void){
+	while(1){
+		string color[8];
+		rep(i,8) cin >> color[i];
+		if(cin.eof()) break;
+
+		s.clear();
+		sort(color,color+8);
+
+		do{
+			Octahedra in;
+			rep(i,8) in.color[i]=color[i];
+
+			bool check=true;
+			rep(i,4){
+				rep(j,4){
+					rep(k,4){
+						if(s.find(in)!=s.end()) check=false;
+						in.rotation();
+					}
+					in.right();
+				}
+				in.top();
+			}
+
+			if(check) s.insert(in);
+
+		}while(next_permutation(color,color+8));
+		cout << s.size() << endl;
+	}
+	return 0;
+}

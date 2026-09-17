@@ -1,0 +1,10 @@
+n = int(input())
+e = 0
+for i in range(n):
+    x = int(input())
+    if x%2 == 0:
+        e += 1
+if n-e >= e:
+    print("first")
+else:
+    print("second")

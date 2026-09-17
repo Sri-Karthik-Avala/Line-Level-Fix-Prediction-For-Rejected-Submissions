@@ -1,0 +1,66 @@
+#include<iostream>
+#include<vector>
+#include<tuple>
+#include<queue>
+#include<set>
+
+using namespace std;
+
+struct S{
+  int y,x,t;
+  vector<int> v;
+};
+
+int main(){
+  for(int N,M;cin>>N>>M,N;){
+    char g[50][51];
+    int y,x;
+    for(int i=0;i<N;i++){
+      cin>>g[i];
+      for(int j=0;j<M;j++){
+	if(g[i][j]=='S'){
+	  y=i;
+	  x=j;
+	}
+      }
+    }
+    int P;
+    cin>>P;
+    string p[10];
+    for(int i=0;i<P;i++){
+      cin>>p[i];
+    }
+    set<vector<int> > s[50][50];
+    queue<S> que;
+    que.push({y,x,0,vector<int>(M)});
+    while(!que.empty()){
+      auto cs=que.front();
+      if(g[cs.y][cs.x]=='G')break;
+      que.pop();
+      if(!s[cs.y][cs.x].insert(cs.v).second)continue;
+      for(int i=0;i<4;i++){
+	static const int dy[]={-1,0,1,0};
+	static const int dx[]={0,1,0,-1};
+	int ny=cs.y+dy[i];
+	int nx=cs.x+dx[i];
+	if(0<=ny&&ny<N&&0<=nx&&nx<M&&g[ny][nx]!='#'){
+	  S ns{ny,nx,cs.t+1,cs.v};
+	  for(int j=0;j<P;j++){
+	    string c=p[j].substr(0,cs.v[j])+"URDL"[i];
+	    while(p[j].compare(0,c.size(),c)){
+	      c.erase(c.begin());
+	    }
+	    if(c==p[j])goto fail;
+	    ns.v[j]=c.size();
+	  }
+	  que.push(ns);
+	fail:
+	  ;
+	}
+      }
+    }
+    cout<<(que.empty()?-1:que.front().t)<<endl;
+  }
+}
+
+	    

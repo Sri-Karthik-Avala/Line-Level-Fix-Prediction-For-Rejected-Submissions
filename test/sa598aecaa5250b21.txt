@@ -1,0 +1,85 @@
+import sys
+input = sys.stdin.readline
+import numpy as np
+from numba import njit
+
+
+def read():
+    D = int(input().strip())
+    # C[i]: コンテストiの低下量にかかる係数
+    C = np.fromstring(input().strip(), dtype=np.int32, sep=" ")
+    # S[d, i]: d日目にコンテストiを開催したときの増加量
+    S = np.empty((D, 26), dtype=np.int32)
+    for i in range(D):
+        s = np.fromstring(input().strip(), dtype=np.int32, sep=" ")
+        S[i, :] = s[:]
+    # T[d]: d日目に開催されるコンテストの種類
+    T = np.array([int(input().strip()) for i in range(D)], dtype=np.int32)
+    T -= 1
+    # M: 変更クエリの数
+    M = int(input().strip())
+    # DQ[i]: d[i] 日目のコンテストを q[i] に変更する
+    DQ = np.empty((M, 2), dtype=np.int32)
+    for i in range(M):
+        dq = np.fromstring(input().strip(), dtype=np.int32, sep=" ")
+        DQ[i, :] = dq[:]
+    DQ -= 1
+    return D, C, S, T, M, DQ
+
+
+@njit
+def satisfaction(d, C, S, T, last):
+    """満足度の変化を求める
+    """
+    v = 0
+    # 増加分: S[d, i]
+    p = T[d]
+    v += S[d, p]
+    last[p] = d
+    # 低下分: sum(C[i] * (d-last[d, i]))
+    for i in range(26):
+        v -= C[i] * (d - last[i])
+    return v
+
+
+@njit
+def change_schedule(D, C, S, T, d, q, cumsat):
+    """d日目のコンテストをqに変更する
+    """
+    p = T[d]
+    dp1, dp3, dq1, dq3 = -1, D, -1, D
+    for i in range(0, d):
+        if T[i] == p: 
+            dp1 = i
+        if T[i] == q:
+            dq1 = i
+    for i in range(d+1, D):
+        if T[i] == p:
+            dp3 = i
+        if T[i] == q:
+            dq3 = i
+    cumsat = cumsat - S[d, p] + S[d, q] - C[p] * (dp3-d) * (d-dp1) + C[q] * (dq3-d) * (d-dq1)
+    return cumsat
+
+@njit
+def solve(D, C, S, T, M, DQ):
+    # 最後にコンテストiを開催した日、未開催ならlast[i] = 0
+    last = -np.ones(26, dtype=np.int32)
+    # cumsat: d日目の満足度
+    cumsat = 0
+    # sat: d日目の満足度の増加量
+    for d in range(D):
+        sat = satisfaction(d, C, S, T, last)
+        cumsat += sat
+    for i in range(M):
+        d, q = DQ[i]
+        cumsat = change_schedule(D, C, S, T, d, q, cumsat)
+        T[d] = q
+        print(cumsat)
+
+
+if __name__ == '__main__':
+    inputs = read()
+    outputs = solve(*inputs)
+    if outputs is not None:
+        print("%s" % str(outputs))

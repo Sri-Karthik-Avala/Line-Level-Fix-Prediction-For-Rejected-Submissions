@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> P;
+typedef pair<ll, P> P3;
+const ll MOD = ll(1e9+7);
+const int IINF = INT_MAX;
+const ll LLINF = LLONG_MAX;
+const int MAX_N = int(3e5 + 5);
+const double EPS = 1e-4;
+const int di[] = {0, 1, 0, -1}, dj[] = {1, 0, -1, 0};
+#define REP(i, n) for (int i = 0; i < n; i++)
+#define REPR(i, n) for (int i = n; i >= 0; i--)
+#define SORT(v) sort((v).begin(), (v).end())
+#define ALL(v) (v).begin(), (v).end()
+
+int n, q, cmax, cnt[MAX_N];
+
+int solve(int m){
+    int ma = 0;
+    for(int i=0; i<cmax; i+=m){
+        int bg = i+ma, en = min(i+m-1, cmax);
+        if(cnt[en]-cnt[bg]<=0)continue;
+        ma = lower_bound(cnt+bg, cnt+en, cnt[en])-(cnt+i);
+    }
+    return ma;
+}
+
+int main() {
+    cin >> n >> q;
+    REP(i,n){
+        int c;
+        cin >> c;
+        cnt[c]++;
+        cmax = max(cmax, c);
+    }
+    REP(i,cmax){
+        cnt[i+1] += cnt[i];
+    }
+    REP(i,q){
+        int m;
+        cin >> m;
+        cout << solve(m) << endl;
+    }
+    return 0;
+}
+

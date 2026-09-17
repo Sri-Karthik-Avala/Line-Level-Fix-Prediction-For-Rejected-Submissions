@@ -1,0 +1,47 @@
+from collections import deque
+n = input()
+
+C = [None]*n
+P = [None]*n
+for i in xrange(n):
+    ipt = map(int, raw_input().split())
+    C[i] = ipt[1:]
+    for c in C[i]:
+        P[c] = i
+LEV = (n+1).bit_length()
+parent = [[None]*(LEV + 1) for i in xrange(n)]
+for i in xrange(n):
+    parent[i][0] = P[i]
+for k in xrange(1, LEV):
+    for i in xrange(n):
+        if parent[i][k] is None:
+            parent[i][k+1] = None
+        else:
+            parent[i][k+1] = parent[parent[i][k]][k]
+depth = [None]*n
+deq = deque()
+deq.append(0)
+depth[0] = 0
+while deq:
+    v = deq.popleft()
+    for c in C[v]:
+        deq.append(c)
+        depth[c] = depth[v] + 1
+
+q = input()
+for t in xrange(q):
+    u, v = map(int, raw_input().split())
+    if not depth[u] < depth[v]:
+        u, v = v, u
+    for k in xrange(LEV+1):
+        if ((depth[v] - depth[u]) >> k) & 1:
+            v = parent[v][k]
+    if u == v:
+        print u
+        continue
+
+    for k in xrange(LEV, -1, -1):
+        if parent[u][k] != parent[v][k]:
+            u = parent[u][k]
+            v = parent[v][k]
+    print parent[u][0]

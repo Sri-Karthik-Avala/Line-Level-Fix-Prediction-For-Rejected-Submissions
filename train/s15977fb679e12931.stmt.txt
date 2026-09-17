@@ -1,0 +1,62 @@
+X-th day of September -->
+ Day of Week 
+
+
+ 
+ The 9th day of September 2017 is Saturday. Then, what day of the week is the X-th of September 2017? 
+ 
+
+ 
+ Given a day in September 2017, write a program to report what day of the week it is.
+ 
+
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+ X 
+ 
+ 
+ The input line specifies a day X (1 &le; X &le; 30) in September 2017.
+ 
+
+
+ Output 
+
+ 
+Output what day of the week it is in a line. Use the following conventions in your output: " mon " for Monday, " tue " for Tuesday, " wed " for Wednesday, " thu " for Thursday, " fri " for Friday, " sat " for Saturday, and " sun " for Sunday.
+ 
+
+ Sample Input 1 
+
+ 
+1
+ 
+
+ Sample Output 1 
+ 
+fri
+ 
+
+ Sample Input 2 
+ 
+9
+ 
+
+ Sample Output 2 
+ 
+sat
+ 
+
+ Sample Input 3 
+ 
+30
+ 
+
+ Sample Output 3 
+ 
+sat

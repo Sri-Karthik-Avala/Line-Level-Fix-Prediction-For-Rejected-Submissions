@@ -1,0 +1,14 @@
+import numpy as np
+n = int(input())
+result = np.array([[0]*4]*4)
+for _ in range(n):
+  inp = list(map(int, input().split()))
+  u, k = inp[0], inp[1]
+  v = inp[2:]
+  if k != 0:
+    for vv in v:
+      result[u-1][vv-1] = 1
+
+result = list(result)
+for i in range(n):
+  print(*result[i])

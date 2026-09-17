@@ -1,0 +1,119 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);i++)
+#define rep(i,n) reep((i),0,(n))
+
+typedef complex<double> P;
+#define EPS (1e-10)
+#define INF (0x3f3f3f3f)
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+
+
+double dot(P a,P b){
+	return a.real()*b.real() + a.imag()*b.imag();
+}
+
+double cross(P a,P b){
+	return a.real()*b.imag()-a.imag()*b.real();
+}
+
+int ccw(P a,P b,P c){
+	P d = b-a;
+	c-=a;
+	double cr = cross(d,c);
+	if(cr < -EPS) return 1;
+	if(cr > EPS) return -1;
+	if(dot(d,c) < -EPS) return 2;
+	if(norm(d) < norm(c) - EPS) return -2;
+	return 0;
+}
+
+int is_intersected_ls(P a1,P a2,P b1,P b2){
+	return ccw(a1,a2,b1)*ccw(a1,a2,b2) <= 0 && ccw(b1,b2,a1)*ccw(b1,b2,a2) <= 0;
+}
+
+int main(){
+	int n,m;
+	cin>>n>>m;
+	vector<vector<double>> a(n,vector<double>(n,INF));
+	vector<vector<double>> b(m,vector<double>(m,INF));
+	vector<P> v(n);
+	vector<P> w(m);
+	rep(i,n){
+		double aa,bb;
+		cin>>aa>>bb;
+		v[i] = P(aa,bb);
+	}
+	rep(i,m){
+		double aa,bb;
+		cin>>aa>>bb;
+		w[i] = P(aa,bb);
+	}
+	rep(i,n){
+		rep(j,n){
+			if(i==j) a[i][j] = 0;
+			else{
+				if(is_intersected_ls(w[0],w[1],v[i],v[j])){
+					a[i][j] = INF;
+				}
+				else{
+					a[i][j] = abs(v[i]-v[j]);
+				}
+			}
+		}
+	}
+	rep(i,m){
+		rep(j,m){
+			if(i==j) b[i][j] = 0;
+			else{
+				if(is_intersected_ls(v[0],v[1],w[i],w[j])){
+					b[i][j] = INF;
+				}
+				else{
+					b[i][j] = abs(w[i]-w[j]);
+				}
+			}
+		}
+	}
+	priority_queue<pair<double,int>> pq;
+	double ans = INF;
+	vector<int> used(n);
+	vector<double> d(n,INF);
+	pq.push(make_pair(-0.0,0));
+	while(pq.size()){
+		auto top = pq.top();
+		pq.pop();
+		if(d[top.second] < -top.first) continue;
+		used[top.second] = 1;
+		rep(i,n){
+			if(used[i]) continue;
+			if(d[i] < -top.first + a[top.second][i]) continue;
+			d[i] = -top.first + a[top.second][i];
+			pq.push(make_pair(top.first - a[top.second][i],i));
+		}
+	}
+	ans=min(ans,d[1]+abs(w[0]-w[1]));
+	pq.push(make_pair(-0.0,0));
+	d.assign(m,INF);
+	used.assign(n,0);
+	while(pq.size()){
+		auto top = pq.top();
+		pq.pop();
+		if(d[top.second] < -top.first) continue;
+		used[top.second] = 1;
+		rep(i,m){
+			if(used[i]) continue;
+			if(d[i] < -top.first + b[top.second][i]) continue;
+			d[i] = -top.first + b[top.second][i];
+			pq.push(make_pair(top.first - b[top.second][i],i));
+		}
+	}
+	ans=min(ans,d[1]+abs(v[0]-v[1]));
+	cout<<fixed<<setprecision(10);
+	if(ans>=INF) cout<<-1<<endl;
+	else{
+		cout<<ans<<endl;
+	}
+}

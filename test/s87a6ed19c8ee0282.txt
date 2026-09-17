@@ -1,0 +1,18 @@
+from collections import deque
+
+a = [int(i) for i in input().split()]
+q = deque([])
+for i in range(a[0]): q.append(deque([]))
+
+for i in range(a[1]):
+    cmd = [int(i) for i in input().split()]
+
+    if cmd[0] == 0:
+        q[cmd[1]].append(cmd[2])
+
+    elif cmd[0] == 1:
+        if q[cmd[1]] != []: print(q[cmd[1]][0])
+
+    elif cmd[0] == 2:
+        if q[cmd[1]] != []: q[cmd[1]].popleft()
+

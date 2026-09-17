@@ -1,0 +1,25 @@
+# coding: utf-8
+card = []
+def k_cut(k, a):
+    a = a[k:] + a[:k]
+    return a
+
+def riffle(n, a):
+    c = []
+    a_card = a[:n]
+    b_card = a[n:]
+    for i in range(n):
+        c += (a_card[i]+b_card[i])
+    return c
+    
+n = int(input())
+m = int(input())
+card = [str(i+1) for i in range(2*n)]
+for i in range(m):
+    k = int(input())
+    if k == 0:
+        card = riffle(n, card)
+    else:
+        card = k_cut(k, card)
+for i in range(len(card)):
+    print(card[i])

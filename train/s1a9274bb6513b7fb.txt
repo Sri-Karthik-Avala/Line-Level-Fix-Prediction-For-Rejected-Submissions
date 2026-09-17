@@ -1,0 +1,14 @@
+import fractions
+N = int(input())
+A = list(map(int,input().split()))
+hard = fractions.gcd(A[0],A[1])
+easy = [A[0],A[1]]
+del A[0],A[1]
+while len(A) != 0:
+  easyt1 = fractions.gcd(easy[0],A[0])
+  easyt2 = fractions.gcd(easy[1],A[0])
+  easyt3 = hard
+  easy = sorted([easyt1,easyt2,easyt3])[1:3]
+  hard = fractions.gcd(hard,A[0])
+  del A[0]
+print(max(easy))

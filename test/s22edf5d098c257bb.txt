@@ -1,0 +1,23 @@
+n=int(input())
+s=[input() for _ in range(n)]
+e=[[]for _ in range(n)]
+INF=10**18
+for i,x in enumerate(s):
+  for j,y in enumerate(x):
+    if y=='1':e[i]+=[j]
+ans=0
+for i in range(n):
+  d=[INF]*n
+  q=[i]
+  d[i]=1
+  while q:
+    now=q.pop()
+    for to in e[now]:
+      if d[to]==INF:
+        q+=[to]
+        d[to]=d[now]+1
+      elif d[to]!=d[now]+1 and d[to]!=d[now]-1:
+        print(-1)
+        exit()
+  ans=max(max(d),ans)
+print(ans)

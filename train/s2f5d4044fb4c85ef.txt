@@ -1,0 +1,30 @@
+#include <iostream>
+#include <cstdio>
+
+#define reep(i,n,m) for(int i=(n);i<(m);i++)
+#define rep(i,n) reep(i,0,n)
+
+using namespace std;
+
+int main(){
+    int n;
+    cin >> n;
+    int s[100] = {0};
+
+    rep(i,n){
+        int a,v;
+        cin >> a >> v;
+        s[a] += v;
+    }
+    int ans=0;
+    int sum=0;
+    reep(i,1,n+1){
+        if(sum<s[i]){
+            ans = i;
+            sum = s[i];
+        }
+    }
+
+    printf("%d %d\n",ans, sum);
+    return 0;
+}

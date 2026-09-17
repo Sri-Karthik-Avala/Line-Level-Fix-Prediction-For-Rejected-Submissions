@@ -1,0 +1,11 @@
+while 1:
+    n=int(raw_input())
+    if n==0:
+        break
+    field=[raw_input() for i in range(n)]
+    large=[[0]*(n+1) for i in range(n+1)]
+    for i in range(n):
+        for j in range(n):
+            if field[i][j]=='.':
+                large[i][j]=min(large[i][j-1],large[i-1][j],large[i-1][i-1])+1
+    print max(map(max,large))

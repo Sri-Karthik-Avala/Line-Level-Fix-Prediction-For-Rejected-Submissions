@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int n;
+  while(cin >> n, n){
+    string s;
+    char thread[1010][210];
+    int len[2][1010];
+    
+    memset(thread, ' ', sizeof(thread));
+    memset(len, 0, sizeof(len));
+    
+    cin >> s;
+    for(int j = 0 ; j < (int)s.size() ; j++) thread[0][j] = s[j];
+    len[1][0] = (int)s.size();
+
+    for(int i = 1 ; i < n ; i++){
+      cin >> s;
+      int p = 0;
+
+      for(int j = 0 ; j < (int)s.size() ; j++)
+	if(s[j] != '.'){ p = j; break; }
+      
+      s = "+" + s.substr(p);
+      
+      for(int j = p ; j < p + (int)s.size() ; j++)
+	thread[i][j-1] = s[j-p];      
+      
+      len[0][i] = p-1;
+      len[1][i] = p + (int)s.size() - 1;
+    }
+    
+    for(int i = 1 ; i < n ; i++){
+      bool flag = false;
+      for(int j = i+1 ; j < n ; j++){
+	if(thread[j][len[0][i]] == '+'){
+	  flag = true;
+	  break;
+	}
+      }
+      
+      if(!flag) continue;
+      
+      for(int j = i+1 ; j < n ; j++){
+	if(thread[j][len[0][i]] == '+' || isalpha(thread[j][len[0][i]])) break;
+	thread[j][len[0][i]] = '|';	
+      }      
+    }
+    
+    for(int i = 0 ; i < n ; i++){
+      for(int j = 0 ; j < len[1][i] ; j++){
+	cout << thread[i][j];
+      }
+      cout << endl;
+    }
+  }
+  
+  return 0;
+}

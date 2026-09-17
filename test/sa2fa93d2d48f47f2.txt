@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+typedef pair<int,int> pii;
+#define mkp make_pair
+int INF=INT_MAX/2;
+int m,n;
+vector<vector<pii>> v;
+vector<vector<int>> vv;
+vector<int> used;
+bool foo(int a){
+    // cout<<"a "<<a<<endl;
+    if(used[a]) return false;
+    used[a]=1;
+    for(int x:vv[a]){
+        // cout<<"x "<<x<<endl;
+        if(!foo(x)){
+            used[a]=0;
+            return false; 
+        }
+    }
+    used[a]=0;
+    return true;
+}
+int main(){
+    cin>>m>>n;
+    used=vector<int>(m,0);
+    v=vector<vector<pii>>(m,vector<pii>(n,pii(0,INF)));
+    rep(i,m){
+        int K;
+        cin>>K;
+        rep(j,K){
+            int a,b;
+            string s;
+            cin>>a>>s>>b;
+            if(s==">="){
+                v[i][a-1].first=max(v[i][a-1].first,b);
+            }
+            else{
+                v[i][a-1].second=min(v[i][a-1].second,b);
+            }
+        }
+    }
+    vv=vector<vector<int>>(m);
+    rep(i,m){
+        rep(j,m){
+            bool f=false;
+            rep(k,n){
+                if(v[i][k].first>v[j][k].second) f=true;
+            }
+            if(f){
+                // cout<<i<<" "<<j<<endl;
+                vv[i].push_back(j);
+            }
+        }
+    }
+    // return 0;
+    bool f=true;
+    rep(i,m){
+        if(!foo(i)) f=false;
+    }
+    if(f) cout<<"Yes"<<endl;
+    else cout<<"No"<<endl;
+}

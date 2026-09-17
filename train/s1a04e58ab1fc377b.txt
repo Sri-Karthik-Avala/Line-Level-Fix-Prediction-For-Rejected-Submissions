@@ -1,0 +1,27 @@
+from math import sqrt
+def dist2(ax, ay, az, bx, by, bz):
+    return (ax - bx) ** 2 + (ay - by) ** 2 + (az - bz) ** 2
+
+def judge(d1, d2, d3):
+    e1, e2, e3 = sqrt(d1), sqrt(d2), sqrt(d3)
+    cos1 = (d1 + d2 - d3) / (2 * e1 * e2)
+    cos2 = (d1 + d3 - d2) / (2 * e1 * e3)
+    return (0 <= cos1 and 0 <= cos2)
+    
+N, Q = map(int, raw_input().split())
+obj = [map(int, raw_input().split()) for i in xrange(N)]
+
+for loop in xrange(Q):
+    sx, sy, sz, dx, dy, dz = map(int, raw_input().split())
+    vx, vy, vz = dx - sx, dy - sy, dz - sz
+    d1 = dist2(sx, sy, sz, dx, dy, dz)
+    cost = 0
+    for x, y, z, r, l in obj:
+        d2, d3 = dist2(x, y, z, sx, sy, sz), dist2(x, y, z, dx, dy, dz)
+        if not judge(d1, d2, d3): continue
+        t = 1.0 * (vx * (x - sx) + vy * (y - sy) + vz * (z - sz)) / (vx * vx + vy * vy + vz * vz)
+        tx, ty, tz = sx + vx * t, sy + vy * t, sz + vz * t
+        d = dist2(x, y, z, tx, ty, tz)
+        if d <= r * r:
+            cost += l
+    print cost

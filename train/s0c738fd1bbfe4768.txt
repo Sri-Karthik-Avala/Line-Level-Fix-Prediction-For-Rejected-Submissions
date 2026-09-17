@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define N 100000 + 5
+#define int long long
+#define rep(i, l, r) for(int i = l; i <= r; ++i)
+int n, nl, nr, al, ar, ans, l[N], r[N], len[N];
+priority_queue <int> Qs;
+priority_queue <int, vector <int>, greater <int> >  Qb;
+int read(){
+    char c; int x = 0, f = 1;
+    c = getchar();
+    while(c > '9' || c < '0'){ if(c == '-') f = -1; c = getchar();}
+    while(c >= '0' && c <= '9') x = x * 10 + c - '0', c = getchar();
+    return x * f;
+}
+signed main(){
+    n = read();
+    rep(i, 1, n) l[i] = read(), r[i] = read(), len[i] = r[i] - l[i];
+    Qs.push(l[1]), Qb.push(l[1]);
+    rep(i, 2, n){
+        al += r[i] - l[i], ar += r[i - 1] - l[i - 1];
+        nl = Qs.top() - al, nr = Qb.top() + ar;
+        if(l[i] < nl) ans += nl - l[i], Qs.pop(), Qs.push(l[i] + al), Qs.push(l[i] + al), Qb.push(nl - ar);
+        else if(l[i] > nr) ans += l[i] - nr, Qb.pop(), Qs.push(nr + al), Qs.push(nr + al), Qb.push(l[i] - ar);
+        else Qs.push(l[i] + al), Qb.push(l[i] - ar);
+    }
+    printf("%lld", ans);
+    return 0;
+}

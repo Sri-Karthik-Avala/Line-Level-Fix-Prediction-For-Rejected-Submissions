@@ -1,0 +1,70 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+
+    int jenny[] = {1,2,1,2,1,4,1,4,1,2,1,2,1,4,1,4};
+    int ans[8];
+    int customer[8];
+
+    while(true){
+
+        int best = 60000;
+
+        for(int i=0; i<8; i++){
+            cin >> customer[i];
+
+            if(cin.eof()){
+                return 0;
+            }
+
+        }
+
+        for(int i=0; i<8; i++){
+
+            int thisBest = 0;
+
+            for(int j=0; j<8; j++){
+                if(customer[j] > jenny[j+i]){
+                    thisBest += (customer[j] - jenny[j+i]);
+                }
+            }
+
+            if(best >= thisBest){
+
+                bool flag = false;
+
+                if(best == thisBest){
+                    for(int j=0; j<8; j++){
+                        if(ans[j] < jenny[j+i]){
+                            flag = true;
+                            break;
+                        }
+                        if(ans[j] > jenny[j+i]){
+                            break;
+                        }
+                    }
+                }
+
+                if(flag){
+                    break;
+                }
+
+                best = thisBest;
+
+                for(int j=0; j<8; j++){
+                    ans[j] = jenny[j+i];
+                }
+            }
+
+        }
+
+        for(int i=0; i<8; i++){
+            cout << ans[i];
+            cout << ((i == 7) ? '\n' : ' ');
+        }
+
+    }
+
+    return 0;
+}

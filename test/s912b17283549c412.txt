@@ -1,0 +1,12 @@
+n = int(input())
+m = int(input())
+maxd = m
+for i in range(n):
+    inn, out = map(int, input().split())
+    m += inn - out 
+    if m > maxd:
+        maxd = m
+    elif m < 0:
+        m = 0
+        break
+print(maxd)

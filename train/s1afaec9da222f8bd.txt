@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+#define rep(i,a,b) for(int i=(a);i<=(b);++i)
+using namespace std;
+const int N=305,P=1e9+7;
+int n,K,ans,fac2[N],match[N],f[2][N];
+int main(){
+	fac2[0]=1;
+	for(int i=1;i<N;++i)fac2[i]=1LL*fac2[i-1]*(2*i-1)%P;
+	scanf("%d%d",&n,&K);
+	for(int i=1;i<=K;++i){
+		int k1,k2;
+		scanf("%d%d",&k1,&k2);
+		match[k1]=k2,match[k2]=k1;
+	}
+	rep(i,1,n*2){
+		int cur=0;
+		memset(f[cur],0,sizeof(f[cur]));
+		f[cur][0]=1;
+		int sz1=0,sz2=0;
+		for(int j=i;j<=n*2;++j){
+			if(match[j]){
+				if(match[j]>j)++sz1;
+				else if(match[j]<i)break;
+				else --sz1;
+			}else{
+				++sz2;
+				cur^=1;
+				memset(f[cur],0,sizeof(f[cur]));
+				rep(k,0,min(n,sz2)){
+					if(f[cur^1][k]){
+						if(k){
+							(f[cur][k-1]+=1LL*f[cur^1][k]*k%P)%=P;
+						}
+						(f[cur][k+1]+=f[cur^1][k])%=P;
+					}
+				}
+			}
+			if(!sz1){
+				(ans+=1LL*f[cur][0]*fac2[n-K-(sz2/2)]%P)%=P;
+				f[cur][0]=0;
+			}
+		}
+	}
+	printf("%d\n",ans);
+	return 0;
+}

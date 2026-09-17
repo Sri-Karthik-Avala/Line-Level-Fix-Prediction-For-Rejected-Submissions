@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n, m;
+    bool board[2020] = {0};
+    int x[101];
+    cin >> n;
+    for(int i=1;i<=n;i++){
+        cin >> x[i];
+        board[x[i]] = true;
+    }
+    cin >> m;
+    for(int i=0;i<m;i++){
+        int a;
+        cin >> a;
+        if(x[a]==2019 || board[x[a]+1]) continue;
+        x[a]++;
+        board[x[a]] = false;
+        board[x[a]+1] = true;
+    }
+
+    for(int i=1;i<=n;i++) cout << x[i] << endl;
+    return 0;
+}

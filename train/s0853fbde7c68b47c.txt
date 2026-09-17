@@ -1,0 +1,32 @@
+#include<iostream>
+#include<map>
+#include<set>
+
+using namespace std;
+
+double R;
+
+int shrink(double d){
+  return (d+1e7)/(R*1.01);
+}
+
+int main(){
+  int N;
+  cin>>N>>R;
+  map<int,set<int> > m;
+  int ans=0;
+  while(N--){
+    double x,y;
+    cin>>x>>y;
+    int sx=shrink(x),sy=shrink(y);
+    bool f=false;
+    for(int i=0;i<3;i++){
+      f|=m[sx+i-1].lower_bound(sy-1)!=m[sx+i-1].lower_bound(sy+1);
+    }
+    if(!f){
+      ans++;
+      m[sx].insert(sy);
+    }
+  }
+  cout<<ans<<endl;
+}

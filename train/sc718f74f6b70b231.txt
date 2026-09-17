@@ -1,0 +1,19 @@
+import math
+import collections
+import itertools
+
+def YesNo(Bool):
+    if(Bool):
+        print("Yes")
+    else:
+        print("No")
+    return
+
+def resolve():
+
+    N=int(input())
+    ans=1/2*(N-1)*(N)
+
+    print(int(ans))
+
+resolve()

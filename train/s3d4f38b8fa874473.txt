@@ -1,0 +1,54 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+vector<int> p,rank,cost;
+
+void makeSet(int x) {
+    p.push_back(x);
+    rank.push_back(0);
+    cost.push_back(0);
+}
+
+int findSet(int x) {
+    int prep = p[x];
+    if(x != p[x]) {
+        p[x] = findSet(p[x]);
+    }
+    cost[x] += cost[prep];
+    return p[x];
+}
+
+void relate(int x, int y, int z) {
+    int rootx = findSet(p[x]), rooty = findSet(p[y]);
+    if(rootx == rooty) return;
+    z = z + cost[x] - cost[y];
+    if(rank[rooty] < rank[rootx]) {
+        p[rooty] = rootx;
+        cost[rooty] = z;
+    }
+    else {
+        p[rootx] = rooty;
+        cost[rootx] = -z;
+        if(rank[rootx] == rank[rooty]) rank[rooty]+=1;
+    }
+}
+
+int main() {
+    int n,q,com,x,y,z;
+    cin >> n >> q;
+    for(int i=0; i<n; i++) makeSet(i);
+    for(int i=0; i<q; i++) {
+        cin >> com >> x >> y;
+        if(com == 0) {
+            cin >> z;
+            relate(x,y,z);
+        }
+        else {
+            if(findSet(x) == findSet(y)) cout << cost[y]-cost[x] << endl;
+            else cout << '?' << endl;
+        }
+    }
+    return 0;
+}
+

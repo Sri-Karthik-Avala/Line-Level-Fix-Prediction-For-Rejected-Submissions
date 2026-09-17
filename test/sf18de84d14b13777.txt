@@ -1,0 +1,15 @@
+k=42
+n=k*(k-1)+1
+print n,k
+for i in xrange(k) :
+    for t in xrange(i*(k-1),(i+1)*(k-1)) :
+        print t+1,
+    print n
+
+for i in xrange(k) :
+    for d in xrange(k-1) :
+        p=d
+        for j in xrange(1,k) :
+            p=(p+i)%(k-1)
+            print j*(k-1)+p+1,
+        print i+1

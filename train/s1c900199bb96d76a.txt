@@ -1,0 +1,73 @@
+#include "bits/stdc++.h"
+ 
+#define int long long
+ 
+using namespace std;
+#define REP(i, s, n) for(signed i = (s); i < signed(n); i++)
+#define rep(i, n) REP(i, 0, n)
+#define rrep(i, n) for(int i = signed(n) - 1; i >= 0; i--)
+#define all(co) co.begin(), co.end()
+typedef pair<int, int> P;
+typedef long long LL;
+ 
+#ifdef int
+const long long INF = 1ll << 62ll;
+#else
+const singed INF = 1 << 29;
+#endif
+ 
+struct edge{ int from, to, cost; };
+ 
+int dr[] = { -1, 0, 1, 0 };
+int dc[] = { 0, 1, 0, -1 };
+ 
+template<typename T = int>
+vector<vector<T>> vvector(int h, int w, T def = T()){ return move(vector<vector<T>>(h, vector<T>(w, def))); }
+class range {
+private: struct I{ int x; int operator*(){ return x; }bool operator!=(I& lhs){ return x < lhs.x; }void operator++(){ ++x; } }; I i, n;
+public:range(int n) :i({ 0 }), n({ n }){}range(int i, int n) :i({ i }), n({ n }){}I& begin(){ return i; }I& end(){ return n; }
+};
+ 
+signed main()
+{
+    int h, w;
+    while (cin >> h >> w && h)
+    {
+        auto dp = vvector(h, w + 1);
+        int ans = 0;
+        rep(i, h)
+        {
+            stack<P> st;
+            st.push(P(0, 0));
+            rep(j, w + 1)
+            {
+                int x = 1;
+                if (j < w) cin >> x;
+ 
+                if (!x) dp[i][j] = 1;
+                if (i >= 1 && dp[i - 1][j] && !x)
+                    dp[i][j] = dp[i - 1][j] + 1;
+ 
+                int size = dp[i][j];
+                if (size == st.top().first) continue;
+                else if (size > st.top().first) st.push(P(size, j));
+                else
+                {
+                    int beg = j;
+                    while (!st.empty() && st.top().first > size)
+                    {
+                        P p = st.top(); st.pop();
+                        ans = max(ans, (j - p.second) * p.first);
+                        beg = p.second;
+                    }
+                    if (st.top().first == size) 
+                        ans = max(ans, (j - st.top().second + 1) * st.top().first);
+                    else st.push(P(size, beg));
+                }
+            }
+        }
+ 
+        cout << ans << endl;
+    }
+    return 0;
+}

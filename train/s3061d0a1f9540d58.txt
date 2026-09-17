@@ -1,0 +1,19 @@
+import os
+import sys
+
+if os.getenv("LOCAL"):
+    sys.stdin = open("_in.txt", "r")
+
+sys.setrecursionlimit(2147483647)
+INF = float("inf")
+
+N, M = list(map(int, sys.stdin.readline().split()))
+
+N, M = list(map(int, sys.stdin.readline().split()))
+# 1 回の時間は M*1900 + (N-M)*100
+time = M * 1900 + (N - M) * 100
+# AC になる確率
+p_ac = 1 / 2 ** M
+
+print(int(1 / p_ac * time))
+

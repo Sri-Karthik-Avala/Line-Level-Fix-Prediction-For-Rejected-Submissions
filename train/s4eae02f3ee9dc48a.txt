@@ -1,0 +1,113 @@
+#include<stdio.h>
+#include<algorithm>
+#include<string.h>
+#include<map>
+#include<set>
+using namespace std;
+int UF[510];
+int FIND(int a){
+	if(UF[a]<0)return a;
+	return UF[a]=FIND(UF[a]);
+}
+void UNION(int a,int b){
+	a=FIND(a);b=FIND(b);
+	if(a==b)return;
+	UF[a]+=UF[b];
+	UF[b]=a;
+}
+pair<int,pair<int,int> > edge[100000];
+int ptr[1000];
+int next[51000];
+int zu[51000];
+int zeit,dis[1000],fin[1000],low[1000],par[1000],dep[1000];
+int kodat[1000],koptr[1000];
+int n=700;
+void dfsInfo(int u,int oy,int d){
+	dis[u]=low[u]=zeit++;par[u]=oy;dep[u]=d;
+	int i,v;
+	for(i=ptr[u];~i;i=next[i])if((v=zu[i])!=oy){
+		if(!~dis[v]){
+			dfsInfo(v,u,d+1);
+			low[u]=min(low[u],low[v]);
+		}else{
+			low[u]=min(low[u],dis[v]);
+		}
+	}
+	fin[u]=zeit++;
+}
+void dfsInfos(){
+	memset(dis,~0,n*4);zeit=0;
+	for(int u=0;u<n;++u)if(!~dis[u])dfsInfo(u,-1,0);
+	for(int u=0;u<n;++u){
+		int &j=koptr[u+1]=koptr[u];
+		for(int i=ptr[u];~i;i=next[i])if(u==par[zu[i]])kodat[j++]=zu[i];
+	}
+}
+bool isBridge(int u,int v){
+	if(dis[u]>dis[v])swap(u,v);
+	return (u==par[v]&&dis[v]<=low[v]);
+}
+int main(){
+	int a,b;scanf("%d%d",&a,&b);
+	for(int i=0;i<b;i++){
+		int p,q,r;scanf("%d%d%d",&p,&q,&r);
+		p--;q--;
+		edge[i]=make_pair(r,make_pair(p,q));
+	}
+	for(int i=0;i<1000;i++)ptr[i]=-1;
+	for(int i=0;i<51000;i++)next[i]=-1;
+	std::sort(edge,edge+b);
+	int at=0;
+	int ret=0;
+	int num=0;
+	for(int i=0;i<a;i++)UF[i]=-1;
+	while(at<b){
+		int sz=0;
+		int to=at;
+		while(to<b&&edge[at].first==edge[to].first)to++;
+	//	printf("%d %d\n",at,to);
+		set<pair<int,int> >S;
+		set<pair<int,int> >dame;
+		map<int,int>m;
+		int ind=0;
+		for(int i=at;i<to;i++){
+			int L=FIND(edge[i].second.first);
+			int R=FIND(edge[i].second.second);
+			if(L>R)swap(L,R);
+			if(L==R)continue;
+			if(!m.count(L))m[L]=ind++;
+			if(!m.count(R))m[R]=ind++;
+		}
+		n=ind;
+		for(int i=0;i<ind;i++)ptr[i]=-1;
+		for(int i=at;i<to;i++){
+			int L=FIND(edge[i].second.first);
+			int R=FIND(edge[i].second.second);
+			if(L>R)swap(L,R);
+			if(L==R)continue;
+			if(S.count(make_pair(L,R))){dame.insert(make_pair(L,R));continue;}
+			S.insert(make_pair(L,R));
+			zu[sz]=m[R];
+			next[sz]=ptr[m[L]];
+			ptr[m[L]]=sz++;
+			zu[sz]=m[L];
+			next[sz]=ptr[m[R]];
+			ptr[m[R]]=sz++;
+		}
+		dfsInfos();
+		//S.clear();
+		for(int i=at;i<to;i++){
+			int L=FIND(edge[i].second.first);
+			int R=FIND(edge[i].second.second);
+			if(L==R)continue;
+			if(L>R)swap(L,R);
+			if(!dame.count(make_pair(L,R))&&isBridge(m[L],m[R])){
+				num++;ret+=edge[i].first;
+			}
+		}
+		for(int i=at;i<to;i++)UNION(edge[i].second.first,edge[i].second.second);
+		for(int i=0;i<sz;i++)next[i]=-1;
+		at=to;
+	}
+	printf("%d %d\n",num,ret);
+}

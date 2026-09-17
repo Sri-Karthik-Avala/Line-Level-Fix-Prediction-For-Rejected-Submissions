@@ -1,0 +1,59 @@
+Breakfast, Lunch and Supper -->
+ Three Meals 
+
+ 
+You are running a restaurant that serves dishes only three times a day. Each of your customer has his/her own separate time zones for eating breakfast, lunch and supper. Thus, your customer enjoys your dish only when he/she visits your restaurant to meet your serving time settings. Your wish is to modify your serving time arrangement so that as many as possible of your customers can enjoy your meals three times a day.
+ 
+ 
+
+ 
+ Write a program to enable as many as possible of customers can enjoy your service three times a day, i.e. breakfast, lunch, and supper. A list of customers eating time zones is given, which you cannot change. Settings of your service time are your option. Coincidence between your service time and either edge of customer’s time zone (start or end time) does not hinder you to provide your service.
+ 
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+ N 
+ ast_1 aet_1 hst_1 het_1 bst_1 bet_1 
+ ast_2 aet_2 hst_2 het_2 bst_2 bet_2 
+:
+ ast_N aet_N hst_N het_N bst_N bet_N 
+ 
+
+ 
+The first line provides the number of customers N (1&le; N &le;50). Each of subsequent N lines provides time zone information of i -th customer: start and end time of breakfast zone ( ast_i , aet_i ), those of lunch zone ( hst_i , het_i ) and those of supper zone ( bst_i , bet_i ). The end time must be later in time as the start time. Time zones do not overlap, i.e. hst_i is later in time than aet_i , and so on. Each time settings must not cross 0:00 midnight.
+ 
+
+ 
+ h m 
+ 
+
+ 
+ Each time information is given by hour h (0&le; h &le;23) and minute m (0&le; m &le;59).
+ 
+
+
+ Output 
+
+ 
+ Output the maximum number of customers that can be served all three meals (breakfast, lunch, and supper).
+ 
+
+ Sample Input 1 
+
+ 
+5
+1 0 2 0 3 30 4 30 6 0 7 0
+2 30 3 0 4 0 5 0 5 30 6 30
+1 30 2 30 4 30 5 0 6 30 7 0
+2 30 3 0 5 0 6 0 6 30 7 0
+1 0 2 0 3 0 3 30 4 0 5 0
+ 
+
+ Sample Output 1 
+ 
+3

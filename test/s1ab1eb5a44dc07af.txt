@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+#define MOD 1000000007LL
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> P;
+
+int n,C;
+int a[101],b[101],c[101];
+int dp[2][105][10005];
+
+int main(void){
+	scanf("%d%d",&n,&C);
+	for(int i=0;i<n;i++){
+		scanf("%d%d%d",&a[i],&b[i],&c[i]);
+	}
+	int now=1,prev=0;
+	for(int i=0;i<n;i++){
+		for(int j=0;j<=C;j++){
+			for(int k=0;k<=i*100;k++){
+				dp[now][j][k]=max(dp[now][j][k],dp[prev][j][k]);
+				if(j+c[i]<=C){
+					int va=k+a[i];
+					int vb=dp[prev][j][k]+b[i];
+					dp[now][j+c[i]][min(va,vb)]=max(dp[now][j+c[i]][min(va,vb)],max(va,vb));
+					va=k+b[i];
+					vb=dp[prev][j][k]+a[i];
+					dp[now][j+c[i]][min(va,vb)]=max(dp[now][j+c[i]][min(va,vb)],max(va,vb));
+				}
+			}
+		}
+		swap(now,prev);
+		memset(dp[now],0,sizeof(dp[now]));
+	}
+	int res=0;
+	for(int i=0;i<=C;i++){
+		for(int j=0;j<=10000;j++){
+			res=max(res,min(j,dp[prev][i][j]));
+		}
+	}
+	printf("%d\n",res);
+	return 0;
+}

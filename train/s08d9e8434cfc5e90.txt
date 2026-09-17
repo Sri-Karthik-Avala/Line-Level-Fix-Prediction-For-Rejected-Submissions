@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+	for(int n,l;cin>>n>>l && n|l;){
+		vector<char> ds(n);
+		vector<int> ps(n);
+		for(int i=0;i<n;i++) cin>>ds[i]>>ps[i],ps[i]*=2;
+		int res=-1,last=-1;
+		for(int t=0;;t++){
+			if(count(begin(ds),end(ds),'#')==n){
+				res=t;
+				break;
+			}
+			last=find_if(begin(ds),end(ds),[](char c){return c!='#';})-begin(ds);
+			
+			for(int i=0;i<n;i++) if(ds[i]!='#'){
+				if(ds[i]=='L') ps[i]--;
+				if(ds[i]=='R') ps[i]++;
+				if(ps[i]==0 || ps[i]==2*l) ds[i]='#';
+			}
+			for(int i=0;i<n;i++)
+				for(int j=i+1;j<n;j++)
+					if(ds[i]!='#' && ds[j]!='#' && ps[i]==ps[j] && ps[i]%2==0)
+						swap(ds[i],ds[j]);
+		}
+		cout<<res/2<<' '<<last+1<<endl;
+	}
+}

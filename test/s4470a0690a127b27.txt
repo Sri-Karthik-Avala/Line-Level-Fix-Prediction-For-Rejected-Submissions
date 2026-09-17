@@ -1,0 +1,98 @@
+#include <bits/stdc++.h>
+#define ll long long
+#define INF 1000000005
+#define MOD 1000000007
+#define EPS 1e-10
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define rrep(i,n) for(int i=(int)(n)-1;i>=0;--i)
+#define srep(i,s,t) for(int i=(int)(s);i<(int)(t);++i)
+#define each(a,b) for(auto (a): (b))
+#define all(v) (v).begin(),(v).end()
+#define len(v) (int)(v).size()
+#define zip(v) sort(all(v)),v.erase(unique(all(v)),v.end())
+#define cmx(x,y) x=max(x,y)
+#define cmn(x,y) x=min(x,y)
+#define fi first
+#define se second
+#define pb push_back
+#define show(x) cout<<#x<<" = "<<(x)<<endl
+#define spair(p) cout<<#p<<": "<<p.fi<<" "<<p.se<<endl
+#define svec(v) cout<<#v<<":";rep(kbrni,v.size())cout<<" "<<v[kbrni];cout<<endl
+#define sset(s) cout<<#s<<":";each(kbrni,s)cout<<" "<<kbrni;cout<<endl
+#define smap(m) cout<<#m<<":";each(kbrni,m)cout<<" {"<<kbrni.first<<":"<<kbrni.second<<"}";cout<<endl
+
+using namespace std;
+
+typedef pair<int,int> P;
+typedef pair<ll,ll> pll;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<double> vd;
+typedef vector<P> vp;
+typedef vector<string> vs;
+
+const int MAX_N = 100005;
+const double PI = 3.141592653589793;
+
+bool possible(double cri,vi& r){
+    int n = (int)r.size();
+    double sm = 0;
+    rep(i,n){
+        sm += acos(2*cri/(r[i]*r[(i+1)%n]));
+    }
+    return (sm < 2*PI);
+}
+
+int main()
+{
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    int n;
+    cin >> n;
+    vi r(n);
+    rep(i,n){
+        cin >> r[i];
+    }
+    double ans = 0;
+    srep(i,3,n+1){
+        vector<bool> v(n,false);
+        fill(v.end() - i, v.end(), true);
+        do{
+            vector<int> vec;
+            rep(j,n){
+                if(v[j]){
+                    vec.pb(r[j]);
+                }
+            }
+            sort(all(vec));
+            do{
+                double mn = INF;
+                rep(j,i){
+                    cmn(mn,(double)vec[j]*vec[(j+1)%i]);
+                }
+                double l = -mn/2;
+                double r = mn/2;
+                while(r-l > EPS){
+                    double mid = (l+r)/2;
+                    if(possible(mid,vec)){
+                        r = mid;
+                    }else{
+                        l = mid;
+                    }
+                }
+                vd st(i);
+                double sm = 0;
+                rep(j,i){
+                    st[j] = acos(2*l/(vec[j]*vec[(j+1)%i]));
+                    sm += vec[j]*vec[(j+1)%i]*sin(st[j])/2.0;
+                }
+                cmx(ans,sm);
+            }while(next_permutation(all(vec)));
+        } while (next_permutation(all(v)));
+    }
+    printf("%.12lf\n",ans);
+    return 0;
+}
+

@@ -1,0 +1,9 @@
+from bisect import *
+N, A, B, C, D = map(int, input().split())
+P = [A + (N-1-i)*D - C*i for i in reversed(range(N))]
+Q = [A + (N-1-i)*C - D*i for i in reversed(range(N))]
+j = bisect_left(P,B)
+if B >= Q[j]:
+    print("YES")
+else:
+    print("NO")

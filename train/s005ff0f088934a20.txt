@@ -1,0 +1,75 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define rep1(i,n) for(int i=1;i<=(n);++i)
+#define all(c) (c).begin(),(c).end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl;
+typedef long long ll;
+ll gcd(ll x,ll y){
+	if(x>y) swap(x,y);
+	while(x>0){
+		y%=x;
+		swap(x,y);
+	}
+	return y;
+}
+ll lcm(ll x,ll y){
+	return x/gcd(x,y)*y;
+}
+vector<ll> divs;
+ll ex(ll x,ll p,ll mod){
+	ll ret=1;
+	while(p>0){
+		if(p%2) ret=x*ret%mod;
+		x=x*x%mod;
+		p/=2;
+	}
+	return ret;
+}
+ll extgcd(ll a,ll b,ll &x,ll &y){
+	if(b==0){
+		x=a,y=0;
+		return a;
+	}
+	ll d=extgcd(b,a%b,x,y),xx=y,yy=x-a/b*y;
+	x=xx,y=yy;
+	return d;
+}
+ll inv(ll a,ll mod){
+	ll x,y;
+	extgcd(a,mod,x,y);
+	return x;
+}
+int main(){
+	ll m,n,a,b,c,d;
+	cin>>m>>n>>a>>b>>c>>d;
+	ll x=lcm(m/gcd(m,a),n/gcd(n,b));
+	for(ll i=1;i*i<=m*n;i++) if(m*n%i==0) divs.pb(i),divs.pb(m*n/i);
+	sort(all(divs));
+	for(ll y:divs){
+		ll p=y*c;
+		ll g=gcd(a,m);
+		if(p%g>0) continue;
+		ll pc=p/g,ac=a/g,mc=m/g;
+		ll e=pc*inv(ac,mc);
+		ll q=y*d;
+		g=gcd(b,n);
+		if(q%g>0) continue;
+		ll qc=q/g,bc=b/g,nc=n/g;
+		ll f=qc*inv(bc,nc);
+		g=gcd(mc,nc);
+		if(e%g==f%g){
+			cout<<x*y-1<<endl;
+			break;
+		}
+	}
+}

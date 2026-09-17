@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+#define pii pair<int,int>
+#define fi first
+#define se second
+#define mp make_pair
+#define poly vector<ll>
+#define For(i,l,r) for(int i=(int)(l);i<=(int)(r);i++)
+#define Rep(i,r,l) for(int i=(int)(r);i>=(int)(l);i--)
+#define pb push_back
+inline char gc(){
+	static char buf[100000],*p1=buf,*p2=buf;
+	return p1==p2&&(p2=(p1=buf)+fread(buf,1,100000,stdin),p1==p2)?EOF:*p1++;
+}
+#define gc getchar
+inline ll read(){
+	ll x=0;char ch=gc();bool positive=1;
+	for(;!isdigit(ch);ch=gc()) if(ch=='-') positive=0;
+	for(;isdigit(ch);ch=gc()) x=x*10+ch-'0';
+	return positive?x:-x;
+}
+inline void write(ll x){
+	if(x<0){
+		x=-x;putchar('-');
+	}
+	if(x>=10) write(x/10);
+	putchar('0'+x%10);
+}
+inline void writeln(ll x){write(x);puts("");}
+inline void writep(ll x){write(x);putchar(' ');}
+inline ull rnd(){
+	return ((ull)rand()<<30^rand())<<4|rand()%4;
+}
+const int N=305,mo=1e9+7;
+int f[2][N][N];
+vector<pii> v[N];
+void upd(int &x,int y){
+	x+=y;if(x>=mo) x-=mo;
+}
+int main(){
+	int n=read(),m=read();
+	For(i,1,m){
+		int l=read(),r=read(),x=read();
+		v[r].pb(mp(l,x));
+	}
+	f[0][0][0]=1;
+	For(i,0,n){
+		int op=i%2;
+		for(auto x:v[i]){
+			For(j,0,i) For(k,0,j) if(f[op][j][k]){
+				int sum=(i>=x.fi)+(j>=x.fi)+(k>=x.fi);
+				if(sum!=x.se) f[op][j][k]=0;
+			}
+		}
+		memset(f[!op],0,sizeof(f[!op]));
+		For(j,0,i) For(k,0,j) if(f[op][j][k]){
+			upd(f[!op][j][k],f[op][j][k]);
+			upd(f[!op][i][j],f[op][j][k]);
+			upd(f[!op][i][k],f[op][j][k]);
+		}
+	}
+	int ans=0;
+	For(i,0,n-1) For(j,0,i-1){
+		upd(ans,f[n&1][i][j]);
+	}
+	cout<<ans;
+}

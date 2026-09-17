@@ -1,0 +1,48 @@
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <math.h>
+#include <algorithm>
+#include <iomanip>
+#include <string>
+#include <stack>
+#include <cctype>
+#include <cstdlib>
+using namespace std;
+
+#define INF (1 << 20)
+#define EPS (1e-10)
+#define EQ(a,b) (fabs((a)-(b)) < EPS)
+
+#define MAX_N 2000
+#define MAX_M 2000
+#define MAX_S 2000
+vector<vector<int> > cur(MAX_N, vector<int>(MAX_N, 0)), old(MAX_N, vector<int>(MAX_N, 0)); //消去数のカウント
+int main(){
+	vector<int> tl;
+	int xl[MAX_S + 1];
+	int s, n, m;
+	cin >> s >> n >> m;
+	for (int i = 1; i <= s; ++i) cin >> xl[i];
+	for (int i = 0; i < n; ++i) {
+		int t, p;
+		cin >> t >> p;
+		tl.push_back(t - xl[p]);
+	}
+	sort(tl.begin(), tl.end());
+	for (int i = 1; i < m; ++i) { //回
+		for (int j = i; j < n; ++j) { //まで
+			for (int k = j; k < n; ++k) { //考慮範囲
+				cur[j][k] = max(old[j-1][j-1] +(tl[k] - tl[j-1]) * j, cur[j-1][k]);
+			}
+		}
+		cur.swap(old);
+	}
+	int sum = 0;
+	for (int i = 0; i < n; ++i) {
+		sum += tl[n-1] - tl[i];
+	}
+	cout << sum - old[n-1][n-1] << endl;
+	return 0;
+}

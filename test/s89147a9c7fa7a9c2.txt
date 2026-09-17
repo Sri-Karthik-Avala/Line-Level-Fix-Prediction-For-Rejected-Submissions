@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cassert>
+constexpr double eps = 1e-7;
+namespace boost {template <class T>struct integer_iterator {T a;bool operator != (integer_iterator const & it) const { return a != it.a; }T operator * () const { return a; }integer_iterator & operator ++ () { ++ a; return *this; }integer_iterator operator ++ (int) { return { a ++ }; }};template <class T>struct integer_range {T l, r;typedef integer_iterator<T> iterator;iterator begin() const { return { l }; }iterator end  () const { return { r }; }};template <class T>integer_range<T> irange(T l, T r) { assert (l <= r); return { l, r }; }template <class T>struct integer_iterator_with_step {T a, d, i;bool operator != (integer_iterator_with_step const & it) const { return a != it.a or d != it.d or i != it.i; }T operator * () const { return a+d*i; }integer_iterator_with_step & operator ++ () { ++ i; return *this; }integer_iterator_with_step operator ++ (int) { return { a, d, i ++ }; }};template <class T>struct strided_integer_range {T l, r, s;typedef integer_iterator_with_step<T> iterator;iterator begin() const { return { l, s, 0 }; }iterator end  () const { return { l, s, (r - l) / s }; }};template <class T>strided_integer_range<T> irange(T l, T r, T s) { assert (s > 0 ? l <= r : s < 0 ? l >= r : false); return { l, r, s }; }}
+#include <utility>
+#include <cmath>
+#define ttt template <typename T>
+#define pca point<T> const &
+ttt struct point { T x, y; };ttt point<T> operator + (pca a, pca b) { return { a.x+b.x, a.y+b.y }; }ttt point<T> operator - (pca a, pca b) { return { a.x-b.x, a.y-b.y }; }ttt point<T> operator - (pca a) { return { -a.x, -a.y }; }ttt point<T> operator * (T a, pca b) { return { a*b.x, a*b.y }; }ttt std::pair<T,T> to_pair(pca a) { return { a.x, a.y }; }ttt bool operator == (pca a, pca b) { return to_pair(a) == to_pair(b); }ttt bool operator != (pca a, pca b) { return to_pair(a) != to_pair(b); }ttt bool operator <  (pca a, pca b) { return to_pair(a) <  to_pair(b); }ttt bool operator <= (pca a, pca b) { return to_pair(a) <= to_pair(b); }ttt bool operator >= (pca a, pca b) { return to_pair(a) >= to_pair(b); }ttt bool operator >  (pca a, pca b) { return to_pair(a) >  to_pair(b); }ttt T length_squared(pca p) { return p.x*p.x + p.y*p.y; }ttt double length(pca p) { return sqrt(length_squared(p)); }ttt point<T> normalized(pca a) { return (1 / length(a)) * a; }ttt T   dot(pca p, pca q) { return p.x * q.x + p.y * q.y; }ttt T cross(pca p, pca q) { return p.x * q.y - p.y * q.x; }ttt int ccw(pca a, pca b, pca c) { T x = cross(b - a, c - a); return x > 0 ? 1 : x < 0 ? -1 : 0; }
+#undef ttt
+#undef pca
+template <typename T> std::istream & operator >> (std::istream & input, point<T> & p) { return input >> p.x >> p.y; }template <typename T> std::ostream & operator << (std::ostream & output, const point<T> & p) { return output << p.x << ' ' << p.y; }
+template <typename T> struct circle { point<T> p; T r; };
+template <typename T> struct line { point<T> a, b; };template <typename T> struct segment { point<T> a, b; };template <typename T> T length_squared(const segment<T> & p) { return length_squared(p.a - p.b); }template <typename T> double length(const segment<T> & p) { return length(p.a - p.b); }
+template <typename T>T sq(T x) { return x * x; }
+template <typename T>point<T> rotate_90(point<T> const & a) {return { - a.y, a.x };}template <typename T>point<T> rotate_270(point<T> const & a) {return { a.y, - a.x };}template <typename T>point<T> rotate_180(point<T> const & a) {return { - a.x, - a.y };}point<double> rotate(point<double> const & a, double th) {return {a.x * cos(th) - a.y * sin(th),a.x * sin(th) + a.y * cos(th) };}
+bool does_include(circle<double> const & a, point<double> const & b) {return length(a.p - b) < a.r + eps;}bool is_on_circumference(point<double> const & a, circle<double> const & b) {return std::abs(length(b.p - a) - b.r) < eps;}// commutable
+bool does_include(circle<double> const & a, circle<double> const & b) {return length(a.p - b.p) < std::abs(a.r - b.r) + eps;}// commutable
+bool does_intersect(circle<double> const & a, circle<double> const & b) {return length(a.p - b.p) < a.r + b.r + eps;}// commutable
+bool does_circumscribe(circle<double> const & a, circle<double> const & b) {return std::abs(length(a.p - b.p) - (a.r + b.r)) < eps;}// commutable
+bool does_inscribe(circle<double> const & a, circle<double> const & b) {return std::abs(length(a.p - b.p) - std::abs(a.r - b.r)) < eps;}std::vector<point<double> > intersection_points(circle<double> const & a, circle<double> const & b) {std::vector<point<double> > result;if (not does_intersect(a,b)) {// nop
+} else if (does_include(a,b) and not does_inscribe(a,b)) {// truly included
+// nop
+} else if (does_inscribe(a,b) or does_circumscribe(a,b)) {result.push_back(a.r * normalized(b.p - a.p));} else {//       c
+//      /|        // a.r / |  b.r
+//    /th|          //   a-------b
+//       l
+double l = length(b.p - a.p);double ac = ( sq(a.r) - sq(b.r) + sq(l) ) / ( 2 * l ); // a * cos(th)
+double as = sqrt( sq(a.r) - sq(ac) );point<double> e = normalized(b.p - a.p);result.push_back(a.p + ac*e + as*rotate_90(e));result.push_back(a.p + ac*e + as*rotate_270(e));}return result;}std::vector<line<double> > common_tangents(circle<double> const & a, point<double> const & b) {std::vector<line<double> > result;if (does_include(a,b) and not is_on_circumference(b,a)) {// truly included
+// nop
+} else if (is_on_circumference(b,a)) {point<double> e = normalized(a.p - b);result.push_back({b + rotate_90(e),b + rotate_270(e) });} else {double theta = acos(a.r / length(b - a.p));result.push_back({ b, b + rotate(a.p - b, + theta) });result.push_back({ b, b + rotate(a.p - b, - theta) });}return result;}std::vector<line<double> > common_inner_tangents(circle<double> const & a, circle<double> const & b) {point<double> p = (a.r / (a.r + b.r)) * (b.p - a.p);return common_tangents(a,p);}std::vector<line<double> > common_outer_tangents(circle<double> a, circle<double> b) {if (b.r < a.r) std::swap(a,b);std::vector<line<double> > result;if (does_include(a,b) and not does_inscribe(b,a)) {// truly included
+// nop
+} else if (does_inscribe(b,a)) {point<double> e = normalized(a.p - b.p);result.push_back({b.p + a.r*e + rotate_90(e),b.p + a.r*e + rotate_270(e) });} else {point<double> d = b.p - a.p;double theta = asin((b.r - a.r) / length(d));point<double> dp = rotate(d, theta);point<double> dm = rotate(d, theta);point<double> ep = rotate_90(normalized(dp));point<double> em = rotate_270(normalized(dm));result.push_back({ a.p + a.r*ep, a.p + a.r*ep + dp });result.push_back({ a.p + a.r*em, a.p + a.r*em + dm });}return result;}std::vector<line<double> > common_tangents(circle<double> const & a, circle<double> const & b) {std::vector<line<double> > result;for (auto l : common_inner_tangents(a,b)) result.push_back(l);for (auto l : common_outer_tangents(a,b)) result.push_back(l);return result;}double distance(line<double> const & a, point<double> const & b) {point<double> p = b   - a.a;point<double> q = a.b - a.a;return std::abs( cross(p, normalized(q)) );}
+using namespace std;
+using namespace boost;
+int main() {
+    int age = 0;
+    while (true) {
+        int n; cin >> n;
+        if (n == 0) break;
+        vector<point<double> > p(n); vector<double> r(n), m(n);
+        for (int i : irange(0,n)) cin >> p[i] >> r[i] >> m[i];
+        if (n <= 2) {
+            cout << n << endl;
+            continue;
+        }
+        vector<circle<double> > cs(2*n);
+        for (int i : irange(0,n)) {
+            cs[2*i].p = p[i];
+            cs[2*i].r = r[i];
+            cs[2*i+1].p = p[i];
+            cs[2*i+1].r = r[i]+m[i];
+        }
+        vector<line<double> > ls;
+        for (int i : irange(0,2*n)) {
+            for (int j : irange(i+1,2*n)) {
+                for (auto l : common_tangents(cs[i], cs[j])) {
+                    ls.push_back(l);
+                }
+            }
+        }
+        int result = 0;
+        for (auto l : ls) {
+            int jewels = 0;
+            for (int i : irange(0,n)) {
+                double d = distance(l, p[i]);
+                if (r[i] < d + eps and d < r[i]+m[i] + eps) {
+                    jewels += 1;
+                }
+            }
+            result = max(result, jewels);
+        }
+        cout << result << endl;
+    }
+    return 0;
+}

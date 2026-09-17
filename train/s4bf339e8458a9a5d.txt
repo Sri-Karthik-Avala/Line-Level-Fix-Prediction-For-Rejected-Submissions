@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define modulo 1000000007
+#define mod(mod_x) ((((long long)mod_x+modulo))%modulo)
+#define Inf 1000000000
+
+vector<double> p(6),q(6);
+
+double calc(double P){
+	double ret = 0.0;
+	for(int i=0;i<6;i++){
+		if(p[i]+q[i]<0.01)continue;
+		ret += (P * p[i] / 100.0 + (1.0-P) * q[i] / 100.0) * max(p[i],q[i]) / (p[i]+q[i]);
+	}
+	
+	return ret;
+	
+}
+
+
+int main(){
+	
+
+	
+	for(int i=0;i<6;i++){
+		cin>>p[i];
+	}
+	for(int i=0;i<6;i++){
+		cin>>q[i];
+	}
+	
+	double l = 0.0;
+	double r = 1.0;
+	
+	for(int i=0;i<500;i++){
+		double m1 = l + (r-l)/3.0;
+		double m2 = l + (r-l)*2.0/3.0;
+		if(calc(m1)>calc(m2))l = m1;
+		else r = m2;
+	}
+	
+	cout<<fixed<<setprecision(20)<<calc(l)<<endl;
+	
+    return 0;
+}

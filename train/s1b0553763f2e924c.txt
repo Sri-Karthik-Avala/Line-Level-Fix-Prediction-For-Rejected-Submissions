@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+int trtable[] = {0, 1, 2, 3, 5, 7, 8, 9};
+
+void solve(int n){
+	if(n > 8) solve(n / 8);
+	cout << trtable[n % 8];
+	return;
+}
+
+int main(){
+	int n;
+	while(cin >> n, n){ 
+		solve(n);
+		cout << endl;
+	}
+	return 0;
+}

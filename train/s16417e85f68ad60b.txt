@@ -1,0 +1,47 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<cmath>
+
+using namespace std;
+
+int main(){
+    int n,ans=0;
+    while(cin>>n,n){
+        //vector<vector<char>>s(51);
+        vector<string> s(n);
+        for(int i=0;i<n;i++){
+            string str;
+            cin>>str;
+            for(int j=0;j<str.size();j++){
+                if(j==0)s[i].push_back(str[j]);
+                else{
+                    if(str[j-1]=='a' || str[j-1]=='i' || str[j-1]=='u' || str[j-1]=='e' || str[j-1]=='o')s[i].push_back(str[j]);
+                }
+            }
+        }
+        for(int i=0;i<n-1;i++){
+            for(int k=i+1;k<n;k++){
+                if(s[i]==s[k]){
+                    ans=-1;
+                    break;
+                }
+                int flag=0;
+                int a=min(s[i].size(),s[k].size());
+                for(int j=0;j<a;j++){
+                    if(s[i][j]!=s[k][j]){
+                        ans=max(ans,j+1);
+                        flag=1;
+                        break;
+                    }
+                }
+                if(flag==0)ans=max(ans,a+1);
+            }
+        }
+            
+        cout<<ans<<endl;
+    }
+}
+
+            
+            

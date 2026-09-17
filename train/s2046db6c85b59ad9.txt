@@ -1,0 +1,13 @@
+import sys
+from math import ceil,floor
+N=int(input())
+b=3501
+
+for h in range(ceil(3*N/4),b):
+  for w in range(1,floor(3*N/4)+1,4):
+    if 4*h*w-N*h-N*w>0:
+      if N*h*w % (4*h*w-N*h-N*w)==0:
+        n=N*h*w//(4*h*w-N*h-N*w)
+        print(h,n,w)
+        sys.exit()
+      

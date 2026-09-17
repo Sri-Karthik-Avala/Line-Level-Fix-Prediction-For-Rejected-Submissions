@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+
+int sumv[1505][1005],rpos[1505][1505];
+int minn[2][1505][1505],maxn[2][1505][1505];
+
+char str[1505][1505];
+
+int main() {
+  int n;
+  scanf("%d",&n);
+  for(int i=1;i<=n;i++) scanf("%s",str[i]+1);
+  int cur=0;
+  ll ans=0;
+  for(int i=n;i>0;i--) {
+  	cur^=1;
+  	for(int j=n;j>0;j--)
+  	  if (str[i][j]!='#') {
+  	  	  sumv[i][j]=sumv[i][j+1]+sumv[i+1][j]+str[i][j]-'0';
+  	  	  rpos[i][j]=max(max(rpos[i][j+1],rpos[i+1][j]),i);
+  	  	  minn[cur][j][i]=j;
+  	  	  for(int k=i+1;k<=rpos[i+1][j];k++) minn[cur][j][k]=minn[cur^1][j][k];
+  	  	  for(int k=max(rpos[i+1][j],i)+1;k<=rpos[i][j+1];k++) minn[cur][j][k]=minn[cur][j+1][k];
+  	  	  maxn[cur][j][i]=j;
+  	  	  for(int k=i;k<=rpos[i][j+1];k++) maxn[cur][j][k]=maxn[cur][j+1][k];
+  	  	  for(int k=max(rpos[i][j+1],i)+1;k<=rpos[i+1][j];k++) maxn[cur][j][k]=maxn[cur^1][j][k];
+  	  	  int d=i+1,r=min(rpos[i][j+1],rpos[i+1][j]);
+  	  	  while (d<=r) {
+  	  	  	    if (maxn[cur^1][j][d]>=minn[cur][j+1][d]) {
+  	  	  	    	    sumv[i][j]-=sumv[d][minn[cur][j+1][d]];
+  	  	  	    	    d=rpos[d][minn[cur][j+1][d]];
+					  }
+  	  	  	    d++;
+			  }
+		  ans+=(ll)(str[i][j]-'0')*(sumv[i][j]-(str[i][j]-'0'));
+		}
+  }
+  printf("%lld\n",ans);
+  return 0;
+}

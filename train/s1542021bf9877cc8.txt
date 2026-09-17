@@ -1,0 +1,61 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int INF = 1 << 30;
+class DisjointSet{
+private:
+  vector< int > rank, p;
+  void link(int x,int y){
+    if(rank[x] > rank[y]){
+      p[y] = x;
+    } else {
+      p[x] = y;
+      if(rank[x] == rank[y]) rank[y]++;
+    }
+  }
+public:
+  DisjointSet(int size){
+    rank.resize(size,0);
+    p.resize(size,0);
+    for(int i = 0; i < size; i++) p[i] = i, rank[i] = 0;
+  }
+  void Union(int x,int y){
+    if(Find(x) != Find(y)) link(Find(x),Find(y));
+  }
+  int Find(int x){
+    return( x != p[x] ? p[x] = Find(p[x]) : p[x]);
+  }
+};
+
+struct edge{
+  int u, v, cost;
+  bool operator<(const edge& e) const {
+    return cost < e.cost;
+  }
+};
+
+int main(){
+  int n, m;
+  while(cin >> n >> m, n){
+    vector< edge > edges;
+    for(int i = 0; i < m; i++){
+      int s, t, c;
+      cin >> s >> t >> c;
+      edges.push_back((edge){ s, t, c});
+    }
+    sort(edges.begin(), edges.end());
+    DisjointSet UnionFind(n);
+    vector< int > cost;
+    for(int i = 0; i < edges.size(); i++){
+      edge& e = edges[i];
+      if(UnionFind.Find(e.u) != UnionFind.Find(e.v)){
+        UnionFind.Union( e.u, e.v);
+        cost.push_back(e.cost);
+      }
+    }
+    if(cost.size() % 2 == 0){
+      cout << (cost[cost.size() / 2] + cost[cost.size() / 2 + 1]) / 2 << endl;
+    } else {
+      cout << cost[cost.size() / 2] << endl;
+    }
+  } 
+}

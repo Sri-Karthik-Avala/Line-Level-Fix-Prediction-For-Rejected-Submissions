@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i = 0; i < n; i++)
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> P;
+
+const double EPS = 1e-10;
+const ll INF = 100000000;
+const ll MOD = 1000000007;
+
+ll n, d;
+ll t[100000], f[100000];
+
+int main(){
+    cin >> n >> d;
+    rep(i,n) cin >> t[i] >> f[i];
+    ll cnt = 1;
+    ll ans = 0;
+    if(t[0] < f[0]) {
+        cout << -1 << endl;
+        return 0;
+    }
+    for(int i = 1; i < n; i++) {
+        if(f[i-1]+f[i]-2 <= t[i]-t[i-1]) {
+            ans += cnt*(f[i-1]-1);
+            cnt = 1;
+        } else {
+            ans += (t[i]-t[i-1])*cnt;
+            if(abs(f[i]-f[i-1]) > t[i]-t[i-1]) {
+                cout << -1 << endl;
+                return 0;
+            }
+            cnt++;
+            if(cnt > d) {
+                cout << -1 << endl;
+                return 0;
+            }
+        }
+    }
+    ans += cnt*(f[n-1]-1);
+    cout << ans << endl;
+}

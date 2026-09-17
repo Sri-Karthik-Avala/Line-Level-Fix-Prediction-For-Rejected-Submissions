@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAX_N 100000
+int n,m;
+vector<int> G[MAX_N];
+bool visited[MAX_N];
+
+bool dfs(int pos,int prev){
+  for(int i=0;i<(int)G[pos].size();i++){
+    int to=G[pos][i];
+    if(prev==to)continue;
+    if(visited[to])return true;
+    visited[to]=true;
+    if(dfs(to,pos))return true;
+  }
+  return false;
+}
+
+bool solve(){
+  for(int i=0;i<n;i++){
+    if(visited[i])continue;
+    visited[i]=true;
+    if(dfs(i,-1))return false;
+    if(G[i].size()>2)return false;
+  }
+
+  return true;
+}
+
+void init(){
+  for(int i=0;i<MAX_N;i++){
+    G[i].clear();
+    visited[i]=false;
+  }
+}
+
+int main(){
+  while(1){
+    scanf("%d %d",&n,&m);
+    if(n==0&&m==0)break;
+    init();
+    for(int i=0;i<m;i++){
+      int a,b;
+      scanf("%d %d",&a,&b);
+      a--,b--;
+      G[a].push_back(b);
+      G[b].push_back(a);
+    }
+    printf(solve()?"yes\n":"no\n");
+  }
+  return 0;
+}

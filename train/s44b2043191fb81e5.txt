@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+#define FOR(I,X,Y) for(long int I=X;I<Y;I++)
+#define REP(I,X) for(long int I=X;I>=0;I--)
+#define INF 1e9+7
+using namespace std;
+
+struct vec{
+  double x;
+  double y;
+  double z;
+  vec operator+(const vec & vec2)const{
+    return {x+vec2.x,y+vec2.y,z+vec2.z};
+  }
+  vec operator-(const vec & vec2)const{
+    return {x-vec2.x,y-vec2.y,z-vec2.z};
+  }
+  double operator*(const vec & vec2)const{
+    return x*vec2.x+y*vec2.y+z*vec2.z;
+  }
+};
+
+double ABS(vec v){
+  return sqrt(v.x*v.x+v.y*v.y+v.z*v.z);
+}
+
+vec multiple(vec v,double k){
+  return {k*v.x,k*v.y,k*v.z};
+}
+
+vec standardize(vec v){
+  return multiple(v,1/ABS(v));
+}
+
+int main(){
+  double x1,y1,x2,y2,x,y;
+  int q;
+  cin >> x1 >> y1 >> x2 >> y2 >> q;
+  vec p1 = {x1,y1,0},p2 = {x2,y2,0},p1p2 = p2 - p1;
+  vector<vec> ans;
+  FOR(i,0,q){
+    cin >> x >> y;
+    vec v = {x,y,0};
+    v = multiple(standardize(p2-p1),(v-p1)*standardize(p1p2));
+    ans.push_back(v+p1);
+  }
+  for(auto p:ans)cout << p.x << " " << p.y << endl;
+}
+

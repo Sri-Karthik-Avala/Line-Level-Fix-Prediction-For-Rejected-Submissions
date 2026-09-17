@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define for_(i,a,b) for(int i=(a);i<(b);++i)
+
+typedef long long lint;
+const double EPS = 1e-9;
+
+typedef struct Point {
+	double x, y, z;
+	Point (double x_, double y_, double z_) : x(x_), y(y_), z(z_) {}
+	Point operator + (const Point& a) const { return Point(x + a.x, y + a.y, z + a.z); }
+	Point operator - (const Point& a) const { return Point(x - a.x, y - a.y, z - a.z); }
+	Point operator * (double d) const { return Point(x * d, y * d, z * d); }
+} Vector;
+
+struct Object {
+	Point p; double r; lint l;
+	Object(Point p_, double r_, lint l_) : p(p_), r(r_), l(l_) {}
+};
+
+double sqr(double x) { return x * x; }
+double distance(const Point& a, const Point& b) { return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y) + sqr(a.z - b.z)); }
+
+bool collision(const Object& obj, const Point& a, const Point& b) {
+	Vector unit = b - a;
+	
+	double lb = 0.0, ub = 10000.0;
+	
+	for_(i,0,500) {
+		double lft = (lb * 2. + ub) / 3., rgt = (lb + ub * 2.) / 3.;
+		Point pl = a + unit * lft, pr = a + unit * rgt;
+		double dl = distance(obj.p, pl), dr = distance(obj.p, pr);
+		if (dl < dr) ub = rgt;
+		else lb = lft;
+	}
+	
+	return distance(obj.p, a + unit * lb) < obj.r + EPS;
+}
+
+int main() {
+	int N, Q;
+	cin >> N >> Q;
+	
+	vector< Object > obj;
+	
+	for_(i,0,N) {
+		double x, y, z, r; lint l;
+		cin >> x >> y >> z >> r >> l;
+		obj.push_back(Object(Point(x, y, z), r, l));
+	}
+	
+	for_(i,0,Q) {
+		double x1, y1, z1, x2, y2, z2;
+		cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2;
+		Point red(x1, y1, z1), blue(x2, y2, z2);
+	
+		lint ans = 0;
+		for_(j,0,N) if (collision(obj[j], red, blue)) ans += obj[j].l;
+		cout << ans << endl;
+	}
+}

@@ -1,0 +1,15 @@
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+
+	vector<int> c(9);
+
+	for(int i = 0; i < 9; i++){
+		cin >> c.at(i);
+	}
+
+	cout << c.at(0) << c.at(4) << c.at(8) <<endl;
+}

@@ -1,0 +1,17 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+  int n,m,i,j,k,c=0,d=0,ans=0;
+  cin>>n>>m;
+  int s=0,t=2*n+1;
+
+  for(i=0;i<n;i++){
+    cout << "lst " << i << endl;
+    cin >> k;
+    ans+=k*(k-1)/2;
+    for(j=0;j<k;j++) cin >> c;
+  }
+
+  cout << "ans "<< ans << endl;
+  return 0;
+} 

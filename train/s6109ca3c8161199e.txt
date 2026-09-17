@@ -1,0 +1,6 @@
+V, E = map(int, input().split())
+for i in range(E):
+  input()
+T = int(input())
+for i in range(T):
+  print(-1)

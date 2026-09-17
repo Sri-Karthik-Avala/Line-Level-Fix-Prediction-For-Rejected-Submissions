@@ -1,0 +1,56 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+#include<queue>
+using namespace std;
+vector<int>x[1002],v[1002];int n,m,s,t,a[10001],b[10001];
+int r1[1002],r2[1002],dist[1002];
+void bfs(int y){
+	queue<int>Q;
+	for(int i=1;i<=n;i++)dist[i]=99999;
+	dist[y]=0;Q.push(y);
+	while(!Q.empty()){
+		int a1=Q.front();Q.pop();
+		for(int i=0;i<(int)x[a1].size();i++){
+			if(dist[x[a1][i]]>dist[a1]+1){
+				dist[x[a1][i]]=dist[a1]+1;
+				Q.push(x[a1][i]);
+			}
+		}
+	}
+}
+void bfs2(int y){
+	queue<int>Q;
+	for(int i=1;i<=n;i++)dist[i]=99999;
+	dist[y]=0;Q.push(y);
+	while(!Q.empty()){
+		int a1=Q.front();Q.pop();
+		for(int i=0;i<(int)v[a1].size();i++){
+			if(dist[v[a1][i]]>dist[a1]+1){
+				dist[v[a1][i]]=dist[a1]+1;
+				Q.push(v[a1][i]);
+			}
+		}
+	}
+}
+int main(){
+	while(true){
+		cin>>n;if(n==0)break;cin>>s>>t>>m;
+		for(int i=1;i<=n;i++)x[i].clear();
+		for(int i=0;i<m;i++){
+			scanf("%d%d",&a[i],&b[i]);
+			x[a[i]].push_back(b[i]);
+			v[b[i]].push_back(a[i]);
+		}
+		bfs(s);for(int i=1;i<=n;i++)r1[i]=dist[i];
+		bfs2(t);for(int i=1;i<=n;i++)r2[i]=dist[i];
+		int maxn=r1[t],maxid=0;
+		for(int i=0;i<m;i++){
+			int H=r1[b[i]]+r2[a[i]]+1;
+			if(maxn>H){maxn=H;maxid=i+1;}
+		}
+		cout<<maxn<<' '<<maxid<<endl;
+	}
+	return 0;
+}

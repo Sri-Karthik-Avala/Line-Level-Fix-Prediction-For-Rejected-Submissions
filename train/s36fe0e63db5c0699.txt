@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+#include <cmath>
+#define rep(i, n) for(int i = 0; i < (n); i++)
+using namespace std;
+using P = pair<int, int>;
+int mod = 998244353;
+int dp[3001][3001] = {};
+
+int main(){
+    
+    int n, s;
+    cin >> n >> s;
+    
+    vector<int> a(n,0);
+    rep(i,n) cin >> a[i];
+   
+    rep(i,n) rep(j,s + 1){
+        
+        if(i == 0){
+            dp[i][0] = 2;
+            dp[i][a[i]] = 1;
+            
+        } else if (j < a[i]){
+            dp[i][j] = dp[i - 1][j] * 2;
+            
+        } else {
+            dp[i][j] = dp[i - 1][j] * 2 + dp[i - 1][j - a[i]];
+        }
+        
+        dp[i][j] %= mod;
+        
+    }
+    
+    cout << dp[n - 1][s] << "\n";
+    
+    return 0;
+}
+

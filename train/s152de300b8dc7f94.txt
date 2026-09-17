@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+from collections import deque, defaultdict
+import itertools as ite
+import sys
+import math
+import decimal
+
+sys.setrecursionlimit(1000000)
+
+INF = 10 ** 18
+MOD = 10 ** 9 + 7
+
+L_, R_ = map(int, raw_input().split())
+
+ans = 0
+for MSB in range(70):
+    S = 2 ** MSB
+    if S * 2 <= L_ or R_ < S:
+        continue
+    L, R = L_, R_
+    if L <= S:
+        L = S
+    if 2 * S - 1 <= R:
+        R = 2 * S - 1
+    n1 = nL = nR = 0
+    nLR = 1
+    SL = SR = 1
+    for i in range(MSB)[::-1]:
+        flag1 = ((1 << i) & L != 0)
+        flag2 = ((1 << i) & R != 0)
+        SL *= 2
+        SR *= 2
+        SL += flag1
+        SR += flag2
+        n1 *= 3
+        if flag1 and not flag2:
+            nLR = 0
+        if SR - SL >= 2:
+            n1 += SR / 2 - SL / 2 - 1
+            if not flag1:
+                n1 += nL
+            if flag2:
+                n1 += nR
+            if not flag1:
+                nL *= 2
+                nL += 1
+            if flag2:
+                nR *= 2
+                nR += 1
+            if not flag1 and flag2:
+                nL += nLR
+                nR += nLR
+    if L == R:
+        ans += 1
+    else:
+        ans += n1 + (SR - SL + 1) + nL + nR + 1
+print ans % MOD

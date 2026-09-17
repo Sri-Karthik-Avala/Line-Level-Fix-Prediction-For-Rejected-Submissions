@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<algorithm>
+#define it register int
+#define ct const int
+#define il inline
+typedef long long ll;
+using namespace std;
+const int N=1000005;
+int h[N],nxt[N],adj[N],t,fa[N],sz[N],id[N],V,n,x,d;
+ll a[N],f[N],ans;
+il ll Min(const ll p,const ll q){return p<q?p:q;}
+il ll Max(const ll p,const ll q){return p>q?p:q;}
+il void add(ct u,ct v){nxt[++t]=h[u],h[u]=t,adj[t]=v;}
+il int dfs(ct x){
+	sz[x]=1;
+	for(it i=h[x];i;i=nxt[i]) dfs(adj[i]),sz[x]+=sz[adj[i]],a[x]+=a[adj[i]];
+}
+il bool cmp(ct p,ct q){return a[p]*sz[q]<a[q]*sz[p];}
+int main(){ 
+	scanf("%d%d%d%lld",&n,&x,&d,&a[1]);it i,j,k;
+	for(i=2;i<=n;++i) scanf("%lld%d",&a[i],&fa[i]),id[i]=i;id[1]=1;//add(fa[i],i)
+	//dfs(1);
+	for(i=n;i;--i) ++sz[i],sz[fa[i]]+=sz[i],a[fa[i]]+=a[i];
+	ct lim=(n<d?n:d),V=n*n*n;
+	for(i=1;i<=V;++i) f[i]=1e18;
+	for(i=1;i<=n;++i) for(k=V;k>=sz[i];--k) f[k]=Min(f[k],f[k-sz[i]]+a[i]);
+	std::sort(id+1,id+1+n,cmp);
+	for(i=0;i<=V;++i)
+		if(f[i]<=x){
+			register ll s=i,lst=x-f[i];
+			for(j=1;j<=n&&id[j]>1;++j){
+				const ll now=min(d-lim+0ll,lst/a[id[j]]);
+				lst-=a[id[j]]*now,s+=now*sz[id[j]]; 
+			}
+			ans=Max(ans,s+lst/a[1]*sz[1]);
+		}
+	printf("%lld",ans);
+	return 0;
+}

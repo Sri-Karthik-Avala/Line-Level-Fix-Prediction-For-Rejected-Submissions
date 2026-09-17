@@ -1,0 +1,38 @@
+while True:
+  n = int(raw_input())
+  if n == 0:
+    break
+
+  data = []
+
+  for i in range(n):
+    elements = list(map(int, raw_input().split(' ')))
+    uid = elements[0]
+    uid = i+1
+    ps = elements[1:]
+    ps = list(set(ps))
+    ps = sorted(ps)
+
+    data.append((uid, ps))
+
+  query = list(map(int, raw_input().split(' ')))
+  query = list(set(query))
+  query = sorted(query)
+
+  ans = []
+
+  for uid, ps in data:
+    plausible = True
+
+    for q in query:
+      if q not in ps:
+        plausible = False
+
+    if plausible:
+      ans.append(uid)
+
+  if len(ans) == 1:
+    print(ans[0])
+
+  else:
+    print(-1)

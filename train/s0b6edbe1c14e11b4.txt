@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+using ll = uint_fast64_t;
+using ld = long double;
+using vi = vector<int>;
+using vll = vector<ll>;
+
+constexpr int inf = ~(1 << 31);
+constexpr ll llinf = ~(1LL << 63);
+constexpr int mod = 1e9 + 7;
+constexpr ld pi = 3.14159265358979323846L;
+
+constexpr int dy[4] = {0, 1, 0, -1};
+constexpr int dx[4] = {1, 0, -1, 0};
+struct Pos { int x, y; };
+
+#define rep(i,n) for(int i=0; i<(n); ++i)
+#define all(n) n.begin(),n.end()
+#define DEBUG cerr << "DEBUG: DONE" << endl;
+
+int main(){
+    ios::sync_with_stdio(false); cin.tie(nullptr);
+    //cout << fixed << setprecision(6);
+    int n, m;
+    cin >> n >> m;
+    vector<string> a(n), b(m);
+    rep (i, n) cin >> a[i];
+    rep (i, m) cin >> b[i];
+
+    // loop a //
+    for (int ah = 0; ah < n-m; ah++) {
+        for (int aw = 0; aw < n-m; aw++) {
+            // loop b //
+            bool match = true;
+            for (int bh = 0; bh < m; bh++) {
+                for (int bw = 0; bw < m; bw++) {
+                    if (a[ah+bh][aw+bw] != b[bh][bw]) {
+                        match = false;
+                        bh = bw = m;
+                    }
+                }
+            }
+            if (match) {
+                cout << "Yes" << endl;
+                return 0;
+            }
+        }
+    }
+
+    cout << "No" << endl;
+    return 0;
+}

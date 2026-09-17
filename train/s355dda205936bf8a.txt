@@ -1,0 +1,86 @@
+#include <bits/stdc++.h>
+#define f first
+#define s second
+using namespace std;
+using ll = long long;
+using ii = pair<int, int>;
+constexpr int MN = 1e5+5;
+constexpr int MOD = 1e9+7;
+
+
+inline ll pw(ll base, ll exp) {
+	ll res = 1;
+	while (exp) {
+		if (exp & 1) (res *= base) %= MOD;
+		exp >>= 1, (base *= base) %= MOD;
+	}
+	return res;
+}
+
+inline ll inv(ll x) { return pw(x, MOD-2); }
+
+ll fact[MN] = { 1 }, ifact[MN] = { 1 };
+
+inline ll nCr(int n, int k) { return fact[n]*ifact[k]%MOD*ifact[n-k]%MOD; }
+
+int c[MN], w[MN];
+vector<int> G[MN];
+vector<ii> P[MN];
+bitset<MN> vis;
+
+inline void add(int u, int v) { G[u].push_back(v), G[v].push_back(u); }
+
+void dfs(int u, vector<int> & ret) {
+	ret.push_back(c[u]);
+	vis[u] = 1;
+	for (int v : G[u]) if (!vis[v]) {
+		vector<int> tmp; dfs(v, tmp);
+		if (tmp.size() > ret.size()) swap(tmp, ret);
+		for (int x : tmp) ret.push_back(x);
+	}
+}
+
+
+int main() {
+	if (fopen("in", "r")) freopen("in", "r", stdin), freopen("out", "w", stdout);
+	ios_base::sync_with_stdio(0), cin.tie(0);
+	
+	int N, X, Y; cin >> N >> X >> Y;
+	for (int i = 0; i < N; ++i) {
+		cin >> c[i] >> w[i];
+		P[--c[i]].emplace_back(w[i], i);
+	}
+
+	for (int i = 0; i < N; ++i) {
+		sort(begin(P[i]), end(P[i]));
+		for (int j = 1; j < P[i].size(); ++j)
+			if (P[i][0].f+P[i][j].f <= X) add(P[i][0].s, P[i][j].s);
+	}
+
+	int a = N, b = N; P[N].emplace_back(1e9, 0);
+	for (int i = 0; i < N; ++i) {
+		if (P[i].size()) {
+			if (P[i][0].f < P[a][0].f) b = a, a = i;
+			else if (P[i][0].f < P[b][0].f) b = i;
+		}
+	}
+
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < P[i].size(); ++j) {
+			if (i != a && P[a][0].f+P[i][j].f <= Y) add(P[a][0].s, P[i][j].s);
+			if (i != b && P[b][0].f+P[i][j].f <= Y) add(P[b][0].s, P[i][j].s);
+		}
+	}
+
+	for (int i = 0; i < N; ++i) fact[i+1] = (i+1ll)*fact[i]%MOD, ifact[i+1] = inv(fact[i+1]);
+
+	ll ans = 1;
+	for (int i = 0; i < N; ++i) if (!vis[i]) {
+		vector<int> v; dfs(i, v);
+		map<int, int> m;
+		for (int x : v) ++m[x];
+		(ans *= fact[v.size()]) %= MOD;
+		for (ii p : m) (ans *= ifact[p.s]) %= MOD;		
+	}
+	cout << ans;
+}

@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#define f first
+#define s second
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> P;
+P p[100010];
+vector <ll>x;
+
+
+int search(ll X){
+  int L=0,M,R=x.size();
+  while(L<R){
+    M=(L+R)/2;
+    if(X<=x[M]) R=M;
+    else L=M+1;
+  }
+  return L;
+}
+
+int main(){
+  ll n,T,q;
+  cin>>n>>T>>q;
+
+  for(int i=0,idx=-1,dir;i<n;i++){
+    ll a;
+    cin>>a>>dir;
+    dir--;
+    if(dir==0) idx=i;
+    p[i]=P(a,dir);
+    if(i&&idx!=-1&&dir==1){
+      ll dis=(p[i].f+p[idx].f)/2;
+      if(dis<=2*T)x.push_back(dis);
+      idx=-1;
+    }
+  }
+
+  //  for(int i=0;i<x.size();i++)cout <<x[i]<<" ";cout <<endl;
+
+  while(q--){
+    int Q;
+    cin>>Q;
+    Q--;
+    ll a=p[Q].f;
+    int dir=p[Q].s;
+    int idx=search(a)-(dir? 1:0);
+    ll ans=(dir? -1:1)*T+a;
+    if(!((dir==1&&idx==-1)||(dir==0&&idx==(int)x.size()))&&abs(x[idx]-a)<=T)ans=x[idx];
+    cout <<ans<<endl;
+  }
+  return 0;
+}

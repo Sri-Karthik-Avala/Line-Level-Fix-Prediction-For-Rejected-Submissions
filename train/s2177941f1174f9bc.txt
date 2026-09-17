@@ -1,0 +1,25 @@
+#include<algorithm>
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+int A=0,B=0,N=0,sum=0,Xa,Xb,min1[3];
+int main(void){	
+	cin>>A>>B>>N;
+	if(N%1000!=0){Xa=N/1000+1;}
+	else{Xa=N/1000;}
+	if(N%500!=0){Xb=N/500+1;}
+	else{Xb=N/500;}
+	min1[0]=Xa*A;
+	min1[1]=Xb*B;
+	if(N%1000<=500&&Xa>=2){
+		min1[2]=(Xa-1)*A+B;
+	}
+	else{
+		min1[2]=1001*20;
+	}
+	sum=min(min1[0],min(min1[1],min1[2]));
+	cout<<sum<<endl;
+	return 0;
+}
+//

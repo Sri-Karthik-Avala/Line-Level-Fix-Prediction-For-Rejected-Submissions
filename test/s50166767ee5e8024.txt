@@ -1,0 +1,41 @@
+import sys
+read = sys.stdin.buffer.read
+readline = sys.stdin.buffer.readline
+readlines = sys.stdin.buffer.readlines
+
+"""
+・逆再生
+・各時点に対して、「(Ai,Aj)がjが右になって終わる確率」を計算していく
+"""
+
+import numpy as np
+
+MOD = 10**9 + 7
+
+N,Q = map(int,readline().split())
+data = list(map(int,read().split()))
+A = np.array(data[:N])
+it = iter(data[N:])
+XY = list(zip(it,it))
+
+dp = np.triu(np.ones((N,N),np.int64),1)
+
+for x,y in XY[::-1]:
+    x -= 1; y -= 1
+    p=dp[x,y]; q=dp[y,x]; r=p+q
+    if r&1:
+        r += MOD
+    r //= 2
+    if r>=MOD:
+        r -= MOD
+    temp = dp[x]
+    temp += dp[y]
+    temp[temp&1==1] += MOD; temp//=2; temp[temp>=MOD] -= MOD; dp[y] = temp
+    temp = dp[:,x]
+    temp += dp[:,y]
+    temp[temp&1==1] += MOD; temp//=2; temp[temp>=MOD] -= MOD; dp[:,y] = temp
+    dp[x,y]=r; dp[y,x]=r; dp[x,x]=0; dp[y,y]=0
+
+select = A[:,None]>A[None,:]
+answer = (dp*select).sum()*pow(2,Q,MOD)%MOD
+print(answer)

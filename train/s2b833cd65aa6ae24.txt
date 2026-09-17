@@ -1,0 +1,74 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <math.h>
+using namespace std;
+
+struct Edge {
+  int from, to;
+  double cost;
+  Edge() { }
+  Edge(int from_, int to_, double cost_) : from(from_), to(to_), cost(cost_) { }
+  bool operator <(const Edge &rhs) const {
+    return cost < rhs.cost;
+  }
+};
+
+struct UnionFind {
+  vector<int> data;
+  UnionFind(int v) : data(v, -1) { };
+  int root(int x){
+  	return data[x] < 0 ? x : (data[x] = root(data[x]));
+  }
+  bool same(int x, int y){
+  	return root(x) == root(y);
+  }
+  void merge(int x, int y){
+  	x = root(x), y = root(y);
+  	if(x != y){
+  		if(size(y) > size(x)) swap(x, y);
+  		data[x] += data[y]; data[y] = x;
+  	}
+  }
+  int size(int x){
+  	return -data[root(x)];
+  }
+};
+
+double kruskal(const int v, vector<Edge> es) {
+	sort(es.begin(), es.end());
+	double ans = 0;
+	UnionFind uf(v);
+	for(int i = 0; i < es.size(); ++i) {
+		if(uf.same(es[i].from, es[i].to)) continue;
+		uf.merge(es[i].from, es[i].to);
+		ans += es[i].cost;
+	}
+	return ans;
+}
+
+int main(){
+	int n;
+	while (cin>>n, n) {
+		vector<double>x(n), y(n), z(n), r(n);
+		vector<Edge> e;
+		
+		for (int i=0; i<n; i++) {
+			cin>>x[i]>>y[i]>>z[i]>>r[i];
+		}
+		for (int i=0; i<n; i++) {
+			for (int j=0; j<n; j++) {
+				if (i != j) {
+					double d = sqrt((x[i]-x[j])*(x[i]-x[j]) + (y[i]-y[j])*(y[i]-y[j]) + (z[i]-z[j])*(z[i]-z[j]));
+					d -= r[i] + r[j];
+					d = max(0.0, d);
+					e.push_back(Edge(i, j, d));
+				}
+			}
+		}
+		
+		cout.setf(ios::fixed); cout.precision(10);
+		cout << kruskal(n, e) << endl;		
+	}
+	return 0;
+}

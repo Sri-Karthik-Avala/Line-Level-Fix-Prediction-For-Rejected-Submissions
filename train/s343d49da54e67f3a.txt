@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<n;++i)
+#define rrep(i,n) for(int i=n-1;i>=0;--i)
+#define REP(i,a,b) for(int i=a;i<b;i++)
+#define yesno(flg) if(flg){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
+#define vi vector<int>
+#define pb push_back
+#define i197 1000000007
+#define MAX_N 200002
+using namespace std;
+
+typedef long long ll;
+typedef pair<int,int> Pii;
+typedef pair<Pii,int> Piii;
+typedef pair<string,string> Pss;
+const int inf=1000000000;
+struct edge{
+	int myc,to,c,cost;
+};
+struct pos{
+	int to,cost,color;
+};
+int dy[]={0, 0, 1, -1};
+int dx[]={1, -1, 0, 0};
+int f[MAX_N]={};
+int b[MAX_N]={};
+bool dp[MAX_N]={};
+vector<Pss> Vs,Vs2;
+
+int main() {
+	int n,f;
+	cin>>n>>f;
+	rep(i,n){
+		vector<string> Vstr;
+		int m;
+		cin>>m;
+		rep(j,m){
+			string str;
+			cin>>str;
+			Vstr.push_back(str);
+		}
+		sort(Vstr.begin(),Vstr.end());
+		rep(j,m){
+			for(int k=j+1;k<m;++k){
+				Vs.push_back(Pss(Vstr[j],Vstr[k]));
+			}
+		}
+	}
+	sort(Vs.begin(),Vs.end());
+	Pss ps=Pss("","");
+	int total=1;
+	rep(i,Vs.size()){
+		if(Vs[i]==ps){
+			total++;
+		}else{
+			if(total>=f)Vs2.push_back(ps);
+			total=1;
+			ps=Vs[i];
+		}
+	}
+	if(total>=f)Vs2.push_back(ps);
+	sort(Vs2.begin(),Vs2.end());
+
+	cout<<Vs2.size()<<endl;
+	rep(i,Vs2.size()){
+		cout<<Vs2[i].first<<" "<<Vs2[i].second<<endl;
+	}
+
+	return 0;
+}
+

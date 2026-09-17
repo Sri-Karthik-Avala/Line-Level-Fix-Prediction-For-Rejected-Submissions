@@ -1,0 +1,90 @@
+#include <vector>
+#include <iostream>
+#include <valarray>
+#include <string>
+#include <algorithm>
+#include <set>
+typedef unsigned long long ull;
+typedef long long ll;
+
+#define rep(i,n) for(ull i = 0;i<(n);i++)
+#define rep1(i,n) for(ull i = 1;i<=(n);i++)
+#define revrep(i,n) for(ull i = (n-1);i>=0;i--)
+#define all(n) (n).begin(),(n).end()
+#define show(x) (cout << "debug " << #x << ":" << x << endl, x);
+#define showvec(x) cout << endl << "debug " << #x << ";" << endl; \
+	for(ull __i = 0;__i < x.size();__i++){ \
+		for(ull __j = 0;__j<x[0].size();__j++){ \
+			cout << x[__i][__j] << " "; \
+		} \
+		cout << endl; \
+	} \
+	cout << endl;
+using namespace std;
+#define MOD 1000000007
+
+ull patternNum(bool last, char p, char q, char r, bool cu, bool cn){
+	ull ans = 0;
+	int fst = (last ? 1 : 0);
+	for(int a = fst;a < 10;a++){
+		if(p != '?'){
+			a = p - '0';
+		}
+		for(int b = fst;b < 10;b++){
+			if(q != '?'){
+				b = q - '0';
+			}
+			for(int c = fst;c < 10;c++){
+				if(r != '?'){
+					c = r - '0';
+				}
+				ull tmp = a + b + (cu ? 1 : 0);
+				if(tmp % 10 == c){
+					if(tmp >= 10 && cn){
+						ans++;
+					}
+					if(tmp < 10 && !cn){
+						ans++;
+					}
+				}
+				if(r != '?'){
+					break;
+				}
+			}
+			if(q != '?'){
+				break;
+			}
+		}
+		if(p != '?'){
+			break;
+		}
+	}
+	return ans;
+}
+
+int main(){
+	ull c0[52],c1[52];
+	string A,B,C;
+	while(cin >> A, A != "0"){
+		cin >> B >> C;
+		rep(i,52){
+			c0[i] = c1[i] = 0;
+		}
+		for(int p = A.size()-1;p>=0;p--){
+			if(p == A.size()-1 && A.size() != 1){
+				c0[p] = patternNum(false,A[p],B[p],C[p],false,false) % MOD;
+				c1[p] = patternNum(false,A[p],B[p],C[p],false,true) % MOD;
+			}else if(p != 0){
+				c0[p] = patternNum(false,A[p],B[p],C[p],false,false) * c0[p+1] + patternNum(false,A[p],B[p],C[p],true,false) * c1[p+1];
+				c0[p] %= MOD;
+				c1[p] = patternNum(false,A[p],B[p],C[p],false,true) * c0[p+1] + patternNum(false,A[p],B[p],C[p],true,true) * c1[p+1];
+				c1[p] %= MOD;
+			}else{
+				c0[p] = patternNum(true,A[p],B[p],C[p],false,false) * c0[p+1] + patternNum(true,A[p],B[p],C[p],true,false) * c1[p+1];
+				c0[p] %= MOD;
+				c1[p] = 0;
+			}	
+		}
+		cout << c0[0] + c1[0] << endl;
+	}
+}

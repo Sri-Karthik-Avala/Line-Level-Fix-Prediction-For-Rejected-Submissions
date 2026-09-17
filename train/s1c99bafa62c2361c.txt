@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+
+#define repd(i, a, b) for (ll i = (a); i < (b); i++)
+#define repb(i, n) for (ll i = (n)-1; i >= 0; i--)
+#define rep(i, n) repd(i, 0, n)
+
+using namespace std;
+
+using ll = long long;
+using ul = unsigned long long;
+using ld = long double;
+const ul mod = 1000000007;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    ll t1, t2, a1, a2, b1, b2;
+    cin >> t1 >> t2 >> a1 >> a2 >> b1 >> b2;
+    ll lead1 = (a1 - b1) * t1, lead2 = (a2 - b2) * t2;
+    if (lead1 + lead2 == 0) {
+        cout << "infinity" << endl;
+        return 0;
+    }
+    if ((lead1 <= 0 && lead2 <= 0) || (lead1 >= 0 && lead2 >= 0)) {
+        cout << 0 << endl;
+        return 0;
+    }
+
+    if (abs(lead1) > abs(lead2)) {
+        cout << 0 << endl;
+        return 0;
+    }
+
+    if (lead1 < 0) {
+        lead1 *= -1;
+        lead2 *= -1;
+    }
+    ll sum = -(lead1 + lead2);
+    ll x = lead1 / sum + 1;
+
+    if (x % sum) {
+        cout << 1 + (2 * (x - 1)) << endl;
+    } else {
+        cout << 2 * (x - 1) << endl;
+    }
+
+    return 0;
+}
+

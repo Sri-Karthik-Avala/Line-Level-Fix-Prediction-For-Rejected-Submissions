@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	while (true) {
+		int n, m, t, p;
+		cin >> n >> m >> t >> p;
+		if (n == 0) break;
+
+		vector<vector<int>> card(300, vector<int>(300, 0));
+		for(int x = 0; x < n; ++x) {
+			for(int y = 0; y < m; ++y) {
+				card[x][y] = 1;
+			}
+		}
+
+		int l = 0, u = 0;
+		for(int q = 0; q < t; ++q) {
+			int d, c;
+			cin>>d>>c;
+
+			if (d == 1) {
+				for(int x = 0; x < c; ++x) {
+					for(int y = 0; y < m; ++y) {
+						card[l + c * 2 - x - 1][u + y] += card[l + x][u + y];
+						card[l + x][u + y] = 0;
+					}
+				}
+				l += c;
+				n = max(c, n - c);
+			} else {
+				for(int x = 0; x < n; ++x) {
+					for(int y = 0; y < c; ++y) {
+						card[l + x][u + c * 2 - 1 - y] += card[l + x][u + y];
+						card[l + x][u + y] = 0; 
+					}
+				}
+				u += c;
+				m = max(c, m - c);
+			}
+		}
+
+		for(int q = 0; q < p; ++q) {
+			int x, y;
+			cin >> x >> y;
+			cout << card[l + x][u + y] << endl;
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,68 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<tuple>
+using namespace std;
+int x[11][3], y[11][3], b[11];
+int n, m; string S[10], T[10];
+void init() {
+	for (int i = 0; i < 33; i++) { x[i / 3][i % 3] = 0; y[i / 3][i % 3] = 0; }
+	for (int i = 0; i < n; i++) {
+		x[i + 1][0] = x[i][0]; x[i + 1][1] = x[i][1]; x[i + 1][2] = x[i][2]; bool Ind = true;
+		for (int j = 0; j < S[i].size(); j++) {
+			if (S[i][j] != '.')Ind = false; if (Ind == true)b[i] = j + 1;
+			if (S[i][j] == '(')x[i + 1][0]++; if (S[i][j] == ')')x[i + 1][0]--;
+			if (S[i][j] == '{')x[i + 1][1]++; if (S[i][j] == '}')x[i + 1][1]--;
+			if (S[i][j] == '[')x[i + 1][2]++; if (S[i][j] == ']')x[i + 1][2]--;
+		}
+	}
+	for (int i = 0; i < m; i++) {
+		y[i + 1][0] = y[i][0]; y[i + 1][1] = y[i][1]; y[i + 1][2] = y[i][2];
+		for (int j = 0; j < T[i].size(); j++) {
+			if (T[i][j] == '(')y[i + 1][0]++; if (T[i][j] == ')')y[i + 1][0]--;
+			if (T[i][j] == '{')y[i + 1][1]++; if (T[i][j] == '}')y[i + 1][1]--;
+			if (T[i][j] == '[')y[i + 1][2]++; if (T[i][j] == ']')y[i + 1][2]--;
+		}
+	}
+}
+vector<tuple<int,int,int>> search() {
+	vector<tuple<int, int, int>>vec;
+	for (int i = 1; i <= 20; i++) {
+		for (int j = 1; j <= 20; j++) {
+			for (int k = 1; k <= 20; k++) {
+				bool OK = true;
+				for (int l = 0; l < n; l++) {
+					if ((x[l][0] * i + x[l][1] * j + x[l][2] * k) != b[l])OK = false;
+				}
+				if (OK == true)vec.push_back(make_tuple(i, j, k));
+			}
+		}
+	}
+	return vec;
+}
+int main() {
+	while (true) {
+		cin >> n >> m; if (n == 0 && m == 0)break;
+		for (int i = 0; i < n; i++)cin >> S[i];
+		for (int i = 0; i < m; i++)cin >> T[i];
+		vector<int>res[10]; init(); search();
+		vector<tuple<int, int, int>>F = search();
+		for (int i = 0; i < F.size(); i++) {
+			int a1 = get<0>(F[i]), a2 = get<1>(F[i]), a3 = get<2>(F[i]);
+			for (int j = 0; j < m; j++) {
+				int TT = y[j][0] * a1 + y[j][1] * a2 + y[j][2] * a3;
+				for (int k = 0; k < res[j].size(); k++) {
+					if (res[j][k] == TT)goto E;
+				}
+				res[j].push_back(TT); E:;
+			}
+		}
+		for (int i = 0; i < m; i++) {
+			if (i)cout << ' ';
+			if (res[i].size() >= 2) { cout << "-1"; }
+			else { cout << res[i][0]; }
+		}
+		cout << endl;
+	}
+	return 0;
+}

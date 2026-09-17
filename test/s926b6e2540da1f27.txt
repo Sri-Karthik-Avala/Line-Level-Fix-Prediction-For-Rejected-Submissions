@@ -1,0 +1,37 @@
+#!/usr/bin/python3
+n = int(input())
+inf = 100 * 100000
+
+M = [[inf for i in range(n)] for j in range(n)]
+
+for i in range(n):
+    L = list(map(int, input().split()))
+    u = L[0]
+    k = L[1]
+    v = L[2::2]
+    c = L[3::2]
+    for j in range(k):
+        M[u][v[j]] = M[v[j]][u] = c[j]
+
+S = set()
+V = set(range(n))
+S.add(0)
+d = [inf for i in range(n)]
+d[0] = 0
+count = 0
+while len(V - S) != 0:
+    T = V - S
+    nd = [inf for i in range(n)]
+    for s in S:
+        for m, c in enumerate(M[s]):
+            if d[s] + c < nd[m] and m in T:
+                nd[m] = d[s] + c
+
+    min_nd = min(nd)
+    u = nd.index(min_nd)
+    S.add(u)
+    d[u] = min_nd
+
+
+for i, v in enumerate(d):
+    print(i, v)

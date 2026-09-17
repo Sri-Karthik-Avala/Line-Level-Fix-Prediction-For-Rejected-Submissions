@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+using namespace std;
+int N;
+string ss;
+string x()
+{
+	string ans;
+	int X;
+	string y;
+	int Z=0;
+	while(Z<ss.length()){
+		X=1;
+		y=ss[Z];
+		while(Z<ss.length()-1&&ss[Z]==ss[Z+1]){
+			X++;
+			Z++;
+		}
+		ans+=(X+'0');
+		ans+=y;
+		Z++;
+	}
+	return ans;
+}
+int main()
+{
+	while(true){
+		scanf("%d",&N);
+		if(N==0)break;
+		cin >> ss;
+		for(int i=0;i<N;i++){
+			ss=x();
+		}
+		cout << ss << "\n";
+	}
+	return 0;
+}

@@ -1,0 +1,118 @@
+Problem I: Operator 
+
+ 
+The customer telephone support center of the computer sales company called JAG is now in-
+credibly confused. There are too many customers who request the support, and they call the
+support center all the time. So, the company wants to figure out how many operators needed
+to handle this situation.
+ 
+
+ 
+For simplicity, let us focus on the following simple simulation.
+ 
+
+ 
+Let N be a number of customers. The i -th customer has id i , and is described by three numbers,
+ M i , L i and K i . M i is the time required for phone support, L i is the maximum stand by time
+until an operator answers the call, and K i is the interval time from hanging up to calling back.
+Let us put these in other words: It takes M i unit times for an operator to support i -th customer.
+If the i -th customer is not answered by operators for L i unit times, he hangs up the call. K i 
+unit times after hanging up, he calls back.
+ 
+
+ 
+One operator can support only one customer simultaneously. When an operator finish a call, he
+can immediately answer another call. If there are more than one customer waiting, an operator
+will choose the customer with the smallest id.
+ 
+
+ 
+At the beginning of the simulation, all customers call the support center at the same time. The
+simulation succeeds if operators can finish answering all customers within T unit times.
+ 
+
+ 
+Your mission is to calculate the minimum number of operators needed to end this simulation
+successfully.
+ 
+
+ Input 
+
+ 
+The input contains multiple datasets. Each dataset has the following format:
+ 
+
+ 
+ N T 
+ M 1 L 1 K 1 
+ . 
+ . 
+ . 
+ M N L N K N 
+ 
+
+ 
+The first line of a dataset contains two positive integers, N and T (1 &le; N &le; 1000, 1 &le; T &le; 1000).
+ N indicates the number of customers in the dataset, and T indicates the time limit of the
+simulation.
+ 
+
+ 
+The following N lines describe the information of customers. The i -th line contains three integers,
+ M i , L i and K i (1 &le; M i &le; T , 1 &le; L i &le; 1000, 1 &le; K i &le; 1000), describing i -th customer's
+information. M i indicates the time required for phone support, Li indicates the maximum stand
+by time until an operator answers the call, and Ki indicates the is the interval time from hanging
+up to calling back.
+ 
+
+ 
+The end of input is indicated by a line containing two zeros. This line is not part of any dataset
+and hence should not be processed.
+ 
+
+ Output 
+
+ 
+For each dataset, print the minimum number of operators needed to end the simulation successfully in a line.
+ 
+
+ Sample Input 
+ 
+3 300
+100 50 150
+100 50 150
+100 50 150
+3 300
+100 50 150
+100 50 150
+200 50 150
+9 18
+3 1 1
+3 1 1
+3 1 1
+4 100 1
+5 100 1
+5 100 1
+10 5 3
+10 5 3
+1 7 1000
+10 18
+1 2 3
+2 3 4
+3 4 5
+4 5 6
+5 6 7
+6 7 8
+7 8 9
+8 9 10
+9 10 11
+10 11 12
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+2
+3
+3
+4

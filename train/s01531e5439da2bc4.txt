@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int INF = 1<<28;
+
+struct Edge {
+  int v, w;
+};
+
+typedef vector<vector<Edge> > Graph;
+
+vector<int> bfs(int src, const Graph &g) {
+  const int n = g.size();
+  vector<int> cost(n, INF);
+  queue<int> que;
+  cost[src] = 0;
+  que.push(src);
+  while(que.size()) {
+    const int v = que.front();
+    que.pop();
+    for(int i = 0; i < g[v].size(); ++i) {
+      int nv = g[v][i].v;
+      if(cost[nv] != INF) continue;
+      cost[nv] = cost[v] + 1;
+      que.push(nv);
+    }
+  }
+  return cost;
+}
+
+int main() {
+  for(int N, M, s, t; cin >> N >> M >> s >> t; ) {
+    --s; --t;
+    Graph G(N);
+    for(int i = 0; i < M; ++i) {
+      int x, y; cin >> x >> y;
+      --x; --y;
+      G[x].push_back((Edge){y, 1});
+      G[y].push_back((Edge){x, 1});
+    }
+    vector<int> cs = bfs(s, G);
+    vector<int> ct = bfs(t, G);
+    int mini = cs[t];
+    sort(ct.begin(), ct.end());
+    int res = 0;
+    for(int i = 0; i < N; ++i) {
+      if(cs[i] == INF) continue;
+      int target = mini - 2 - cs[i];
+      res += upper_bound(ct.begin(), ct.end(), target)
+        - lower_bound(ct.begin(), ct.end(), target);
+    }
+    cout << res << endl;
+  }
+  return 0;
+}

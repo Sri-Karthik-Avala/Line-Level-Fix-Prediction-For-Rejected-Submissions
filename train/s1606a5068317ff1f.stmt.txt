@@ -1,0 +1,57 @@
+Problem C: ! 
+
+ 
+You are one of ICPC participants and in charge of developing a library for multiprecision numbers
+and radix conversion. You have just finished writing the code, so next you have to test if it
+works correctly. You decided to write a simple, well-known factorial function for this purpose:
+ 
+
+ 
+ 
+ 
+
+ 
+Your task is to write a program that shows the number of trailing zeros when you compute M !
+in base N , given N and M .
+ 
+
+ Input 
+
+ 
+The input contains multiple data sets. Each data set is described by one line in the format
+below:
+ 
+ 
+ N M 
+ 
+ 
+where N is a decimal number between 8 and 36 inclusive, and M is given in the string repre-
+sentation in base N . Exactly one white space character appears between them.
+ 
+ 
+The string representation of M contains up to 12 characters in base N . In case N is greater
+than 10, capital letters A, B, C, ... may appear in the string representation, and they represent
+10, 11, 12, ..., respectively.
+ 
+ 
+The input is terminated by a line containing two zeros. You should not process this line.
+ 
+
+ Output 
+
+ 
+For each data set, output a line containing a decimal integer, which is equal to the number of
+trailing zeros in the string representation of M ! in base N .
+ 
+
+ Sample Input 
+ 
+10 500
+16 A
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+124
+2

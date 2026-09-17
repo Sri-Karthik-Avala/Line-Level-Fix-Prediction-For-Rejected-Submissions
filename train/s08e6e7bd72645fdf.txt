@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+#define SIZE 5005
+#define MX 10000005
+#define MOD 1000000007
+using namespace std;
+typedef long long int ll;
+typedef pair <int,int> P;
+
+ll inv[MX],fac[MX],finv[MX];
+ll dp[SIZE][SIZE];
+ll dp2[SIZE];
+ll rt[SIZE];
+
+void make()
+{
+	inv[1]=1;
+	fac[0]=fac[1]=1;
+	finv[0]=finv[1]=1;
+	for(int i=2;i<MX;i++)
+	{
+		inv[i]=MOD-inv[MOD%i]*(MOD/i)%MOD;
+		fac[i]=fac[i-1]*(ll) i%MOD;
+		finv[i]=finv[i-1]*inv[i]%MOD;
+	}
+	rt[0]=1;
+	for(int i=1;i<SIZE;i++) rt[i]=rt[i-1]*2LL%MOD;
+}
+ll C(int a,int b)
+{
+	if(a<b) return 0;
+	return fac[a]*(finv[b]*finv[a-b]%MOD)%MOD;
+}
+int main()
+{
+	make();
+	int n,A;
+	scanf("%d %d",&n,&A);
+	for(int i=0;i<=A;i++)
+	{
+		dp2[i]=1;
+		for(int j=2;j<=i;j++)
+		{
+			dp2[i]-=inv[i]*dp2[i-j]%MOD;
+			if(dp2[i]<0) dp2[i]+=MOD;
+		}
+	}
+	int B=n-A;
+	dp[0][0]=1;
+	ll ret=0;
+	for(int i=0;i<=A;i++)
+	{
+		ll sum=0;
+		for(int j=0;j<=A;j++)
+		{
+			if(i>0||j>0)
+			{
+				ll now=sum;
+				if(i>0&&j>0)
+				{
+					now+=dp[i-1][j-1]*inv[A-j+1]%MOD;
+					if(now>=MOD) now-=MOD;
+				}
+				dp[i][j]=now;
+				if(j>0)
+				{
+					sum+=dp[i][j-1]*inv[A-j+1]%MOD;
+					if(sum>=MOD) sum-=MOD;
+				}
+				if(dp[i][j]>0&&i<=B)
+				{
+					ret+=C(B+j-i-1,j-1)*dp[i][j]%MOD*dp2[A-j]%MOD;
+					if(ret>=MOD) ret-=MOD;
+				}
+			}
+		}
+	}
+	printf("%lld\n",ret*fac[A]%MOD*fac[B]%MOD);
+}

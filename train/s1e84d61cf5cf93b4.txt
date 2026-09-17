@@ -1,0 +1,71 @@
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+#include <vector>
+#include <cstring>
+#include <set>
+#define SIZE 20005
+
+using namespace std;
+typedef long long int ll;
+typedef pair <ll,ll> P;
+
+ll A[SIZE];
+P pos[SIZE];
+int n;
+
+bool check(int x,int k)//x 桁目
+{
+	ll rt=1;
+	for(int i=0;i<x;i++) rt*=10LL;
+	int sz=0;
+	pos[sz++]=P(rt*(ll) k,rt*(ll) (k+1)-1);
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<sz;j++)
+		{
+			if(pos[j].first<=A[i]%(rt*10LL)&&A[i]%(rt*10LL)<=pos[j].second)
+			{
+				return true;
+			}
+		}
+		int ns=sz;
+		for(int j=0;j<sz;j++)
+		{
+			P p=pos[j];
+			p.first-=A[i]%(rt*10LL);
+			p.second-=A[i]%(rt*10LL);
+			if(p.first<0) p.first+=rt*10LL;
+			if(p.second<0) p.second+=rt*10LL;
+			if(p.first<=p.second) pos[ns++]=p;
+			else
+			{
+				pos[ns++]=P(p.first,rt*10LL-1);
+				pos[ns++]=P(0,p.second);
+			}
+		}
+		sort(pos,pos+ns);
+		sz=0;
+		for(int j=0;j<ns;)
+		{
+			P p=pos[j];
+			for(;j<ns&&pos[j].first<=p.second;j++) p.second=max(p.second,pos[j].second);
+			pos[sz++]=p;
+		}
+	}
+	return false;
+}
+int main()
+{
+	scanf("%d",&n);
+	for(int i=0;i<n;i++) scanf("%lld",&A[i]);
+	int ret=0;
+	for(int i=0;i<20;i++)
+	{
+		int nm=0;
+		for(int j=0;j<10;j++) if(check(i,j)) nm=j;
+		ret+=nm;
+	}
+	printf("%d\n",ret);
+	return 0;
+}

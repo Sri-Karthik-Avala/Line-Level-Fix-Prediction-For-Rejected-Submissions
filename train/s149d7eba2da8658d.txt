@@ -1,0 +1,60 @@
+#include<iostream>
+#include<iomanip>
+#include<cstring>
+#include<cmath>
+#include<cstdio>
+#include<queue>
+#include<algorithm>
+using namespace std;
+const int mod=1e9+7;
+int read()
+{
+	char c=getchar();
+	int res=0,bj=1;
+	while(c<'0'||c>'9'){if(c=='-') bj=-1;c=getchar();}
+	while(c>='0'&&c<='9') res=(res<<1)+(res<<3)+(c^48),c=getchar();
+	return res*bj;
+}
+int n,dp[605][305][605],a[605],tot,num,b[605],c[605],nums=0;
+bool vis[605],vst[605];
+long long fir[605];
+int main()
+{
+	n=read();
+	for(int i=1;i<=2*n;i++) a[i]=read();
+	fir[0]=1;
+	for(int i=1;i<=2*n;i++) fir[i]=fir[i-1]*i%mod;
+	for(int i=1;i<=2*n;i+=2)
+	{
+		if(a[i]!=-1&&a[i+1]!=-1){vst[a[i]]=vst[a[i+1]]=1;continue;}
+		b[++tot]=a[i],b[++tot]=a[i+1];
+		if(a[i]==-1&&a[i+1]==-1) nums++;
+	}
+	for(int i=1;i<=2*n;i++)
+	{
+		if(vst[i]) continue;
+		c[++num]=i;
+	}
+	for(int i=1;i<=tot;i++) if(b[i]!=-1) b[i]=lower_bound(c+1,c+num+1,b[i])-c;
+	for(int i=1;i<=tot;i++) if(b[i]!=-1) vis[b[i]]=1;
+	dp[tot+1][0][0]=1;
+	for(int i=tot+1;i>1;i--)
+	for(int j=0;j<=tot/2;j++)
+	for(int k=0;k+j<=tot;k++)
+	if(dp[i][j][k])
+	{
+		if(vis[i-1])
+		{
+			if(j) dp[i-1][j-1][k]=(dp[i-1][j-1][k]+dp[i][j][k])%mod;
+			dp[i-1][j][k+1]=(dp[i-1][j][k+1]+dp[i][j][k])%mod;
+		}
+		else
+		{
+			if(j) dp[i-1][j-1][k]=(dp[i-1][j-1][k]+dp[i][j][k])%mod;
+			if(k) dp[i-1][j][k-1]=(dp[i-1][j][k-1]+dp[i][j][k]*k%mod)%mod;
+			dp[i-1][j+1][k]=(dp[i-1][j+1][k]+dp[i][j][k])%mod;
+		}
+	}
+	long long ans=dp[1][0][0];
+	printf("%lld\n",ans*fir[nums]%mod);
+}

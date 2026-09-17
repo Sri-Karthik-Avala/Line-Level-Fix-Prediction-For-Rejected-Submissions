@@ -1,0 +1,110 @@
+# -*- coding: utf-8 -*-
+import bisect
+import heapq
+import math
+import random
+from collections import Counter, defaultdict, deque
+from decimal import ROUND_CEILING, ROUND_HALF_UP, Decimal
+from fractions import Fraction
+from functools import lru_cache, reduce
+from itertools import combinations, combinations_with_replacement, product, permutations, accumulate
+from operator import add, mul, sub, itemgetter, attrgetter
+
+
+import sys
+# sys.setrecursionlimit(10**6)
+# readline = sys.stdin.buffer.readline
+readline = sys.stdin.readline
+
+INF = 2**62-1
+
+
+def read_int():
+    return int(readline())
+
+
+def read_int_n():
+    return list(map(int, readline().split()))
+
+
+def read_float():
+    return float(readline())
+
+
+def read_float_n():
+    return list(map(float, readline().split()))
+
+
+def read_str():
+    return readline().strip()
+
+
+def read_str_n():
+    return readline().strip().split()
+
+
+def ep(*args):
+    print(*args, file=sys.stderr)
+
+
+def mt(f):
+    import time
+
+    def wrap(*args, **kwargs):
+        s = time.perf_counter()
+        ret = f(*args, **kwargs)
+        e = time.perf_counter()
+
+        ep(e - s, 'sec')
+        return ret
+
+    return wrap
+
+
+@mt
+def slv(N, W, WV):
+    vl = {}
+    vl[WV[0][0]] = list()
+    vl[WV[0][0]+1] = list()
+    vl[WV[0][0]+2] = list()
+    vl[WV[0][0]+3] = list()
+    for w, v in WV:
+        vl[w].append(v)
+
+    for v in vl.values():
+        v.sort(reverse=True)
+        v.insert(0, 0)
+
+
+    wi, wj, wk, wl = vl.keys()
+    ans = 0
+    vis = 0
+    for i, vi in enumerate(vl[wi]):
+        if wi * i > W:
+            break
+        vis += vi
+        vjs = 0
+        for j, vj in enumerate(vl[wj]):
+            if wi * i + wj * j > W:
+                break
+            vjs += vj
+            vks = 0
+            for k, vk in enumerate(vl[wk]):
+                if wi*i + wj*j + wk*k> W:
+                    break
+                vks += vk
+                ans = max(ans, vis+vjs+vks)
+    return ans
+
+
+
+
+
+def main():
+    N, W = read_int_n()
+    WV = [read_int_n() for _ in range(N)]
+    print(slv(N, W, WV))
+
+
+if __name__ == '__main__':
+    main()

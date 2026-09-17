@@ -1,0 +1,16 @@
+N = int(input())
+A = [int(input()) for _ in range(N)]
+A.sort()
+
+a = len(A)
+if a%2==0:
+  answer = 2 * sum(A[a//2+1:]) + A[a//2] - A[a//2-1] - 2* sum(A[:a//2-1])
+  
+if a%2==1:
+  b = a//2
+  if 2*A[b] + A[b-1] - A[b+1]>0:
+    answer = 2*sum(A[b+1:]) - A[b] - A[b-1] - 2*sum(A[:b-1])
+  else:
+    answer = A[b] + A[b+1] + 2*sum(A[b+2:]) - 2*sum(A[:b])  
+  
+print(answer)    

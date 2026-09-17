@@ -1,0 +1,23 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <cstdio>
+#include <cmath>
+#include <set>
+#include <utility>
+#include <tuple>
+#include <queue>
+
+using namespace std;
+
+int main()
+{
+    string s;
+    cin>>s;
+    if (s=="ani") cout<<"square1001\n";
+    else cout<<"E869120\n";
+    return 0;
+}
+

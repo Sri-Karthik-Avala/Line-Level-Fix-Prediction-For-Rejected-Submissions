@@ -1,0 +1,71 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement This contest is CODE FESTIVAL .
+However, Mr. Takahashi always writes it CODEFESTIVAL , omitting the single space between CODE and FESTIVAL . 
+ So he has decided to make a program that puts the single space he omitted. 
+ You are given a string s with 12 letters.
+Output the string putting a single space between the first 4 letters and last 8 letters in the string s . 
+ 
+ 
+ 
+ 
+ Constraints 
+ s contains exactly 12 letters. 
+ All letters in s are uppercase English letters. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input The input is given from Standard Input in the following format: 
+ s 
+ 
+ 
+ 
+ 
+ 
+ Output Print the string putting a single space between the first 4 letters and last 8 letters in the string s .
+Put a line break at the end. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 CODEFESTIVAL
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 CODE FESTIVAL
+ 
+ Putting a single space between the first 4 letters and last 8 letters in CODEFESTIVAL makes it CODE FESTIVAL . 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 POSTGRADUATE
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 POST GRADUATE
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 ABCDEFGHIJKL
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 ABCD EFGHIJKL

@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,a) FOR(i,0,a)
+using namespace std;
+bool maps[100][100];
+int dx[]={0,1,0,-1},dy[]={1,0,-1,0};
+int search(int y,int x){
+	int maxim=0;
+	maps[y][x]=false;
+	REP(i,4)
+		if(y+dy[i] && x+dx[i] && maps[y+dy[i]][x+dx[i]])
+		maxim=max(maxim,search(y+dy[i],x+dx[i]));
+	maps[y][x]=true;
+	return maxim+1;
+}
+int main() {
+	// your code goes here
+	int m,n;
+	while(cin >> m >> n && n){
+	int maxim=0;
+	REP(i,n)
+		REP(j,m)
+			cin >> maps[i][j];
+	REP(i,n)
+		REP(j,m)
+			if(maps[i][j])
+			maxim=max(maxim,search(i,j));
+	cout << maxim << endl;
+	}
+	return 0;
+}

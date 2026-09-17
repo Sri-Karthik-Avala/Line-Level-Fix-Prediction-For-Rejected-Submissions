@@ -1,0 +1,4 @@
+s=str(input())
+n=str(len(s)-2)
+p="i"+n+"n"
+print(p)

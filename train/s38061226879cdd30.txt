@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int N;
+  string S;
+  cin >> N >> S;
+  
+  if (N/2 == 1) {
+    cout << "No" << endl;
+    return 0;
+  }
+  
+  string s1 = "",
+  		 s2 = "";
+  for (int i = 0; i < N/2; i++) {
+    s1 += S.at(i);
+  }
+  for (int i = N/2; i < N; i++) {
+    s2 += S.at(i);
+  }
+  
+  if (s1 == s2) {
+    cout << "Yes" << endl;
+  } else {
+    cout << "No" << endl;
+  }
+}

@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define IOS ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+int main(){
+    IOS;
+    cout << fixed << setprecision(5);
+    int n, t, a, h, res;
+    vector<pair<float, int>>vec;
+    cin >> n;
+    cin >> t >> a;
+    // vec.push_back(make_pair(a, 0));
+    for(int i=0; i<n; i++){
+      cin >> h;
+      float ans=t-(h*0.006);
+      vec.push_back(make_pair(ans, i));
+    }
+    int mn=1000000;
+    sort(vec.rbegin(), vec.rend());
+    for(int i=0; i<vec.size(); i++){
+      // cout << vec[i]. first << " " << vec[i].second << endl;
+      if(abs(vec[i].first-a)<mn){
+        mn=abs(vec[i].first-a);
+        res=vec[i].second;
+      }
+    }
+    cout << res+1;
+}

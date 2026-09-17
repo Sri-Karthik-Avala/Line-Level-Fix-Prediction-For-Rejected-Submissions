@@ -1,0 +1,30 @@
+def Class(x):
+	if x<=48.0:
+		print("light fly")
+	elif 48.0<x<=51.0:
+		print("fly")
+	elif 51.0<x<=54.0:
+		print("bantam")
+	elif 54.0<x<=57.0:
+		print("feather")
+	elif 57.0<x<=60.0:
+		print("light")
+	elif 60.0<x<=64.0:
+		print("light welter")
+	elif 64.0<x<=69.0:
+		print("welter")
+	elif 69.0<x<=75.0:
+		print("light middle")
+	elif 75.0<x<=81.0:
+		print("middle")
+	elif 81.0<x<=91.0:
+		print("light heavy")
+	else:
+		ptinr("heavy")
+
+while True:
+	try:
+		x=float(input())
+		Class(x)
+	except EOFError:
+		break

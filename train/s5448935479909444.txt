@@ -1,0 +1,70 @@
+#include <cstdio>
+#include <cmath>
+
+int abs(int x){
+	if(x<0)return -x;
+	return x;
+}
+
+#define INF 5e4
+int extgcd(int a,int b,int &x,int &y){
+	int d=a;
+	if(b!=0){
+		d=extgcd(b,a%b,y,x);
+		y-=(a/b)*x;
+	}else{
+		x=1;
+		y=0;
+	}
+	return d;
+}
+
+int a,b,d;
+
+int main(void){
+	while(1){
+		scanf("%d %d %d",&a,&b,&d);
+		if(a+b+d==0)break;
+		int x=INF,y=INF;
+		for(int i=0;i<=d;i++){
+			int k=(d-a*i)/b;
+			if(k>=0){
+				if(a*i+b*k==d){
+					if(i+k<x+y){
+						x=i;
+						y=k;
+					}else if(i+k==x+y && a*i+b*k<x*a+b*y){
+						x=i;
+						y=k;
+					}
+				}
+			}
+			k=(d+a*i)/b;
+			if(k>=0){
+				if(b*k==d+a*i){
+					if(i+k<x+y){
+						x=i;
+						y=k;
+					}else if(i+k==x+y && a*i+b*k<x*a+b*y){
+						x=i;
+						y=k;
+					}
+				}
+			}
+			k=(a*i-d)/b;
+			if(k>=0){
+				if(b*k+d==a*i){
+					if(i+k<x+y){
+						x=i;
+						y=k;
+					}else if(i+k==x+y && a*i+b*k<x*a+b*y){
+						x=i;
+						y=k;
+					}
+				}
+			}
+		}
+		printf("%d %d\n",x,y);
+	}
+	return 0;
+}

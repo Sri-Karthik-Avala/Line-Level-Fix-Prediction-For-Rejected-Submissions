@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<ll, ll> P;
+
+#define pb push_back
+#define rep(i, a, n) for(int i = (a); i < (n); i++)
+#define dep(i, a, n) for(int i = (a); i >= (n); i--)
+#define mod (ll)(1e9+7)
+#define int ll
+
+__attribute__((constructor))
+void initial() {
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+}
+
+int n;
+int t[100001];
+
+signed main() {
+  cin >> n;
+  rep(i, 0, n) cin >> t[i];
+
+  int mx = 0;
+  rep(i, 0, n) {
+    if(i * 10 > mx) {
+      cout << "no" << endl;
+      return 0;
+    }
+    mx = max(mx, i * 10 + t[i]);
+  }
+  mx = 0;
+  int cu = 0;
+  dep(i, n - 1, 0) {
+    if(cu * 10 > mx) {
+      cout << "no" << endl;
+      return 0;
+    }
+    mx = max(mx, cu * 10 + t[i]);
+    cu++;
+  }
+  cout << "yes" << endl;
+}
+

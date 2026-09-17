@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <iomanip>
+using namespace std;
+
+int N,M,S,G;
+
+struct state{
+    int node,velocity;
+    double ti;
+    int pre_node;
+    bool operator<(const state& right)const{
+        return ti>right.ti;
+    }
+};
+
+struct edge{
+    int to,dist,upp;
+};
+
+double dp[31][31][31];
+double inf = 1e9;
+
+int main(){
+    while(cin >> N >> M && N>0){
+        cin >> S >> G;
+        vector<vector<edge>> v(N+1);
+        int x,y,d,c;
+        for(int i=0;i<M;i++){
+            cin >> x >> y >> d >> c;
+            v[x].push_back({y,d,c});
+            v[y].push_back({x,d,c});
+        }
+        for(int i=1;i<=N;i++) for(int j=1;j<=30;j++) for(int k=1;k<=N;k++) dp[i][j][k] = inf;
+        dp[S][1][0] = 0;
+        priority_queue<state> Q;
+        Q.push({S,0,0,0});
+        while(!Q.empty()){
+            state now = Q.top(); Q.pop();
+            if(dp[now.node][now.velocity][now.pre_node]<now.ti) continue;
+            for(auto& x:v[now.node]){
+                if(now.pre_node==x.to) continue;
+                for(int dv=-1;dv<=1;dv++){
+                    if(now.velocity+dv<=0 || now.velocity+dv>x.upp) continue;
+                    state ne;
+                    ne.node = x.to; ne.velocity = now.velocity+dv;
+                    ne.ti = now.ti+1.0*x.dist/ne.velocity;
+                    ne.pre_node = now.node;
+                    if(dp[ne.node][ne.velocity][ne.pre_node]>ne.ti){
+                        dp[ne.node][ne.velocity][ne.pre_node] = ne.ti;
+                        Q.push(ne);
+                    }
+                }
+            }
+        }
+        double ans = inf;
+        for(int i=1;i<=N;i++) ans = min(ans,dp[G][1][i]);
+        if(ans>=inf) cout << "reachable" << endl;
+        else{
+            cout << fixed;
+            cout << setprecision(10) << ans << endl;
+        }
+    }
+}

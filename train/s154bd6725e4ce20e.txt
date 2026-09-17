@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+#define FOR(i,a,b) for(long i=(a);i<(b);i++)
+#define RFOR(i,a,b) for(long i=(b) - 1;i>=(a);i--)
+#define REP(i,n) for(long i=0;i<(n);i++)
+#define RREP(i,n) for(long i=n-1;i>=0;i--)
+
+#define PB push_back
+#define INF INT_MAX/3
+#define ALL(a) (a).begin(),(a).end()
+#define CLR(a) memset(a,0,sizeof(a))
+
+typedef long long int ll;
+
+using namespace std;
+
+int main(){
+    vector<long> two;
+    vector<long> three;
+    vector<long> five;
+    vector<long> num;
+    two.PB(1);
+    three.PB(1);
+    five.PB(1);
+    for(long i=1;two.back()<1e6;i++){
+	two.PB(two.back() * 2);
+    }
+    for(long i=1;three.back()<1e6;i++){
+	three.PB(three.back() * 3);
+    }
+    for(long i=1;five.back()<1e6;i++){
+	five.PB(five.back() * 5);
+    }
+    for(long i=0;i<two.size();i++){
+	for(long j=0;j<three.size();j++){
+	    for(long k=0;k<five.size();k++){
+		if(two[i] * three[j] * five[k] < 1e6)
+		    num.PB(two[i] * three[j] * five[k]);
+	    }
+	}
+    }
+    sort(ALL(num));
+    while(true){
+	long n,m;
+	cin >> m;
+	if(m == 0) break;
+	cin >> n;
+	long ans  = upper_bound(ALL(num),n) -  lower_bound(ALL(num),m);
+	cout << ans << endl;
+    }
+    return 0;
+}

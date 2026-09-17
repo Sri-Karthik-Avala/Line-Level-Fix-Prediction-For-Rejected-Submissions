@@ -1,0 +1,21 @@
+R=range;T=[0]*28;N=int(input());S=[[ord(C)-95 for C in input()]for _ in[0]*N];U=N*26**2*[0];V=N*[0];Q=int(input())
+for X in S:
+	P=0
+	for C in X:
+		if T[P+C]==0:T[P+C]=len(T);T+=[0]*28
+		T[P]+=1;P=T[P+C]
+	T[P]+=1;T[P+1]=1
+for I in R(N):
+	P=0
+	for C in S[I]:
+		for A in R(26):
+			X=T[P+A+2]
+			if(A!=C-2)*X:U[676*I+26*A+C-2]+=T[X]
+		V[I]+=T[P+1]
+		P=T[P+C]
+while Q:
+	K,P=input().split();K=int(K)-1;P=[ord(C)-97 for C in P];X=1+V[K]
+	for A in R(26):
+		for B in R(A+1,26):
+			X+=U[676*K+26*P[A]+P[B]]
+	print(X);Q-=1

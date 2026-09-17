@@ -1,0 +1,97 @@
+I - The J-th Number 
+
+ Problem Statement 
+
+ 
+You are given N empty arrays, t_1, ..., t_n . At first, you execute M queries as follows.
+ 
+
+ 
+ add a value v to array t_i ( a \leq i \leq b ) 
+ 
+
+ 
+Next, you process Q following output queries.
+ 
+
+ 
+ output the j -th number of the sequence sorted all values in t_i ( x \leq i \leq y ) 
+ 
+
+
+ Input 
+
+ 
+The dataset is formatted as follows.
+ 
+
+ 
+ N M Q 
+ a_1 b_1 v_1 
+...
+ a_M b_M v_M 
+ x_1 y_1 j_1 
+...
+ x_Q y_Q j_Q 
+ 
+
+ 
+The first line contains three integers N ( 1 \leq N \leq 10^9 ), M ( 1 \leq M \leq 10^5 ) and Q ( 1 \leq Q \leq 10^5 ). Each of the following M lines consists of three integers a_i , b_i and v_i ( 1 \leq a_i \leq b_i \leq N , 1 \leq v_i \leq 10^9 ). Finally the following Q lines give the list of output queries, each of these lines consists of three integers x_i , y_i and j_i ( 1 \leq x_i \leq y_i \leq N, 1 \leq j_i \leq &Sigma;_{x_i \leq k \leq y_i} |t_k| ).
+ 
+
+ Output 
+
+ 
+For each output query, print in a line the j -th number.
+ 
+
+ Sample Input 1 
+
+ 
+5 4 1
+1 5 1
+1 1 3
+4 5 1
+3 4 2
+1 3 4
+ 
+
+ Output for the Sample Input 1 
+
+ 
+2
+ 
+
+ 
+After the M -th query is executed, each t_i is as follows:
+ 
+
+ 
+[1,3], [1], [1,2], [1,1,2], [1,1]
+ 
+
+ 
+The sequence sorted values in t_1 , t_2 and t_3 is [1,1,1,2,3]. In the sequence, the 4-th number is 2.
+ 
+
+ Sample Input 2 
+
+ 
+10 4 4
+1 4 11
+2 3 22
+6 9 33
+8 9 44
+1 1 1
+4 5 1
+4 6 2
+1 10 12
+ 
+
+ Output for the Sample Input 2 
+
+ 
+11
+11
+33
+44

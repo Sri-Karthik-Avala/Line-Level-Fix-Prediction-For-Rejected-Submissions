@@ -1,0 +1,46 @@
+#include<cstdio>
+#include<algorithm>
+#define Z int
+#define V void
+#define L long long
+#define T struct
+#define U using namespace std
+#define S(n) scanf("%lld",&n)
+#define P(n) printf("%lld",(n+p)%p)
+#define F(i,a,b) for(L i=a;i<=b;i++)
+#define D(i,a,b) for(L i=a;i>=b;i--)
+#define W while
+#define I if
+#define R return
+#define nx 100001
+#define p (L)(1e9+7)
+U;
+T pt{L x,y;}a[nx],b[nx*2];
+L n,m,x[nx],y[nx],tot,cnt,l,r,h,t,f[nx];
+L cmp(pt x,pt y){R x.x<y.x||(x.x==y.x&&x.y>y.y);}
+V ins(L x,L y){W(x<=cnt)(f[x]+=y)%=p,x+=x&-x;}
+L ask(L x){L s=0;W(x)(s+=f[x])%=p,x-=x&-x;R s;}
+Z main(){
+	S(n),S(m);
+	F(i,1,n)S(x[i]);
+	F(i,1,m)S(y[i]);
+	l=1,r=n;
+	W(x[l]<y[1]&&l<=r)l++;
+	W(x[r]>y[m]&&l<=r)r--;
+	h=0,t=m+1;
+	F(i,l,r){
+		W(y[h+1]<x[i]&&h<m)h++;
+		b[++tot].x=x[i]-y[h],b[tot].y=i;
+	}
+	D(i,r,l){
+		W(y[t-1]>x[i]&&t>1)t--;
+		b[++tot].x=y[t]-x[i],b[tot].y=-i;
+	}
+	sort(b+1,b+tot+1,cmp),cnt=1;
+	F(i,1,tot)cnt+=b[i].x>b[i-1].x,
+	b[i].y>0?a[b[i].y].x=cnt:a[-b[i].y].y=cnt;
+	sort(a+l,a+r+1,cmp),ins(1,1);
+	F(i,l,r)I(a[i].x!=a[i-1].x||a[i].y!=a[i-1].y)
+	ins(a[i].y,ask(a[i].y-1));
+	P(ask(cnt));
+}

@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+int main(void)
+{
+	int s[13];
+	int h[13];
+	int c[13];
+	int d[13];
+	int cnum;
+	
+	for(int i = 0; i < 13; i++){
+		s[i] = -1;
+		h[i] = -1;
+		c[i] = -1;
+		d[i] = -1;
+	}
+	scanf("%d", &cnum);
+	
+	for(int i = 0; i < cnum; i++){
+		char chr;
+		int num;
+		scanf("%c %d", &chr, &num);
+		switch(chr){
+			case 'S':
+				s[num-1] = 1;
+				break;
+			case 'H':
+				h[num-1] = 1;
+				break;
+			case 'C':
+				c[num-1] = 1;
+				break;
+			case 'D':
+				d[num-1] = 1;
+				break;
+		}
+	}
+	
+	for(int j = 0; j < 13; j++)
+		if(s[j] != 1)
+			printf("S %d\n", j+1);
+			
+	for(int j = 0; j < 13; j++)
+		if(h[j] != 1)
+			printf("H %d\n", j+1);
+	
+	for(int j = 0; j < 13; j++)
+		if(c[j] != 1)
+			printf("C %d\n", j+1);
+	
+	for(int j = 0; j < 13; j++)
+		if(d[j] != 1)
+			printf("D %d\n", j+1);
+			
+	return 0;	
+}

@@ -1,0 +1,45 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<set>
+#include<utility>
+#include<vector>
+#include<cmath>
+#include<cstdio>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb push_back
+#define mp make_pair
+#define it ::iterator
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+const double ESP=1e-8;
+using namespace std;
+int main(){
+  int n;
+  while(cin>>n,n){
+    double m1,m2;
+    int m=360;
+    rep(i,n-1){
+      int tmp;
+      cin>>tmp;
+      m-=tmp;
+      m1+=sin(PI*tmp/180.0);
+    }
+    m1+=sin(PI*m/180.0);
+    cin>>n;
+    m=360;
+    rep(i,n-1){
+      int tmp;
+      cin>>tmp;
+      m-=tmp;
+      m2+=sin(PI*tmp/180.0);
+    }
+    m2+=sin(PI*m/180.0);
+    if(abs(m1-m2)<ESP)cout<<0<<endl;
+    else if(m1>m2)cout<<1<<endl;
+    else cout<<2<<endl;
+  }
+
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  while (true)
+  {
+    int answer;
+
+    int b, r, g, c, s, t;
+    cin >> b >> r >> g >> c >> s >> t;
+
+    if (b == 0) { break; }
+
+    int bonus = b * 5 + r * 3;
+    answer = 100
+      + b * 15
+      + r * 15
+      + bonus * 15
+      + g * 7
+      + c * 2
+      - ((t - s - bonus) * 3)
+      - (bonus * 2);
+
+    cout << answer << endl;
+  }
+
+  return 0;
+}

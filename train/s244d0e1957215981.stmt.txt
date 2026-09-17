@@ -1,0 +1,94 @@
+Reverse Roads 
+
+ 
+ICP city has an express company whose trucks run from the crossing S to the crossing T .
+The president of the company is feeling upset because all the roads in the city are one-way, and are severely congested.
+So, he planned to improve the maximum flow (edge disjoint paths) from the crossing S to the crossing T by reversing the traffic direction on some of the roads.
+ 
+
+ 
+Your task is writing a program to calculate the maximized flow from S to T by reversing some roads, and the list of the reversed roads.
+ 
+
+ Input 
+
+ 
+The first line of a data set contains two integers N ( 2 \leq N \leq 300 ) and M ( 0 \leq M \leq {\rm min} (1\,000,\ N(N-1)/2) ).
+ N is the number of crossings in the city and M is the number of roads.
+ 
+
+ 
+The following M lines describe one-way roads in the city.
+The i -th line ( 1 -based) contains two integers X_i and Y_i ( 1 \leq X_i, Y_i \leq N , X_i \neq Y_i ).
+ X_i is the ID number ( 1 -based) of the starting point of the i -th road and Y_i is that of the terminal point.
+The last line contains two integers S and T ( 1 \leq S, T \leq N , S \neq T , 1 -based).
+ 
+
+ 
+The capacity of each road is 1 .
+
+You can assume that i \neq j implies either X_i \neq X_j or Y_i \neq Y_j ,
+and either X_i \neq Y_j or X_j \neq Y_i .
+ 
+
+ Output 
+
+ 
+In the first line, print the maximized flow by reversing some roads.
+In the second line, print the number R of the reversed roads.
+In each of the following R lines, print the ID number ( 1 -based) of a reversed road.
+You may not print the same ID number more than once.
+ 
+
+ 
+If there are multiple answers which would give us the same flow capacity, you can print any of them.
+ 
+
+ Sample Input 1 
+
+ 
+2 1
+2 1
+2 1
+ 
+
+ Output for the Sample Input 1 
+
+ 
+1
+0
+ 
+
+ Sample Input 2 
+
+ 
+2 1
+1 2
+2 1
+ 
+
+ Output for the Sample Input 2 
+
+ 
+1
+1
+1
+ 
+
+ Sample Input 3 
+
+ 
+3 3
+3 2
+1 2
+3 1
+1 3
+ 
+
+ Output for the Sample Input 3 
+
+ 
+2
+2
+1
+3

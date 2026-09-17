@@ -1,0 +1,24 @@
+a,b,c,d,e,mv=map(int,input().split())
+e= e/(e+100)
+
+ans=0 ;ans1=-1 ; ans2=-1
+for i in range(31):
+    if 100*i*a> mv: continue
+    for j in range(31):
+        if i+j==0:continue
+        if 100*(i*a+j*b)> mv:continue
+        for k in range(2801):
+            if 100*(i*a+j*b)+k*c> mv:continue
+            for l in range(2801):
+                water=100*(a*i+b*j)
+                sugar=k*c+l*d
+                if water+sugar > mv:
+                    break
+                pp= sugar/(water+sugar)
+                
+                if e>= pp and ans<pp:
+                    #print("water",water,"sugar",sugar,pp)
+                    ans=pp
+                    ans1= water+sugar
+                    ans2= sugar
+print(ans1,ans2)

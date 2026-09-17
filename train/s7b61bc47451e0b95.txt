@@ -1,0 +1,18 @@
+L = []
+while True:
+    (a, op, b) = map(str, raw_input().split())
+    A, B = int(a), int(b)
+    if A == 0 and op == '?' and B == 0:
+        break
+    else:
+        if op == '+':
+            L.append(A + B)
+        elif op == '-':
+            L.append(A - B)
+        elif op == '*':
+            L.append(A * B)
+        else:
+            L.append(A / B)
+
+for x in range(len(L)):
+    print L[x]

@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+    vector<string> v;
+
+    string output = "abc";
+    for(int i=0; i < 100; i++){
+        string input;
+        input += output[output.size()-1];
+        input += ('a'+i);
+        input += output[0];
+        cout << "?"+input << endl; fflush(stdout);
+        cin >> output;
+
+        v.push_back(input);
+        bool is = false;
+        for(int j=0; j < v.size(); j++) if(v[j] == output) is = true;
+        if(input[input.size()-1] != output[0]) is = true;
+        if(is){cout << "!OUT" << endl; fflush(stdout); break;}
+        else v.push_back(output);
+    }
+}

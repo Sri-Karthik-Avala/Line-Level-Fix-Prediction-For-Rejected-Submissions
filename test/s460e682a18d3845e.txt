@@ -1,0 +1,30 @@
+def nibutan(f_id,e_id,f_num,count):
+    
+    
+    m_id = int((f_id + e_id) / 2)
+    m_num = n_lis[m_id]
+
+    count += 1
+    if (f_id > e_id):
+        return count
+    else:
+
+        if m_num > f_num:
+            return(nibutan(f_id,m_id -1,f_num,count))
+        elif m_num < f_num:
+            return(nibutan(m_id + 1,e_id,f_num,count))
+        else:
+            return count
+                
+while True:
+    global n_lis
+
+    n = int(input())
+    if n == 0:
+        break
+    n_lis = []
+    for i in range(n):
+        n_lis.append(int(input()))
+    f_n = int(input())
+    ans = nibutan(0,n,f_n,0)
+    print(ans)

@@ -1,0 +1,19 @@
+while True:
+    n = int(raw_input())
+    if n == 0:
+        break
+    magic = [[0 for i in range(n)] for i in range(n)]
+    x, y = n/2, n/2
+    magic[y][x] = 1
+    count = 2
+    while count <= n**2:
+        x, y = (x+1)%n, (y+1)%n
+        if magic[y][x] == 0:
+            magic[y][x] = count
+            count += 1
+        else:
+            x, y = (x-1)%n, (y+1)%n
+            magic[y][x] = count
+            count += 1
+    for i in xrange(n):
+        print "".join(map(lambda s:str(s).rjust(4),magic[i]))

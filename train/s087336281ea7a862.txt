@@ -1,0 +1,22 @@
+#include<iostream>
+#include<algorithm>
+#define rep(i,n) for(int i=0;i<n;i++)
+using namespace std;
+int n,m,cost[100001],op[1023];
+void dfs(int sum){
+	rep(i,(1<<n)-1)if(cost[sum+op[i]]>cost[sum]+1)cost[sum+op[i]]=cost[sum]+1,dfs(sum+op[i]);
+}
+int main(){
+	while(cin>>n>>m,n){
+		int coin[10],s=0;rep(i,n)cin>>coin[i];
+		rep(i,1<<n)if(i>0){
+			s=0;rep(j,n)if(i&1<<j)s+=coin[j];
+			op[i-1]=s;
+		}
+		sort(op,op+(1<<n)-1,greater<int>());
+		rep(i,m+1)cost[i]=1<<20;
+		cost[0]=0;dfs(0);
+		cout<<cost[m]<<endl;
+	}
+	return 0;
+}

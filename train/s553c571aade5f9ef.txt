@@ -1,0 +1,15 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n, factorial = 1;
+    cin >> n;
+
+    for (; n; n--)
+        factorial *= n;
+
+    cout << factorial << endl;
+
+    return 0;
+}

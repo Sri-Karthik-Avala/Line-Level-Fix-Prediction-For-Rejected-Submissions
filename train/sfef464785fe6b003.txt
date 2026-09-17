@@ -1,0 +1,8 @@
+A,B,C=X,Y,Z=map(int,input().split())
+
+A = Y
+B = X
+A = Z
+C = X
+
+print(str(A)+' '+str(B)+' '+str(C))

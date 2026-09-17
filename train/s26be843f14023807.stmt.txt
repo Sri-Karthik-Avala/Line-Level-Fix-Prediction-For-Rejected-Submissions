@@ -1,0 +1,149 @@
+Problem C: Emacs-like Editor 
+
+ 
+Emacs is a text editor which is widely used by many programmers.
+ 
+ 
+The advantage of Emacs is that we can move a cursor without arrow keys and the mice. For example, the cursor can be moved right, left, down, and up by pushing f , b , n , p with the Control Key respectively. In addition, cut-and-paste can be performed without the mouse.
+ 
+
+ 
+Your task is to write a program which simulates key operations in the Emacs-like editor. The program should read a text and print the corresponding edited text.
+ 
+
+ 
+The text consists of several lines and each line consists of zero or more alphabets and space characters. A line, which does not have any character, is a blank line.
+ 
+
+ 
+The editor has a cursor which can point out a character or the end-of-line in the corresponding line. The cursor can also point out the end-of-line in a blank line.
+ 
+ 
+In addition, the editor has a buffer which can hold either a string (a sequence of characters) or a linefeed.
+ 
+
+ 
+The editor accepts the following set of commands (If the corresponding line is a blank line, the word "the first character" should be "the end-of-line"):
+ 
+
+ 
+ 
+ a 
+Move the cursor to the first character of the current line.
+ 
+
+ 
+ e 
+Move the cursor to the end-of-line of the current line.
+ 
+
+ 
+ p 
+Move the cursor to the first character of the next upper line, if it exists. 
+If there is no line above the current line, move the cursor to the first character of the current line.
+ 
+
+ 
+ n 
+Move the cursor to the first character of the next lower line, if it exists. 
+If there is no line below the current line, move the cursor to the first character of the current line.
+ 
+
+ 
+ f 
+Move the cursor by one character to the right, unless the cursor points out the end-of-line. 
+If the cursor points out the end-of-line and there is a line below the current line, move the cursor to the first character of the next lower line. Otherwise, do nothing.
+ 
+
+ 
+ b 
+Move the cursor by one character to the left, unless the cursor points out the first character. 
+If the cursor points out the first character and there is a line above the current line, move the cursor to the end-of-line of the next upper line. Otherwise, do nothing.
+ 
+
+ 
+ d 
+If the cursor points out a character, delete the character (Characters and end-of-line next to the deleted character are shifted to the left). 
+If the cursor points out the end-of-line and there is a line below, the next lower line is appended to the end-of-line of the current line (Lines below the current line are shifted to the upper). Otherwise, do nothing.
+ 
+
+ 
+ k 
+If the cursor points out the end-of-line and there is a line below the current line, perform the command d mentioned above, and record a linefeed on the buffer. 
+If the cursor does not point out the end-of-line, cut characters between the cursor (inclusive) and the end-of-line, and record them on the buffer. After this operation, the cursor indicates the end-of-line of the current line.
+ 
+
+ 
+ y 
+If the buffer is empty, do nothing. 
+If the buffer is holding a linefeed, insert the linefeed at the cursor. The cursor moves to the first character of the new line. 
+If the buffer is holding characters, insert the characters at the cursor. The cursor moves to the character or end-of-line which is originally pointed by the cursor.
+ 
+
+ 
+
+ 
+The cursor position just after reading the text is the beginning of the first line, and the initial buffer is empty.
+ 
+
+ Input 
+
+ 
+The input consists of only one data-set which includes two parts. The first part gives a text consisting of several lines. The end of the text is indicated by a line (without quotes):
+
+ 
+"END_OF_TEXT"
+ 
+
+ 
+This line should not be included in the text.
+ 
+
+ 
+Next part gives a series of commands. Each command is given in a line. The end of the commands is indicated by a character ' - '.
+ 
+
+
+ Output 
+
+ 
+For the input text, print the text edited by the commands.
+ 
+
+ Constraints 
+
+ 
+ The number of lines in the text given as input &le; 10 
+ The number of characters in a line given as input &le; 20 
+ The number of commands &le; 300 
+ The maximum possible number of lines in the text during operations &le; 100 
+ The maximum possible number of characters in a line during operations &le; 1000 
+ 
+
+ Sample Input 
+ 
+hyo
+ni
+END_OF_TEXT
+f
+d
+f
+f
+k
+p
+p
+e
+y
+a
+k
+y
+y
+n
+y
+-
+ 
+
+ Output for the Sample Input 
+ 
+honihoni
+honi

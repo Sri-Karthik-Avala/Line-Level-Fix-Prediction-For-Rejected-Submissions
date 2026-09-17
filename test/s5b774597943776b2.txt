@@ -1,0 +1,25 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+main(){
+  double x;
+  while(1){
+    cin >> x;
+    if(x==0.0) break;
+    int nume=0, deno=1;
+    while(1){
+      double tmp=(double)nume/deno;
+      if(nume>20) break;
+      if(tmp<M_PI+x && tmp>M_PI-x) break;
+      if(tmp<M_PI-x){
+	nume++;
+      }else{
+	deno++;
+      }
+    }
+    printf("%d/%d\n", nume, deno);
+  }
+  return 0;
+}

@@ -1,0 +1,22 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int _ = 2e5 + 7; int N , A[_];
+
+int main(){
+	ios::sync_with_stdio(0); cin >> N; for(int i = 1 ; i <= N ; ++i) cin >> A[i];
+#define pii pair < int , int >
+	vector < pii > trs; trs.push_back(pii(0 , 0));
+	for(int i = 1 ; i <= N ; ++i){
+		vector < pii > now;
+		for(auto t : trs){
+			int x = t.first , y = t.second , z = A[i - 1] - y;
+			now.push_back(pii(x + (bool)y + (z < A[i]) , 0));
+			if(y <= A[i]) now.push_back(pii(x + (A[i - 1] < A[i]) , y));
+			if(z <= A[i]) now.push_back(pii(x + (y > A[i] - z) , A[i] - z));
+		}
+		sort(now.begin() , now.end()); trs = {now[0]};
+		for(auto t : now) if(t.first != trs.back().first){trs.push_back(t); break;}
+	}
+	cout << trs[0].first; return 0;
+}

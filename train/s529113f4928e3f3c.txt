@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define reps(i,n) for(int i=1;i<(int)(n);i++)
+
+typedef long long ll;
+using namespace std;
+
+ll kai(ll num){
+  ll div=pow(10,9)+7;
+  if(num==1){
+    return 1;
+  }else{
+    return (num%div)*kai(num-1)%div;
+  }
+}
+
+int main()
+{
+  ll n,m;
+  cin>>n>>m;
+  ll div=pow(10,9)+7;
+
+  if(abs(n-m)>1){
+    cout<<0<<endl;
+    return 0;
+  }
+
+  if(n%2==0&&m%2==0){
+    // cout<<kai(n)<<endl;
+    cout<<kai(n)*kai(m)*2%div<<endl;
+  }else{
+    cout<<kai(n)*kai(m)%div<<endl;
+  }
+  return 0;
+}

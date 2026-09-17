@@ -1,0 +1,38 @@
+# AOJ 1510 Independent Research
+# Python3 2018.7.13 bal4u
+
+mv = [[-1,-1,-1],[-1,-1,0],[-1,-1,1],[-1,0,-1],[-1,0,0],[-1,0,1],[-1,1,-1],[-1,1,0],[-1,1,1],
+      [0,-1,-1],[0,-1,0],[0,-1,1],[0,0,-1],[0,0,1],[0,1,-1],[0,1,0],[0,1,1],
+      [1,-1,-1],[1,-1,0],[1,-1,1],[1,0,-1],[1,0,0],[1,0,1],[1,1,-1],[1,1,0],[1,1,1]]
+				
+cno = 0
+arr = [[[[0 for x in range(5)] for y in range(5)] for z in range(5)] for k in range(2)]
+while True:
+	n = int(input())
+	if n == 0: break
+	for z in range(5):
+		if z > 0: input()
+		for y in range(5): arr[0][z][y] = list(map(int, input()))
+	a, b = [0]*27, [0]*27
+	ts = list(map(int, input().split()))
+	for t in ts[1:]: a[t] = 1
+	ts = list(map(int, input().split()))
+	for t in ts[1:]: b[t] = 1
+	for j in range(n):
+		for z in range(5):
+			for y in range(5):
+				for x in range(5):
+					s = 0;
+					for i in range(26):
+						xx, yy, zz = x+mv[i][0], y+mv[i][1], z+mv[i][2]
+						if xx >= 0 and xx < 5 and yy >= 0 and yy < 5 and zz >= 0 and zz < 5:
+							s += arr[j&1][zz][yy][xx] & 1
+					if arr[j&1][z][y][x] & 1: arr[1-(j&1)][z][y][x] = b[s]
+					else: arr[1-(j&1)][z][y][x] = a[s]
+	if cno: print()
+	cno += 1
+	print("Case ", cno, ":", sep='')
+	for z in range(5):
+		if z > 0: print()
+		for y in range(5): print(*arr[n&1][z][y], sep='')
+		

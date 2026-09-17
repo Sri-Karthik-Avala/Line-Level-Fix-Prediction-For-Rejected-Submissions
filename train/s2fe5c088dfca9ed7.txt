@@ -1,0 +1,72 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+struct edge{
+  int to;
+  long long cap;
+  int rev;
+};
+
+vector<vector<edge> > G;
+bool used[109];
+
+void add_edge(int from,int to,long long cap){
+  G[from].push_back({to,cap,(int)G[to].size()});
+  G[to].push_back({from,0,(int)G[from].size()-1});
+}
+
+long long dfs(int v,int t,long long f){
+  if(v==t)return f;
+  used[v]=true;
+  for(int i=0;i<G[v].size();i++){
+    edge &e=G[v][i];
+    if(!used[e.to]&&e.cap>0){
+      long long d=dfs(e.to,t,min(f,e.cap));
+      if(d>0){
+	e.cap-=d;
+	G[e.to][e.rev].cap+=d;
+	return d;
+      }
+    }
+  }
+  return 0;
+}
+
+long long max_flow(int s,int t){
+  int flow=0;
+  for(;;){
+    fill(begin(used),end(used),false);
+    long long f=dfs(s,t,1LL<<62);
+    if(f==0)return flow;
+    flow+=f;
+  }
+}
+
+int main(){
+  for(long long N,W;cin>>N>>W,N;){
+    G=vector<vector<edge> >(109);
+    for(int i=0;i<7;i++){
+      add_edge(107,100+i,W);
+    }
+    long long tsum=0;
+    for(int i=0;i<N;i++){
+      long long t,c;
+      cin>>t>>c;
+      tsum+=t;
+      while(c--){
+	char dow[99];
+	cin>>dow;
+	add_edge(100+(
+		 (dow[0]=='S')?(dow[1]=='u')?0:1:
+		 (dow[0]=='M')?2:
+		 (dow[0]=='T')?(dow[1]=='u')?3:4:
+		 (dow[0]=='W')?5:6),i,1LL<<62);
+      }
+      add_edge(i,108,t);
+    }
+    cout<<((max_flow(107,108)==tsum)?"Yes":"No")<<endl;
+  }
+}

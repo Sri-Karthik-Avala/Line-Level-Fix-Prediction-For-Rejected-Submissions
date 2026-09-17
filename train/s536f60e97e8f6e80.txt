@@ -1,0 +1,80 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> P;
+#define MAX 1005
+#define INF 1000000007
+
+int N;
+int A[MAX],B[MAX];
+int dp[MAX][MAX];
+
+int main(){
+
+  scanf("%d",&N);
+
+  vector<P> t;
+  for(int i=0;i<N;i++){
+    scanf("%d %d",&A[i],&B[i]);
+    t.push_back( P(B[i]-A[i],i) );
+  }
+  sort(t.begin(),t.end());
+
+  for(int i=0;i<MAX;i++)
+    for(int j=0;j<MAX;j++)
+      dp[i][j]=INF;
+
+  dp[0][0]=0;
+
+  int ans=0;
+
+  for(int i=1;i<=N;i++){
+
+    int id=t[i-1].second;
+
+    for(int j=0;j<=N;j++){
+      dp[i][j]=dp[i-1][j];
+
+      if(j>0){
+	int f=dp[i-1][j-1];
+
+	if(f<=B[id]-A[id]){
+
+	  dp[i][j]=min(dp[i][j],f+A[id]);
+
+	}
+      }
+      
+      if(dp[i][j]!=INF){
+	ans=max(ans,j);
+      }
+    }
+  }
+  /*
+  for(int i=0;i<=N;i++){
+    for(int j=0;j<=N;j++){
+      if(dp[i][j]==INF){
+	cout<<" INF";
+      }else{
+	printf(" %3d",dp[i][j]);
+      }
+    }
+    cout<<endl;
+
+  }
+  */
+  printf("%d\n",ans);
+  return 0;
+}
+/*
+   0 INF INF INF
+   0   3 INF INF
+   0   3   8 INF
+   0   3   8  18
+3
+stdrsv1122{s1210062}167: ./a.out < in2
+   0 INF INF INF
+   0 INF INF INF
+   0  10 INF INF
+   0   5  15 INF
+2
+*/

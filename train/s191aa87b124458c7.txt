@@ -1,0 +1,47 @@
+#include <string>
+#include <iostream>
+#include <algorithm>
+#define mod 1000000007
+using namespace std;
+int a[3][10007], l[3], f1, f2, power[10007];
+int calc(int g) {
+	int ret = 0, rng = l[g] - l[2] - f2;
+	for (int i = 0; i <= rng; i++) {
+		int comp = 0;
+		for (int j = l[2] - 1; j >= 0; j--) {
+			if (a[g][i + j] > a[2][j]) { comp = 1; break; }
+			if (a[g][i + j] < a[2][j]) { comp = -1; break; }
+		}
+		int res = 0;
+		for (int j = i + l[2]; j < l[1]; j++) res = (res + 1LL * a[g][j] * power[j - i - l[2]]) % mod;
+		res = 1LL * res * power[i] % mod;
+		switch (comp) {
+		case 1:
+			res = (res + power[i]) % mod; break;
+		case 0:
+			for (int j = 0; j < i; j++) res = (res + a[g][j] * power[j]) % mod; break;
+		}
+		ret = (ret + res) % mod;
+	}
+	if (f2) for (int i = 0; i < l[g] - 1; i++) ret = (ret - power[i] + mod) % mod;
+	return ret;
+}
+int main() {
+	string s; power[0] = 1;
+	for (int i = 1; i <= 10000; i++) power[i] = 10LL * power[i - 1] % mod;
+	for (int i = 0; i < 3; i++) {
+		cin >> s;
+		reverse(s.begin(), s.end());
+		for (int j = 0; j < s.size(); j++) a[i][l[i]++] = s[j] - 48;
+	}
+	if (l[0] == 1 && !a[0][0]) f1 = 1;
+	if (l[2] == 1 && !a[2][0]) f2 = 1;
+	if (!f1) {
+		for (int j = 0; ; j++) {
+			if (a[0][j] == 0) a[0][j] = 9;
+			else { a[0][j]--; break; }
+		}
+	}
+	cout << (calc(1) - (!f1 ? calc(0) : 0) + mod) % mod << endl;
+	return 0;
+}

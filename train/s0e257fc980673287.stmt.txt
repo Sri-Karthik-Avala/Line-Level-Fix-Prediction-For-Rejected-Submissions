@@ -1,0 +1,109 @@
+Problem C:
+Shopping
+ 
+
+ 
+ Your friend will enjoy shopping. She will walk through a mall along a straight street, where $N$ individual shops (numbered from 1 to $N$) are aligned at regular intervals. Each shop has one door and is located at the one side of the street. The distances between the doors of the adjacent shops are the same length, i.e. a unit length. Starting shopping at the entrance of the mall, she visits shops in order to purchase goods. She has to go to the exit of the mall after shopping.
+ 
+
+ 
+ She requires some restrictions on visiting order of shops. Each of the restrictions indicates that she shall visit a shop before visiting another shop. For example, when she wants to buy a nice dress before choosing heels, she shall visit a boutique before visiting a shoe store. When the boutique is farther than the shoe store, she must pass the shoe store before visiting the boutique, and go back to the shoe store after visiting the boutique.
+ 
+
+ 
+ If only the order of the visiting shops satisfies all the restrictions, she can visit other shops in any order she likes.
+ 
+
+ 
+ Write a program to determine the minimum required walking length for her to move from the entrance to the exit.
+ 
+
+ 
+ Assume that the position of the door of the shop numbered $k$ is $k$ units far from the entrance, where the position of the exit is $N + 1$ units far from the entrance.
+ 
+
+ Input 
+
+ 
+ The input consists of a single test case. 
+ 
+$N$ $m$ 
+$c_1$ $d_1$ 
+. 
+. 
+. 
+$c_m$ $d_m$ 
+ 
+ 
+ The first line contains two integers $N$ and $m$, where $N$ ($1 \leq N \leq 1000$) is the number of shops, and $m$ ($0 \leq m \leq 500$) is the number of restrictions. Each of the next $m$ lines contains two integers $c_i$ and $d_i$ ($1 \leq c_i 
+ 
+ There are no pair of $j$ and $k$ that satisfy $c_j = c_k$ and $d_j = d_k$.
+ 
+
+
+ Output 
+
+ 
+Output the minimum required walking length for her to move from the entrance to the exit. You should omit the length of her walk in the insides of shops.
+ 
+
+
+ Sample Input 1 
+
+ 10 3
+3 7
+8 9
+2 5 
+
+ Sample Output 1 
+
+ 23 
+
+ Sample Input 2 
+
+ 10 3
+8 9
+6 7
+2 4 
+
+ Sample Output 2 
+
+ 19 
+
+ Sample Input 3 
+
+ 10 0 
+
+ Sample Output 3 
+
+ 11 
+
+ Sample Input 4 
+
+ 10 6
+6 7
+4 5
+2 5
+6 9
+3 5
+6 8 
+
+ Sample Output 4 
+
+ 23 
+
+ Sample Input 5 
+
+ 1000 8
+3 4
+6 1000
+5 1000
+7 1000
+8 1000
+4 1000
+9 1000
+1 2 
+
+ Sample Output 5 
+
+ 2997

@@ -1,0 +1,32 @@
+n = 4
+
+A = ['' for _ in range(2**n)]
+for bit in range(2**n):
+    i = bit
+    mask = 1 << 0
+    if bit & mask:
+        A[i] += 'AKIH'
+    else:
+        A[i] += 'KIH'
+
+    mask = 1 << 2
+    if bit & mask:
+        A[i] += 'AB'
+    else:
+        A[i] += 'B'
+
+    mask = 1 << 3
+    if bit & mask:
+        A[i] += 'AR'
+    else:
+        A[i] += 'R'
+
+    mask = 1 << 4
+    if bit & mask:
+        A[i] += 'A'
+    else:
+        A[i] += ''
+        
+#print(A)
+
+print('YES') if input() in A else print('NO')

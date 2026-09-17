@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+using lint = long long;
+template<class T = int> using V = vector<T>;
+template<class T = int> using VV = V< V<T> >;
+
+int main() {
+  cin.tie(nullptr); ios::sync_with_stdio(false);
+  constexpr int N = 1e4;
+  V<> a, b;
+  for (int i = 1; ; ++i) {
+    a.push_back(i * (i + 1) * (i + 2) / 6);
+    if (a.back() >= N) {
+      a.pop_back();
+      break;
+    }
+    if (a.back() & 1) b.push_back(a.back());
+  }
+  V<> p(N, -1), q(N, -1);
+  p[0] = q[0] = 0;
+  queue<int> que;
+  que.push(0);
+  while (!que.empty()) {
+    int i = que.front(); que.pop();
+    for (int e : a) if (i + e < N and p[i + e] == -1) {
+      p[i + e] = p[i] + 1;
+      que.push(i + e);
+    }
+  }
+  que.push(0);
+  while (!que.empty()) {
+    int i = que.front(); que.pop();
+    for (int e : b) if (i + e < N and q[i + e] == -1) {
+      q[i + e] = q[i] + 1;
+      que.push(i + e);
+    }
+  }
+  while (true) {
+    int n; cin >> n;
+    if (!n) break;
+    cout << p[n] << ' ' << q[n] << '\n';
+  }
+}

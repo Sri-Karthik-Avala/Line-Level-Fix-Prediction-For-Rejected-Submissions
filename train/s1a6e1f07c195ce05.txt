@@ -1,0 +1,116 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+namespace {
+    typedef long long Long;
+
+    Long to_i(const string& s) {
+        istringstream is(s);
+        Long n; is >> n;
+        return n;
+    }
+
+    Long P; string s;
+
+    Long extgcd(Long a, Long b, Long& x, Long& y) {
+        Long g = a; x = 1LL; y = 0LL;
+        if (b != 0LL) {
+            g = extgcd(b, a % b, y, x);
+            y -= (a / b) * x;
+        }
+        return g;
+    }
+    Long inverse(Long v) {
+        Long x, y;
+        if (extgcd(v, P, x, y) == 1LL) return (x + P) % P;
+        return 0;
+    }
+
+    bool input() {
+        string l; getline(cin, l);
+        int x = l.find(":");
+        P = to_i(l.substr(0, x));
+        if (P == 0) return false;
+        string t = l.substr(x + 1, l.size() - (x + 1));
+        s.clear();
+        for (int i = 0; i < t.size(); i++) {
+            if (t[i] != ' ') s.push_back(t[i]);
+        }
+        return true;
+    }
+
+    Long calc(char op, Long a, Long b) {
+        //cout << a << op << b << endl;
+        if (op == '+') return (a + b) % P;
+        if (op == '-') return (a + P - b) % P;
+        if (op == '*') return (a * b) % P;
+        if (op == '/') {
+            if (b == 0) throw("NG");
+            return (a * inverse(b)) % P;
+        }
+        cout << op << endl;
+        assert(0);
+    }
+
+    Long number(const string& s, int& i) {
+        string t;
+        while (i < s.size() && isdigit(s[i])) {
+            t.push_back(s[i]);
+            i++;
+        }
+        return to_i(t);
+    }
+
+    Long expr(const string& s, int&i);
+    Long term(const string& s, int& i) {
+        if (s[i] == '(') {
+            i++;
+            Long a = expr(s, i);
+            assert(s[i] == ')');
+            i++;
+            return a;
+        }
+        Long a = number(s, i);
+        while (i < s.size() && (s[i] == '*' || s[i] == '/')) {
+            char op = s[i]; i++;
+            Long b;
+            if (s[i] == '(') {
+                i++;
+                b = expr(s, i);
+                assert(s[i] == ')');
+                i++;
+            } else {
+                b = number(s, i);
+            }
+            a = calc(op, a, b);
+        }
+        return a;
+    }
+
+    Long expr(const string& s, int& i) {
+        Long a = term(s, i);
+        while (i < s.size() && s[i] != ')') {
+            char op = s[i]; i++;
+            assert(op == '+' || op == '-');
+            Long b = term(s, i);
+            a = calc(op, a, b);
+        }
+        return a;
+    }
+
+    void solve() {
+        try {
+            int i = 0;
+            Long ans = expr(s, i);
+            cout << s << " = " << ans << " (mod " << P << ")" << endl;
+        } catch (char const* msg) {
+            cout << msg << endl;
+        }
+    }
+}
+
+int main() {
+    while (input()) solve();
+    return 0;
+}

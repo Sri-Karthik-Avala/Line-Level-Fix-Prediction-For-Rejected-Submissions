@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <sstream>
+#include <string>
+#include <complex>
+#include <cstdio>
+using namespace std;
+
+int v[50][50];
+int main(){
+	int h,w,t;
+	int p;
+	cin >> w >> h >> t >> p;
+	
+	for(int i = 0 ; i < p ; i++){
+		int x,y,z;
+		cin >> x >> y >> z;
+		if( z < p ) v[y][x]++;
+	}
+	int sum = 0;
+	for(int i = 0 ; i < h ; i++){
+		for(int j = 0 ; j < w ; j++){
+			int s;
+			cin >> s;
+			sum += s * v[i][j];
+		}
+	}
+	cout << sum << endl;
+
+}

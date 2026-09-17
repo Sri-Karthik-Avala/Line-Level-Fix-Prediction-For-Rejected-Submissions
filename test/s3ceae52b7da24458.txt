@@ -1,0 +1,10 @@
+while 1:
+    if input()=='0':break
+    a=sorted(list(map(int,input().split())))[::-1]
+    b=sorted(list(map(int,input().split())))[::-1]
+    p=0;c=0;
+    for i,x in enumerate(a):
+        if x<=b[p]:p+=1
+        else:c+=1
+        if (i+1)//2<c:print(i+1);break
+    else:print('NA')

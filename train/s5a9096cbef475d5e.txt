@@ -1,0 +1,103 @@
+#include <iostream>
+#include <queue>
+#include <set>
+using namespace std;
+typedef long long ll;
+
+ll mov[13][4] = {
+	{2,-1,-1,-1},
+	{2,5,-1,-1},
+	{0,1,3,6},
+	{2,7,-1,-1},
+	{5,-1,-1,-1},
+	{1,4,6,9},
+	{2,5,7,10},
+	{3,6,8,11},
+	{7,-1,-1,-1},
+	{5,10,-1,-1},
+	{6,9,11,12},
+	{7,10,-1,-1},
+	{10,-1,-1,-1},
+};
+
+ll sw(ll l, int i, int j) {
+	int a, b;
+	a = (l >> (4 * i)) & 0xfL;
+	b = (l >> (4 * j)) & 0xfL;
+
+	l &= ~(0xfL << (4*i));
+	l &= ~(0xfL << (4*j));
+
+	l |= (ll)b << (4 * i);
+	l |= (ll)a << (4 * j);
+
+	return l;
+}
+
+int main() {
+	while(1) {
+		ll in = 0;
+		for(int i = 0; i < 13; i++) {
+			int tmpin;
+			cin >> tmpin;
+			if(tmpin < 0)
+				return 0;
+			in |= ((ll)tmpin << (4*i));
+		}
+
+		queue<ll> q;
+		set<ll> s;
+		q.push(in);
+		s.insert(in);
+		int ans = -1;
+		// debug
+		int failcount = 0;
+		for(int i = 0; i <= 20; i++) {
+			queue<ll> next;
+			while(!q.empty()) {
+				ll l = q.front(); q.pop();
+				if(l == 0xba9876543210) {
+					ans = i;
+					goto OUTPUT_ANSWER;
+				}
+				else {
+					int cnt = 0;
+					for(int j = 0; j < 13; j++) {
+						ll t = 0xba9876543210;
+						if(((l >> 4*j) & 0xfL) != ((t >> 4*j) & 0xfL)) {
+							cnt++;
+						}
+					}
+					if(cnt > 20 - (i + 3))
+						continue;
+				}
+
+				for(int j = 0; j < 13; j++) {
+					if(((l >> (4*j)) & 0xfL) == 0) {
+						for(int k = 0; k < 4; k++) {
+							ll p;
+							if(mov[j][k] < 0)
+								break;
+							p = sw(l, j, mov[j][k]);
+							if(s.find(p) == s.end()) {
+								s.insert(p);
+								next.push(p);
+							}
+							else {
+								failcount++;
+							}
+						}
+					}
+				}
+			}
+			q = next;
+		}
+
+OUTPUT_ANSWER:;
+		if(ans < 0)
+			cout << "NA" << endl;
+		else
+			cout << ans << endl;
+//		cout << failcount << endl;
+	}
+}

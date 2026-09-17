@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+
+using namespace std;
+
+const int N = 1e5 + 100;
+
+int n, m, dislike[10];
+
+
+int main()
+{
+	scanf("%d%d", &n, &m);
+	memset(dislike, 0, sizeof(dislike));
+	while(m -- ) {
+		int tmp;
+		scanf("%d", &tmp);
+		dislike[tmp] = true;
+	}
+	int i;
+	for(i = n; i < 10000; i ++) {
+		int t = i;
+		bool is_suc = true;
+		while(t) {
+			int num = t % 10;
+			t /= 10;
+			if( dislike[num])
+				is_suc = false;
+		}
+		if( is_suc)    break;
+	}
+	printf("%d\n", i);
+	return 0;
+} 

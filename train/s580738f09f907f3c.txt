@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+inline void upi(int&a,const int&b){a>b?a=b:0;}
+const int N=1505;
+int n,i,j,x,a[N][N];
+char c[N][N];
+long long ans;
+int L[N][N],R[N][N],B[N],tB[N][N],Mp[N][N],tMp[N][N],Rch[N];
+int s1[N][N],s2[N][N],s3[N][N],Lu[N][N],Ru[N][N],T[N],tT[N][N],sm,only[N];
+int q[N],xb,lp,rp,q2[N],t,w;
+inline int Brh(int x,int y,int l){l=min(l,min(B[x],B[y]));return l<Mp[x][y]?0:s1[l][n]-s1[l][y-1]-s2[l][x+1]+s3[x+1][y-1];}
+inline void upd(int w){
+	x=Brh(q2[w],q[rp],min(B[q2[w]],B[q[rp]]))-(q2[w+1]?Brh(q2[w],q[rp],B[q2[w+1]]):0);
+	sm-=x;only[q2[w]]-=x;
+}
+void solve(int lb,int rb){
+	if(lb==rb)return;int mid=lb+rb>>1;solve(lb,mid);solve(mid+1,rb);
+	for(i=mid+1;i<=rb+1;++i)for(j=0;j<=n+1;++j)L[i][j]=N,R[i][j]=0,tB[i][j]=0;
+	for(i=mid+1;i<=rb;++i)memset(s1[i],0,n+2<<2),memset(s2[i],0,n+2<<2);for(i=1;i<=n;++i)memset(s3[i]+i,0,n-i+1<<2);
+	for(i=1;i<=n;++i)for(j=i;j<=n;++j)tMp[i][j]=N;
+	for(j=1;j<=n;++j)if(a[mid+1][j])L[mid+1][j]=a[mid+1][j-1]?L[mid+1][j-1]:j,R[mid+1][j]=j;
+	for(i=mid+2;i<=rb;++i)for(j=1;j<=n;++j)if(a[i][j])
+		L[i][j]=min(L[i-1][j],L[i][j-1]),R[i][j]=max(R[i-1][j],R[i][j-1]);
+	for(i=rb;i>=mid+1;--i)for(j=n;j;--j)if(a[i][j])tB[i][j]=max(i,max(tB[i+1][j],tB[i][j+1]));memcpy(B,tB[mid+1],n+2<<2);
+
+	for(i=mid+1;i<=rb;++i)for(j=1;j<=n;++j)if(R[i][j])upi(tMp[L[i][j]][R[i][j]],i);
+	for(i=1;i<n;++i)for(j=n;j>i;--j)upi(tMp[i][j-1],tMp[i][j]);
+	for(i=1;i<n;++i)for(j=i+1;j<=n;++j)upi(tMp[i+1][j],tMp[i][j]);
+	for(i=1;i<n;++i)for(j=i;j<=n;++j)if(a[mid+1][i] && a[mid+1][j])
+		Mp[i][j]=tMp[i][j]<=min(B[i],B[j])?tMp[i][j]:N;
+	for(i=mid+1;i<=rb;++i)for(j=1;j<=n;++j)if(R[i][j])
+		s1[i][R[i][j]]+=a[i][j],s2[i][L[i][j]]+=a[i][j],s3[L[i][j]][R[i][j]]+=a[i][j];
+	for(i=mid+1;i<=rb;++i){
+		for(j=2;j<=n;++j)s1[i][j]+=s1[i][j-1];for(j=n-1;j;--j)s2[i][j]+=s2[i][j+1];
+		if(i>mid+1)for(j=1;j<=n;++j)s1[i][j]+=s1[i-1][j],s2[i][j]+=s2[i-1][j];
+	}
+	for(i=1;i<n;++i)for(j=i+1;j<=n;++j)s3[i][j]+=s3[i][j-1];
+	for(i=n-1;i;--i)for(j=i+1;j<=n;++j)s3[i][j]+=s3[i+1][j];
+	for(i=1;i<=n;++i)if(a[mid+1][i])Rch[i]=Brh(i,i,rb);
+
+	for(i=lb-1;i<=mid+1;++i)for(j=0;j<=n+1;++j)Lu[i][j]=N,Ru[i][j]=0,tT[i][j]=N;
+	for(j=n;j;--j)if(a[mid+1][j])Ru[mid+1][j]=a[mid+1][j+1]?Ru[mid+1][j+1]:j,Lu[mid+1][j]=j;
+	for(i=mid;i>=lb;--i)for(j=n;j;--j)if(a[i][j])
+		Lu[i][j]=min(Lu[i+1][j],Lu[i][j+1]),Ru[i][j]=max(Ru[i+1][j],Ru[i][j+1]);
+	for(i=lb;i<=mid+1;++i)for(j=1;j<=n;++j)if(a[i][j])tT[i][j]=min(i,min(tT[i-1][j],tT[i][j-1]));memcpy(T,tT[mid+1],n+2<<2);
+	
+	for(i=mid;i>=lb;--i){
+		lp=t=1;xb=rp=w=sm=0;for(j=1;j<=n;++j)if(T[j]<=i)q[++xb]=j;
+		for(j=1;j<=n;++j)if(Ru[i][j]){
+			for(;rp<xb && q[rp+1]<=Ru[i][j];){
+				++rp;sm+=only[q[rp]]=Rch[q[rp]];for(;t<=w && B[q2[w]]<=B[q[rp]];--w)upd(w);
+				if(t<=w)upd(t);q2[++w]=q[rp];q2[w+1]=0;
+			}
+			for(;lp<=rp && q[lp]<Lu[i][j];)sm-=only[q[lp++]];for(;t<=w && q2[t]<Lu[i][j];++t);
+			ans+=a[i][j]*sm;
+		}
+	}
+}
+int main(){
+	scanf("%d",&n);
+	for(i=1;i<=n;++i)scanf("%s",c[i]+1);
+	for(i=1;i<=n;++i)for(j=n,x=0;j;--j){
+		a[i][j]=c[i][j]=='#'?0:c[i][j]-'0';
+		if(a[i][j])ans+=x*a[i][j],x+=a[i][j];else x=0;
+	}
+	solve(1,n);
+	printf("%lld\n",ans);
+	return 0;
+}

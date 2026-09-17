@@ -1,0 +1,44 @@
+Matrix-chain Multiplication 
+
+ 
+ The goal of the matrix-chain multiplication problem is to find the most efficient way to multiply given $n$ matrices $M_1, M_2, M_3,...,M_n$.
+ 
+
+ 
+ Write a program which reads dimensions of $M_i$, and finds the minimum number of scalar multiplications to compute the maxrix-chain multiplication $M_1M_2...M_n$.
+ 
+
+ Input 
+
+ 
+ In the first line, an integer $n$ is given. In the following $n$ lines, the dimension of matrix $M_i$ ($i = 1...n$) is given by two integers $r$ and $c$ which respectively represents the number of rows and columns of $M_i$.
+ 
+
+ Output 
+
+ 
+ Print the minimum number of scalar multiplication in a line.
+ 
+
+ Constraints 
+
+ 
+ $1 \leq n \leq 100$ 
+ $1 \leq r, c \leq 100$ 
+ 
+
+
+ Sample Input 1 
+ 
+6
+30 35
+35 15
+15 5
+5 10
+10 20
+20 25
+ 
+
+ Sample Output 1 
+ 
+15125

@@ -1,0 +1,4 @@
+from decimal import Decimal
+
+n, d, x = map(Decimal, input().split())
+print((d + (2 * n - 1) * x / 2) * sum((n - i) / (i + 1) for i in range(int(n))))

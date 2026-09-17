@@ -1,0 +1,13 @@
+from math import factorial
+n = int(input())
+m = factorial(n)
+s = 2
+ans = 1
+while s > 1:
+    c = 1
+    while m % s == 0:
+        c += 1
+        m = m // s
+    ans *= c
+    s += 1
+print(ans % (10**9+7))

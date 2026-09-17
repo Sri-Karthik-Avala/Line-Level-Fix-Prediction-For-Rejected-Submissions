@@ -1,0 +1,3 @@
+com=input()
+x,y=map(float,com.split(" "))
+print(x*y,x*2+y*2)

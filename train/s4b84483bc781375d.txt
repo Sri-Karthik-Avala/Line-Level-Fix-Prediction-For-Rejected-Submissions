@@ -1,0 +1,52 @@
+#include<cstdio>
+#include<cstring>
+#include<ctype.h>
+using namespace std;
+
+	int N, H;
+	int T[1000];
+	char S[1000][210];
+	char c[20];
+	int result[20] = {0};
+
+
+int main() {
+		
+	scanf("%d%d", &N, &H);
+	for(int i = 0; i < N; i++) {
+		scanf("%s%d", S[i], &T[i]);
+	}
+	
+	for(int i = 0; i < N; i++) {
+		int len = strlen(S[i]);
+		for(int j = 0; j < len; j++) {
+			bool ac = false;
+			while(!ac) {
+				if(T[i] < 0) {
+					j = len;
+					H--;
+					break;
+				}
+				printf("? %s\n", S[i]); fflush(stdout);
+				scanf("%s", c);
+				if(c[0] == S[i][j] || toupper(c[0]) == S[i][j]) {
+					ac = true;
+					S[i][j] = '_';
+					result[0]++;
+					result[1]++;
+				} else {
+					T[i]--;
+					result[1]++;
+				}
+			}
+		}
+		if(H <= 0) {
+			printf("! Game Over\n"); fflush(stdout);
+			return 0;
+		}
+	}
+	
+	printf("! Game Clear %.1lf\n", (double)result[0] / result[1] * 100.0);
+	fflush(stdout);
+	
+}

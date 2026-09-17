@@ -1,0 +1,16 @@
+s = str(input())
+
+ans, cnt, i = 0, 0, 0
+while i < len(s)-1:
+  if s[i] == 'A':
+    cnt += 1
+    i += 1
+  else:
+    if s[i:i+2] == 'BC':
+      ans += cnt
+      i += 2
+      cnt = 1
+    else:
+      cnt = 0
+      i += 1
+print(ans)

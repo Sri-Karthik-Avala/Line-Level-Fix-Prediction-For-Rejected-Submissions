@@ -1,0 +1,71 @@
+Score : 500 points 
+ 
+ 
+ Problem Statement For an integer n not less than 0 , let us define f(n) as follows: 
+ 
+ f(n) = 1 (if n < 2 ) 
+ f(n) = n f(n-2) (if n \geq 2 ) 
+ 
+ Given is an integer N . Find the number of trailing zeros in the decimal notation of f(N) . 
+ 
+ 
+ 
+ 
+ Constraints 
+ 0 \leq N \leq 10^{18} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ N 
+ 
+ 
+ 
+ 
+ 
+ Output Print the number of trailing zeros in the decimal notation of f(N) . 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 12
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 1
+ 
+ f(12) = 12 × 10 × 8 × 6 × 4 × 2 = 46080 , which has one trailing zero. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 5
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 0
+ 
+ f(5) = 5 × 3 × 1 = 15 , which has no trailing zeros. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 1000000000000000000
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 124999999999999995

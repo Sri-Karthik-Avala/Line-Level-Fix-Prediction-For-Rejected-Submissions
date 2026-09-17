@@ -1,0 +1,79 @@
+#include<bits/stdc++.h>
+using namespace std;
+//dengyaotriangle!
+
+const int maxn=200005;
+
+int n,q;
+int a[maxn];
+
+struct node{
+    node* c[2];
+    int mx1,mx2;
+}pool[maxn];int ps;
+
+
+node* nwnode(){
+    node* rt=pool+ps++;
+    rt->mx1=rt->mx2=-(1<<20);
+    return rt;
+}
+
+void pu(node* rt){
+    if(rt&&rt->c[0])rt->mx1=max(rt->c[0]->mx1,rt->c[1]->mx1),rt->mx2=max(rt->c[0]->mx2,rt->c[1]->mx2);
+}
+
+node* bt(int l,int r){
+    int m=(l+r)>>1;
+    node* u=nwnode();
+    if(l!=r){
+        u->c[0]=bt(l,m);
+        u->c[1]=bt(m+1,r);
+    }
+    return u;
+}
+
+void chg(node* rt,int cl,int cr,int i,int v){
+    int cm=(cl+cr)>>1;
+    if(cl==cr){rt->mx1=max(rt->mx1,v);rt->mx2=max(rt->mx2,v-a[cl]);return;}
+    else if(i<=cm)chg(rt->c[0],cl,cm,i,v);
+    else chg(rt->c[1],cm+1,cr,i,v);
+    pu(rt);
+}
+
+int qry(node* rt,int cl,int cr,int l,int r,bool x){
+    int cm=(cl+cr)>>1;
+    if(cl==l&&cr==r)return x?rt->mx1:rt->mx2;
+    else if(r<=cm)return qry(rt->c[0],cl,cm,l,r,x);
+    else if(l>cm)return qry(rt->c[1],cm+1,cr,l,r,x);
+    else return max(qry(rt->c[0],cl,cm,l,cm,x),qry(rt->c[1],cm+1,cr,cm+1,r,x));
+}
+
+pair<int,int> p[maxn];
+
+int main(){
+    ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    cin>>n;
+    int ans=0;
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
+        if(a[i]==0)a[i]=-1;
+        else ans++;
+        a[i]+=a[i-1];
+        //cerr<<a[i]<<endl;
+    }
+    cin>>q;
+    node* rt=bt(0,n);
+    chg(rt,0,n,0,0);
+    for(int i=1;i<=q;i++)cin>>p[i].first>>p[i].second;
+    sort(p+1,p+1+q);
+    for(int i=1;i<=q;i++){
+        int el=p[i].first,er=p[i].second;
+        int h=qry(rt,0,n,0,el-1,1)+a[er]-a[el-1];
+        int g=qry(rt,0,n,el-1,er,0)+a[er];
+        chg(rt,0,n,er,max(h,g));
+    }
+    ans-=qry(rt,0,n,0,n,1);
+    cout<<ans;
+    return 0;
+}

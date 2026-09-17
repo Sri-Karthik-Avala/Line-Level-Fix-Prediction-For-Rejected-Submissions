@@ -1,0 +1,16 @@
+from sys import *
+
+maxnum = 60000
+primes = [True]*maxnum
+primes[0] = primes[1] = False
+for i in xrange(maxnum):
+    if i >= maxnum**0.5 : break
+    if not primes[i]: continue
+    for j in xrange(i*2,maxnum,i): primes[j] = False
+
+for s in stdin:
+    d = int(s)
+    for i in reversed(xrange(2,d-1)):
+        if primes[i]: print i,; break
+    for i in xrange(d+1,maxnum):
+        if primes[i]: print i;break

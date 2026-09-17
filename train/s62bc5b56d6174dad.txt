@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string s;
+    cin>>s;
+
+    map<char,int>cc,ic;
+
+    for(int i=0;i<s.size();i++){
+        if(isdigit(s[i]))ic[s[i]]++;
+        else cc[s[i]]++;
+    }
+
+    int ans=s.size();
+
+    for(char c='a';c<'z';c++){
+        while(cc[c]){
+            char next=c+1;
+            while(next<='z'&&ic[next])next++;
+
+            if(next-c<=3)break;
+            ans-=next-c-3;
+            for(char d=c;d<next;d++)cc[d]--;
+        }
+    }
+
+
+    for(char c='0';c<'9';c++){
+        while(ic[c]){
+            char next=c+1;
+            while(next<='9'&&ic[next])next++;
+
+            if(next-c<=3)break;
+            ans-=next-c-3;
+            for(char d=c;d<next;d++)ic[d]--;
+        }
+    }
+    cout<<ans<<endl;
+    return 0;
+}

@@ -1,0 +1,49 @@
+import sys
+
+sys.setrecursionlimit(200000)
+
+
+def do_dfs(root, add_duplicated=True):
+    global edges, visited, duplicated
+
+    def main(i):
+        visited[i] = True
+        for edge in edges[i]:
+            if visited[edge]:
+                if edge == root:
+                    return True
+                if add_duplicated:
+                    duplicated.add(edge)
+                continue
+            if main(edge):
+                return True
+        return False
+
+    return main(root)
+
+
+n, m = map(int, input().split())
+
+edges = [set() for _ in range(n)]
+
+for _ in range(m):
+    s, t = map(int, input().split())
+    edges[s].add(t)
+
+visited = [False] * n
+duplicated = set()
+
+for i in range(n):
+    if not visited[i]:
+        if do_dfs(i):
+            print(1)
+            break
+else:
+    visited = [False] * n
+    for i in duplicated:
+        root = i
+        if do_dfs(i, False):
+            print(1)
+            break
+    else:
+        print(0)

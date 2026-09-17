@@ -1,0 +1,84 @@
+#include <iostream>
+#include <algorithm>    
+#include <vector>
+#include <cassert>
+#include <tuple>
+using namespace std;
+
+using vi = vector<int>;
+using ll = long long;
+
+const ll inf = 1e9;
+
+inline int dist(int x1, int y1, int z1, int x2, int y2, int z2) {
+    return abs(x1 - y1) + abs(y1 - y2) + abs(z1 - z2);
+}
+
+int dx[] = { 0,0,0,0,-1,1 ,0};
+int dy[] = { 0,0,-1,1,0,0 ,0};
+int dz[] = { -1,1,0,0,0,0 ,0};
+
+int ans;
+int n;
+
+struct P {
+    int x, y, z;
+    P(int x, int y, int z) :x(x), y(y), z(z) {}
+    P() {}
+    P rotX(int dir) const {
+        return dir ? P(x, n - z - 1, y) : P(x, z, n - y - 1);
+    }
+    P rotY(int dir) const {
+        return dir ? P(z, y, n - x - 1) : P(n - z - 1, y, x);
+    }
+    P rotZ(int dir) const {
+        return dir ? P(n - y-1, x, z) : P(y, n - x-1, z);
+    }
+    int dist(P const &p) const {
+        return abs(x - p.x) + abs(y - p.y) + abs(z - p.z);
+    }
+    bool inner() const {
+        return
+            0 <= x && 0 <= y && 0 <= z &&
+            x < n && y < n && z < n;
+    }
+};
+
+void dfs(const P &a, const P &b, int role) {
+    // cout << " " << a.x << " " << a.y << " " << a.z << " " << role << endl;
+    ans = min(role + a.dist(b), ans);
+    if (role == 10) return;
+    if (a.x != b.x) {
+        dfs(a.rotX(0), b, role + 1);
+        dfs(a.rotX(1), b, role + 1);
+    }
+    if (a.y != b.y) {
+        dfs(a.rotY(0), b, role + 1);
+        dfs(a.rotY(1), b, role + 1);
+    }
+    if (a.z != b.z) {
+        dfs(a.rotZ(0), b, role + 1);
+        dfs(a.rotZ(1), b, role + 1);
+    }
+}
+
+int main() {
+    while (cin >> n) {
+        ans = 1e9;
+        P a, b;
+        cin >> a.x >> a.y >> a.z;
+        cin >> b.x >> b.y >> b.z;
+        for (int i = 0; i < 6; ++i) {
+            P aa = a;
+            aa.x += dx[i];
+            aa.y += dy[i];
+            aa.z += dz[i];
+            if (aa.inner()) {
+                dfs(aa, b, 0);
+            }
+        }
+        ++ans;
+        dfs(a, b, 0);
+        cout << ans << endl;
+    }
+}

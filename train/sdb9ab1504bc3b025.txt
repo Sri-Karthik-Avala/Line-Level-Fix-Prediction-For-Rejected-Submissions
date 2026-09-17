@@ -1,0 +1,12 @@
+def function(a):
+	s=0
+	d=a
+	for i in range(d,600-d+1,d):
+		s+=a*(d**2)
+		d+=a
+		#print("%10d %10d"%(d,s))
+	return s
+
+
+n=int(input())
+print(function(n))

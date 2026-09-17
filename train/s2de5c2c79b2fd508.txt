@@ -1,0 +1,28 @@
+import numpy as np
+
+while True:
+    l = list(map(int, input().split()))
+    S = l[0]
+    p = np.zeros(S)
+    M = l[1]
+    i = 0
+    N = M
+    if M == 0 and S == 0:
+        break
+
+    while True:
+        if p[i] == M:
+            print(i)
+            break
+
+        if N == 0:
+            N = p[i]
+            p[i] = 0
+            i += 1
+            i %= S
+
+        else:
+            N -= 1
+            p[i] += 1
+            i += 1
+            i %= S

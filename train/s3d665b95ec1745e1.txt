@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=200000+5,inf=0x3f3f3f3f;
+int f[N],cyc[N];
+int find(int x){
+	return x==f[x]?x:f[x]=find(f[x]);
+}
+struct node{
+	int r,c,val;
+	bool friend operator <(node i,node j){
+		return i.val>j.val;
+	}
+}a[N];
+int main(){
+	int n,H,W;
+	cin>>n>>H>>W;
+	for(int i=1;i<=H+W;++i)
+		f[i]=i;
+	for(int i=1;i<=n;++i)
+		cin>>a[i].r>>a[i].c>>a[i].val;
+	sort(a+1,a+n+1);int ans=0;
+	for(int i=1;i<=n;++i){
+		int x=find(a[i].r),y=find(a[i].c+H);
+		if(x==y){
+			if(cyc[x]) continue;
+			cyc[x]=1;
+		}
+		else{
+			if(cyc[x] && cyc[y]) continue;
+			f[x]=y; cyc[y]+=cyc[x];
+		}
+		ans+=a[i].val;
+	}
+	cout<<ans;
+	return 0;
+}

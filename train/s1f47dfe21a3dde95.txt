@@ -1,0 +1,68 @@
+#include <iostream>
+#include <utility>
+#include <algorithm>
+using namespace std;
+
+pair<int, int> p[60];
+int ans[2510], beg[60]={};
+
+int main() {
+	int N, K;
+	cin >> N >> K;
+	int sum=0, opb=(N-1)*(K+1)+1;
+	for(int i=0; i<N; ++i){
+		cin >> p[i].first;
+		p[i].second=i+1;
+		sum += max(0, K+1-p[i].first);
+	}
+	sort(p, p+N);
+	if(sum>K || p[0].first<K+1-(K+1)/2){
+		cout << -1 << endl;
+		return 0;
+	}
+	int num=0;
+	for(int i=0; i<N; ++i){
+		if(p[i].first<K+1){
+			for(int j=0; j+p[i].first<K+1; ++j){
+				beg[num]=p[i].second;
+				if(num+2>K) num=1;
+				else num += 2;
+			}
+		}
+		else break;
+	}
+	for(int i=0; i<K; ++i){
+		if(beg[i]==0){
+			while(1){
+				++beg[i];
+				if(i>0){
+					if(beg[i-1]==beg[i]) continue;
+				}
+				if(i+1<K){
+					if(beg[i+1]==beg[i]) continue;
+				}
+				break;
+			}
+		}
+	}
+	int a=0, b=beg[0], now=0;
+	for(int i=0; i<opb; ++i){
+		if(i%(N-1)==0 && i>0 && i<opb-1){
+			ans[i]=b;
+			a=b;
+			b=beg[i/(N-1)];
+			now=0;
+		}
+		else{
+			do{
+				++now;
+			}while(now==a || now==b);
+			ans[i]=now;
+		}
+	}
+	cout << opb << endl;
+	cout << ans[0];
+	for(int i=1; i<opb; ++i) cout << ' ' << ans[i];
+	cout << endl;
+	return 0;
+}

@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+#define LL long long int
+using namespace std;
+LL bol[200000],r1[200000],r2[200000],club[100000],node[100000],size[100000];
+int main(void)
+{
+	LL i,j,n,m,k;
+	cin>>n>>m>>k;
+	for(i=0;i<k;i++) cin>>bol[i]>>r1[i]>>r2[i];
+	for(i=0;i<n;i++) club[i]=0,node[i]=i,size[i]=1;
+	for(i=0;i<k;i++) {
+		int x,y,c,s;
+		if(bol[i]==1) {
+			x=r1[i],y=r2[i];
+			while(x!=node[x]) x=node[x];
+			while(y!=node[y]) y=node[y];
+			if(club[x]!=0&&club[y]!=0&&club[x]!=club[y]) {
+				cout<<i+1<<endl;
+				break;
+			}
+			else if(club[x]!=0&&club[y]==0) club[y]=club[x];
+			else if(club[x]==0&&club[y]!=0) club[x]=club[y];
+			if(x!=y) {
+				if(size[x]>size[y]) node[y]=x;
+				else if(size[y]>size[x]) node[x]=y;
+				else node[y]=x,size[x]++;
+			}
+		}
+		else {
+			s=r1[i],c=r2[i];
+			while(s!=node[s]) s=node[s];
+			if(club[s]==0) club[s]=c;
+			else if(club[s]!=c) {
+				cout<<i+1<<endl;
+				break;
+			}
+		}
+	}
+	if(i==k) cout<<"0"<<endl;
+}

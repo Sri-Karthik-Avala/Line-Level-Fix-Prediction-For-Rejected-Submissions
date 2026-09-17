@@ -1,0 +1,19 @@
+from math import isfinite
+from itertools import dropwhile
+
+n, knapsack = map(int, input().split())
+dpn = n * 100  # MAX VALUE
+dp = [float('inf')] * (dpn + 1)
+dp[0] = 0
+for i in range(n):
+    value, weight = map(int, input().split())
+    for j in range(dpn - value, 0, -1):
+        if not isfinite(dp[j]):
+            continue
+        new_weight = dp[j] + weight
+        if new_weight <= knapsack and dp[j + value] > new_weight:
+            dp[j + value] = new_weight
+    if dp[value] > weight:
+        dp[value] = weight
+
+print(next(dropwhile(lambda i: not isfinite(dp[i]), range(dpn, -1, -1))))

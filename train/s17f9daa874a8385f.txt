@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int main() {
+  int n;
+  cin >> n;
+  vector<string> s(n);
+  int i;
+  for(i=0;i<n;i++){
+    cin >> s.at(i);
+  }
+  int m;
+  cin >> m;
+  vector<string> t(m);
+  for(i=0;i<m;i++){
+    cin >> t.at(i);
+  }
+  int j,ans=0;
+  for(i=0;i<n;i++){
+    int maxi=0;
+    for(j=0;j<n;j++){
+      if(s.at(i)==s.at(j)){
+        maxi++;
+      }
+    }
+    for(int k=0;k<m;k++){
+      if(s.at(i)==t.at(i)){
+        maxi--;
+      }
+    }
+    ans=max(maxi,ans);
+  }
+  cout << ans;
+}
+      
+  

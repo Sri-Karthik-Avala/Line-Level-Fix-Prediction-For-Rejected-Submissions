@@ -1,0 +1,17 @@
+def solve(x):
+	B=list(map(int,x))
+	B.reverse()
+	for i in range(len(B)):
+		B[i]=B[i]*(2**i)
+	if 0 in B:
+		B.remove(0)
+	print(" ".join(map(str,B)))	
+
+
+while True:
+	try:
+		x=int(input())
+		solve(format(x,'b'))
+
+	except EOFError:
+		break

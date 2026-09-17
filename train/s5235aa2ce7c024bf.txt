@@ -1,0 +1,90 @@
+def getN():
+    return int(input())
+def getNM():
+    return map(int, input().split())
+def getList():
+    return list(map(int, input().split()))
+def getArray(intn):
+    return [int(input()) for i in range(intn)]
+def input():
+    return sys.stdin.readline().rstrip()
+def rand_N(ran1, ran2):
+    return random.randint(ran1, ran2)
+def rand_List(ran1, ran2, rantime):
+    return [random.randint(ran1, ran2) for i in range(rantime)]
+def rand_ints_nodup(ran1, ran2, rantime):
+  ns = []
+  while len(ns) < rantime:
+    n = random.randint(ran1, ran2)
+    if not n in ns:
+      ns.append(n)
+  return sorted(ns)
+
+def rand_query(ran1, ran2, rantime):
+  r_query = []
+  while len(r_query) < rantime:
+    n_q = rand_ints_nodup(ran1, ran2, 2)
+    if not n_q in r_query:
+      r_query.append(n_q)
+  return sorted(r_query)
+
+from collections import defaultdict, deque, Counter
+from sys import exit
+from decimal import *
+from heapq import heapify, heappop, heappush
+import math
+import random
+import string
+from copy import deepcopy
+from itertools import combinations, permutations, product
+from operator import mul, itemgetter
+from functools import reduce
+from bisect import bisect_left, bisect_right
+
+import sys
+sys.setrecursionlimit(1000000000)
+mod = 10 ** 9 + 7
+
+#############
+# Main Code #
+#############
+
+# 逆元事前処理ver
+# nが小さい場合に
+lim = 10 ** 6 + 7
+fact = [1, 1]
+factinv = [1, 1]
+inv = [0, 1]
+
+for i in range(2, lim + 1):
+    fact.append((fact[-1] * i) % mod)
+    inv.append((-inv[mod % i] * (mod // i)) % mod)
+    # 累計
+    factinv.append((factinv[-1] * inv[-1]) % mod)
+
+def cmb(n, r):
+    if (r < 0) or (n < r):
+        return 0
+
+    if r == 0:
+        return 1
+        
+    r = min(r, n - r)
+    return fact[n] * factinv[r] * factinv[n - r] % mod
+
+"""
+g(r,c) を 0 ≤ i ≤ r かつ 0 ≤ j ≤ c を満たす全ての整数の組 (i,j) に対する f(i,j) の総和とする。
+ここでf(r + 1, c) = f(r, c) + f(r, c - 1)...f(r, 0)
+f(r, c)からr方向へ1つ（一通り）
+f(r, c - 1)からr方向へ1つ, c方向に1つ（一通り）
+...
+
+つまりf(r2 + 1, c2) = f(r2, c) + f(r2, c - 1) + ... f(r2, 0)
+これをf(0, c2)からf(r2 + 1, c2)まで求めればg(r2, c2)が求まる
+"""
+r1, c1, r2, c2 = getNM()
+
+ans = 0
+for i in range(r1, r2 + 1):
+    ans = (ans + cmb(c2 + i + 1, i + 1) - cmb(c1 + i, i + 1)) % mod
+print(ans)

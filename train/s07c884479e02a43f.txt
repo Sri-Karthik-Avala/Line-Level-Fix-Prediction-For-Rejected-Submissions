@@ -1,0 +1,9 @@
+import calendar as C
+while 1:
+    a,b=map(int, input().split())
+    if a==0:break
+    if sum([1 for i in range(a,b+1) if C.isleap(i)])==0:
+        print("NA")
+    else:
+        for i in range(a,b+1):
+            if C.isleap(i)and i%100!=0:print(i)

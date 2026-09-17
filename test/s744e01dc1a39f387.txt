@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define foreach(c,itr) for(__typeof((c).begin()) itr=(c).begin();itr!=(c).end();itr++)
+
+using namespace std;
+
+int h,w;
+char a[12][12];
+int dx[] = {-1,+0};
+int dy[] = {+0,-1};
+map<vector<int>,int> dp[12*12];
+
+int uf[20];
+
+inline void init() { rep(i,20) uf[i] = i; }
+
+int find(int x) {
+  if( uf[x] == x ) return x;
+  return uf[x] = find(uf[x]);
+}
+
+void unit(int x,int y){
+  x = find(x), y = find(y);
+  if( x != y ) uf[x] = y;
+}
+
+bool isValid(int x,int y) { return 0 <= x && x < w && 0 <= y && y < h; }
+
+vector<int> getState(vector<int> state,int x){
+  if( state[x] == -1 ) state[x] = 123456;
+  init();
+  rep(i,w) rep(j,w) if( state[i] != -1 && state[j] != -1 && ( state[i] == state[j] || ( abs(i-j) == 1 && !( min(i,j) == x && max(i,j) == x+1 ) ) ) ) unit(i,j);
+
+  int index = 0;
+  vector<int> ret(w,-1);
+  rep(i,w) if( state[i] != -1 && ret[i] == -1 ) {
+    ret[i] = index++;
+    rep(j,w) if( find(i) == find(j) ) ret[j] = ret[i];
+  }
+  return ret;
+}
+
+/*
+  -1 : ???
+  0<= : ???
+ */
+void compute(){
+  {
+    vector<int> init(w,-1);
+    dp[0][init] = 0;
+  }
+  rep(y,h) rep(x,w) {
+    int next = y * w + x + 1;
+    foreach(dp[y*w+x],itr){
+      vector<int> state = itr->first;
+      int score = itr->second;
+      
+      // white
+      if( a[y][x] != '#' ){
+	bool success = true;
+	rep(i,2) {
+	  int nx = x + dx[i], ny = y + dy[i];
+	  if( !isValid(nx,ny) ) continue;
+	  if( state[nx] == -1 ) { success = false; break; }
+	}
+	if( success ) {
+	  vector<int> nstate = state;
+	  nstate[x] = -1;
+	  success = false;
+	  if( state[x] != -1 ) {
+	    rep(i,w) if( i != x && state[i] == state[x] ) { success = true; break; }
+	  } else success = true;
+	  
+	  if( success ) {
+	    if( !dp[next].count(nstate) || dp[next][nstate] < score ) dp[next][nstate] = score;
+	  }
+	}
+      }
+
+      // black
+      if( a[y][x] != '.' ) {
+	if( x-1 >= 0 && state[x-1] >= 0 && state[x-1] == state[x] ) continue;
+	vector<int> nstate = getState(state,x);
+	if( !dp[next].count(nstate) || dp[next][nstate] < score+1 ) dp[next][nstate] = score + 1;
+      } 
+    }
+  }
+  if( dp[h*w].empty() ) { puts("-1"); return; }
+  int maxi = -1;
+  foreach(dp[h*w],itr) {
+    bool success = true;
+    rep(i,w) if( (itr->first)[i] > 0 ) { success = false; break; }
+    if( success ) maxi = max(maxi,itr->second);
+  }
+  cout << maxi << endl;
+}
+
+int main(){
+  cin >> h >> w;
+  rep(i,h) {
+    string s;
+    cin >> s;
+    rep(j,w) a[i][j] = s[j];
+  }
+  compute();
+  return 0;
+}

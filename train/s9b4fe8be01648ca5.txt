@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+"""
+http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0585
+
+"""
+import sys
+from sys import stdin
+from math import sqrt
+input = stdin.readline
+
+
+def closest_part(points, n):
+    # ?????¬???p324???
+    if n <= 1:
+        return float('inf')
+    m = n // 2
+    x = points[m][0]
+    d = min(closest_part(points[:m], m), closest_part(points[m:], n-m))
+
+    points.sort(key=lambda x:x[1])
+    b = []
+    for i in range(n):
+        if abs(points[i][0] - x) >= d:
+            continue
+        for j in range(len(b)):
+            dx = points[i][0] - b[-j-1][0]
+            dy = points[i][1] - b[-j-1][1]
+            if dy >= d:
+                break
+            d = min(d, (dx**2 + dy**2))
+        b.append(points[i])
+    return d
+
+
+def main(args):
+    n = int(input())
+    points = [tuple(map(int, input().split())) for _ in range(n)]
+    points.sort()               #  x????????§??????????????????
+
+    result = closest_part(points, n)
+    print(result)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
+    

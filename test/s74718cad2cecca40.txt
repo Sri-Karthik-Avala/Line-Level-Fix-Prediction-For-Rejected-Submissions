@@ -1,0 +1,4 @@
+H,W=map(int,input().split());M=[input()for _ in"_"*H];D=[[0]*-~W for _ in"_"*-~H]
+for i in range(H):
+  for j in range(W):D[i+1][j+1]=min([D[i][j+1]+(M[i][j]<M[i-1][j]),999][i<1],[D[i+1][j]+(M[i][j]!=M[i][j-1]),999][j<1],999*(i+j>0))
+print(D[-1][-1]+(M[0][0]<".")) 

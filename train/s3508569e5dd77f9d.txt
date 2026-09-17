@@ -1,0 +1,63 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<vector>
+#include<set>
+#include<list>
+#include<queue>
+#include<cmath>
+#include<functional>
+#include<algorithm>
+#define INF (1<<29)
+#define rep(i,n) for(int i=0;i<(n);i++)
+using namespace std;
+
+
+int f(const string &s){
+	if(s[0]=='*')return -1;
+	int res=0;
+	rep(i,s.size()){
+		if(s[i]!='/'){
+			res=res*10+s[i]-'0';
+		}
+	}
+	return res;
+}
+
+bool contain(const string &s,const string &t){
+	rep(i,s.size()){
+		if(s.compare(i,t.size(),t)==0)
+			return true;
+	}
+	return false;
+}
+
+int main(){
+	int n;
+	string title[100],auther[100];
+	int date[100];
+	int q;
+	cin>>n;
+	rep(i,n){
+		string s;
+		cin>>title[i]>>auther[i]>>s;
+		date[i]=f(s);
+	}
+	cin>>q;
+	rep(i,q){
+		if(i)cout<<endl;
+		string ti,au,s,t;
+		int from,to;
+		cin>>ti>>au>>s>>t;
+		from=f(s);
+		to=f(t);
+		rep(j,n){
+			if( (ti=="*"||contain(title[j],ti)) && (au=="*"||au==auther[j])
+				&& (from<=date[j]) && (to==-1||to>=date[j]) ){
+					cout<<title[j]<<endl;
+			}
+		}
+	}
+	return 0;
+}

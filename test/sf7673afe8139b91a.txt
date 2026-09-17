@@ -1,0 +1,13 @@
+import sys
+
+rect = 0
+dia = 0
+for line in sys.stdin:
+    a,b,c = [int(i) for i in line.split(",")]
+    if a**2 + b**2 == c**2:
+        rect += 1
+    if a == b or b == c or c == a:
+        dia += 1
+
+print(rect)
+print(dia)

@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+#define For(i,x,y) for (register int i=(x);i<=(y);i++)
+#define FOR(i,x,y) for (register int i=(x);i<(y);i++)
+#define Dow(i,x,y) for (register int i=(x);i>=(y);i--)
+#define Debug(v) for (auto i:v) printf("%lld ",i);puts("")
+#define mp make_pair
+#define fi first
+#define se second
+#define pb push_back
+#define ep emplace_back
+#define siz(x) ((int)(x).size())
+#define all(x) (x).begin(),(x).end()
+#define fil(a,b) memset((a),(b),sizeof(a))
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pa;
+typedef pair<ll,ll> PA;
+typedef vector<int> poly;
+inline ll read(){
+    ll x=0,f=1;char c=getchar();
+    while ((c<'0'||c>'9')&&(c!='-')) c=getchar();
+    if (c=='-') f=-1,c=getchar();
+    while (c>='0'&&c<='9') x=x*10+c-'0',c=getchar();
+    return x*f;
+}
+
+const int N = 1<<10|3;
+int n,m,pre[N][N],a[N][N];
+inline int calc(int x1,int y1,int x2,int y2){
+	return pre[x2][y2]-pre[x1-1][y2]-pre[x2][y1-1]+pre[x1-1][y1-1];
+}
+inline int calc(){
+	For(i,1,n) For(j,1,m) pre[i][j]=pre[i-1][j]+pre[i][j-1]-pre[i-1][j-1]+a[i][j];
+	int ans=0;
+	For(i,1,n) For(j,1,m)
+		For(_i,i,n) For(_j,j,m) ans+=calc(i,j,_i,_j)&1;
+	return ans;
+}
+
+int ans[N][N];
+inline void Build(int x1,int y1,int x2,int y2){
+	if (y2-y1==0||x2-x1==0) return;
+	int m1=(x1+x2)/2,m2=(y1+y2)/2;
+	ans[(x1+x2)/2][(y1+y2)/2]=0;
+	Build(x1,y1,m1-1,m2-1);
+	Build(x1,m2+1,m1-1,y2);
+	Build(m1+1,y1,x2,m2-1);
+	Build(m1+1,m2+1,x2,y2);
+}
+
+int main(){
+	int n=(1<<read())-1,m=(1<<read())-1;
+	For(i,1,n) For(j,1,m) ans[i][j]=1;
+	Build(1,1,n,m);
+	For(i,1,n){
+		For(j,1,m) printf("%d ",ans[i][j]);
+		puts("");
+	}
+}

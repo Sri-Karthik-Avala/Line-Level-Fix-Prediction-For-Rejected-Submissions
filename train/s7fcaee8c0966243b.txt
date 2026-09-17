@@ -1,0 +1,57 @@
+N,K = map(int,input().split())
+
+H = list(map(int,input().split()))
+
+HSorted = sorted(H)
+
+HIndexToHeight = []
+HHeightToIndex = {}
+
+for i in range(N):
+    if i != 0 and HSorted[i] == HSorted[i-1]:
+        continue
+    HIndexToHeight.append(HSorted[i])
+    HHeightToIndex[HSorted[i]] = len(HIndexToHeight) - 1
+
+INF = 10 ** 12
+
+heightCount = len(HIndexToHeight)
+
+DP = []
+for i in range(N):
+    DP.append([])
+    for j in range(K + 1):
+        DP[i].append([])
+        for k in range(heightCount):
+            DP[i][j].append(INF)
+
+for k in range(heightCount):
+    if k == HHeightToIndex[H[0]]:
+        DP[0][0][k] = H[0]
+    elif K != 0:
+        DP[0][1][k] = HIndexToHeight[k]
+
+for i in range(1,N):
+    currentHeight = HHeightToIndex[H[i]]
+    for j in range(K + 1):
+        for k in range(heightCount):
+            if currentHeight > k:
+                if j > 0:
+                    DP[i][j][k] = min(DP[i-1][j-1][k], DP[i][j][k])
+                DP[i][j][currentHeight] = min(DP[i-1][j][k] + HIndexToHeight[currentHeight] - HIndexToHeight[k], DP[i][j][currentHeight])
+            elif currentHeight == k:
+                DP[i][j][currentHeight] = min(DP[i-1][j][k], DP[i][j][currentHeight])
+            else:
+                if j > 0:
+                    DP[i][j][k] = min(DP[i-1][j-1][k], DP[i][j][k])
+                DP[i][j][currentHeight] = min(DP[i-1][j][k], DP[i][j][currentHeight])
+ans = INF
+
+for j in range(K + 1):
+    for k in range(heightCount):
+        if ans > DP[N-1][j][k]:
+            ans = DP[N-1][j][k]
+
+print(ans)
+
+

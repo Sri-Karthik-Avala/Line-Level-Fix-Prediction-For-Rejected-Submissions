@@ -1,0 +1,64 @@
+k=int(input())
+x,y=map(int,input().split())
+d=abs(x)+abs(y)
+if k%2==0 and d%2==1:
+  print(-1)
+  exit()
+
+nx,ny=0,0
+ans=[]
+flg=True
+while d>2*k:
+  dx=min(k,abs(x-nx))
+  dy=k-dx
+  if abs(x-nx):nx+=dx*(x-nx)//abs(x-nx)
+  if abs(y-ny):ny+=dy*(y-ny)//abs(y-ny)
+  ans.append([nx,ny])
+  d=abs(x-nx)+abs(y-ny)
+if d%2==1:
+  dx=min(k,abs(x-nx))
+  dy=k-dx
+  if abs(x-nx):nx+=dx*(x-nx)//abs(x-nx)
+  if abs(y-ny):ny+=dy*(y-ny)//abs(y-ny)
+  ans.append([nx,ny])
+  d=abs(x-nx)+abs(y-ny)
+
+# dは必ず偶数になる。中間地点が定まる
+dd=d//2
+dx=min(dd,abs(x-nx))
+dy=dd-dx
+mx,my=nx,ny
+if abs(x-nx):mx=nx+dx*(x-nx)//abs(x-nx)
+if abs(y-ny):my=ny+dy*(y-ny)//abs(y-ny)
+flg=False
+while [nx,ny]!=[x,y]:
+  d=abs(x-nx)+abs(y-ny)
+  #if d>10:exit()
+  #print(d,nx,ny)
+  # 距離がkの倍数になればあとは近づくだけ
+  if d%k==0:
+    dx=min(k,abs(x-nx))
+    dy=k-dx
+    if abs(x-nx):nx+=dx*(x-nx)//abs(x-nx)
+    if abs(y-ny):ny+=dy*(y-ny)//abs(y-ny)
+
+  # 中間地点通過済みなら、ゴールから離れる
+  elif flg:
+    nx-=k*(x-nx)//abs(x-nx)
+
+  # 中間地点未通過ならそこに近づく。
+  else:
+    #必ず中間地点を通過する。y座標は中間地点のまま。x座標で離れる
+    flg=True
+    dy=min(k,abs(my-ny))
+    dx=k-dy
+    ny=my
+    if mx-nx>0:
+      nx+=dx
+    else:
+      nx-=dx
+
+  ans.append([nx,ny])
+print(len(ans))
+for a,b in ans:
+  print(a,b)

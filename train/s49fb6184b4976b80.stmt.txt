@@ -1,0 +1,60 @@
+Problem E: Triangles 
+
+ 
+There is a group that paints an emblem on the ground to invite aliens every year. You are a member of
+this group and you have to paint the emblem this year.
+ 
+ 
+The shape of the emblem is described as follows. It is made of n regular triangles whose sides are
+equally one unit length long. These triangles are placed so that their centroids coincide, and each of them
+is rotated counterclockwise by 360/ n degrees with respect to the one over it around its centroid. The
+direction of the top triangle is not taken into account.
+ 
+ 
+It is believed that emblems have more impact as their n are taken larger. So you want to paint the emblem
+of n as large as possible, but you don’t have so much chemicals to paint. Your task is to write a program
+which outputs the area of the emblem for given n so that you can estimate the amount of the needed
+chemicals.
+ 
+
+ 
+ 
+ Figure 1: The Emblem for n = 2 
+ 
+
+ Input 
+
+ 
+The input data is made of a number of data sets. Each data set is made of one line which contains an
+integer n between 1 and 1000 inclusive.
+ 
+ 
+The input is terminated by a line with n = 0. This line should not be processed.
+ 
+
+ Output 
+
+ 
+For each data set, output the area of the emblem on one line. Your program may output an arbitrary
+number of digits after the decimal point. However, the error should be 10 -6 ( = 0.000001) or less.
+ 
+
+ Sample Input 
+ 
+1
+2
+3
+4
+5
+6
+0
+ 
+
+ Output for the Sample Input 
+ 
+0.433013
+0.577350
+0.433013
+0.732051
+0.776798
+0.577350

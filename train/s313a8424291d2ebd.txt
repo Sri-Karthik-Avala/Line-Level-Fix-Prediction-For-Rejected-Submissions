@@ -1,0 +1,24 @@
+import sys
+readline = sys.stdin.readline
+from functools import reduce
+def gcd(a,b):
+    while b:
+        a, b = b, a%b
+    return a
+
+def calc(A):
+    N = len(A)
+    K = sum(1 for a in A if a % 2 == 0)
+    if K & 1:
+        return True
+    if N-1 != K:
+        return False
+    A = [a-a%2 for a in A]
+    g = reduce(gcd, A)
+    A = [a//g for a in A]
+    return not calc(A)
+
+
+N = int(readline())
+A = list(map(int, readline().split()))
+print('First' if calc(A) else 'Second')

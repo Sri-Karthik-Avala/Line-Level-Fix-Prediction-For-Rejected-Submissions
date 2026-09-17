@@ -1,0 +1,7 @@
+n = int(raw_input())
+for i in range(n):
+    a,b,c = map(int, raw_input().split()).sort(reverse = True)
+    if a*a == b*b + c*c:
+        print "YES"
+    else:
+        print "NO"

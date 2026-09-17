@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const string D = "^>v<";
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {-1, 0, 1, 0};
+const int inf = 1 << 25;
+int fld[3000][3000], w, h;
+int ans;
+
+
+void compress(vector<int>& vec)
+{
+  vector<int> temp = vec;
+  sort(temp.begin(), temp.end());
+  temp.erase(unique(temp.begin(), temp.end()), temp.end());
+  for(int i = 0; i < vec.size(); i++){
+    vec[i] = find(temp.begin(), temp.end(), vec[i]) - temp.begin();
+  }
+}
+
+int solve(int x, int y, int d)
+{
+  if(x < 0 || w < x || y < 0 || h < y) return 0;
+  int nx = x + dx[d], ny = y + dy[d], nd = d;
+  if(0 <= nx && nx <= w && 0 <= ny && ny <= h && fld[ny][nx] != -1) nd = fld[ny][nx];
+  int hoge = fld[y][x];
+  fld[y][x] = -1;
+  int ret = solve(nx, ny, nd) + (hoge != -1);
+  return ret;
+}
+
+int main()
+{
+  int n;
+  cin >> n;
+  vector<int> ix, iy, id;
+  for(int i = 0; i < n; i++){
+    int x, y; char d;
+    cin >> x >> y >> d;
+    ix.push_back(x);
+    iy.push_back(y);
+    id.push_back(D.find(d));
+  }
+  compress(ix);
+  compress(iy);
+  w = *max_element(ix.begin(), ix.end()), h = *max_element(iy.begin(), iy.end());
+  ans = 0;
+  memset(fld, -1, sizeof(fld));
+  /*
+  for(int j = 0; j < n; j++) fld[iy[j]][ix[j]] = id[j];
+  for(int i = 0; i <= h; i++){
+    for(int j = 0; j <= w; j++) printf("%2d", fld[i][j]); 
+    cout << endl;
+  }
+  */
+  for(int i = 0; i < n; i++){
+    memset(fld, -1, sizeof(fld));
+    for(int j = 0; j < n; j++) fld[iy[j]][ix[j]] = id[j];
+    ans = max(ans, solve(ix[i], iy[i], id[i]));
+  }
+  cout << ans << endl;
+  return 0;
+}

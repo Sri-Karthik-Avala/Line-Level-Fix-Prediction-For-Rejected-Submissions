@@ -1,0 +1,47 @@
+import sys
+read = sys.stdin.buffer.read
+readline = sys.stdin.buffer.readline
+readlines = sys.stdin.buffer.readlines
+sys.setrecursionlimit(10 ** 7)
+
+import numpy as np
+
+N,D = map(int,readline().split())
+XY = np.array(list(map(int,read().split())))
+
+A = np.zeros((D,D),np.int64)
+X = XY[::2]; Y = XY[1::2]
+np.add.at(A,(X%D,Y%D),1)
+
+D = 4
+A = np.array([[1,0,0,1],[1,0,1,0],[0,0,0,0],[1,0,1,1]])
+
+maxA = A.max()
+n = int((maxA-1)**.5)
+
+# 2周分用意する
+AA = np.tile(A,(2,2))
+
+gr1 = (AA > n*n).cumsum(axis=0).cumsum(axis=1)
+gr2 = (AA > n*(n+1)).cumsum(axis=0).cumsum(axis=1)
+
+def test(x):
+    gr1_rd = gr1[D:D+D,D:D+D] + gr1[x:x+D,x:x+D] - gr1[x:x+D,D:D+D] - gr1[D:D+D,x:x+D]
+    condition_rd = (gr1_rd == 0)
+    gr2_ru = gr2[x:x+D,D:D+D] + gr2[0:D,x:x+D] - gr2[x:x+D,x:x+D] - gr2[0:D,D:D+D]
+    gr2_ld = gr2[D:D+D,x:x+D] + gr2[x:x+D,0:D] - gr2[x:x+D,x:x+D] - gr2[D:D+D,0:D]
+    condition_ru = (gr2_ru == 0)
+    condition_ld = (gr2_ld == 0)
+    return (condition_rd&condition_ru&condition_ld).any()
+
+left = 0 # 足りてない
+right = D # 足りてる
+while left+1 < right:
+    mid = (left+right)//2
+    if test(mid):
+        right = mid
+    else:
+        left = mid
+
+answer = n*D + right - 1
+print(answer)

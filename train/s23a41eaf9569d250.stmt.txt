@@ -1,0 +1,119 @@
+Problem H
+ Animal Companion in Maze 
+ 
+
+ 
+ George, your pet monkey, has escaped, slipping the leash!
+ 
+
+ 
+ George is hopping around in a maze-like building with many rooms. The doors of the rooms, if any, lead directly to an adjacent room, not through corridors. Some of the doors, however, are one-way: they can be opened only from one of their two sides.
+ 
+
+ 
+ He repeats randomly picking a door he can open and moving to the room through it. You are chasing him but he is so quick that you cannot catch him easily. He never returns immediately to the room he just has come from through the same door, believing that you are behind him. If any other doors lead to the room he has just left, however, he may pick that door and go back.
+ 
+
+ 
+ If he cannot open any doors except one through which he came from, voila, you can catch him there eventually.
+ 
+
+ 
+ You know how rooms of the building are connected with doors, but you don't know in which room George currently is.
+ 
+
+ 
+It takes one unit of time for George to move to an adjacent room through a door.
+ 
+
+ 
+Write a program that computes how long it may take before George will be confined in a room. You have to find the longest time, considering all the possibilities of the room George is in initially, and all the possibilities of his choices of doors to go through.
+ 
+
+ 
+ Note that, depending on the room organization, George may have possibilities to continue hopping around forever without being caught.
+ 
+
+ 
+Doors may be on the ceilings or the floors of rooms; the connection of the rooms may not be drawn as a planar graph.
+ 
+
+
+
+ Input 
+
+ 
+ The input consists of a single test case, in the following format. 
+ 
+$n$ $m$ 
+$x_1$ $y_1$ $w_1$ 
+. 
+. 
+. 
+$x_m$ $y_m$ $w_m$ 
+ 
+
+ 
+ The first line contains two integers $n$ ($2 \leq n \leq 100000$) and $m$ ($1 \leq m \leq 100000$), the number of rooms and doors, respectively. Next $m$ lines contain the information of doors. The $i$-th line of these contains three integers $x_i$, $y_i$ and $w_i$ ($1 \leq x_i \leq n, 1 \leq y_i \leq n, x_i \ne y_i, w_i = 1$ or $2$), meaning that the $i$-th door connects two rooms numbered $x_i$ and $y_i$, and it is one-way from $x_i$ to $y_i$ if $w_i = 1$, two-way if $w_i = 2$.
+ 
+ 
+
+
+ Output 
+
+ 
+Output the maximum number of time units after which George will be confined in a room. If George has possibilities to continue hopping around forever, output " Infinite ".
+ 
+
+
+
+ Sample Input 1 
+
+ 2 1
+1 2 2 
+
+ Sample Output 1 
+
+ 1 
+
+ 
+
+ Sample Input 2 
+
+ 2 2
+1 2 1
+2 1 1 
+
+ Sample Output 2 
+
+ Infinite 
+
+ 
+
+ Sample Input 3 
+
+ 6 7
+1 3 2
+3 2 1
+3 5 1
+3 6 2
+4 3 1
+4 6 1
+5 2 1 
+
+ Sample Output 3 
+
+ 4 
+
+ 
+
+ Sample Input 4 
+
+ 3 2
+1 3 1
+1 3 1 
+
+
+ Sample Output 4 
+
+ 1

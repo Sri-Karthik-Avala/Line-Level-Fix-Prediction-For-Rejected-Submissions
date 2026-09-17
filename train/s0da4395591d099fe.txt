@@ -1,0 +1,22 @@
+#include <stdio.h>
+const int N=1e3+10;
+void swap(int &a,int &b){
+    int temp=a;
+    a=b;
+    b=temp;
+    return ;
+}
+int main(){
+    int n,a[N],q,b,e,t;
+    scanf("%d",&n);
+    for(int i=1;i<=n;i++)scanf("%d",&a[i]);
+    scanf("%d",&q);
+    while(q--){
+        scanf("%d%d%d",&b,&e,&t);
+        for(int i=0;i<=e-b;i++)swap(a[i+b],a[t+i]);
+    }
+    
+    printf("%d",a[1]);
+    for(int i=2;i<=n;i++)printf(" %d",a[i]);
+    printf("\n");
+}

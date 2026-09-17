@@ -1,0 +1,69 @@
+import itertools
+import os
+import sys
+
+if os.getenv("LOCAL"):
+    sys.stdin = open("_in.txt", "r")
+
+sys.setrecursionlimit(10 ** 9)
+INF = float("inf")
+IINF = 10 ** 18
+MOD = 10 ** 9 + 7
+
+
+# MOD = 998244353
+
+
+def get_block(X1, Y1, X2, Y2):
+    # x1 から x2 の間にある、y方向の両端が y1 と y2 より大きいブロック
+    if X1 > X2:
+        X1, X2 = X2, X1
+    if Y1 > Y2:
+        Y1, Y2 = Y2, Y1
+    size = pow(3, 30)
+    for level in reversed(range(31)):
+        x1 = X1 // size
+        x2 = X2 // size
+        y1 = Y1 // size
+        y2 = Y2 // size
+        if y1 == y2 == 1:
+            # x1 と x2 の間に 1, 4, 7, ... があればそれ
+            if x2 - x1 >= 2:
+                while x1 % 3 != 1:
+                    x1 += 1
+                return x1 * size, y1 * size, size
+        if x1 == x2 == 1:
+            if y2 - y1 >= 2:
+                while y1 % 3 != 1:
+                    y1 += 1
+                return x1 * size, y1 * size, size
+        size //= 3
+    return None
+
+
+def dist(x1, y1, x2, y2):
+    return abs(x1 - x2) + abs(y1 - y2)
+
+
+def solve(X1, Y1, X2, Y2):
+    # 一番大きい障害物を知りたい
+    block = get_block(X1, Y1, X2, Y2)
+    ret = INF
+    if block:
+        x, y, size = block
+        for x, y in itertools.product((x - 1, x + size), (y - 1, y + size)):
+            ret = min(ret, dist(X1, Y1, x, y) + dist(X2, Y2, x, y))
+    else:
+        ret = min(ret, dist(X1, Y1, X2, Y2))
+    return ret
+
+
+Q = int(sys.stdin.buffer.readline())
+ABCD = [list(map(int, sys.stdin.buffer.readline().split())) for _ in range(Q)]
+for a, b, c, d in ABCD:
+    a -= 1
+    b -= 1
+    c -= 1
+    d -= 1
+    ans = solve(a, b, c, d)
+    print(ans)

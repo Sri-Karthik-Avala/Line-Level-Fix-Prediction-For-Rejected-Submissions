@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+string str;
+int idx;
+
+
+int calc() {
+    char c = str[idx];
+    if (c == '-') {
+        idx++;
+        return 1-calc();
+    }
+    if (c == '(') {
+        idx++;
+        int r1 = calc();
+        char cc = str[idx];
+        idx++;
+        if (cc == '-') {
+            idx++;
+        }
+        int r2 = calc();
+        idx++;
+        if (cc == '*') {
+            return r1*r2;
+        }
+        if (cc == '+') {
+            return min(1, r1+r2);
+        }
+        if (cc == '-') {
+            if (r1 && !r2) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    }
+    idx++;
+    return c == 'T' ? 1 : 0;
+}
+
+int main() {
+    while (true) {
+        string s;
+        cin >> s;
+        if (s == "#") break;
+        string s1 = "", s2 = "";
+        int u = 0;
+        while (s[u] != '=') {
+            s1 += s[u];
+            u++;
+        }
+        u++;
+        while (u < s.size()) {
+            s2 += s[u];
+            u++;
+        }
+        bool f = true;
+        for (int i = 0; i < (1<<2); i++) {
+            str = s1;
+            for (int j = 0; j < str.size(); j++) {
+                if ('a' <= str[j] && str[j] <= 'k') {
+                    str[j] = ((i>>(str[j]-'a')) & 1) ? 'T' : 'F';
+                }
+            }
+            idx = 0;
+            int r1 = calc();
+            str = s2;
+            for (int j = 0; j < str.size(); j++) {
+                if ('a' <= str[j] && str[j] <= 'k') {
+                    str[j] = ((i>>(str[j]-'a')) & 1) ? 'T' : 'F';
+                }
+            }
+            idx = 0;
+            int r2 = calc();
+            if (r1 != r2) {
+                f = false;
+                break;
+            }          
+        }
+        if (f) {
+            cout << "YES" << endl;
+        } else {
+            cout << "NO" << endl;
+        }  
+    }
+}

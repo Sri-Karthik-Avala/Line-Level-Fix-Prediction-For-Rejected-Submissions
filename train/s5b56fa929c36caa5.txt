@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <queue>
+#include <utility>
+using namespace std;
+typedef pair<int,int> pi;
+#define F first
+#define S second
+const int N=2e5+10;
+struct star{
+    pi pos;
+    int light;
+    void in(){
+        scanf("%d%d%d",&pos.F,&pos.S,&light);
+        return ;
+    }
+};
+struct cmp{
+    bool operator()(const star &a,const star &b){
+        return a.light>b.light;
+    }
+};
+int min(int a,int b){return a>b?b:a;}
+long long int max(long long int a,long long int b){return a>b?a:b;}
+int main(){
+    int n,d,low=0;
+    long long int ans=0;
+    star temp;
+    priority_queue<star,vector<star>,cmp> pq;
+    priority_queue<pi,vector<pi>,greater<pi>>l,b;
+    priority_queue<pi> u,r;
+    scanf("%d%d",&n,&d);
+    for(int i=0;i<n;i++){
+        temp.in();
+        pq.push(temp);
+        low=min(low,temp.light);
+    }
+    low+=d;
+    while(!pq.empty()){
+        while(pq.top().light<=low){
+            temp=pq.top();
+            pq.pop();
+            u.push({temp.pos.F,temp.light});
+            b.push({temp.pos.F,temp.light});
+            l.push({temp.pos.S,temp.light});
+            r.push({temp.pos.S,temp.light});
+            if(pq.empty())break;
+        }
+        while(!u.empty()){
+            if(u.top().S<low-d)u.pop();
+            else break;
+        }
+        
+        if(u.empty())continue;
+        while(!r.empty()){
+            if(r.top().S<low-d)r.pop();
+            else break;
+        }
+        if(r.empty())continue;
+        while(!l.empty()){
+            if(l.top().S<low-d)l.pop();
+            else break;
+        }
+        if(l.empty())continue;
+        while(!b.empty()){
+            if(b.top().S<low-d)b.pop();
+            else break;
+        }
+        if(b.empty())continue;
+        ans=max(ans,(long long int)(u.top().F-b.top().F)*(r.top().F-l.top().F));
+        if(!pq.empty())low=pq.top().light;
+    }
+    printf("%lld\n",ans);
+    
+}

@@ -1,0 +1,47 @@
+while(1):
+    N=int(raw_input())
+    if N==0:
+        break
+    else:
+        gems=[]
+        okflag=0
+        loc=[10,10]
+        for i in range(N):
+            [gemx,gemy]=[int(x) for x in raw_input().split()]
+            gems.append([gemx,gemy])
+        M=int(raw_input())
+        for i in range(M):
+            com=raw_input().split()
+            com[1]=int(com[1])
+            if com[0]=="N":
+                for j in range(com[1]):
+                    loc[1]=loc[1]+1
+                    if loc in gems:
+                        gems.remove(loc)
+                #loc[1]=loc[1]+com[1]
+            elif com[0]=="S":
+                for j in range(com[1]):
+                    loc[1]=loc[1]-1
+                    if loc in gems:
+                        gems.remove(loc)
+                #loc[1]=loc[1]-com[1]
+            elif com[0]=="E":
+                for j in range(com[1]):
+                    loc[0]=loc[0]+1
+                    if loc in gems:
+                        gems.remove(loc)
+
+                #loc[0]=loc[0]+com[1]
+            else:
+                for j in range(com[1]):
+                    loc[0]=loc[0]-1
+                    if loc in gems:
+                        gems.remove(loc)
+                #loc[0]=loc[0]-com[1]
+            if len(gems)==0:
+                okflag=1
+                break
+        if okflag:
+            print "Yes"
+        else:
+            print "No"

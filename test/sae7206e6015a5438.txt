@@ -1,0 +1,101 @@
+#include <bits/stdc++.h>
+#define M 400005
+#define mod 1000000007
+#define PB push_back
+#define MP std::make_pair
+#define FI first
+#define SE second
+typedef long long ll;
+int n, X[M], Y[M], deg[M], bel[M], fa[M], size[M], V, E;
+std::vector <int> Edge[M], vec, cir, tmp, Tree[M];
+std::map <std::pair <int, int>, int> Map;
+std::vector <std::pair <int, int> > row[M], col[M];
+bool vis[M], Vis[M];
+ll fac[M], fac_inv[M], inv[M];
+int read() {
+	char c = getchar(); int ans = 0;
+	while (c < '0' || c > '9') c = getchar();
+	while (c >= '0' && c <= '9') ans = ans * 10 + c - '0', c = getchar();
+	return ans;
+}
+void Write(int x) {
+	if (x < 10) putchar(x + '0');
+	else Write(x / 10), putchar(x % 10 + '0');
+}
+ll invs(ll x) {return x == 1 ? 1 : (mod - mod / x) * invs(mod % x) % mod;}
+void dfs1(int x) {
+	vec.PB(x), vis[x] = 1, V++;
+	for (auto i : Edge[x]) {
+		if (i != fa[x]) E++;
+		if (!vis[i]) fa[i] = x, dfs1(i);
+	}
+}
+void dfs2(int x) {
+	for (auto i : Edge[x]) {
+		if (i == fa[x]) continue;
+		if (fa[i] == x) dfs2(i);
+		else if (cir.empty()) {
+			for (int j = x; j != i; j = fa[j]) cir.PB(j);
+			cir.PB(i);
+		}
+	}
+}
+ll dfs3(int x) {
+	size[x] = 1; ll ans = 1;
+	for (auto i : Tree[x]) ans = ans * dfs3(i) % mod, size[x] += size[i];
+	return ans * inv[size[x]] % mod;
+}
+ll calc() {
+	for (auto i : tmp) Tree[i].clear(), Vis[i] = deg[i] = 0; ll ans = 1;
+	for (auto i : tmp) {
+		if (bel[i] <= n) {
+			for (auto j : row[bel[i]])
+				if (j.SE == i) break;
+				else Tree[i].PB(j.SE), deg[j.SE]++;
+		}
+		else {
+			for (auto j : col[bel[i] - n])
+				if (j.SE == i) break;
+				else Tree[i].PB(j.SE), deg[j.SE]++;
+		}
+	}
+	for (auto i : tmp)
+		if (!deg[i]) ans = ans * dfs3(i) % mod;
+	return ans;
+}
+ll calc(int rt) {
+	vec.clear(), cir.clear(), tmp.clear(), V = E = 0, dfs1(rt);
+	if (V != --E) return 0; dfs2(rt); std::queue <int> Q;
+	for (auto i : vec)
+		for (auto j : Edge[i]) deg[j]++;
+	for (auto i : vec)
+		if (deg[i] == 1) Q.push(i), deg[i] = 0;
+	while (!Q.empty()) {
+		int now = Q.front(); Q.pop();
+		for (auto i : Edge[now])
+			if (deg[i]) {
+				deg[i]--, bel[Map[MP(now, i)]] = now, tmp.PB(Map[MP(now, i)]);
+				if (deg[i] == 1) deg[i] = 0, Q.push(i);
+			}
+	}
+	ll ans = 0;
+	for (int _ = 0; _ < 2; tmp.resize(tmp.size() - cir.size()), std::reverse(cir.begin(), cir.end()), _++) {
+		for (int j = 0; j < cir.size() - 1; j++) bel[Map[MP(cir[j], cir[j + 1])]] = cir[j], tmp.PB(Map[MP(cir[j], cir[j + 1])]);
+		bel[Map[MP(cir.back(), cir[0])]] = cir.back(), tmp.PB(Map[MP(cir.back(), cir[0])]), ans += calc();
+	}
+	return ans % mod;
+}
+int main() {
+	n = read(); ll ans = 1; fac[0] = 1;
+	for (int i = 1; i <= n * 2; i++) fac[i] = fac[i - 1] * i % mod; fac_inv[n * 2] = invs(fac[n * 2]);
+	for (int i = n * 2; i; i--) fac_inv[i - 1] = fac_inv[i] * i % mod;
+	for (int i = 1; i <= n * 2; i++) inv[i] = fac_inv[i] * fac[i - 1] % mod;
+	for (int i = 1; i <= n * 2; i++)
+		X[i] = read(), Y[i] = read(), row[X[i]].PB(MP(Y[i], i)), col[Y[i]].PB(MP(X[i], i)),
+		Edge[X[i]].PB(Y[i] + n), Edge[Y[i] + n].PB(X[i]),
+		Map[MP(X[i], Y[i] + n)] = Map[MP(Y[i] + n, X[i])] = i;
+	for (int i = 1; i <= n; i++) std::sort(row[i].begin(), row[i].end()), std::sort(col[i].begin(), col[i].end());
+	for (int i = 1; i <= n * 2; i++)
+		if (!vis[i]) ans = ans * calc(i) % mod;
+	return Write(ans * fac[n * 2] % mod), 0;
+}

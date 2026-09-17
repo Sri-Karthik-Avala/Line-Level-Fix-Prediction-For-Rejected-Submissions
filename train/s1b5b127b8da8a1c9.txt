@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <iomanip> 
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <map>
+#include <set>
+#include <functional>
+#include <algorithm>
+#include <unordered_map>
+#include <unordered_set>
+#include <bitset>
+#include <numeric>
+
+using namespace std;
+
+
+long long mul_inv(long long a, long long b)
+{
+	long long b0 = b, t, q;
+	long long x0 = 0, x1 = 1;
+	if (b == 1) return 1;
+	while (a > 1) {
+		q = a / b;
+		t = b, b = a % b, a = t;
+		t = x0, x0 = x1 - q * x0, x1 = t;
+	}
+	if (x1 < 0) x1 += b0;
+	return x1;
+}
+
+long long division(long long a, long long b, long long p) {		// (a / b) mod p = ((a mod p) * (b^(-1) mod p)) mod p
+	long long ans, inv;
+	inv = mul_inv(b, p);
+	ans = ((a % p) * inv) % p;
+	return ans;
+}
+
+long long gcd(long long a, long long b)
+{
+	while (b != 0) {
+		long long t = b;
+		b = a % b;
+		a = t;
+	}
+	return a;
+}
+
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	long long n, m, a, b, c, MOD = 1000000009, r, ans, nn, i, j, k, p, q, pp, qq, x, newp, newq, a2, b2, ab, g;
+	cin >> n >> a >> b >> c;
+
+	nn = n * 2;
+	vector<long long> fact(nn), aa(nn), bb(nn), f100(nn);
+	fact[0] = 1; aa[0] = 1; bb[0] = 1; f100[0] = 1;
+	a2 = division(a, a + b, MOD);
+	a2 = (a2 * 100) % MOD;
+	b2 = division(b, a + b, MOD);
+	b2 = (b2 * 100) % MOD;
+
+	for (i = 1; i < nn; i++) {
+		fact[i] = (fact[i - 1] * i) % MOD;
+		aa[i] = (aa[i - 1] * a2) % MOD;
+		bb[i] = (bb[i - 1] * b2) % MOD;
+		f100[i] = (f100[i - 1] * 100) % MOD;
+	}
+
+	p = 0; q = 1;
+	for (m = n; m < nn; m++) {
+		pp = (fact[m - 1] * m) % MOD;
+		x = (aa[n] * bb[m - n] + aa[m - n] * bb[n]) % MOD;
+		pp = (pp * x) % MOD;
+
+		qq = (fact[n - 1] * fact[m - 1 - (n - 1)]) % MOD;
+		x = (f100[m - 1] * (100 - c)) % MOD;
+		qq = (qq * x) % MOD;
+
+		newp = (p * qq + pp * q) % MOD;
+		newq = (q * qq) % MOD;
+
+		p = newp;
+		q = newq;
+	}
+
+	g = gcd(p, q);
+	p /= g;
+	q /= g;
+
+	ans = division(p, q, MOD);
+
+	cout << ans << "\n";
+
+	return 0;
+}
+
+

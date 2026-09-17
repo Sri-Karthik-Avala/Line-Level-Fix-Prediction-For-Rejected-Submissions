@@ -1,0 +1,63 @@
+#include<cmath>
+#include<cstdio>
+#include<cassert>
+#include<algorithm>
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+
+const double EPS=1e-8;
+
+const int N_MAX=3;
+bool Gauss_Jordan(int n,const double A[N_MAX][N_MAX],const double *b,double *x){
+	static double B[N_MAX][N_MAX+1];
+	rep(i,n){
+		rep(j,n) B[i][j]=A[i][j];
+		B[i][n]=b[i];
+	}
+
+	rep(i,n){
+		int piv=i;
+		for(int j=i;j<n;j++) if(abs(B[j][i])>abs(B[piv][i])) piv=j;
+		rep(j,n+1) swap(B[i][j],B[piv][j]);
+
+		if(abs(B[i][i])<EPS) return false;
+
+		for(int j=i+1;j<=n;j++) B[i][j]/=B[i][i];
+		rep(j,n) if(i!=j) for(int k=i+1;k<=n;k++) B[j][k]-=B[j][i]*B[i][k];
+	}
+
+	rep(i,n) x[i]=B[i][n];
+	return true;
+}
+
+int main(){
+	int n; scanf("%d",&n);
+	double sx=0,sy=0,sxx=0,sxy=0,syy=0,sxxx=0,sxxy=0,sxyy=0,syyy=0;
+	rep(i,n){
+		int x,y; scanf("%d%d",&x,&y);
+		sx+=x;
+		sy+=y;
+		sxx+=x*x;
+		sxy+=x*y;
+		syy+=y*y;
+		sxxx+=x*x*x;
+		sxxy+=x*x*y;
+		sxyy+=x*y*y;
+		syyy+=y*y*y;
+	}
+
+	double A[3][3]={
+		{sxx,sxy,sx},
+		{sxy,syy,sy},
+		{sx,sy,1}
+	};
+	double b[3]={-sxxx-sxyy,-sxxy-syyy,-sxx-syy},x[3];
+
+	assert(Gauss_Jordan(3,A,b,x));
+
+	printf("%.9f %.9f %.9f\n",x[0],x[1],x[2]);
+
+	return 0;
+}

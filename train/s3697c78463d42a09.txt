@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+const int mod=998244353;
+void add(int &x,int y){
+	x=(x+y)%mod;
+}
+int ksm(int b,int n){
+	int res=1;
+	while(n){
+		if(n&1) res=1ll*res*b%mod;
+		b=1ll*b*b%mod; n>>=1;
+	}
+	return res;
+}
+int f[100005],a[105];
+signed main(){
+	int n,sum=0;cin>>n;
+	f[0]=1;
+	for(int i=1;i<=n;++i){
+		cin>>a[i];sum+=a[i];
+		for(int j=sum;j>=a[i];--j)
+			add(f[j],f[j-a[i]]+f[j-a[i]]);			
+//		cout<<f[1]<<endl;
+	}
+	int ans=ksm(3,n),res=0;
+//	cout<<sum<<endl;
+	for(int i=0;i<=sum/2;++i)
+		add(res,f[i]);
+//	cout<<ans<<" "<<res<<endl;
+	res=res*3ll%mod;
+	add(ans,mod-res);
+	memset(f,0,sizeof(f));
+	f[0]=1;sum=0;
+	for(int i=1;i<=n;++i){
+		sum+=a[i];
+		for(int j=sum;j>=a[i];--j)
+			add(f[j],f[j-a[i]]);
+	}
+	if(sum%2==0) add(ans,3ll*f[sum/2]);
+	cout<<ans;
+	return 0;
+}

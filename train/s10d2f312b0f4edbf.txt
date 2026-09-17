@@ -1,0 +1,63 @@
+#include<iostream>
+#include<vector>
+#include<ios>
+#include<algorithm>
+using namespace std;
+#include<vector>
+struct UF{
+	int n;
+	vector<int>parent,rank;
+	UF(int n_=0):n(n_),parent(n_),rank(n_,0)
+	{
+		for(int i=0;i<n_;i++)parent[i]=i;
+	}
+	int find(int a)
+	{
+		return parent[a]!=a?parent[a]=find(parent[a]):a;
+	}
+	bool same(int a,int b)
+	{
+		return find(a)==find(b);
+	}
+	bool unite(int a,int b)
+	{
+		a=find(a),b=find(b);
+		if(a==b)return false;
+		if(rank[a]<rank[b])
+		{
+			parent[a]=b;
+		}
+		else
+		{
+			parent[b]=a;
+			if(rank[a]==rank[b])rank[a]++;
+		}
+		return true;
+	}
+};
+main()
+{
+    int n;
+    while(cin>>n,n)
+    {
+        int m;cin>>m;
+        int ans=n;
+        vector<pair<int,pair<int,int> > >e;
+        for(;m--;)
+        {
+            int a,b,c;scanf("%d,%d,%d",&a,&b,&c);
+            c=c/100-1;
+            e.push_back(make_pair(c,make_pair(a,b)));
+        }
+        UF uf(n);
+        sort(e.begin(),e.end());
+        for(int i=0;i<e.size();i++)
+        {
+            int a=e[i].second.first,b=e[i].second.second,c=e[i].first;
+            if(uf.same(a,b))continue;
+            uf.unite(a,b);
+            ans+=c;
+        }
+        cout<<ans<<endl;
+    }
+}

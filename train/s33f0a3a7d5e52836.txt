@@ -1,0 +1,87 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <map>
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <complex>
+using namespace std;
+
+#define ll long long
+#define vvi vector< vector<int> >
+#define All(X) X.begin(),X.end()
+#define FOR(i,a,b) for(int i=(int)(a);i<(int)(b);i++)
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+typedef long double ld;
+typedef complex<ld> P;
+typedef vector<P> VP;
+const ld eps = 1e-10, pi = acos(-1.0);
+
+const double G = 9.8;
+int N,V,X,Y;
+vector<int> L(N),B(N),R(N),T(N);
+ld calcv(ld vy,ld t){
+  return vy*t-G*t*t/2;
+}
+
+int cmp(ld lb,ld ub,ld a){
+  return a< lb+eps ? -1 : a>ub-eps ? 1 :0;
+}
+bool check(ld qX,ld qY){
+  //solve g^2/4*t^4 + (g*qY-V)*t^2 + (qX^2+qY^2) = 0;
+  ld a = G*G/4; ld b = G*qY-V*V; ld c = qX*qX+qY*qY;
+  ld D = b*b-4*a*c;
+  //cout << D << endl;
+  if((D<0)&&(D>-eps)) D=0;
+  if(D<0) return false;
+  for(int k=-1;k<=1;k+=2){
+    //find t
+    ld t2 = -1*b+k*sqrt(D)/(2*a);
+    if(t2<=0) continue;
+    ld t = sqrt(t2);
+    ld vx = qX/t; ld vy = (qY+G*t*t/2)/t;
+
+    //can reach Y?
+    double reachy = calcv(vy,X/vx);
+    if(reachy<Y-eps) return false;
+
+    bool ok = true;
+    //find colision
+    REP(i,N){
+      if(L[i] >= X) continue;//ignore
+      if(R[i]==X && Y<=T[i] && B[i]<=reachy) ok = false;
+      //cout << vx << " : " << vy << endl;
+      int yL = cmp(B[i],T[i],calcv(vy,L[i]/vx));
+      int yR = cmp(B[i],T[i],calcv(vy,R[i]/vx));
+      int xH = cmp(L[i],R[i],vx*(vy/G));
+      int yH = cmp(B[i],T[i],calcv(vy,vy/G));
+      if(xH==0 && yH >= 0 && yL < 0) ok = false;
+      if(yL * yR <= 0) ok = false;
+    }
+    if(ok) return true;
+  } 
+  return false;
+}
+int main(){
+  cin >> N >> V >> X >> Y;
+  REP(i,N){
+    int a,b,c,d;
+    cin >> a >> b >> c >> d;
+    L.push_back(a); B.push_back(b); R.push_back(c); T.push_back(d);
+    //cin >> L[i] >> B[i] >> R[i] >> T[i];
+
+    R[i] = min(R[i],X);
+  }
+  bool ok = check(X,Y);
+  REP(i,N){
+    ok |= check(L[i],T[i]);
+    ok |= check(R[i],T[i]);
+  }
+  cout << (ok ? "Yes" : "No") << endl;
+  return 0;
+}

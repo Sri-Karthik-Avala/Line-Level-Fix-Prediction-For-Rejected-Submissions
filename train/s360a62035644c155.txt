@@ -1,0 +1,85 @@
+#include<iostream>
+#define rep(i,n) for(int i=0;i<n;i++)
+using namespace std;
+
+int n;
+int a[5][5];
+int s[5];
+int dy[] = {-1,0,1,0}, dx[] = {0,1,0,-1};
+
+int check(void){
+  int res = 0;
+  for(int d=1;;d++){
+    bool dis[5][5],f = false;
+    rep(i,5)rep(j,5)dis[i][j] = false;
+    
+    rep(i,5)rep(j,5){
+      if(a[i][j] == 0)continue;
+      
+      rep(k,2){
+	int sy = i, sx = j;
+	int c = 0;
+	while(sy>=0 && sx>=0 && sy<=4 && sx<=4 && a[sy][sx] == a[i][j]){
+	  c++; sy += dy[k]; sx += dx[k];
+	}
+	if(c<3)continue;
+	
+	f = true;
+	sy = i; sx = j;
+	while(sy>=0 && sx>=0 && sy<=4 && sx<=4 && a[sy][sx] == a[i][j]){
+	  dis[sy][sx] = true;
+	  sy += dy[k]; sx += dx[k];
+	}
+      }
+    }
+    if(!f)return res;
+
+    rep(i,5)rep(j,5){
+      if(dis[i][j]){
+	res += d*s[a[i][j]-1];
+	a[i][j] = 0;
+      }
+    }
+    
+    rep(i,5){
+      for(int j=4;j>=0;j--){
+	if(a[j][i] != 0){
+	  for(int k=1;k<=4-j;k++){
+	    if(a[j+k][i]==0)swap(a[j+k][i],a[j+k-1][i]);
+	  }
+	}
+      }
+    }
+  }
+}
+
+int move(int y,int x,int d){
+  int tmp[5][5];
+  rep(i,5)rep(j,5)tmp[i][j] = a[i][j];
+  int res = check();
+  rep(i,5)rep(j,5)a[i][j] = tmp[i][j];
+  if(d==n)return res;
+
+  rep(k,4){
+    int sy = y+dy[k], sx = x+dx[k];
+    if(sy<0 || sy>4 || sx<0 || sy>4)continue;
+    swap(a[y][x],a[sy][sx]);
+    res = max(res,move(sy,sx,d+1));
+    swap(a[y][x],a[sy][sx]);
+  }
+  return res;
+}     
+
+int solve(){
+  int res = 0;
+  rep(i,5)rep(j,5)res = max(res,move(i,j,0));
+  return res;
+}
+
+int main(){
+  while(cin >> n,n>=0){
+    rep(i,5)rep(j,5)cin >> a[i][j];
+    rep(i,5)cin >> s[i];
+    cout << solve() << endl;
+  }
+}

@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long;
+/*
+道路間の中でも最短＝直通
+短いほうからとっていけばOKか
+
+ちがった・・・
+全部いれてからWFで、まず-1判定
+そのあと、使ってない直通を消すんだけど、どうすればいいかな
+そのほうしんであってそう
+
+A 0 10 12 20
+B 10 0 23 30
+C 12 23 0 26
+D 20 30 26 0
+頂点ごとに、最短だけとるってこと？
+CDの26をはらないとだめだからそうでもなさそう
+
+あああ意味わかった
+まず全部つなぐ
+中継したほうが小さい、はありえないから-1
+同じなら直通はぶく
+
+はぶいてからやりなおさなくていい？
+あってもなくても同じだから別に、か
+
+*/
+#include <bits/stdc++.h>
+using namespace std;
+using ll=long long;
+int main(){
+  ll N,ans=0; cin>>N;
+  vector<vector<ll>> A(310,vector<ll>(310,0)),B(310,vector<ll>(310,1));
+  for(ll i=0; i<N; i++) for(ll j=0; j<N; j++) cin>>A[i][j];
+  for(ll k=0; k<N; k++) for(ll i=0; i<N; i++) for(ll j=0; j<N; j++){
+    ll z=A[i][k]+A[k][j];
+    if(A[i][j]>z){
+      cout<<-1<<endl;
+      return 0;
+    }
+    if(A[i][j]==z) B[i][j]=0;
+  }
+  for(ll i=0; i<N; i++) for(ll j=0; j<N; j++)ans+=A[i][j]*B[i][j];
+  cout<<ans<<endl;
+}

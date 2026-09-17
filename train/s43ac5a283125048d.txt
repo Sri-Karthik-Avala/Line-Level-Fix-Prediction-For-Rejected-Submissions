@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
+
+int seg = 1;
+
+class RAQ{
+	vector<int> dat;
+public:
+	RAQ() : dat(seg * 2 - 1){}
+	void add(int a,int b,int x,int k = 0,int l = 0,int r = seg){
+		if(b <= l || r <= a) return;
+		if(a <= l && r <= b){
+			dat[k] += x;
+			return;
+		}
+		add(a,b,x,k * 2 + 1,l,(l + r) / 2);
+		add(a,b,x,k * 2 + 2,(l + r) / 2,r);
+	}
+	int get(int i){
+		int s = 0;
+		i += seg - 1;
+		s += dat[i];
+		while(i){
+			i = (i - 1) / 2;
+			s += dat[i];
+		}
+		return s;
+	}
+};
+
+signed main(){
+	int n,q,x[100000],d[100000],l[100000];
+	cin >> n >> q;
+	while(seg < n) seg *= 2;
+	vector<RAQ> ps(2);
+	for(int i = 0;i < n;i++){
+		ps[0].add(i,i + 1,i);
+		ps[1].add(i,i + 1,n - i - 1);
+	}
+	for(int i = 0;i < q;i++) cin >> x[i] >> d[i] >> l[i];
+	for(int i = q - 1;i >= 0;i--){
+		int low = -1,up = n;
+		while(up - low > 1){
+			int mid = (up + low) / 2;
+			if(d[i] == 1){
+				if(ps[0].get(mid) < x[i]) low = mid;
+				else up = mid;
+			}else{
+				if(ps[1].get(mid) < n - x[i]) up = mid;
+				else low = mid;
+			}
+		}
+		if(d[i] == 1) ps[1].add(0,up,l[i] * 2);
+		else ps[0].add(up,seg,l[i] * 2);
+	}
+	for(int i = 0;i < n;i++) cout << (ps[0].get(i) + ps[1].get(i) - n + 1) / 2 << endl;
+	return 0;
+}

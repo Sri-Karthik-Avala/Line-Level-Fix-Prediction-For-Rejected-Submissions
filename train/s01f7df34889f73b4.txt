@@ -1,0 +1,78 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <algorithm>
+#include <math.h>
+#include <map>
+#include<functional>
+#include <iomanip>
+#include <vector>
+#include <queue>
+#include <set>
+#include <typeinfo>
+#define PI 3.14159265359
+#define INF 99999999;
+#define rep(i, n) for(int i=0; i<n; i++)
+#define REP(n) rep(i, n)
+#define EPS 1e-10
+typedef long long ll;
+using namespace std;
+
+
+
+/*
+class Target
+{
+public:
+	vector <string> draw(int n)
+	{
+
+	}
+};
+*/
+
+double tanri(int money, int year, int rate)
+{
+	return 1.0 * money * (1.0 + year * rate / 100.0);
+}
+
+double hukuri(int money, int year, int rate)
+{
+	return money * pow(1.0 + rate / 100.0, year);
+}
+
+int main()
+{
+	int n, y, b, r, t;
+	double max_price = -1.0;
+	int ind;
+	
+	while (cin >> n, n)
+	{
+		cin >> y;
+		REP(n)
+		{
+			cin >> b >> r >> t;
+			switch (t)
+			{
+			case 1:
+				if (max_price < tanri(1, y, r))
+				{
+					max_price = tanri(1, y, r);
+					ind = b;
+				}
+				break;
+			case 2:
+				if (max_price < hukuri(1, y, r))
+				{
+					max_price = hukuri(1, y, r);
+					ind = b;
+				}
+			}
+		}
+		cout << ind << endl;
+	}
+	
+	return 0;
+}

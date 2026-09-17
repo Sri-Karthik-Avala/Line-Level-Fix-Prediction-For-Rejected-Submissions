@@ -1,0 +1,28 @@
+N = int(input())
+s = list(map(int, input().split()))
+Q = int(input())
+t = list(map(int, input().split()))
+count = 0
+
+
+def b_search(x, y):
+    a = 0
+    b = len(x)
+    if y > x[b-1] or y < x[a]:
+        return 0
+    while b - a >= 1:
+        c = (a + b) // 2
+        if x[c] == y:
+            return 1
+        elif y < x[c]:
+            b = c
+        else:
+            a = c
+    return 0
+
+
+for i in range(len(t)):
+    count += b_search(s, t[i])
+
+print(count)
+

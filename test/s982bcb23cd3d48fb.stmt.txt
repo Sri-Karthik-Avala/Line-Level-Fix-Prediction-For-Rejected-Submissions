@@ -1,0 +1,104 @@
+Vector Compression 
+
+ 
+
+
+
+You are recording a result of a secret experiment, which consists of a large set of N -dimensional vectors.
+Since the result may become very large, you are thinking of
+compressing it. Fortunately you already have a good compression method
+for vectors with small absolute values, all you have to do is to
+preprocess the vectors and make them small.
+ 
+
+ 
+
+
+
+
+
+
+You can record the set of vectors in any order you like.
+Let's assume you process them in the order v_1 , v_2 ,..., v_M .
+Each vector v_i is recorded either as is , or as a difference vector.
+When it is recorded as a difference,
+you can arbitrarily pick up an already chosen vector v_j (j<i) and a real value r .
+Then the actual vector value recorded is (v_i - r v_j) .
+The values of r and j do not affect the compression ratio so much, so you don't have to care about them.
+ 
+
+ 
+Given a set of vectors,
+your task is to write a program that calculates the minimum sum of the squared length of the recorded vectors.
+
+ 
+
+ Input 
+
+ 
+The input is like the following style.
+ 
+
+ 
+ N M 
+ v_{1,1} v_{1,2} ... v_{1,N} 
+ ... 
+ v_{M,1} v_{M,2} ... v_{M,N} 
+ 
+
+ 
+The first line contains two integers N and M ( 1 \leq N, M \leq 100 ),
+where N is the dimension of each vector,
+and M is the number of the vectors.
+Each of the following M lines contains N floating point values v_{i,j} ( -1.0 \leq v_{i,j} \leq 1.0 )
+which represents the j -th element value of the i -th vector.
+ 
+
+ Output 
+
+ 
+Output the minimum sum of the squared length of the recorded vectors. 
+The output should not contain an absolute error greater than 10^{-6} .
+ 
+
+ Sample Input 1 
+
+ 
+2 3
+1.0 1.0
+-1.0 0.0
+0.5 0.5
+ 
+
+ Output for the Sample Input 1 
+
+ 
+1.0
+ 
+
+ Sample Input 2 
+
+ 
+1 1
+1.0
+ 
+
+ Output for the Sample Input 2 
+
+ 
+1.0
+ 
+
+ Sample Input 3 
+
+ 
+4 3
+1.0 1.0 0.0 0.0
+-1.0 0.0 -1.0 0.0
+0.5 0.5 0.5 0.5
+ 
+
+ Output for the Sample Input 3 
+
+ 
+3.0

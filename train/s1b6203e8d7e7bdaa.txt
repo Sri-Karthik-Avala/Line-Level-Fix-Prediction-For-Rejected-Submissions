@@ -1,0 +1,17 @@
+import sys
+
+def solve(lis):
+    for e in lis[3:]:
+        if e%2:
+            return "NG"
+    return "OK"
+
+li = [0]*102
+for s in sys.stdin:
+    a,b = map(int,s.split())
+    if a == b == 0:
+        print solve(li)
+        li = [0]*102
+        continue
+    li[a] += 1
+    li[b] += 1

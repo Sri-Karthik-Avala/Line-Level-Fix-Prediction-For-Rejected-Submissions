@@ -1,0 +1,81 @@
+#include<cstdio>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<iostream>
+#include<queue>
+#include<map>
+#include<set>
+#include<complex>
+#include<stack>
+#include<cmath>
+  
+using namespace std;
+  
+#define reps(i,f,n) for(int i=f;i<int(n);i++)
+#define rep(i,n) reps(i,0,n)
+
+const int N = 111;
+vector<int> masu[N];
+
+int dp[N][N];
+
+int main(){
+	vector<string> input;
+	
+	string in;
+	while(cin>>in){
+		input.push_back(in);
+	}
+	
+	
+	
+	int h = input.size();
+	rep(i,N)masu[i].clear();
+	
+	rep(i,h){
+		int p = min(i+1, h-i);
+		
+		bool flg = false;
+		if(i>(h/2))flg=true;
+		
+		if(flg)rep(j,(i-p)/2+1)masu[i].push_back(0);
+		
+		stringstream scin;
+		scin<<input[i];
+		
+		int a;
+		scin>>a;
+		masu[i].push_back(a);
+		
+		rep(j,p-1){
+			char c;
+			scin>>c>>a;
+			masu[i].push_back(a);
+		}
+		
+		
+		if(flg)rep(j,(i-p)/2+1)masu[i].push_back(0);
+	}
+	
+	
+	rep(i,h){
+		rep(j,masu[i].size())printf("%d ",masu[i][j]);
+		puts("");
+	}
+	
+	rep(i,N)rep(j,N)dp[i][j]=0;
+	
+	int ans = 0;
+	
+	dp[0][0]=masu[0][0];
+	rep(i,h-1){
+		rep(j,i+1){
+			dp[i+1][j] = max(dp[i+1][j], dp[i][j]+masu[i+1][j]);
+			dp[i+1][j+1] = max(dp[i+1][j+1], dp[i][j]+masu[i+1][j+1]);
+			ans = max(ans, max(dp[i+1][j],dp[i+1][j+1]));
+		}
+	}
+	
+	printf("%d\n",ans);
+}

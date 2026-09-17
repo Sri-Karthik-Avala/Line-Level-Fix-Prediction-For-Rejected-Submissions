@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define TRACE(x) cerr << #x << " :: " << x << endl
+#define _ << " " <<
+#define SZ(x) (int)(x).size()
+#define ALL(x) (x).begin(),(x).end()
+#define FOR(i,a,b) for(int i=(a);i<=(b);++i)
+#define RFOR(i,a,b) for (int i=(a);i>=(b);--i)
+typedef long long ll;
+
+const int mxN = 5e3+5;
+const int MOD = 1e9+7;
+int N, P[mxN];
+vector<int> al[mxN];
+bool vis[mxN];
+int dp[mxN][mxN];
+
+int comp = 0, cyc = 0, sz[mxN], fac[mxN], po[mxN];
+void dfs(int u, bool f) {
+    vis[u] = 1;
+    sz[comp] += f;
+    for (int v : al[u]) if (!vis[v]) dfs(v,f);
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cin >> N;
+    FOR(i,1,N){
+        cin >> P[i];
+        if (P[i] != -1) al[P[i]].push_back(i);
+    }
+
+    FOR(i,1,N) if (P[i] == -1) ++comp, dfs(i,1);
+    FOR(i,1,N) if (!vis[i]) ++cyc, dfs(i,0);
+
+    dp[0][0] = 1;
+    FOR(i,1,comp){
+        dp[i][0] = 1;
+        FOR(x,1,comp){
+            dp[i][x] = dp[i-1][x];
+            dp[i][x] = (dp[i][x] + (ll) dp[i-1][x-1] * sz[i] % MOD) % MOD;
+        }
+    }
+
+    fac[0] = 1, po[0] = 1;
+    FOR(i,1,comp){
+        fac[i] = (ll) fac[i-1] * i % MOD;
+        po[i] = (ll) po[i-1] * (N-1) % MOD;
+    }
+    int tot = (ll) po[comp] * (N-cyc) % MOD, sub = 0;
+    FOR(i,1,comp){
+        sub += (ll) (sz[i]-1) * po[comp-1] % MOD;
+        sub %= MOD;
+    }
+    FOR(i,2,comp){
+        sub += (ll) dp[comp][i] * fac[i-1] % MOD * po[comp-i] % MOD;
+        sub %= MOD;
+    }
+    cout << (tot - sub + MOD) % MOD << '\n';
+}
+

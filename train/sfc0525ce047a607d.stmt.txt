@@ -1,0 +1,60 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement You are given an array a_0, a_1, ..., a_{N-1} of length N . Process Q queries of the following types. 
+ 
+ 0 p x : a_p \gets a_p + x 
+ 1 l r : Print \sum_{i = l}^{r - 1}{a_i} . 
+ 
+ 
+ 
+ 
+ 
+ Constraints 
+ 1 \leq N, Q \leq 500,000 
+ 0 \leq a_i, x \leq 10^9 
+ 0 \leq p < N 
+ 0 \leq l_i < r_i \leq N 
+ All values in Input are integer. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ N Q 
+ a_0 a_1 ... a_{N - 1} 
+ \textrm{Query}_0 
+ \textrm{Query}_1 
+:
+ \textrm{Query}_{Q - 1} 
+ 
+ 
+ 
+ 
+ 
+ Output For each query of the latter type, print the answer. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 5 5
+1 2 3 4 5
+1 0 5
+1 2 4
+0 3 10
+1 0 5
+1 0 3
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 15
+7
+25
+6

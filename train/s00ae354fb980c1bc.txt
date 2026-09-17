@@ -1,0 +1,17 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n;
+int c=0;
+
+int main(){
+  cin>>n;
+  for(int i=0;i<n;i++){
+    string s;
+    cin>>s;
+    if(s=="A")c++;
+    else c=max(0,c-1);
+  }
+  cout<< (c==0?"YES":"NO") <<endl;
+  return 0;
+}

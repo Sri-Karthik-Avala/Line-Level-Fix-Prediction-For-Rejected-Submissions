@@ -1,0 +1,54 @@
+Red Dragonfly 
+　
+ 
+ It’s still hot every day, but September has already come. It’s autumn according to the calendar. Looking around, I see two red dragonflies at rest on the wall in front of me. It’s autumn indeed.
+ 
+
+ 
+ When two red dragonflies’ positional information as measured from the end of the wall is given, make a program to calculate the distance between their heads.
+ 
+
+ Input 
+ 
+ The input is given in the following format.
+ 
+ 
+$x_1$ $x_2$
+ 
+
+ 
+ The input line provides dragonflies’ head positions $x_1$ and $x_2$ ($0 \leq x_1, x_2 \leq 100$) as integers.
+ 
+
+ Output 
+ 
+ Output the distance between the two red dragonflies in a line.
+ 
+
+ Sample Input 1 
+ 
+20 30
+ 
+ Sample Output 1 
+ 
+10
+ 
+
+ Sample Input 2 
+
+ 
+50 25
+
+ 
+ Sample Output 2 
+ 
+25
+ 
+
+ Sample Input 3 
+ 
+25 25
+ 
+ Sample output 3 
+ 
+0

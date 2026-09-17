@@ -1,0 +1,57 @@
+#include <algorithm>
+#include <climits>
+#include <iostream>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> i_i;
+int MOD = 1000000007;
+
+int main() {
+	int n; cin >> n;
+	vector<vector<int> > a(n, vector<int>(6, INT_MIN));
+	vector<vector<i_i> > p(6, vector<i_i>(n));
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < 6; j++) {
+			int x, y; scanf("%d%d", &x, &y);
+			a[i][0] = max(a[i][0], x);
+			a[i][1] = max(a[i][1], -x);
+			a[i][2] = max(a[i][2], y);
+			a[i][3] = max(a[i][3], -y);
+			a[i][4] = max(a[i][4], x + y);
+			a[i][5] = max(a[i][5], -(x + y));
+		}
+		for (int k = 0; k < 6; k++)
+			p[k][i] = i_i(a[i][k], i);
+	}
+	for (int k = 0; k < 6; k++) {
+		sort(p[k].begin(), p[k].end());
+		reverse(p[k].begin(), p[k].end());
+	}
+	vector<int> index(6), cnt(n);
+	queue<int> q;
+	vector<int> b(6);
+	for (;;) {
+		for (int k = 0; k < 6; k++)
+			for (int& i = index[k]; i < n && -p[k][i].first <= b[k ^ 1]; i++) {
+				int j = p[k][i].second;
+				if (++cnt[j] == 6) q.push(j);
+			}
+		if (q.empty()) break;
+		int i = q.front(); q.pop();
+		for (int k = 0; k < 6; k++)
+			b[k] = max(b[k], a[i][k] + 1);
+	}
+	int k; cin >> k;
+	while (k--) {
+		int x, y; cin >> x >> y;
+		if (x <= b[0] && -x <= b[1] && y <= b[2] && -y <= b[3] && x + y <= b[4] && -(x + y) <= b[5])
+			cout << "YES" << endl;
+		else
+			cout << "NO" << endl;
+	}
+}

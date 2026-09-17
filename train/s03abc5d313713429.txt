@@ -1,0 +1,54 @@
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <cmath>
+#include <vector>
+#include <cstring>
+#include <string>
+#include <set>
+#include <map>
+#include <stack>
+#include <queue>
+#include <algorithm>
+using namespace std;
+ 
+#define REP(i,n) for(int i=0; i<n; ++i)
+#define FOR(i,a,b) for(int i=a; i<=b; ++i)
+#define FORR(i,a,b) for (int i=a; i>=b; --i)
+#define pi M_PI
+ 
+typedef long long ll;
+typedef vector<int> VI;
+typedef vector<ll> VL;
+typedef vector<VI> VVI;
+typedef pair<int,int> P;
+typedef pair<ll,ll> PL;
+
+int main() {
+    int n;
+    int w[5] = {5, 7, 5, 7, 7};
+    while (cin >> n && n){
+        VI a(n);
+        REP(i,n) {
+            string s;
+            cin >> s;
+            a[i] = s.length();
+        }
+        REP(s,n){
+            int x = 0, i = s, j = 0, f = 1;
+            while (f){
+                x += a[i];
+                i++;
+                if (x > w[j]) f = 0;
+                if (x == w[j]){
+                    x = 0;
+                    j++;
+                }
+                if (j == 5) break;
+            }
+            if (f) cout << s+1 << endl;
+        }
+    }
+
+    return 0;
+}

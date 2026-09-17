@@ -1,0 +1,96 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement Snuke built an online judge to hold a programming contest. 
+ When a program is submitted to the judge, the judge returns a verdict, which is a two-character string that appears in the string S as a contiguous substring.
+(The judge can return any two-character substring of S .) 
+ Determine whether the judge can return the string AC as the verdict to a program. 
+ 
+ 
+ 
+ 
+ Constraints 
+ 2 \leq |S| \leq 5 
+ S consists of uppercase English letters. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ S 
+ 
+ 
+ 
+ 
+ 
+ Output If the judge can return the string AC as a verdict to a program, print Yes ; if it cannot, print No . 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 BACD
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 Yes
+ 
+ The string AC appears in BACD as a contiguous substring (the second and third characters). 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 ABCD
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 No
+ 
+ Although the string ABCD contains both A and C (the first and third characters), the string AC does not appear in ABCD as a contiguous substring. 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 CABD
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 No
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 4 ACACA
+ 
+ 
+ 
+ 
+ 
+ Sample Output 4 Yes
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 5 XX
+ 
+ 
+ 
+ 
+ 
+ Sample Output 5 No

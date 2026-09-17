@@ -1,0 +1,108 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>	
+#include<map>
+#include<set>
+#include<utility>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<stack>
+#include<cstdio>
+#include<sstream>
+#include<iomanip>
+#include<assert.h>
+#include<typeinfo>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb push_back
+#define all(in) in.begin(),in.end()
+#define shosu(x) fixed<<setprecision(x)
+using namespace std;
+//kaewasuretyuui
+typedef long long ll;
+//#define int ll
+typedef int Def;
+typedef pair<Def,Def> pii;
+typedef vector<Def> vi;
+typedef vector<vi> vvi;
+typedef vector<pii> vp;
+typedef vector<vp> vvp;
+typedef vector<string> vs;
+typedef vector<double> vd;
+typedef vector<vd> vvd;
+typedef pair<Def,pii> pip;
+typedef vector<pip>vip;
+//#define mt make_tuple
+//typedef tuple<pii,int,int> tp;
+//typedef vector<tp> vt;
+template<typename A,typename B>bool cmin(A &a,const B &b){return a>b?(a=b,true):false;}
+template<typename A,typename B>bool cmax(A &a,const B &b){return a<b?(a=b,true):false;}
+//template<class C>constexpr int size(const C &c){return (int)c.size();}
+//template<class T,size_t N> constexpr int size(const T (&xs)[N])noexcept{return (int)N;}
+const double PI=acos(-1);
+const double EPS=1e-7;
+Def inf = sizeof(Def) == sizeof(long long) ? 2e18 : 1e9;
+int dx[]={0,1,0,-1};
+int dy[]={1,0,-1,0};
+struct edge{int to,cap,rev;};//ikisaki youryou gyakuhen
+class MF{//max flow
+	public:
+	int n;
+	vector<vector<edge> >G;//[MAX];
+	vector<bool>used;//[MAX];
+	MF(int size){
+		n=size;
+		G=vector<vector<edge> >(n);
+	}
+	void add_edge(int from, int to, int cap){
+		edge q={to,cap,int(G[to].size())};
+		G[from].push_back(q);
+		q={from,0,int(G[from].size()-1)};
+		G[to].push_back(q);
+	}
+	int dfs(int v,int t, int f) {
+		if(v==t)return f;
+		used[v]=1;
+		for(int i=0;i<G[v].size();i++){
+			edge &e=G[v][i];
+			if(used[e.to]||e.cap<=0) continue;
+			int d =dfs(e.to,t,min(f,e.cap));
+			if(d>0){
+				e.cap-=d;
+				G[e.to][e.rev].cap+=d;
+				return d;
+			}
+		}
+		return 0;
+	}
+	int mf(int s,int t) {//from s to t,ford_fulkerson
+		int flow=0,f;
+		while(1){
+			used=vector<bool>(n,false);
+			f=dfs(s,t,inf);
+			if(f==0)return flow;
+			flow+=f;
+		}
+	}
+};
+int main(){
+	int n,m;
+	cin>>n>>m;
+	vp in(m);
+	rep(i,m)cin>>in[i].first>>in[i].second;
+	rep(i,m){
+		MF mf(n*2+1);
+		rep(j,n)mf.add_edge(j,n+j,1);
+		int s=n,t=n*2;
+		rep(j,i){
+			mf.add_edge(n+in[j].first-1,in[j].second-1,1);
+			mf.add_edge(n+in[j].second-1,in[j].first-1,1);
+		}
+		mf.add_edge(in[i].first-1,t,1);
+		mf.add_edge(in[i].second-1,t,1);
+		if(mf.mf(s,t)==2)cout<<"Yes"<<endl;
+		else cout<<"No"<<endl;
+	}
+}

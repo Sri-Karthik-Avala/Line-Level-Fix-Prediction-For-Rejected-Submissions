@@ -1,0 +1,4 @@
+a = int(input("Enter an integer : "))
+s=a**2
+t=a**3
+print(a+s+t)

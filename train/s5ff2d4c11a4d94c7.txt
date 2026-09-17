@@ -1,0 +1,85 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+
+#include <set>
+#include <map>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <ctime>
+#include <vector>
+#include <cstdio>
+#include <string>
+#include <iomanip>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define LL long long
+#define pii pair<int,int>
+#define sd(x) scanf("%d",&x)
+#define slld(x) scanf("%lld",&x)
+#define pd(x) printf("%d\n",x)
+#define plld(x) printf("%lld\n",x)
+#define rep(i,a,b) for(int i = (a) ; i <= (b) ; i++)
+#define per(i,a,b) for(int i = (a) ; i >= (b) ; i--)
+#define mem(a) memset(a,0,sizeof(a))
+#define lson l , m , rt << 1
+#define rson m + 1 , r , rt << 1 | 1
+#define fast_io ios::sync_with_stdio(false)
+
+const LL mod = 1e9 + 7;
+const int maxn = 5e5 + 7;
+const int INF = 0x3f3f3f3f;
+const double pi = acos(-1.0);
+
+LL f[maxn],inv[maxn];
+
+void init() {
+    inv[0] = f[0] = inv[1] = f[1] = 1;
+    for(LL i = 2 ; i <= maxn ; i++) {
+        inv[i] = ((mod - mod / i) * inv[mod%i]) % mod;
+        f[i] = i;
+    }
+    for(LL i = 2 ; i <= maxn ; i++) {
+        inv[i] = (inv[i] * inv[i-1]) % mod;
+        f[i] = (f[i] * f[i-1]) % mod;
+    }
+}
+
+LL C(LL x,LL y) {
+    return f[x] * inv[y] % mod * inv[x-y] % mod;
+}
+
+LL A(LL x,LL y) {
+    return f[x] * inv[x-y] % mod;
+}
+int main() {
+
+#ifndef ONLINE_JUDGE
+//	freopen("in.txt", "r", stdin);
+//	freopen("out.txt", "w", stdout);
+	long _begin_time = clock();
+#endif
+
+    init();
+    int n,m;
+    sd(n),sd(m);
+    LL ans = A(m,n);
+    // cout << "ans = " << ans << endl;
+    for(LL i = 1 ; i <= n ; i++) {
+        LL res = C(n,i) * A(m - i , n - i);
+        // cout << "i = " << i << " res = " << res << endl;
+        if(i&1) ans = (ans - res + mod) % mod;
+        else ans = (ans + res) % mod;
+    }
+    ans = ans * A(m,n) % mod;
+    plld(ans);
+
+#ifndef ONLINE_JUDGE
+	long _end_time = clock();
+	// cout << "time = " <<  _end_time - _begin_time << endl;
+#endif
+    return 0;
+}

@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define repl(i,a,b) for(int i=(int)(a);i<(int)(b);i++)
+#define rep(i,n) repl(i,0,n)
+#define mp(a,b) make_pair((a),(b))
+#define pb(a) push_back((a))
+#define all(x) (x).begin(),(x).end()
+#define uniq(x) sort(all(x)),(x).erase(unique(all(x)),end(x))
+#define fi first
+#define se second
+#define dbg(x) cout<<#x" = "<<((x))<<endl
+template<class T,class U> ostream& operator<<(ostream& o, const pair<T,U> &p){o<<"("<<p.fi<<","<<p.se<<")";return o;}
+template<class T> ostream& operator<<(ostream& o, const vector<T> &v){o<<"[";for(T t:v){o<<t<<",";}o<<"]";return o;}
+
+#define INF 2147483600
+#define long long long // for codeforces
+
+int solve(){
+  vector<vector<int>> vec(5,vector<int>(5));
+  rep(i,5)rep(j,5) scanf("%d", &vec[i][j]);
+  rep(i,5)rep(j,5) vec[i][j]--;
+
+  const int masks[] = {0x3fc, 0x3f3, 0x3cf, 0x33f, 0x0ff};
+  const int points[] ={0,60,70,80};
+
+  vector<vector<int>> dp(1<<10, vector<int>(4, -1));
+  dp[0][0] = 0;
+  // dp[mask][i] : 2bit?????¨??¨???????????????????????????????????¨??????????????¨???????¢???????????????§????????¢
+  // i : ?????????????????¢????????????????????????
+
+  rep(i,4)rep(j,4){
+    vector<vector<int>> nxt(1<<10, vector<int>(4, -1));
+    rep(mask, 1<<10) rep(k,4) if(dp[mask][k]>=0){
+      int l = (mask>>(j*2))%4;
+      int r = (mask>>(j*2+2))%4;
+      rep(d,4){ // # switch push
+        int pl=0,pr=0;
+        if(vec[i][j]!=-1) pl = points[(vec[i][j]+l+k+d)%4];
+        if(vec[i][j+1]!=-1) pr = points[(vec[i][j+1]+r+d)%4];
+        int nmask = (mask&masks[j]) + (((k+d)%4)<<(j*2));
+        if(j<3) nxt[nmask][d] = max(nxt[nmask][d], dp[mask][k] + pl);
+        if(j==3){
+          nmask = (nmask&masks[4]) + (d<<8);
+          nxt[nmask][0] = max(nxt[nmask][0], dp[mask][k] + pl + pr);
+        }
+      }
+    }
+    swap(nxt, dp);
+  }
+
+  int ans = 0;
+  rep(_mask, 1<<10)if(dp[_mask][0]>0){
+    int mask = _mask;
+    int crnt=dp[_mask][0];
+    rep(i,5){
+      int d = mask%4;
+      mask /= 4;
+      if(vec[4][i]!=-1){
+        crnt += points[(vec[4][i]+d)%4];
+      }
+    }
+    ans = max(ans, crnt);
+  }
+  return ans;
+}
+
+int main(){
+  int n;
+  cin>>n;
+  rep(_,n) cout<<solve()<<endl;
+
+  return 0;
+}

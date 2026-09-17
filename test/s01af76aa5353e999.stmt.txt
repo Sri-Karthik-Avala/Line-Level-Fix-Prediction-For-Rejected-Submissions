@@ -1,0 +1,146 @@
+Vampire 
+
+ 
+Mr. C is a vampire. If he is exposed to the sunlight directly, he turns 
+into ash.
+Nevertheless, last night, he attended to the meeting of Immortal and 
+Corpse Programmers
+Circle, and he has to go home in the near dawn.
+Fortunately, there are many tall buildings around Mr. C's home, and 
+while the sunlight is blocked by the buildings, he can move around 
+safely.
+The top end of the sun has just reached the horizon now.
+In how many seconds does Mr. C have to go into his safe coffin?
+ 
+
+ 
+To simplify the problem, we represent the eastern dawn sky as a 2-dimensional
+ x - y plane, where the x axis is horizontal and the y axis
+is vertical, and approximate building silhouettes by rectangles
+and the sun by a circle on this plane.
+ 
+
+ 
+The x axis represents the horizon.
+We denote the time by t , and the current time is t =0.
+The radius of the sun is r and
+its center is at (0, - r ) when the time t =0.
+The sun moves on the x - y plane in a uniform linear motion at
+a constant velocity of (0, 1) per second.
+ 
+
+ 
+The sunlight is blocked if and only if the entire region of the sun 
+(including its edge) is included in the union of the silhouettes 
+(including their edges) and the region below the horizon (y &#8804; 0).
+ 
+
+ 
+Write a program that computes the time of the last moment when the sunlight is blocked.
+ 
+
+ 
+The following figure shows the layout of silhouettes and the position of the sun at
+the last moment when the sunlight is blocked, that corresponds to the
+first dataset of Sample Input below. As this figure indicates, there are possibilities
+that the last moment when the sunlight is blocked can be the time t =0.
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+The sunlight is blocked even when two silhouettes share parts of their edges.
+
+The following figure shows the layout of silhouettes and the position of the sun at the
+last moment when the sunlight is blocked, corresponding to the second
+dataset of Sample Input.
+In this dataset the radius of the sun is 2 and there are two silhouettes:
+the one with height 4 is in -2 &#8804; x &#8804; 0, and
+the other with height 3 is in 0 &#8804; x &#8804; 2.
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+
+ Input 
+
+
+ 
+The input consists of multiple datasets.
+The first line of a dataset contains two
+integers r and n separated by a space.
+ r is the radius of the sun and n is the number of silhouettes
+of the buildings.
+(1 &#8804; r &#8804; 20, 0 &#8804; n &#8804; 20)
+ 
+Each of following n lines contains three integers
+ x li , x ri , h i (1 &#8804; i &#8804; n ) separated by a space.
+ 
+
+ 
+These three integers represent a silhouette rectangle of a building.
+The silhouette rectangle is parallel to the horizon, and its left and right edges
+are at x = x li and x = x ri , its top
+edge is at y = h i , and its bottom edge is on
+the horizon.
+(-20 &#8804; x li < x ri &#8804; 20,
+0 < h i &#8804; 20)
+ 
+The end of the input is indicated by a line containing two zeros separated by a space.
+ 
+
+ 
+Note that these silhouettes may overlap one another.
+ 
+
+
+ Output 
+
+ 
+For each dataset, output a line containing the number indicating the time t of the last moment when the sunlight is blocked.
+The value should not have an error greater than 0.001.
+No extra characters should appear in the output.
+ 
+
+
+ Sample Input 
+
+ 2 3
+-2 -1 3
+0 1 3
+2 3 3
+2 2
+-2 0 4
+0 2 3
+2 6
+-3 3 1
+-2 3 2
+-1 3 3
+0 3 4
+1 3 5
+2 3 6
+2 6
+-3 3 1
+-3 2 2
+-3 1 3
+-3 0 4
+-3 -1 5
+-3 -2 6
+0 0
+ 
+
+
+ Output for the Sample Input 
+
+ 0.0000
+3.0000
+2.2679
+2.2679

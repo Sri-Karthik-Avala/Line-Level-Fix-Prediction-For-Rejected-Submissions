@@ -1,0 +1,29 @@
+from math import sqrt
+P = "perfect number"
+D = "deficient number"
+A = "abundant number"
+while True:
+    n = input()
+    if n==0:
+        break
+    if n==1:
+        print D
+        continue
+    su = 1
+    temp = n
+    for i in xrange(2, int(sqrt(n))+1):
+        cnt = 0
+        while temp%i==0:
+            temp /= i
+            cnt += 1
+        if cnt:
+            su *= (i**(cnt+1)-1)/(i-1)
+        if temp==1:
+            su -= n
+            break
+    if temp!=1:
+        su *= (temp**2-1)/(temp-1)
+        su -= n
+    print su, temp
+
+    print P if n==su else (D if su<n else A)

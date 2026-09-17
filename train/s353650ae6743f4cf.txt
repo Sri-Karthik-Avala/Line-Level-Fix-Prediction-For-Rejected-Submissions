@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+using namespace std;
+using Int = long long;
+typedef pair<Int, Int> P;
+
+template<typename T1,typename T2> inline void chmin(T1 &a,T2 b){if(a>b) a=b;}
+template<typename T1,typename T2> inline void chmax(T1 &a,T2 b){if(a<b) a=b;}
+
+vector<vector<P> > nx
+{
+  {P(0,5),P(1,6),P(2,7),P(3,8),P(4,9)},
+  {P(0,1),P(4,3),P(9,14),P(10,15),P(5,11)},
+  {P(0,4),P(5,10),P(11,16),P(6,12),P(1,2)},
+  {P(1,0),P(6,11),P(12,17),P(7,13),P(2,3)},
+  {P(2,1),P(7,12),P(13,18),P(8,14),P(3,4)},
+  {P(3,2),P(8,13),P(14,19),P(9,10),P(4,0)},
+  {P(5,0),P(10,9),P(15,19),P(16,17),P(11,6)},
+  {P(6,1),P(11,5),P(16,15),P(17,18),P(12,7)},
+  {P(7,2),P(12,6),P(17,16),P(18,19),P(13,8)},
+  {P(8,3),P(13,7),P(18,17),P(19,15),P(14,9)},
+  {P(9,4),P(14,8),P(19,18),P(15,16),P(10,5)},
+  {P(15,10),P(19,14),P(18,13),P(17,12),P(16,11)}
+};
+
+short dp[203][203][21][21][6];
+struct st{
+  Int y,x,n,m,d;
+  st(Int y,Int x,Int n,Int m,Int d):y(y),x(x),n(n),m(m),d(d){}
+};
+const Int CC = 101;
+signed main(){  
+  cin.tie(0);
+  ios::sync_with_stdio(0);
+  {
+    memset(dp,-1,sizeof(dp));
+    queue<st> q;
+    dp[CC][CC][0][5][0]=0;
+    q.emplace(CC,CC,0,5,0);
+    Int dyl[6]={0,0,1,0,0,-1};
+    Int dxl[6]={-1,-1,0,1,1,0};
+    Int dyr[6]={0,-1,0,0,1,0};
+    Int dxr[6]={1,0,-1,-1,0,1};
+    Int dyo[6]={1,0,0,-1,0,0};    
+    Int dxo[6]={0,1,1,0,-1,-1};
+
+    auto push=[&](st a,st b){
+      if(~dp[a.y][a.x][a.n][a.m][a.d]) return;
+      dp[a.y][a.x][a.n][a.m][a.d]=dp[b.y][b.x][b.n][b.m][b.d]+1;
+      q.emplace(a);
+    };
+    
+    while(!q.empty()){
+      st s=q.front();q.pop();
+      if(dp[s.y][s.x][s.n][s.m][s.d]>100) break;
+      
+      Int k=0,l=0;
+      for(Int i=0;i<12;i++)
+	for(Int j=0;j<5;j++)
+	  if(nx[i][j]==P(s.n,s.m)) k=i,l=j;
+      
+      //cout<<k<<" "<<l<<endl;
+      
+      {// L
+	st t=s;
+	t.y+=dyl[s.d];
+	t.x+=dxl[s.d];
+	tie(t.n,t.m)=nx[k][(l+4)%5];
+	t.d=(s.d+5)%6;	
+	push(t,s);
+      }
+      {// R
+	st t=s;
+	t.y+=dyr[s.d];
+	t.x+=dxr[s.d];
+	tie(t.n,t.m)=nx[k][(l+1)%5];
+	t.d=(s.d+1)%6;	
+	push(t,s);
+      }
+      {// O
+	st t=s;
+	t.y+=dyo[s.d];
+	t.x+=dxo[s.d];
+	swap(t.n,t.m);
+	t.d=(s.d+3)%6;	
+	push(t,s);
+      }
+    }
+    
+    
+  }
+  
+  
+  {
+    Int x,y,n;
+    while(cin>>x>>y>>n,x||y||n){
+      short ans=101;
+      x+=CC;y+=CC;
+      for(Int i=0;i<20;i++){
+	for(Int j=0;j<6;j++){
+	  if(dp[y][x][n][i][j]<0) continue;
+	  chmin(ans,dp[y][x][n][i][j]);
+	}
+      }
+      cout<<ans<<endl;
+    }
+  }
+  return 0;
+}
+

@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define for_(i,a,b) for(int i=(a);i<(b);++i)
+#define allof(a) (a).begin(),(a).end()
+
+typedef long long lint;
+
+struct Edge { int to; lint c; };
+
+struct State {
+	int v, h; lint c;
+	bool operator > (const State& s) const { return c > s.c; }
+};
+
+int N, M, S1, S2, T, BC;
+vector< vector< Edge > > adj;
+lint dst[2][1010][110], INF = 1LL << 60;
+
+void djk(int index, int s) {
+	for_(v,0,N) for_(h,0,BC+1) dst[index][v][h] = INF;
+	
+	priority_queue< State, vector< State >, greater< State > > que;
+	que.push(State{s, 0, 0});
+	dst[index][s][0] = 0;
+	
+	while (!que.empty()) {
+		State s = que.top(); que.pop();
+		
+		if (dst[index][s.v][s.h] < s.c) continue;
+		
+		for (Edge e : adj[s.v]) {
+			lint nxc = s.c + (e.c == -1 ? 0 : e.c);
+			int nh = s.h + (e.c == -1 ? 1 : 0);
+			
+			if (nh <= BC && dst[index][e.to][nh] > nxc) {
+				dst[index][e.to][nh] = nxc;
+				que.push(State{e.to, nh, nxc});
+			}
+		}
+	}
+}
+
+vector< lint > calcX(int index) {
+	vector< lint > X;
+	
+	for_(ki,0,BC+1) for_(kj,ki+1,BC+1) {
+		lint di = dst[index][T][ki], dj = dst[index][T][kj];
+		lint x = (di - dj) / (kj - ki);
+		for_(dx,-1,2) if (di < INF && dj < INF && x + dx >= 0) X.push_back(x + dx);
+	}
+	
+	return X;
+}
+
+void solve() {
+	djk(0, S1);
+	djk(1, S2);
+	
+	vector< lint > X = calcX(0), XX = calcX(1);
+	X.insert(X.end(), allof(XX));
+	
+	sort(allof(X));
+	X.erase(unique(allof(X)), X.end());
+	
+	if (X.empty()) X.push_back(0);
+	int m = X.size();
+	
+	lint ans = INF;
+	
+	for_(i,0,m) {
+		lint x = X[i];
+		
+		lint dk[2] = {INF, INF};
+		for_(j,0,2) for_(k,0,BC+1) dk[j] = min(dk[j], dst[j][T][k] + k * x);
+		
+		ans = min(ans, abs(dk[0] - dk[1]));
+	}
+	
+	cout << ans << endl;
+}
+
+int main() {
+	while (cin >> N >> M >> S1 >> S2 >> T, N) {
+		--S1; --S2; --T;
+		adj.assign(N, vector< Edge >());
+		BC = 0;
+		
+		for_(i,0,M) {
+			int u, v;
+			string str;
+			cin >> u >> v >> str;
+			--u; --v;
+			
+			lint c;
+			
+			if (str == "x") {
+				c = -1;
+				++BC;
+			} else {
+				stringstream ss(str);
+				ss >> c;
+			}
+			
+			adj[u].push_back(Edge{v, c});
+			adj[v].push_back(Edge{u, c});
+		}
+		
+		solve();
+	}
+}

@@ -1,0 +1,103 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> P;
+int p,r,t;
+int L[333];
+int lmp[333];
+int tmp[333][333];
+int n[333][333];
+bool used[333];
+int C[333];
+vector<P> D;
+
+bool isRelease( int id ){
+  for(int i=0;i<r;i++)
+    if( n[id][i] > L[i] ) return false;
+  return true;
+}
+
+bool check(int h){
+
+  for(int i=0;i<r;i++) L[i] = lmp[i];
+  for(int i=0;i<p;i++){
+    C[i] = r;
+    for(int j=0;j<r;j++){
+      n[i][j] = tmp[i][j];
+      if( n[i][j] == 0 ) C[i]--;
+    }
+  }
+  
+  for(int i=0;i<h;i++){
+    if( L[ D[i].second ] == 0 ) return true;
+    L[ D[i].second ]--;    
+    n[ D[i].first ][ D[i].second ]--;
+    assert( n[ D[i].first ][ D[i].second ] >= 0 );    
+    if( n[ D[i].first ][ D[i].second ] == 0 ) C[ D[i].first ]--;
+
+    if( C[ D[i].first ] == 0 ) {
+      used[ D[i].first ] = true;
+      for(int j=0;j<r;j++)
+        L[ j ] += tmp[ D[i].first ][ j ];      
+    }
+  }
+
+  /*
+  cout << "time : " <<  h << endl;
+  for(int i=0;i<r;i++) cout << L[i]<< " ";
+  cout << endl;
+  for(int i=0;i<p;i++){
+    for(int j=0;j<r;j++) cout << n[i][j] << " ";
+    cout << endl;
+  }
+  */
+
+
+  bool loop = true;
+  memset( used,0,sizeof( used ));
+  while( loop ){
+    loop = false;
+    for(int i=0;i<p;i++){
+      if( used[i] ) continue;
+      if( isRelease( i ) ) {
+        for(int j=0;j<r;j++)
+          L[ j ] += tmp[i][j] - n[i][j];
+        used[i] = true;
+        loop = true;
+      }
+    }
+  }
+
+  for(int i=0;i<p;i++)
+    if( !used[i] ) return true;
+  return false;
+  
+}
+
+int main(){
+  cin >> p >> r >> t;
+  D.resize( t );
+  for(int i=0;i<r;i++) {
+    cin >> L[i]; lmp[i] = L[i];
+  }
+  for(int i=0;i<p;i++)
+    for(int j=0;j<r;j++){
+      cin >> n[i][j];
+      tmp[i][j] = n[i][j];
+    }
+  for(int i=0;i<t;i++){
+    cin >> D[i].first >> D[i].second;
+    D[i].first--; D[i].second--;
+  }
+
+  int st = 0, ed = t;
+  int res = -1;
+  while( st <= ed ){
+    int h = (st+ed)/2;
+    if( check( h ) ) {
+      ed = h-1; res = h;
+    } else {
+      st = h+1;
+    }
+  }
+  cout << res << endl;
+}

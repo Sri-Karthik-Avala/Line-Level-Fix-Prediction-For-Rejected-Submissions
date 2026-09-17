@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long lint;
+typedef pair<lint, int> Pr;
+const lint INF = 1ll << 61;
+
+int n, m;
+lint x;
+lint h[100000];
+vector<Pr> g[100000];
+lint dist[100000];
+
+void solve()
+{
+	fill_n(dist, 100000, INF);
+	dist[0] = 0;
+	
+	priority_queue<Pr, vector<Pr>, greater<Pr>> pq;
+	for (pq.push(Pr(0, 0)); pq.size(); ){
+		Pr p = pq.top(); pq.pop();
+		lint sum = p.first;
+		int v = p.second;
+		if (dist[v] < sum) continue;
+		
+		lint ch = max(x - sum, 0ll);
+		//printf("%d %lld %lld\n", v, sum, ch);
+		for (auto &e : g[v]){
+			int to = e.second;
+			lint cost = e.first;
+			
+			lint nh = ch - cost;
+			if (nh < 0) cost += -nh;
+			else if (nh > h[to]) cost += nh - h[to];
+			
+			if (dist[to] > sum + cost){
+				dist[to] = sum + cost;
+				pq.push(Pr(sum + cost, to));
+			}
+		}
+	}
+	
+	lint res;
+	if (dist[n - 1] == INF) res = -1;
+	else if (dist[n - 1] < x) res = dist[n - 1] * 2;
+	else res = dist[n - 1] + h[n - 1];
+	
+	printf("%lld\n", res);
+}
+
+int main()
+{
+	scanf("%d %d %lld", &n, &m, &x);
+	
+	for (int i = 0; i < n; i++){
+		scanf("%lld", &h[i]);
+	}
+	
+	for (int i = 0; i < m; i++){
+		int a, b;
+		lint t;
+		scanf("%d %d %lld", &a, &b, &t);
+		--a; --b;
+		if (h[a] >= t) g[a].push_back(Pr(t, b));
+		if (h[b] >= t) g[b].push_back(Pr(t, a));
+	}
+	
+	solve();
+	
+	return 0;
+}

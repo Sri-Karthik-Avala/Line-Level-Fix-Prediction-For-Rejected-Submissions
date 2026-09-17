@@ -1,0 +1,67 @@
+#include<iostream>
+#include<complex>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+typedef complex<double> P;
+
+double dot(P a,P b){
+  return (a*conj(b)).real();
+}
+
+int main(){
+  for(int H,R;cin>>H>>R,H;){
+    P h[100];
+    for(int i=0;i<H;i++){
+      int x,y;
+      cin>>x>>y;
+      h[i]=P(x,y);
+    }
+    int UMS[3],dums[3];
+    cin>>UMS[0]>>UMS[1]>>UMS[2]>>dums[0]>>dums[1]>>dums[2];
+    P ums[3][10];
+    for(int i=0;i<3;i++){
+      for(int j=0;j<UMS[i];j++){
+	int x,y;
+	cin>>x>>y;
+	ums[i][j]=P(x,y);
+      }
+    }
+    int nr[100]={};
+    for(int i=0;i<R;i++){
+      int w,a;
+      cin>>w>>a;
+      auto reach=[=](P s,P d,int ang){
+	P v=d-s;
+	return abs(v)-1e-5<a&&acos(dot(v,polar(1.,w*acos(0)/90))/abs(v))-1e-5<ang*acos(0)/90/2;
+      };
+      for(int j=0;j<H;j++){
+	if(reach(P(0,0),h[j],dums[0])){
+	  bool f=false;
+	  for(int k=0;k<3;k++){
+	    for(int l=0;l<UMS[k];l++){
+	      f|=reach(ums[k][l],h[j],dums[k]);
+	    }
+	  }
+	  nr[j]+=!f;
+	}
+      }
+    }
+    auto m=*max_element(nr,nr+H);
+    if(m==0){
+      cout<<"NA"<<endl;
+    }else{
+      vector<int> v;
+      for(int i=0;i<H;i++){
+	if(m==nr[i]){
+	  v.push_back(i+1);
+	}
+      }
+      for(int i=0;i<v.size();i++){
+	cout<<v[i]<<" \n"[i==v.size()-1];
+      }
+    }
+  }
+}

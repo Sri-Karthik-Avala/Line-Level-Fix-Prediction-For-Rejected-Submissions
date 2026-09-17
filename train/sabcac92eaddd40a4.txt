@@ -1,0 +1,39 @@
+from collections import deque
+D=int(input())
+def f(d,k):
+  if 0<=k<=1:
+    if d!=0:
+      return "Unko"
+    if k==1:
+      return deque([0])
+    else:
+      return deque([])
+  s=10-(d%10)
+  if s==10:
+    A=f(d//10,k-2)
+    s=0
+  #print(d,s,d-s*(10**(k-1))+s)
+  else:
+    A=f((d-s*(10**(k-1))+s)//10,k-2)
+  if A=="Unko":
+    return "Unko"
+  A.appendleft(s)
+  A.append(-s)
+  return A
+ans=0
+for k in range(1,50):
+  A=f(D,k)
+  if A=="Unko":
+    continue
+ # print(A)
+  res=1
+  for j in range((k+1)//2):
+    if j==0:
+      res*=9-abs(A[j])
+    else:
+      if A[j]==0:
+        res*=10
+      else:
+        res*=10-abs(A[j])
+  ans+=res
+print(ans)

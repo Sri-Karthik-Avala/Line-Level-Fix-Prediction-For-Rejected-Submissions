@@ -1,0 +1,83 @@
+from bisect import bisect_left
+q=int(input())
+query=[input() for _ in range(q)]
+l,r=-pow(10,9),pow(10,9)
+ary=[-float('inf')]
+for qq in query:
+    if qq[0]=='1':
+        _,a,b=map(int,qq.split())
+        ary.append(a)
+ary.append(float('inf'))
+ary.sort()
+
+class SegmentTree():
+    def __init__(self,size,segfunc=lambda x,y:x+y,default=0):
+        self.segfunc=segfunc
+        self.default=default
+        self.size=pow(2,(size-1).bit_length())
+        self.data=[default]*(self.size*2)
+    def update(self,i,v):
+        i+=self.size
+        self.data[i]=v
+        while i:
+            i>>=1
+            self.data[i]=self.segfunc(self.data[2*i],self.data[2*i+1])
+    # 区間[l,r)に対するクエリ
+    def query(self,l,r):
+        l+=self.size
+        r+=self.size
+        lres,rres=self.default,self.default
+        while l<r:
+            if l&1:
+                lres=self.segfunc(lres, self.data[l])
+                l += 1
+            if r&1:
+                r-=1
+                rres=self.segfunc(self.data[r],rres)
+            l>>=1
+            r>>=1
+        res=self.segfunc(lres,rres)
+        return res
+    def get(self,i):
+        return self.data[self.size+i]
+    def add(self,i,v):
+        self.update(i,self.get(i)+v)
+    
+#ary[0],ary[-1]
+ml,mr=0,len(ary)+1
+mv=0
+st=SegmentTree(len(ary))
+for qq in query:
+    if qq[0]=='2':
+        print(ary[ml],mv)
+    else:
+        _,a,b=map(int,qq.split())
+        a=bisect_left(ary,a)
+        st.add(0,-1)
+        st.add(a,2)
+        if ml<=a<mr:
+            mv+=b
+            ml,mr=a,a+1
+        else:
+            l,r=0,len(ary)+1
+            mv+=b
+            while r-l>1:
+                x=(l+r)//2
+                chk=st.query(0,x)
+                if chk>=0:
+                    l,r=l,x
+                else:
+                    l,r=x,r
+            l0,r0=l,r
+            l,r=ml,len(ary)+1
+            while r-l>1:
+                x=(l+r)//2
+                chk=st.query(0,x)
+                if chk>0:
+                    l,r=l,x
+                else:
+                    l,r=x,r
+            mv+=min(abs(ary[ml]-ary[l]),abs(ary[mr]-1-ary[l]))+abs(ary[a]-ary[l])
+            mr=l if st.query(0,l+1)>0 else l+1
+            ml=l0 if st.query(0,l0+1)>=0 else l0+1
+

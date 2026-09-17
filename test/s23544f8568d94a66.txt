@@ -1,0 +1,114 @@
+#include <bits/stdc++.h>
+
+#define _overload(_1,_2,_3,name,...) name
+#define _rep(i,n) _range(i,0,n)
+#define _range(i,a,b) for(int i=int(a);i<int(b);++i)
+#define rep(...) _overload(__VA_ARGS__,_range,_rep,)(__VA_ARGS__)
+
+#define _rrep(i,n) _rrange(i,n,0)
+#define _rrange(i,a,b) for(int i=int(a)-1;i>=int(b);--i)
+#define rrep(...) _overload(__VA_ARGS__,_rrange,_rrep,)(__VA_ARGS__)
+
+#define _all(arg) begin(arg),end(arg)
+#define uniq(arg) sort(_all(arg)),(arg).erase(unique(_all(arg)),end(arg))
+#define getidx(ary,key) lower_bound(_all(ary),key)-begin(ary)
+#define clr(a,b) memset((a),(b),sizeof(a))
+#define bit(n) (1LL<<(n))
+#define popcount(n) (__builtin_popcountll(n))
+
+template<class T>bool chmax(T &a, const T &b) { return (a<b)?(a=b,1):0;}
+template<class T>bool chmin(T &a, const T &b) { return (b<a)?(a=b,1):0;}
+
+using namespace std;
+
+using ll=long long;
+
+const ll inf =1LL << 62;
+const ll mod=1000000007LL;
+
+inline ll extgcd(ll a,ll b,ll& x,ll& y){x=1,y=0;ll g=a;if(b!=0) g=extgcd(b,a%b,y,x),y-=a/b*x;return g;}
+inline ll ADD(const ll &a, const ll &b,const ll &mod) { return a+b<mod?a+b:a+b-mod;}
+inline ll SUB(const ll &a, const ll &b,const ll &mod) { return a-b>=0?a-b:a-b+mod;}
+inline ll MUL(const ll &a, const ll &b,const ll &mod) { return (1LL*a*b)%mod;}
+inline ll INV(ll a,ll mod){ll x,y;extgcd(a,mod,x,y);return (x%mod+mod)%mod;}
+inline ll DIV(const ll &a, const ll &b,const ll &mod) {return MUL(a,INV(b,mod),mod);}
+inline ll POW(ll a,ll n,ll mod){ll b=1LL;for(a%=mod;n;a=MUL(a,a,mod),n>>=1)if(n&1) b=MUL(b,a,mod); return b;}
+
+ll fact[1010],factinv[1010];
+ll powerinv[1010][1010];
+
+ll dp[1010][1010];
+ll f[1010][1010],g[1010][1010];
+
+const int limit=1000;
+
+void precal(ll ary[1010][1010],ll n,ll k){
+	vector<int> group[1010];
+	rep(before,1,n+1){
+		const int after=before/__gcd<ll>(before,k);
+		group[after].push_back(before);
+	}
+
+	dp[0][0]=1LL;
+	rep(after,1,n+1){
+		rep(i,group[after].size()){
+			const int before=group[after][i];
+			const int cluster=before/after;
+			rep(num,n/after+1) dp[i+1][num]=0LL;
+			
+			rep(j,n/after+1){
+				for(int num=0;j+num*after<=n;++num){
+					ll add=MUL(dp[i][j],POW(after,num*cluster,mod),mod);
+					add=MUL(add,powerinv[cluster][num],mod);
+					add=MUL(add,powerinv[after][num],mod);
+					add=MUL(add,factinv[num],mod);
+					dp[i+1][j+num*cluster]=ADD(dp[i+1][j+num*cluster],add,mod);
+				}
+			}
+		}
+		rep(num,n/after+1) ary[after][num]=MUL(dp[group[after].size()][num],fact[num],mod);
+	}
+
+	//rep(i,1,n)rep(num,n/i+1) cout << i << " " << num << " " << ary[i][num] << endl;
+}
+
+int main(void){
+	ll n,x,y,z;
+	cin >> n >> x >> y >> z;
+
+	fact[0]=1LL;
+	rep(i,1,limit+1) fact[i]=MUL(fact[i-1],i,mod);	
+	factinv[limit]=INV(fact[limit],mod);
+	rrep(i,limit) factinv[i]=MUL(factinv[i+1],i+1,mod);
+
+	rep(i,limit+1){
+		powerinv[i][limit]=INV(POW(i,limit,mod),mod);
+		rrep(j,limit) powerinv[i][j]=MUL(powerinv[i][j+1],i,mod);
+	}
+
+	const ll k=abs(x+z-y);
+	precal(f,n,k);
+	precal(g,n,2);
+
+	rep(i,n+1)rep(j,n+1) dp[i][j]=0LL;
+	dp[0][0]=1LL;
+	
+	rep(cycle_len,1,n+1){
+		rep(i,n+1){
+			for(int num=0;i+num*cycle_len<=n;++num){
+				ll add=dp[cycle_len-1][i];
+				add=MUL(add,f[cycle_len][num],mod);
+				add=MUL(add,g[cycle_len][num],mod);
+				add=MUL(add,powerinv[cycle_len][num],mod); // circle duplicate
+				add=MUL(add,factinv[num],mod); // matching duplicate
+				dp[cycle_len][i+num*cycle_len]=ADD(dp[cycle_len][i+num*cycle_len],add,mod);
+			}
+		}
+	}
+
+	if(x+y+z==0)
+		cout << MUL(POW(n,n,mod),dp[n][n],mod) << endl;
+	else
+		cout << MUL(fact[n],dp[n][n],mod) << endl;
+	return 0;
+}

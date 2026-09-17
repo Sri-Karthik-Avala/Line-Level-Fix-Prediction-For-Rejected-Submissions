@@ -1,0 +1,14 @@
+days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+dom=[31,29,31,30,31,60,31,31,30,31,30,31]
+while True:
+    try:
+        try:
+            (m,d)=map(int,raw_input().split())
+        except: break
+        if m==0 and d==0: break
+        day=4-1
+        for i in xrange(m-1):
+            day+=dom[i]
+        day+=d
+        print days[day%7]
+    except EOFError: break

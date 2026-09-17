@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, T, E, a[400];
+
+int main(){
+    scanf("%d%d%d", &N, &T, &E);
+    for(int x = 0; x < N; x++){
+        scanf("%d", a+x);
+    }
+    int x;
+    for(x = 0; x < N; x++){
+        if(min(T%a[x], a[x]-T%a[x]) <= E){ break; }
+    }
+    if(x == N) puts("-1");
+    else printf("%d\n", x);
+    return 0;
+}

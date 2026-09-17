@@ -1,0 +1,49 @@
+#pragma GCC optimize("O2")
+#pragma GCC optimize("unroll-loops")
+#pragma GCC target("sse,sse2,tune=native")
+#include<bits/stdc++.h>
+#define all(x) x.begin(), x.end()
+#define rall(x) x.rbegin(), x.rend()
+#define pb push_back
+using namespace std;
+using ll = long long;
+//using arr = array;
+using pi = pair<int, int>;
+using vi = vector<int>;
+using vvi = vector<vi>;
+using vpi = vector<pi>;
+using ld = long double;
+const int maxn = 1<<18, mod = 1e9 + 7;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+int n, m;
+vpi g[maxn];
+int ok, vis[maxn];
+void dfs(int v, int t) {
+	vis[v] = 1;
+	for(auto &i : g[v]) {
+		if(i.second >= t) continue;
+		if(vis[i.first]) ok = 0;
+		if(ok) dfs(i.first, i.second);
+	}
+}
+bool check(int u, int v) {
+	memset(vis, 0, sizeof vis);ok = 1;
+	dfs(u, 1<<30);
+	if(ok) dfs(v, 1<<30);
+	
+	return ok;
+}
+int main() {
+	cin.tie(0)->sync_with_stdio(0);
+	cin >> n >> m;
+	for(int f, t, i = 0; i < m; i++) {
+		cin >> f >> t;
+		g[f].pb({t, i});
+		g[t].pb({f, i});
+	}
+	int ans = 0;
+	for(int i = 1; i <= n; i++)
+		for(int j = 1; j < i; j++)
+			ans += check(i, j);
+	cout << ans;
+}

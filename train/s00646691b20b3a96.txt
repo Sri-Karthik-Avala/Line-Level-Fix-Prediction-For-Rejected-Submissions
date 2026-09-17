@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <cmath>
+#include <algorithm>
+
+#define NUM 11000
+
+int main(){
+	char buf[20],result,tmp,op;
+	bool firstFLG = true;
+
+	while(scanf("%s",buf)!=EOF){
+
+		if(buf[0] == '='){
+			printf("%d\n",result);
+		}else{
+
+			if(buf[1] == '\0' && (buf[0] == '*' || buf[0] == '-' || buf[0] == '+' || buf[0] == '/')){
+				op = buf[0];
+			}else{
+				tmp = 0;
+				if(buf[0] == '-'){
+					for(int i = 1; buf[i] != '\0'; i++){
+						tmp = 10*tmp + (buf[i]-'0');
+					}
+					tmp = -1*tmp;
+				}else{
+					for(int i = 0; buf[i] != '\0'; i++){
+						tmp = 10*tmp + (buf[i]-'0');
+					}
+				}
+
+				if(firstFLG){
+					result = tmp;
+					firstFLG = false;
+				}else{
+					switch(op){
+					case '-':
+						result -= tmp;
+						break;
+					case '+':
+						result += tmp;
+						break;
+					case '*':
+						result *= tmp;
+						break;
+					case '/':
+						result /= tmp;
+						break;
+
+					}
+				}
+
+			}
+		}
+	}
+
+	return 0;
+}

@@ -1,0 +1,11 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  for(double d; cin >> d; ) {
+    double res = d*sqrt(2);
+    if((int)d == d) res = max(res, d+1);
+    printf("%.10f\n", res);
+  }
+  return 0;
+}

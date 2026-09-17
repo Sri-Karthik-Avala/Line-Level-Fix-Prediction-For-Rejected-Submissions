@@ -1,0 +1,106 @@
+import collections
+import unittest
+
+
+def solve(n, a):
+    POSSIBLE = 'Possible'
+    IMPOSSIBLE = 'Impossible'
+
+    a.sort()
+    counter = collections.Counter(a)
+    max_k = max(counter)
+    min_k = (max_k+1)//2
+    if min(counter) < min_k or min_k not in counter:
+        return IMPOSSIBLE
+    if counter[max_k] < 2:
+        return IMPOSSIBLE
+    if max_k == 1 and n > 2:
+        return IMPOSSIBLE
+    if max_k % 2 == 0:
+        if counter[min_k] > 1:
+            return IMPOSSIBLE
+        if any([i not in counter or counter[i] < 2 for i in range(min_k + 1, max_k+1)]):
+            return IMPOSSIBLE
+    else:
+        if any([i not in counter or counter[i] < 2 for i in range(min_k, max_k+1)]):
+            return IMPOSSIBLE
+    return POSSIBLE
+
+
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    result = solve(n, a)
+    print(result)
+
+
+if __name__ == "__main__":
+    main()
+
+
+class Test(unittest.TestCase):
+    def test1(self):
+        n = 5
+        a = [3, 2, 2, 3, 3]
+        expected = 'Possible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test2(self):
+        n = 3
+        a = [1, 1, 2]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test3(self):
+        n = 10
+        a = [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, ]
+        expected = 'Possible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test4(self):
+        n = 10
+        a = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, ]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test5(self):
+        n = 6
+        a = [1, 1, 1, 1, 1, 5]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test6(self):
+        n = 5
+        a = [4, 3, 2, 3, 4]
+        expected = 'Possible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test_hand1(self):
+        n = 5
+        a = [4, 4, 2, 4, 4]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test_hand2(self):
+        n = 2
+        a = [1, 1]
+        expected = 'Possible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test_hand3(self):
+        n = 2
+        a = [2, 2]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test_hand4(self):
+        n = 3
+        a = [1, 1, 1]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)
+
+    def test_hand5(self):
+        n = 3
+        a = [2, 2, 2]
+        expected = 'Impossible'
+        self.assertEqual(solve(n, a), expected)

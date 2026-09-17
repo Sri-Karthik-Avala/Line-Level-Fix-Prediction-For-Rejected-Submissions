@@ -1,0 +1,24 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int solve(vector<pair<int, int>>x) {
+	int minx = 9999, minid = -1;
+	for (int i = 0; i < x.size(); i++) {
+		if (x[i].second == 0 && minx > x[i].first) { minx = x[i].first; minid = i; }
+	}
+	if (minx == 9999)return 0;
+	int L = minid; while (L >= 1 && x[L - 1].second == 0)L--;
+	int R = minid; while (R < x.size() - 1 && x[R + 1].second == 0)R++;
+	vector<pair<int, int>>J;
+	for (int i = 0; i < x.size(); i++) { if (L <= i && i <= R)continue; J.push_back(x[i]); }
+	return solve(J) + 1;
+}
+int main() {
+	vector<pair<int, int>>r; int n; cin >> n;
+	for (int i = 0; i < n; i++) {
+		int t1; char c2; cin >> c2 >> t1;
+		if (c2 == 'y')r.push_back(make_pair(t1, 0)); else r.push_back(make_pair(t1, 1));
+	}
+	cout << solve(r) << endl;
+	return 0;
+}

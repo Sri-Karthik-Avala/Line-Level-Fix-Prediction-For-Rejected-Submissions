@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+def dfs(s,Map,H,W,c):
+    dxdy = [(1,0),(-1,0),(0,1),(0,-1),(1,1),(-1,-1),(-1,1),(1,-1)]
+    for i in range(3):
+        Map[s[0]][s[1]] = c
+        nextPos = (s[0]+dxdy[i][0],s[1]+dxdy[i][1])
+        if nextPos[0] >= 0 and nextPos[1] >= 0 and nextPos[0] < H and nextPos[1] < W:
+            if Map[nextPos[0]][nextPos[1]] == 1:
+                dfs(nextPos,Map,H,W,c)
+
+while True:
+    W,H = map(int,input().split(" "))
+    if W == 0 and H == 0:
+        break
+    Map = [list(map(int,input().split())) for i in range(0,H)]
+    c = 1
+    for i in range(H):
+        for j in range(W):
+            if Map[i][j] == 1:
+                c += 1
+                dfs((i,j),Map,H,W,c)
+    print(c-1)

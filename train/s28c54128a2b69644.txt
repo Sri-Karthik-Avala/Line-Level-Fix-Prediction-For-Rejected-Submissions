@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int MAXN = 200010;
+
+template <typename T>
+class FenwickTree
+{
+public:
+  int N;
+  vector<T> dat;
+
+  FenwickTree(int n, T m = 0)
+  {
+    init(n, m);
+  }
+
+  void init(int n, int m)
+  {
+    N = n;
+    dat.resize(n + 1);
+    for (int i = 0; i < dat.size(); i++)
+    {
+      dat[i] = m;
+    }
+  }
+
+  int64_t sum(int i)
+  {
+    T s = 0;
+    while (i > 0)
+    {
+      s += dat[i];
+      i -= i & -i;
+    }
+    return s;
+  }
+
+  void add(int i, T x)
+  {
+    while (i <= N)
+    {
+      dat[i] += x;
+      i += i & -i;
+    }
+  }
+};
+
+int main()
+{
+  int64_t N, K;
+  cin >> N >> K;
+  vector<int64_t> A(N);
+  for (int i = 0; i < N; i++)
+  {
+    cin >> A.at(i);
+  }
+  vector<int64_t> S(N + 1, 0);
+  for (int i = 1; i <= N; i++)
+  {
+    S[i] = S[i - 1] + A[i - 1];
+  }
+  vector<int64_t> v, cv;
+  for (int i = 0; i <= N; i++)
+  {
+    v.push_back(S[i] - i * K);
+  }
+  cv = v;
+  sort(v.begin(), v.end());
+  map<int, int> mp;
+  int n = 1;
+  for (int i = 0; i <= N; i++)
+  {
+    if (i && v[i - 1] < v[i])
+    {
+      n++;
+    }
+    mp[v[i]] = n;
+  }
+  for (int i = 0; i <= N; i++)
+  {
+    cv[i] = mp[cv[i]];
+  }
+  int64_t ans = 0;
+  FenwickTree<int64_t> ft(MAXN);
+  for (auto c : cv)
+  {
+    ans += ft.sum(c);
+    ft.add(c, 1);
+  }
+  cout << ans << endl;
+}

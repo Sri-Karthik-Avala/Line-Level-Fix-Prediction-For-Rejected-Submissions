@@ -1,0 +1,36 @@
+import heapq
+
+N=int(input())
+array=[int(x) for x in input().split()]
+leftsidesum=[]
+firstN=[]
+for i in range(N):
+	heapq.heappush(firstN,array[i])
+summ=sum(firstN)
+leftsidesum.append(summ)
+
+for i in range(N,2*N):
+	summ+=array[i]
+	heapq.heappush(firstN,array[i])
+	summ-=heapq.heappop(firstN)
+	leftsidesum.append(summ)
+	
+rightsidesum=[]
+secondN=[]
+for i in range(3*N-1,2*N-1,-1):
+	heapq.heappush(secondN,-array[i])
+summm=sum(secondN)
+rightsidesum.append(-summm)
+
+for i in range(2*N-1,N-1,-1):
+	summm-=array[i]
+	heapq.heappush(secondN,-array[i])
+	summm-=heapq.heappop(secondN)
+	rightsidesum.append(-summm)
+
+	
+rightsidesum=rightsidesum[::-1]
+tobeprinted=[]
+for i in range(N):
+	tobeprinted.append(leftsidesum[i]-rightsidesum[i])
+print(max(tobeprinted))

@@ -1,0 +1,93 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <set>
+#include <map>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <algorithm>
+#include <cstring>
+#include <functional>
+#include <cmath>
+#include <complex>
+#include <cassert>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define rep1(i,n) for(int i=1;i<=(n);++i)
+#define all(c) (c).begin(),(c).end()
+#define fs first
+#define sc second
+#define pb push_back
+#define show(x) cout << #x << " " << x << endl
+typedef long double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+typedef vector<P> Pol;
+D eps=1e-10,Eps=1e-9;
+D cro(P a,P b){return imag(conj(a)*b);}
+int ccw(P a,P b,P c){
+	if(cro(b-a,c-a)>eps) return 1;
+	if(cro(b-a,c-a)<-eps) return -1;
+	if(abs(abs(a-c)+abs(c-b)-abs(a-b))<eps) return 0;
+	if(abs(abs(a-b)+abs(c-b)-abs(a-c))<eps) return -2;
+	return 2;
+}
+bool iLS(L l,L s){
+	return cro(l.sc-l.fs,s.fs-l.fs)*cro(l.sc-l.fs,s.sc-l.fs)<eps;
+}
+P intLL(L a,L b){
+	D t=cro(a.sc-a.fs,a.sc-b.fs)/cro(a.sc-a.fs,b.sc-b.fs);
+	return b.fs+t*(b.sc-b.fs);
+}
+int M,N;
+Pol a,b;
+D rec(D x){
+	L l=L(P(x,0),P(x,1));
+	Pol inters;
+	rep(j,M){
+		L e=L(a[j],a[(j+1)%M]);
+		if(iLS(l,e)) inters.pb(intLL(l,e));
+	}
+	if(inters.size()<=1) return -1;
+	D leny=0;
+	for(P p:inters) for(P q:inters) leny=max(leny,abs(p-q));
+	inters.clear();
+	rep(j,N){
+		L e=L(b[j],b[(j+1)%N]);
+		if(iLS(l,e)) inters.pb(intLL(l,e));
+	}
+	if(inters.size()<=1) return -1;
+	D lenz=0;
+	for(P p:inters) for(P q:inters) lenz=max(lenz,abs(p-q));
+	return leny*lenz;
+}
+int main(){
+	while(true){
+		cin>>M>>N;
+		if(M==0) break;
+		a.clear(),b.clear();
+		vector<D> xs;
+		D ans=0;
+		rep(i,M){
+			D x,y;
+			cin>>x>>y;
+			a.pb(P(x,y));
+			xs.pb(x-Eps);
+			xs.pb(x+Eps);
+		}
+		rep(i,N){
+			D x,y;
+			cin>>x>>y;
+			b.pb(P(x,y));
+			xs.pb(x-Eps);
+			xs.pb(x+Eps);
+		}
+		sort(all(xs));
+		rep(i,xs.size()-1){
+			if(rec(xs[i])<-eps||rec(xs[i])<-eps) continue;
+			ans+=(xs[i+1]-xs[i])/6.0*(rec(xs[i])+4.0*rec((xs[i+1]+xs[i])/2)+rec(xs[i+1]));
+		}
+		printf("%.4f\n",(double)ans);
+	}
+}

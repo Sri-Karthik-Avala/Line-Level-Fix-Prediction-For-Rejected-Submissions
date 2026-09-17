@@ -1,0 +1,72 @@
+Bridges 
+
+ 
+Find bridges of an undirected graph G(V, E) .
+ 
+
+ 
+A bridge (also known as a cut-edge) is an edge whose deletion increase the number of connected components.
+ 
+
+ Input 
+
+ 
+ |V| |E| 
+ s 0 t 0 
+ s 1 t 1 
+:
+ s |E|-1 t |E|-1 
+ 
+
+ 
+, where |V| is the number of nodes and |E| is the number of edges in the graph. The graph nodes are named with the numbers 0, 1,..., |V| -1 respectively.
+ 
+
+ 
+ s i and t i represent source and target nodes of i -th edge (undirected).
+ 
+
+ Output 
+
+ 
+A list of bridges of the graph ordered by name. For each bridge, names of its end-ponints, source and target (source < target), should be printed separated by a space. The sources should be printed ascending order, then the target should also be printed ascending order for the same source.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; |V| &le; 100,000 
+ 0 &le; |E| &le; 100,000 
+ The graph is connected 
+ There are no parallel edges 
+ There are no self-loops 
+ 
+
+ Sample Input 1 
+ 
+4 4
+0 1
+0 2
+1 2
+2 3
+ 
+ Sample Output 1 
+ 
+2 3
+ 
+ 
+
+ Sample Input 2 
+ 
+5 4
+0 1
+1 2
+2 3
+3 4
+ 
+ Sample Output 2 
+ 
+0 1
+1 2
+2 3
+3 4

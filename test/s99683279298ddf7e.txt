@@ -1,0 +1,21 @@
+while True:
+    X,Y=map(int,raw_input().split())
+    if X==Y==0:break
+    C=[[0]+map(int,raw_input().split())+[0] for i in range(Y)]
+    C.append([0]*(X+2))
+    dp=[[0]*(X+2) for i in range(Y+1)]
+    for i in range(1,X+1):
+        if C[0][i]!=1:
+            dp[0][i]=1
+    for i in range(Y-1):
+        for j in range(1,X+1):
+            if C[i][j]==0:
+                if C[i+1][j]!=1:
+                    dp[i+1][j]+=dp[i][j]
+                if C[i+1][j+1]!=1 and C[i+1][j+1]!=2:
+                    dp[i+1][j+1]+=dp[i][j]
+                if C[i+1][j-1]!=1 and C[i+1][j-1]!=2:
+                    dp[i+1][j-1]+=dp[i][j]
+            if C[i][j]==2:
+                dp[i+2][j]+=dp[i][j]
+    print sum(dp[-1][1:-1])+sum(dp[-2][1:-1])

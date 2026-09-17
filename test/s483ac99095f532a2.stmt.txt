@@ -1,0 +1,80 @@
+goto busters 
+
+
+ Problem Statement 
+
+ あなたは謎のプログラムのソースコードを見つけた． 
+さっそくコンパイルして実行してみたが，いつまで待っても処理が終わらない． 
+どうやら，プログラムが無限ループしてしまっているようである． 
+ ソースコードを詳しく見てみたところ，以下のようなことがわかった． 
+ ソースコードは N 行からなり，各行はラベル文か goto 文のいずれかである． 
+ラベル文と goto 文はそれぞれ次のようなフォーマットに従っている． 
+ LABEL: 
+ goto LABEL; 
+ ここで，LABEL はラベルを表す文字列である． 
+ プログラムは先頭の行から順番に 1 行ずつ処理される． 
+ラベル文と goto 文を処理したときの挙動は次のとおり： 
+ ラベル文を処理しても何も起こらない 
+ goto 文を処理したとき，次の処理は同じ名前のラベルを持ったラベル文から始める 
+ 最後の行を処理し終えて次に処理する行がなくなったとき，プログラムは終了する． 
+ あなたは，いくつかの goto 文を削除することでプログラムを正しく終了させたいと思っている． 
+一方で，手を加える箇所はできるだけ少なくしたい． 
+プログラムを終了させるためには最小でいくつの goto 文を消せばいいだろうか． 
+
+ Input 
+
+ N 
+ s_1 
+ . . . 
+ s_N 
+ s_i は次の二つのうちのいずれかである． 
+ LABEL_i:
+goto LABEL_i; 
+
+ Constraints 
+
+ 1 ≦ N ≦ 100 
+ ラベルはアルファベットの大文字または小文字のみからなる，1 文字以上 10 文字以下の文字列 
+ すべての s_i = &quot;goto LABEL_i;&quot; に対して， s_j = &quot;LABEL_i:&quot; となる j が存在する． 
+ 同じ名前のラベルを持ったラベル文は二回以上現れない． 
+ &quot;goto&quot; という名前のラベルは存在しない． 
+
+ Output 
+
+ 削除すべき goto 文の最小個数を 1 行に出力せよ． 
+
+ Sample Input 1 
+
+ 2
+LOOP:
+goto LOOP; 
+
+ Output for the Sample Input 1 
+
+ 1 
+
+ Sample Input 2 
+
+ 8
+goto there;
+loop:
+goto loop;
+here:
+goto goal;
+there:
+goto here;
+goal: 
+
+ Output for the Sample Input 2 
+
+ 0 
+
+ Sample Input 3 
+
+ 1
+GOTO: 
+
+
+ Output for the Sample Input 3 
+
+ 0

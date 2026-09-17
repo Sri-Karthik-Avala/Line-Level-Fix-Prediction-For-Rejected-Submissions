@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+int pr[7] = {2, 3, 5, 7, 11, 13, 17};
+int main(){
+	long long val = 1;
+	vector<long long> divs;
+	divs.push_back(1);
+	for(int i = 0; i < 7; i++){
+		long long p = 1;
+		int crt = 0;
+		while(p <= 300)
+			p *= pr[i], crt++;
+		p /= pr[i];
+		crt--;
+		val *= p;
+		int len = divs.size();
+		for(int j = crt; j >= 1; j--){
+			for(int k = 0; k < len; k++){
+				divs.push_back(divs[k] * p);
+			}
+			p /= pr[i];
+		}
+	}
+	int q; cin >> q;
+	vector<pair<int,int> > ops;
+	for(int i = 0; i < q; i++){
+		int m, x; cin >> m >> x;
+		ops.push_back({m, x});
+	}
+	long long ans = 0;
+	for(auto e : divs){
+		map<int, long long> cnt;
+		for(int j = 0; j < q; j++){
+			bool ok = true;
+			int m, x; tie(m, x) = ops[j];
+			for(int k = 0; k < 7; k++){
+				long long px = 1;
+				while(m % pr[k] == 0){
+					 m /= pr[k];
+					 px *= pr[k];
+				}
+				if(e % px != 0) ok = false;
+			}
+			if(ok) cnt[m] += x;
+		}
+		long long sum = 0;
+		for(auto g : cnt) sum += max(g.second, 0ll);
+		ans = max(ans, sum);
+	}
+	cout << ans << endl;
+	return 0;
+}

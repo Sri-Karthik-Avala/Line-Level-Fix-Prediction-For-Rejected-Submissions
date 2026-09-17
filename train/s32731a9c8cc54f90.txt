@@ -1,0 +1,18 @@
+N,K = map(int,input().split())
+if N < 3:
+    print(0)
+    exit()
+
+mem = [0] * 11
+for i in range(11):
+    for j in range(2,7):
+        n = i*7 + j
+        if (9*n)%11 == K: mem[i] += 1
+
+ans = sum(mem) * (N//11)
+ans -= mem[0]
+if N%11 == 0:
+    ans -= mem[-1]
+else:
+    ans += sum(mem[:N%11])
+print(ans)

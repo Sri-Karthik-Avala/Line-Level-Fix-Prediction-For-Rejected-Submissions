@@ -1,0 +1,25 @@
+s=input();t=input()
+s=sorted(s)
+t=sorted(t)
+tnew=[]
+
+for i in range(len(t)-1,-1,-1):
+    #print(i)
+    tnew.append(t[i])
+cnt=0
+
+for i in range(len(s)):
+    if s[i]<tnew[i]:
+        print('Yes')
+        cnt=1
+        break
+    if s[i]>tnew[i]:
+        print('No')
+        cnt=1
+        break
+
+if cnt==0:
+    if len(tnew)>len(s):
+        print('Yes')
+    else:
+        print('No')

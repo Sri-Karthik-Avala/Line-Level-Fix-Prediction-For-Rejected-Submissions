@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    ans = [None] * n
+    for i in range(n - 1):
+        allxor = a[i] ^ a[i + 1]
+    for i in range(n):
+        ans[i] = allxor ^ a[i]
+    print(*ans)
+
+
+if __name__ == "__main__":
+    main()

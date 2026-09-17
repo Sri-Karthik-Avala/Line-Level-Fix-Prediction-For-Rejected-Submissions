@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <stdio.h>
+#include <cstring>
+#include <queue>
+#include <stack>
+#include <functional>
+using namespace std;
+#define Would
+#define you
+
+
+int main() {
+	string h;
+	while (1) {
+		cin >> h;
+		if (h == "#") { break; }
+		int a, b, c;
+		cin >> a >> b >> c;
+		if (a >= 31) {
+			cout << "?" << " ";
+			a -= 30;
+		}
+		else { cout << "HEISEI" << " "; }
+		cout << a << " " << b << " " << c << endl;
+	}
+}
+

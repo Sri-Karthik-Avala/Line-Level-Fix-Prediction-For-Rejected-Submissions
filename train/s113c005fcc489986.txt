@@ -1,0 +1,60 @@
+#include "bits/stdc++.h"
+#include<unordered_map>
+#include<unordered_set>
+#pragma warning(disable:4996)
+using namespace std;
+
+
+
+int main(){
+	int N,M,K;cin>>N>>M>>K;
+	vector<int>darks;
+	for (int i = 0; i < M; ++i) {
+		int a;cin>>a;a--;
+		darks.push_back(a);
+	}
+	vector<vector<int>>edges(N,vector<int>(K));
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < K; ++j) {
+			int t;cin>>t;
+			edges[i][j]=t-1;
+		}
+	}
+
+	vector<int>memo(1<<M,10000000);
+	memo[(1<<M)-1]=0;
+
+	queue<int>que;
+	que.push((1<<M)-1);
+	while (!que.empty()) {
+		int nows(que.front());
+		que.pop();
+		bitset<16>bs(nows);
+
+		for (int ope = 0; ope < K; ++ope) {
+			bitset<16>nexts;
+			for (int i = 0; i < M; ++i) {
+				if (bs[i]) {
+					int to=edges[i][ope];
+					auto it=find(darks.begin(),darks.end(),to);
+					if (it == darks.end()) {
+
+					}
+					else {
+						nexts[it-darks.begin()]=true;
+					}
+				}
+			}
+			if (memo[nexts.to_ulong()] > memo[bs.to_ulong()] + 1) {
+				memo[nexts.to_ulong()]=memo[bs.to_ulong()]+1;
+				que.push(nexts.to_ulong());
+			}
+		}
+	}
+
+	cout<<memo[0]<<endl;
+
+	return 0;
+}
+
+

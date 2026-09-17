@@ -1,0 +1,8 @@
+for _ in [0] * int(raw_input()):
+  a, b = map(int, raw_input().split(':'))
+  b = b/60.0
+  x = abs((a+b)-b*12)
+  if x>6: x=12-6
+  if x<1: print 'alert'
+  elif 3<=x: print 'safe'
+  else: print 'warning'

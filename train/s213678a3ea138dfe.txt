@@ -1,0 +1,29 @@
+def yaku(card):
+    table=[0]*13
+    for i in range(5):
+        table[card[i]-1]+=1
+    if table.count(4)!=0:
+        return "four card"
+    elif table.count(3)!=0:
+        if table.count(2)!=0:
+            return "full house"
+        else:
+            return "three card"
+    elif table.count(2)!=0:
+        if table.count(2)==2:
+            return "two pair"
+        else:
+            return "one pair"
+    else:
+
+        if ",".join(map(str,card)) in ("1,2,3,4,5,6,7,8,9,10,11,12,13" or "1,10,11,12,13"):
+            return "straight"
+        else:
+            return "null"
+while True:
+    try:
+        card=map(int,raw_input().split(","))
+        card.sort()
+        print yaku(card)
+    except:
+        break

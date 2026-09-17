@@ -1,0 +1,66 @@
+#pragma GCC optimize("O2,unroll-loops")
+#pragma GCC target("avx,avx2,sse,sse2,popcnt")
+#include<bits/stdc++.h>
+#define all(x) x.begin(), x.end()
+#define pb push_back
+using namespace std;
+using ll = long long;
+using ld = long double;
+const int maxn = 1<<19, mod = 1e9 + 7, i2 = (mod+1)/2;
+int n, a[maxn], ind[maxn];
+int get(int i) {
+	i++;
+	int r = ind[i];
+	for(; i; i -= i&-i) r += a[i];
+	return r;
+}
+void add(int i, int x) {
+	i++;
+	for(; i <= n; i += i&-i) a[i] += x;
+}
+void add(int l, int r, int x) {
+	if(l == r) {
+		ind[l+1] += x;
+		return;
+	}
+	add(l, x);
+	add(r+1, -x);
+}
+
+void carry(int i) {
+	if(i == 0) return;
+	if(get(i)+1 == get(i-1)) {
+		int p = i;
+		for(int z = 1<<19; z>>=1;)
+			if(p-z >= 0 && get(p-z) == get(i)+1) p -= z;
+		add(p+1, i-1, 9);
+		add(i, i, 10);
+		add(p, p, -1);
+	}
+	while(get(i) < get(i-1)) {
+		ll k = get(i-1)-get(i);
+		k = (k+10)/11;
+		add(i, i, 10*k);
+		add(i-1, i-1, -k);
+		carry(i-1);
+	}
+}
+int main() {
+	cin.tie(0)->sync_with_stdio(0);
+	string s;
+	
+	cin >> s;
+	
+	//mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+	//for(int i = 0; i < 500000; i++) s.pb('0' + (rng()%10));
+	
+	n = s.size();
+	for(int i = 0; i < n; i++) {
+		add(i, i, s[i]-'0');
+		//for(int j = 0; j <= i; j++) cout << get(j) << " ";cout << '\n';
+		carry(i);
+		//for(int j = 0; j <= i; j++) cout << get(j) << " ";cout << '\n';
+	}
+	cout << (get(n-1)+8)/9;
+	return 0;
+}

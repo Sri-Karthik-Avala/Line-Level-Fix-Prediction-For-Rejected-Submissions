@@ -1,0 +1,108 @@
+Kagisys 
+ ある部屋ではICカードを用いて鍵を開け閉めする電子錠システムを用いている。
+このシステムは以下のように動作する。
+ 
+ 各ユーザーが持つICカードを扉にかざすと、そのICカードのIDがシステムに渡される。
+システムはIDが登録されている時、施錠されているなら開錠し、そうでないのなら施錠し、それぞれメッセージが出力される。
+IDが登録されていない場合は、登録されていないというメッセージを出力し、開錠及び施錠はおこなわれない。
+ 
+ さて、現在システムにはN個のID(U 1 , U 2 , ……, U N )が登録されており、施錠されている。
+M回ICカードが扉にかざされ、そのIDはそれぞれ順番にT 1 , T 2 , ……, T M であるとする。
+この時のシステムがどのようなメッセージを出力するか求めよ。
+ 
+
+ Input 
+ 入力は以下の形式で与えられる。
+ 
+N U 1 U 2 …… U N M T 1 T 2 …… T M 
+
+
+ Constraints 
+ N, Mは整数である
+ 1 &le; N &le; 256
+ U i は1文字以上10文字以下の小文字英字のみからなる文字列である
+ U i はユニークである(i &ne; jならばU i &ne; U j )
+ 1 &le; M &le; 256
+ T i は1文字以上10文字以下の小文字英字のみからなる文字列である
+ 
+
+
+ Output 
+ 各T 1 , T 2 , ……, T M について、
+ 開錠された時は、&quot;Opened by &quot;の後に続けてIDを、
+ 施錠された時は、&quot;Closed by &quot;の後に続けてIDを、
+ IDが登録されていないものだった場合は&quot;Unknown &quot;の後に続けてIDを
+それぞれ1行に出力せよ。
+ 
+
+ 初期状態では施錠された状態である。
+ 
+
+ Sample Input 1 
+
+ 4
+abcd
+efgh
+ijkl
+mnop
+5
+abcd
+abcc
+efgh
+abcd
+mnop
+ 
+
+ Output for the Sample Input 1 
+
+ Opened by abcd
+Unknown abcc
+Closed by efgh
+Opened by abcd
+Closed by mnop
+ 
+
+ Sample Input 2 
+
+ 2
+a
+abcdefghij
+9
+c
+bcdefghijk
+abcdefghij
+b
+a
+b
+a
+bcdefghijk
+c
+ 
+
+ Output for the Sample Input 2 
+
+ Unknown c
+Unknown bcdefghijk
+Opened by abcdefghij
+Unknown b
+Closed by a
+Unknown b
+Opened by a
+Unknown bcdefghijk
+Unknown c
+ 
+
+ Sample Input 3 
+
+ 2
+z
+x
+2
+z
+x
+ 
+
+ Output for the Sample Input 3 
+
+ Opened by z
+Closed by x

@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+
+signed main(){
+  int n,m;
+  cin>>n>>m;
+  vector<long long int> a(m+1);
+  for(auto &v:a) cin>>v;
+  vector<int> b(m);
+  for(auto &v:b) cin>>v;
+  long long int res=0;
+  vector<pair<pair<int,int>,long long int>> state;
+  for(int i=0;i<m;i++){
+    state.push_back({{a[i],a[i+1]},(1LL<<b[i])});
+  }
+  for(long long int rank=n;rank>=0;rank--){
+    if(rank==0){
+      if(!(state[0].second& 1LL)){
+	res++;
+      }
+      break;
+    }
+    vector<pair<pair<int,int>,long long int>> nex;
+    for(int i=0;i<state.size();i++){
+      long long int lef=state[i].first.first+state[i].first.first%2;
+      long long int rig=state[i].first.second-state[i].first.second%2;
+      if(lef<rig){
+	if(!(state[i].second&(1LL<<rank))){
+	  res+=(rig-lef)/2;
+	}
+	nex.push_back({{lef/2,rig/2},state[i].second});
+      }
+      
+      if(rig!=state[i].first.second){
+	long long int val=state[i+1].second;
+	if(state[i].second&(1LL<<rank)){
+	  nex.push_back({{rig/2,rig/2+1},val});
+	}
+	else if(val & (1LL<<rank)){
+	  nex.push_back({{rig/2,rig/2+1},state[i].second});
+	}
+	else{
+	  res++;
+	  nex.push_back({{rig/2,rig/2+1},state[i].second|val});
+	}
+      }
+    }
+    state=nex;
+  }
+  cout<<res<<endl;
+  
+  return 0;
+}

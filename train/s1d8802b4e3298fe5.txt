@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+#pragma GCC optimize ("O2,unroll-loops")
+//#pragma GCC optimize("no-stack-protector,fast-math")
+//#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef pair<int, int> pii;
+typedef pair<pii, int> piii;
+typedef pair<ll, ll> pll;
+#define debug(x) cerr<<#x<<'='<<(x)<<endl;
+#define debugp(x) cerr<<#x<<"= {"<<(x.first)<<", "<<(x.second)<<"}"<<endl;
+#define debug2(x, y) cerr<<"{"<<#x<<", "<<#y<<"} = {"<<(x)<<", "<<(y)<<"}"<<endl;
+#define debugv(v) {cerr<<#v<<" : ";for (auto x:v) cerr<<x<<' ';cerr<<endl;}
+#define all(x) x.begin(), x.end()
+#define pb push_back
+#define kill(x) return cout<<x<<'\n', 0;
+
+const int inf=1000000010;
+const ll INF=10000000000000010LL;
+const int mod=1000000007;
+const int MAXN=1010, M=4;
+
+struct Matrix{
+	ll A[M][M];
+	Matrix(){
+		memset(A, 0, sizeof(A));
+	}
+	ll* operator [](int i){
+		return A[i];
+	}
+};
+Matrix operator *(Matrix A, Matrix B){
+	Matrix C;
+	for (int i=0; i<M; i++) for (int k=0; k<M; k++) for (int j=0; j<M; j++)
+		C[i][j]=(C[i][j] + A[i][k]*B[k][j])%mod;
+	return C;
+}
+Matrix operator ^(Matrix A, ll k){
+	Matrix B;
+	for (int i=0; i<M; i++) B[i][i]=1;
+	for (; k; k>>=1, A=A*A) if (k&1) B=B*A;
+	return B;
+}
+
+ll n, m, k, u, v, x, y, t, a, b, c, ans, cnt;
+char A[MAXN][MAXN];
+Matrix T;
+
+int main(){
+	ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	cin>>n>>m>>k;
+	for (int i=1; i<=n; i++) for (int j=1; j<=m; j++) cin>>A[i][j];
+	for (int i=1; i<=n; i++) if (A[i][1]=='#' && A[i][m]=='#') a++;
+	for (int i=1; i<=m; i++) if (A[1][i]=='#' && A[n][i]=='#') b++;
+	for (int i=1; i<=n; i++) for (int j=1; j<=m; j++) cnt+=(A[i][j]=='#');
+	if (a && b) kill(1)
+	if (!a && !b){
+		T[0][0]=cnt;
+		T=T^k;
+		kill(T[0][0])
+	}
+	if (b){
+		for (int i=1; i<MAXN; i++) for (int j=1; j<i; j++) swap(A[i][j], A[j][i]);
+		swap(n, m);
+		swap(a, b);
+	}
+	T[0][0]=cnt;
+	for (int i=1; i<=n; i++) for (int j=1; j<m; j++)
+		T[0][1]-=(A[i][j]=='#' && A[i][j+1]=='#');
+	T[1][1]=a;
+	T=T^(k-1);
+	ans=(T[0][0] + T[0][1])%mod;
+	if (ans<0) ans+=mod;
+	cout<<ans<<'\n';
+	
+	return 0;
+}

@@ -1,0 +1,62 @@
+#include<iostream>
+#include<cstdio>
+#include<unordered_map>
+using namespace std;
+typedef long long ll;
+const ll p=10000000000037;
+const int base=250001;
+unordered_map<ll,int> mp;
+int n,dig[250005];
+ll pw[250005]={1},hsh[250005],ans;
+char s[250005];
+ll qpow(__int128 a,ll b){
+    ll res=1;
+    while(b){
+        if(b&1)
+            res=res*a%p;
+        a=a*a%p;
+        b>>=1;
+    }
+    return res;
+}
+ll power(ll x){
+    return x>=0?pw[x]:qpow(pw[-x],p-2);
+}
+int main(){
+    ios::sync_with_stdio(false);
+    ll val;
+    int i;
+    cin>>n>>s+1;
+    for(i=1;i<=n;i++)
+        pw[i]=pw[i-1]*base%p;
+    for(i=1;i<=n;i++){
+        switch(s[i]){
+            case '+':
+                dig[i]=dig[i-1];
+                hsh[i]=(hsh[i-1]+power(dig[i]))%p;
+                break;
+            case '-':
+                dig[i]=dig[i-1];
+                hsh[i]=(hsh[i-1]-power(dig[i])+p)%p;
+                break;
+            case '<':
+                dig[i]=dig[i-1]+1;
+                hsh[i]=hsh[i-1];
+                break;
+            case '>':
+                dig[i]=dig[i-1]-1;
+                hsh[i]=hsh[i-1];
+        }
+    }
+    for(i=0;i<=n;i++){
+        if(mp.count(hsh[i]))
+            ans+=mp[hsh[i]];
+        val=(hsh[i]+hsh[n]*power(dig[i]))%p;
+        if(mp.count(val))
+            mp[val]++;
+        else
+            mp[val]=1;
+    }
+    cout<<ans;
+    return 0;
+}

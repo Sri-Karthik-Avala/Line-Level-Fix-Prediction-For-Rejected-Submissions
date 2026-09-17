@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import time
+import datetime
+
+def calc(stay1, stay2):
+    d  = datetime.datetime.strptime(stay1[0], "%H:%M")
+    dd = datetime.datetime.strptime(stay2[2], "%H:%M")
+    diff = (d - dd).seconds
+    return diff/60
+
+def __main__():
+    n, m = map(int, raw_input().split(" "))
+    stay = [map(str, raw_input().split(" ")) for _ in xrange(n)]
+    ans = []
+    for i in xrange(len(stay)):
+        for j in xrange(len(stay)):
+            if stay[i][1] in stay[j][3] and calc(stay[i], stay[j]) >= m:
+                ans.append(str(stay[i][1]) + " " + str(calc(stay[i], stay[j])))
+    print len(ans)
+    for i in xrange(len(ans)):
+        print ans[i]
+                
+__main__()

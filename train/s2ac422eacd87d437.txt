@@ -1,0 +1,12 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(void){
+  int n,k; cin>>n>>k;
+  long long res=0;
+  for(int i=k+1; i<=n; ++i){
+    int p=n/i,q=n-p*i;
+    res+=(i-k)*p+(q-k<0? 0:(q-k+1));
+  }
+  cout<<res;
+  return 0;
+}

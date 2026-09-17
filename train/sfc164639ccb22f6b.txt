@@ -1,0 +1,24 @@
+while 1:
+    d, w = map(int, input().split())
+    if d == w == 0:
+        break
+    E = [[*map(int, input().split())] for i in range(d)]
+    ans = 0
+    for x2 in range(d):
+        for y2 in range(w):
+            for x1 in range(x2-1):
+                for y1 in range(y2-1):
+                    co = 10**18
+                    for x in range(x1, x2+1):
+                        co = min(co, E[x][y1], E[x][y2])
+                    for y in range(y1, y2+1):
+                        co = min(co, E[x1][y], E[x2][y])
+                    ci = 0
+                    cnt = 0
+                    for x in range(x1+1, x2):
+                        for y in range(y1+1, y2):
+                            ci = max(ci, E[x][y])
+                            cnt += E[x][y]
+                    if ci < co:
+                        ans = max(ans, (x2-x1-1)*(y2-y1-1)*co - cnt)
+    print(ans)

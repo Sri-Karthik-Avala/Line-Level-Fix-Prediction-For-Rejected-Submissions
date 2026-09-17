@@ -1,0 +1,27 @@
+#include <iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int main() {
+	int N;//くじ引きの回数
+
+	cin >> N;
+
+	std::vector<string> vec_keihin;//景品の文字列
+
+	string strCin;
+	for (int i = 0; i < N; i++) {
+		cin >> strCin;
+		vec_keihin.push_back(strCin);
+	}
+
+	std::sort(vec_keihin.begin(), vec_keihin.end());
+	vec_keihin.erase(std::unique(vec_keihin.begin(), vec_keihin.end()));
+
+
+
+	cout << vec_keihin.size() << endl;
+
+}

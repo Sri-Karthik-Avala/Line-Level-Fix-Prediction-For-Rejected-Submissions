@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> P;
+int main() {
+  int n,m,mod=256;
+  cin >> n;
+  map<string,P> ma;
+  for(int i=0; i<n; i++) {
+    string s;
+    P p;
+    cin >> s >> p.first >> p.second;
+    ma[s]=p;
+  }
+  queue<vector<int> > que;
+  cin >> m;
+  for(int i=0; i<m; i++) {
+    string s;
+    cin >> s;
+    vector<int> a(mod);
+    fill(a.begin(),a.end(),0);
+    if(s[0]=='+') a[0]=2;
+    else if(s[0]=='-') a[0]=3;
+    else if(s[0]=='*') a[0]=4;
+    else if(s[0]=='/') a[0]=5;
+    else if(isdigit(s[0])) {
+      stringstream ss;
+      ss << s;
+      int x;
+      ss >> x;
+      a[x%mod]=1;
+    } else {
+      for(int i=ma[s].first; i<=ma[s].second; i++) a[i]=1;
+    }
+    que.push(a);
+  }
+  stack<vector<int> > s;
+  while(!que.empty()) {
+    vector<int> c=que.front();que.pop();
+    if(c[0]>=2) {
+      vector<int> a,b,d(mod);
+      fill(d.begin(),d.end(),0);
+      b=s.top();s.pop();
+      a=s.top();s.pop();
+      for(int i=0; i<mod; i++) {
+	for(int j=0; j<mod; j++) {
+	  if(!a[i] || !b[j]) continue;
+	  if(c[0]==2) d[(i+j)%mod]=1;
+	  if(c[0]==3) d[(i-j)%mod]=1;
+	  if(c[0]==4) d[(i*j)%mod]=1;
+	  if(c[0]==5) {
+	    if(j==0) {
+	      cout << "error" << endl;
+	      return 0;
+	    } else d[(i/j)%mod]=1;
+	  }
+	}
+      }
+      s.push(d); 
+    } else s.push(c);
+  }
+  cout << "correct" << endl;
+  return 0;
+}

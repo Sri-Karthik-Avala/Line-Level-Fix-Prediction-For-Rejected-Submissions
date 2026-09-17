@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+
+signed main()
+{
+    ll n, m;
+    cin >> n >> m;
+    vector<ll> a(n);
+    vector<ll> b(m);
+
+    for(auto& x : a)
+        cin >> x;
+    for(auto& x : b)
+        cin >> x;
+
+    vector<ll> rui(n + 1, 0);
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+    for(ll i = 0; i < n; ++i)
+        rui[i + 1] = rui[i] + a[i];
+
+    ll ans = 0;
+
+    for(ll i = 0; i < m; ++i){
+        auto it = lower_bound(a.begin(), a.end(), b[i]);
+        ll dist = distance(a.begin(), it);
+
+        ans += rui[i];
+        ans += b[i] * (n - dist);
+    }
+    cout << ans << endl;
+}
+

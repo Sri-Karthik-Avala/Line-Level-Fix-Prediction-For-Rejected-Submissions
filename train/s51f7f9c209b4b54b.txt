@@ -1,0 +1,31 @@
+N, K = map(int,input().split())
+A = []
+B = []
+copy = K
+for i in range(N):
+    a,b = map(int,input().split())
+    A.append(a)
+    B.append(b)
+target = []
+while K >= 2:
+    target.append(K%2)
+    K = K//2
+target.append(1)
+
+def check(A,B,N,K):
+    compare = 0
+    for i in range(N):
+        if A[i]|K <= K:
+            compare+=B[i]
+    return(compare)
+
+ans = check(A,B,N,copy)
+for i in range(len(target)):
+    if target[i] ==1:
+        copy = copy^2**i
+        if i >0:
+            copy = copy | (2**i-1)
+        chance = check(A,B,N,copy)
+        if chance > ans:
+            ans = chance
+print(ans)

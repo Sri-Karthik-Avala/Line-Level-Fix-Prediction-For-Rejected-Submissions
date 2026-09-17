@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<n;i++)
+int a[1010], c[1010];
+int main() {
+	int n, q;
+	cin >> n;
+	rep(i, n)cin >> a[i];
+	cin >> q;
+	while (q--) {
+		int b, m, e;
+		cin >> b >> m >> e;
+		for (int i = b; i < e; i++)c[(i + e - m) % (e - b)] = a[i];
+		for (int i = b; i < e; i++)a[i] = c[i];
+	}
+	rep(i, n)cout << a[i] << (i == n - 1 ? "\n" : " ");
+	return 0;
+}

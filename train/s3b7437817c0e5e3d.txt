@@ -1,0 +1,53 @@
+s=input()
+x,y=map(int,input().split())
+
+dpx=[False]*16001
+dpy=[False]*16001
+
+dpx[8000],dpy[8000]=True,True
+
+xxx=True
+judge=True
+s+='T'
+cnt=0
+for i in s:
+  if i=='F':
+      cnt+=1
+
+  else:
+    xxx=False
+    if judge:
+        judge=False
+    
+    else:
+        judge=True
+
+    if cnt==0:
+        continue
+
+    sin=[False]*16001
+    if not judge:
+        for j in range(16001):
+            if dpx[j]==True:
+                if not xxx:
+                  sin[j-cnt]=True
+                sin[j+cnt]=True
+        dpx=sin
+    
+    else:
+        for j in range(16001):
+            if dpy[j]==True:
+                sin[j-cnt]=True
+                sin[j+cnt]=True
+        dpy=sin
+
+    cnt=0
+
+    
+
+
+if dpx[x+8000] and dpy[y+8000]:
+    print('Yes')
+
+else:
+    print('No')

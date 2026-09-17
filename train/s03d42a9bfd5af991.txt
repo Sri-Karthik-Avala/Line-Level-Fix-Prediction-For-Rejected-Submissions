@@ -1,0 +1,27 @@
+while True:
+  n = int(input())
+  if not n:
+    break
+  ss = [s for s in input()[::-1]]
+  for i in range(n):
+    new = []
+    app = new.append
+    last = ss.pop()
+    count = 1
+    while ss:
+      a = ss.pop()
+      if a == last:
+        count += 1
+      else:
+        app(str(count))
+        app(last)
+        last = a
+        count = 1
+
+    app(str(count))
+    app(last)
+    ss = [s for s in new[::-1]]
+
+  print("".join(new))
+  
+  

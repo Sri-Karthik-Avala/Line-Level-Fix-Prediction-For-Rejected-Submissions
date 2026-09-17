@@ -1,0 +1,12 @@
+while 1:
+    n, m = map(int, input().split())
+    if n == m == 0:
+        break
+    B = [int(input(), 2) for i in range(n)]
+    C = {}
+    for b in B:
+        D = {b: 1}
+        for k in C:
+            D[k ^ b] = max(D.get(k ^ b, 0), C[k] + 1)
+        C = D
+    print(C.get(0, 0))

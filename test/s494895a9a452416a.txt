@@ -1,0 +1,25 @@
+h, w = (int(x) for x in input().split())
+A = [list(input()) for _ in range(h)]
+R = [["."] * w for _ in range(h)]
+B = [["."] * w for _ in range(h)]
+
+# ベースとして Red: へび, Blue: Red以外
+for i in range(h):
+    for j in range(w):
+        if 0 < i < h - 1 and 0 < j < w - 1:
+            if (i % 2 == 1 and 1 < j < w - 1) or (i % 4 == 2 and j == w - 2) or (i % 4 == 0 and j == 1):
+                R[i][j] = "#"
+        if R[i][j] != "#":
+            B[i][j] = "#"
+
+for i in range(h):
+    for j in range(w):
+        if A[i][j] == "#":
+            R[i][j] = "#"
+            B[i][j] = "#"
+
+for r in R:
+    print("".join(r))
+print()
+for b in B:
+    print("".join(b))

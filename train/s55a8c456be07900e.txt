@@ -1,0 +1,38 @@
+#include<iostream>
+#include<algorithm>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+#define MAXN 500006
+#define P 998244353
+int n , m;
+
+int Pow( int x , int a ) {
+    int ret = 1;
+    while( a ) {
+        if( a & 1 ) ret = 1ll * ret * x % P;
+        x = 1ll * x * x % P , a >>= 1;
+    }
+    return ret;
+}
+
+int J[MAXN] , iJ[MAXN];
+
+int C( int a , int b ) {
+    return J[a] * 1ll * iJ[b] % P * iJ[a] % P;
+}
+
+int main() {
+    J[0] = iJ[0] = 1;
+    for( int i = 1 ; i < MAXN ; ++ i ) J[i] = J[i - 1] * 1ll * i % P , iJ[i] = Pow( J[i] , P - 2 );
+    cin >> n >> m;
+    int lim = min( n , m );
+    int c = 0 , res = 0;
+    for( int i = 0 , zjk ; i <= lim ; ++ i ) {
+        zjk = C( n , i ) * 1ll * C( m , i ) % P * J[i] % P * Pow( n + 1 , m - i ) % P * Pow( m + 1 , n - i ) % P;
+        if( c ) zjk = P - zjk;
+        c ^= 1;
+        res = ( res + zjk ) % P;
+    }
+    cout << res << endl;
+}

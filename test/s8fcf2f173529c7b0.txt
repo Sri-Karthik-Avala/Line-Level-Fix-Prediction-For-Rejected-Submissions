@@ -1,0 +1,37 @@
+from Queue import Queue
+mv=((-1,0),(1,0),(0,-1),(0,1))
+while True:
+    X,Y=map(int,raw_input().split())
+    if X==Y==0:break
+    tx,ty=map(int,raw_input().split())
+    kx,ky=map(int,raw_input().split())
+    tx,ty,kx,ky=tx-1,ty-1,kx-1,ky-1
+    D=[map(int,raw_input().split()) for i in range(Y)]
+    Q=Queue()
+    Q.put((tx,ty,kx,ky,0))
+    visited=set()
+    visited.add((tx,ty,kx,ky))
+    while not Q.empty():
+        tx,ty,kx,ky,t=Q.get()
+        if t>=100:
+            print "NA"
+            break
+        if tx==kx and ty==ky:
+            print t
+            break
+        for i in range(4):
+            dtx,dty=tx+mv[i][0],ty+mv[i][1]
+            dkx,dky=kx-mv[i][0],ky-mv[i][1]
+            if dtx<0 or dtx>=X or dty<0 or dty>=Y:
+                continue
+            if dkx<0 or dkx>=X or dky<0 or dky>=Y:
+                continue
+            if D[dty][dtx]==1:
+                dtx,dty=tx,ty
+            if D[dky][dkx]==1:
+                dkx,dky=kx,ky
+            if (dtx,dty,dkx,dky) not in visited:
+                visited.add((dtx,dty,dkx,dky))
+                Q.put((dtx,dty,dkx,dky,t+1))
+    else:
+        print "NA"

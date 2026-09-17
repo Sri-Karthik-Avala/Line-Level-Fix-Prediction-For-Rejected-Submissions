@@ -1,0 +1,44 @@
+#include<cstdio>
+#include<string>
+#include<iostream>
+
+using namespace std;
+
+int a,b;
+
+void game(int x,int y,int p,string s){
+	if(x==a && y==b)cout << s << endl;
+	else if(a==6 || b==6){
+		if(x<4 || y<4){
+			if(x<4)game(x+1,y,0,s+'A');
+			if(y<4)game(x,y+1,1,s+'B');
+		}else{
+			if(x!=a)game(x+1,y,0,s+'A');
+			if(y!=b)game(x,y+1,1,s+'B');
+		}
+	}else{
+		if(a==5){
+			if(x+1==a && y<b)game(x,y+1,1,s+'B');
+			else{
+				if(x<a)game(x+1,y,0,s+'A');
+				if(y<b)game(x,y+1,1,s+'B');
+			}
+		}else if(b==5){
+			if(y+1==b && x<a)game(x+1,y,0,s+'A');
+			else{
+				if(x<a)game(x+1,y,0,s+'A');
+				if(y<b)game(x,y+1,1,s+'B');
+			}
+		}else{
+			if(x<a)game(x+1,y,0,s+'A');
+			if(y<b)game(x,y+1,1,s+'B');
+		}
+	}
+}
+
+int main(void){
+	scanf("%d%d",&a,&b);
+	string s;
+	game(0,0,-1,s);
+	return 0;
+}

@@ -1,0 +1,74 @@
+#pragma GCC optimize("Ofast")
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+
+#define F first
+#define S second
+#define int long long
+#define ll long long
+//#define int  unsigned long long
+#define pb push_back
+//#define double long double
+
+using namespace std;
+using namespace __gnu_pbds;
+typedef  tree< int , null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+const int N = 500050;
+const int K = 230000;
+const int mod = 1e9 + 7;
+int a[N], d[N];
+int binpow(int x, int y){
+    int res = 1;
+    while(y){
+        if (y % 2){
+            res = res * x % mod;
+        }
+        x = x * x % mod;
+        y /= 2;
+    }
+    return res;
+}
+int c(int k, int n){
+    if (k > n) return 0;
+    int res = 1;
+    for (int i = n - k + 1; i <= n; i++) res = res * i;
+    for (int i = 1; i <= k; i++) res = res / i;
+    return res % mod;
+}
+int f(int x){
+    if (x < 0 || x % 2){
+        return 0;
+    }
+    x /= 2;
+    int res = 1;
+    for (int i = 1; i <= 15; i++){
+        res = res * binpow(i, mod - 2) % mod;
+    }
+    for (int i = x + 1; i <= x + 15; i++){
+        res = res * i % mod;
+    }
+    return res;
+}
+main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+     //freopen("input.txt", "r", stdin);
+    //freopen("output.txt", "w", stdout);
+    int t;
+    cin >> t;
+    while(t--){
+        int n;
+        cin >> n;
+        if (n <= 5){
+            cout << 0 << endl;
+            continue;
+        }
+        n -= 5;
+        int ans = 0;
+        for (int i = 0; i <= 11; i++){
+            ans = (ans +  c(i, 11) * f(n - i)) % mod;
+        }
+        cout << ans << endl;
+    }
+}

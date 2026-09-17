@@ -1,0 +1,73 @@
+#include <iostream>
+#include <cstdio>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <complex>
+#include <map>
+#include <climits>
+#include <sstream>
+using namespace std;
+
+#define reep(i,a,b) for(int i=(a);i<(b);++i)
+#define rep(i,n) reep((i),0,(n))
+#define ALL(v) (v).begin(),(v).end()
+#define PB push_back
+#define EPS 1e-8
+#define F first
+#define S second
+#define mkp make_pair
+
+static const double PI=6*asin(0.5);
+typedef long long ll;
+typedef complex<double> CP;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+typedef vector<int> vint;
+static const int INF=1<<24;
+
+template <class T>
+void initvv(vector<vector<T> > &v,int a,int b, const T  &t = T()){
+	v.assign(a,vector<T>(b,t));
+}
+
+//v.erase(unique(v.begin(),v.end()),v.end());
+
+int main(){
+	string END="END OF INPUT";
+	string s;
+	while(getline(cin,s)){
+		if(s.substr(0,12)==END){
+			// cout<<0<<endl;
+			break;
+		}
+		s=" "+s.substr(0,s.size()-1)+" ";
+		int n=s.size();
+		rep(i,n){
+			// if(i) cout<<" ";
+			if(i==n-1){
+				break;
+			}
+			if(s[i]==' '){
+				// cout<<"i = "<<i<<endl;
+				int cnt=0;
+				reep(j,i+1,n){
+					if(s[j]==' '){
+						i=j-1;
+						break;
+					}
+					else{
+						// cout<<j<<" "<<s[j]<<endl;
+						cnt++;
+					}
+				}
+				cout<<cnt;
+			}
+		}
+		cout<<endl;
+	}
+}

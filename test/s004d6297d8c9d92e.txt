@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int INF = 1000000000;
+#define REP(i,s,n) for(int i=(int)(s);i<(int)(n);++i)
+#define rep(i,n) REP(i, 0, n)
+typedef pair<int, int> pint;
+
+int H, W;
+struct Edge { int num, to; Edge(int n, int t) : num(n), to(t) {}};
+vector<vector<Edge>> edges;
+bool bfs(int broken_edge, vector<int>& dist, const vector<vector<Edge>>& edges) {
+    dist[(H - 1) * W + W - 1] = 0;
+    queue<int> que; que.push((H - 1) * W + W - 1);
+    while(!que.empty()) {
+        int cur = que.front(); que.pop();
+        for(const Edge& e : edges[cur]) {
+            if(e.num == broken_edge || dist[e.to] != INF) continue;
+            dist[e.to] = dist[cur] + 1;
+            que.push(e.to);
+        }
+    }
+    return dist[0] == INF;
+}
+
+int solve(const vector<vector<int>>& wdist, const vector<vector<Edge>>& edges) {
+    vector<int> dist(H * W, INF);
+    priority_queue<pint, vector<pint>, greater<pint>> que;
+    dist[(H - 1) * W + W - 1] = 0; que.emplace(0, (H - 1) * W + W - 1);
+    auto upd = [](int& a, int b) { return a > b ? (a = b, true) : false;};
+    while(!que.empty()) {
+        int cos, node;
+        tie(cos, node) = que.top(); que.pop();
+        if(dist[node] < cos) continue;
+        for(const Edge& e : edges[node]) {
+            int ncos = max(cos + 1, wdist[e.num][e.to]);
+            if(upd(dist[e.to], ncos)) que.emplace(ncos, e.to);
+        }
+    }
+    return dist[0];
+}
+int main() {
+    cin.tie(0); ios::sync_with_stdio(false);
+    while(cin >> H >> W) {
+        int t_, edgenum = 0;
+        vector<vector<Edge>> edges(H * W);
+        rep(i, H) {
+            rep(j, W - 1) {
+                cin >> t_;
+                if(t_ == 0) {
+                    edges[i * W + j].emplace_back(edgenum, i * W + j + 1);
+                    edges[i * W + j + 1].emplace_back(edgenum, i * W + j);
+                    ++edgenum;
+                }
+            }
+            if(i == H - 1) continue;
+            rep(j, W) {
+                cin >> t_;
+                if(t_ == 0) {
+                    edges[i * W + j].emplace_back(edgenum, (i + 1) * W + j);
+                    edges[(i + 1) * W + j].emplace_back(edgenum, i * W + j);
+                    ++edgenum;
+                }
+            }
+        }
+        vector<vector<int>> wdist(edgenum, vector<int>(H * W, INF));
+        rep(i, edgenum) if(bfs(i, wdist[i], edges)) goto fail;
+        cout << solve(wdist, edges) << endl;
+        continue;
+      fail:
+        cout << "-1" << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,121 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<n;++i)
+
+using namespace std;
+using R = long double;
+const R EPS = 1e-4L; // [-1000,1000]->EPS=1e-8 [-10000,10000]->EPS=1e-7
+inline int sgn(const R& r) {return (r > EPS) - (r < -EPS);}
+inline R sq(R x) {return sqrt(max(x, 0.0L));}
+
+// Description: ????????????
+// Verifyed: various problem
+const R INF = 1E40L;
+const R PI = acos(-1.0L);
+using P = complex<R>;
+const P O = 0.0L;
+using L = struct {P s, t;};
+using VP = vector<P>;
+using VL = vector<L>;
+using C = struct {P c; R r;};
+
+auto& operator >> (istream& is, P& p) { R x, y; is >> x >> y; p = P(x, y); return is;}
+auto& operator << (ostream& os, P& p) { os << real(p) << " " << imag(p); return os;}
+
+inline R dot(P o, P a, P b) {return real(conj(a - o) * (b - o));}
+inline R det(P o, P a, P b) {return imag(conj(a - o) * (b - o));}
+inline int sdot(P o, P a, P b) {return sgn(dot(o, a, b));}
+inline int sdet(P o, P a, P b) {return sgn(det(o, a, b));}
+
+//projection verify AOJ CGL_1_A
+P proj(L l, P p) { R u = real((p - l.s) / (l.t - l.s)); return (1 - u) * l.s + u * l.t;}
+
+// Circle // verified: AOJ 1183
+enum RCC {OUT = 2, ON_OUT = 1, ISC = 0, ON_IN = -1, IN = -2};
+int rcc(C a, C b) { R d = abs(a.c - b.c); return sgn(d - a.r - b.r) + sgn(d - abs(a.r - b.r));}
+
+// cross point between circle and line
+// verified: AOJ CGL_7_D
+P cir(C c, R t) {return c.c + polar(c.r, t);}
+VP cross(C c, L l) {
+	P h = proj(l, c.c), e = polar(sq(norm(c.r) - norm(h - c.c)), arg(l.t - l.s));
+	return VP{h - e, h + e};
+}
+
+// cross point between circles
+// verified: AOJ CGL_7_E
+VP cross(C a, C b) {
+	P d = b.c - a.c, w = (norm(d) + norm(a.r) - norm(b.r)) / (2.0L * norm(d)) * d;
+	return cross(a, {a.c + w, a.c + w + 1il * w});
+}
+
+
+int n, w;
+P p[11];
+int h[11];
+
+
+inline R calc(R radius,R height){
+	if (radius <= height) return radius;
+	return sq(norm(radius) - norm(radius - height));
+}
+
+bool can(R radius) {
+	
+	R width = calc(radius,w);
+	//cerr << fixed <<  "radius" << " " << radius  << " " << width << endl;
+	if (width >= 50.0) return false;
+
+	R lower = 0 + width, upper = 100 - width;
+
+
+	VP cand;
+
+	C c[11];
+	rep(i, n)  c[i] = C{p[i], calc(radius,h[i])};
+
+	rep(j, n)rep(i, j) if (abs(rcc(c[i], c[j])) <= 1) for (const auto &it : cross(c[i], c[j])) cand.push_back(it);
+
+	VP corner;
+
+	for (auto &y : {lower, upper})  for (auto &x : {lower, upper})corner.push_back(P(x, y));
+	rep(i, 4) cand.push_back(corner[i]);
+	swap(corner[2], corner[3]);
+
+	L l[4];
+	rep(i, 4) l[i]=L{corner[i], corner[(i + 1) % 4]};
+
+	rep(i, n) rep(j, 4) for (const auto &it : cross(c[i], l[j])) cand.push_back(it);
+
+	for (auto &p : cand) {
+		if ( sgn(real(p)  - lower)  < 0 or sgn(imag(p)  - lower) < 0  or sgn(real(p) - upper)  > 0  or sgn(imag(p) - upper) > 0 ) continue;
+		bool ok = true;
+		rep(i, n) if ( sgn(abs(c[i].c - p) -c[i].r) < 0)  ok = false;
+		if (ok) return true;
+	}
+
+	return false;
+}
+
+
+int main(void) {
+	while (cin >> n >> w) {
+		if (n == 0 and w == 0) break;
+
+		rep(i, n) cin >> p[i] >> h[i];
+
+		R low = 0.0, high = 200.0;
+
+		
+		rep(loop, 200) {
+			const R mid = (low + high) / 2.0;
+			if (can(mid))
+				low = mid;
+			else
+				high = mid;
+		}
+		
+		cout.precision(10);
+		cout << fixed << low << endl;
+	}
+	return 0;
+}

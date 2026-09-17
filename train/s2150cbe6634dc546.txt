@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+using ll = long long;
+const ll M = 998244353;
+int si[] = {-1, 0, 1, 0};
+int sj[] = {0, -1, 0, 1};
+
+int main(){
+  int h,w;
+  cin >> h >> w;
+  vector<vector<int>> a(h,vector<int>(w));
+  rep(i,h) rep(j,w) cin >> a[i][j];
+
+  vector<int> p,x,y,z;
+  rep(i,h) rep(j,w){
+    if (a[i][j]%2 != 0) {
+      a[i][j]--;
+      p.push_back(i);
+      x.push_back(j);
+      if(i == h-1 && j == w-1) break;
+      if(j != w-1) {
+        a[i][j+1]++;
+        y.push_back(i);
+        z.push_back(j+1);
+      }else{
+        a[i+1][j]++;
+        y.push_back(i+1);
+        z.push_back(j);
+      } 
+    }
+  }
+
+  cout << p.size() << endl;
+  rep(i,p.size()) cout << p[i]+1 << " " << x[i]+1 << " " << y[i]+1 << " " << z[i]+1 << endl;
+
+  return 0;
+}

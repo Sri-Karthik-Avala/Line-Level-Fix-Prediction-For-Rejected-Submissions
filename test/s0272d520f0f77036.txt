@@ -1,0 +1,69 @@
+#include<stdio.h>
+#include<algorithm>
+#include<string.h>
+#include<string>
+using namespace std;
+int val[15][15];
+int use[15];
+int len[15];
+string dp[1<<14][15];
+string str[15];
+char in[20];
+int main(){
+	int a;
+	while(scanf("%d",&a),a){
+		for(int i=0;i<a;i++){
+			scanf("%s",in);
+			str[i]=in;
+		}
+		for(int i=0;i<a;i++)use[i]=1;
+		for(int i=0;i<a;i++)len[i]=str[i].size();
+		for(int i=0;i<a;i++)for(int j=0;j<a;j++)val[i][j]=0;
+		for(int i=0;i<a;i++){
+			for(int j=0;j<a;j++){
+				if(i==j)continue;
+				if(len[i]<len[j]){
+					for(int k=0;k<=len[j]-len[i];k++){
+						bool ok=true;
+						for(int l=0;l<len[i];l++)if(str[i][l]!=str[j][k+l])ok=false;
+						if(ok)use[i]=0;
+					}
+				}
+				for(int k=1;k<min(len[i],len[j]);k++){
+					bool ok=true;
+					for(int l=0;l<k;l++){
+						if(str[i][len[i]-k+l]!=str[j][l])ok=false;
+					}
+					if(ok)val[i][j]=k;
+				}
+			}
+		}
+		for(int i=0;i<(1<<a);i++)for(int j=0;j<a;j++)dp[i][j]="~";
+		for(int i=0;i<a;i++)if(use[i])dp[1<<i][i]=str[i];
+		for(int i=0;i<(1<<a);i++){
+			for(int j=0;j<a;j++){
+				if(dp[i][j][0]=='~')continue;
+			//	printf("%d %d: %s\n",i,j,dp[i][j].c_str());
+				for(int k=0;k<a;k++){
+					if((i&(1<<k))||!use[k])continue;
+					if(dp[i+(1<<k)][k][0]=='~'||
+					dp[i+(1<<k)][k].size()>dp[i][j].size()+len[k]-val[j][k]||
+					(dp[i+(1<<k)][k].size()==dp[i][j].size()+len[k]-val[j][k]&&
+					dp[i+(1<<k)][k]>dp[i][j]+str[k].substr(val[j][k],len[k]-val[j][k])))dp[i+(1<<k)][k]=dp[i][j]+str[k].substr(val[j][k],len[k]-val[j][k]);
+				}
+			}
+		}
+		int goal=0;
+		for(int i=0;i<a;i++)if(use[i])goal+=(1<<i);
+		int ret=999999999;
+		string res="~";
+		for(int i=0;i<a;i++){
+			if(dp[goal][i][0]=='~')continue;
+			if(ret>dp[goal][i].size()||(ret==dp[goal][i].size()&&res>dp[goal][i])){
+				ret=dp[goal][i].size();
+				res=dp[goal][i];
+			}
+		}
+		printf("%s\n",res.c_str());
+	}
+}

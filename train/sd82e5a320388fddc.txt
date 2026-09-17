@@ -1,0 +1,10 @@
+import math
+while True:
+	x = math.factorial(int(input()))
+	n = list(str(x))
+	con = 0
+	for i in range(len(n)-1,0,-1):
+		if n[i] != '0':
+			break
+		con += 1
+	print(con)

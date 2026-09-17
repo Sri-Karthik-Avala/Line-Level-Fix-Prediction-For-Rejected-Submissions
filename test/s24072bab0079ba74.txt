@@ -1,0 +1,62 @@
+#include<cstdio>
+#include<cstring>
+#define fo(x,a,b) for(int x=(a),e_=(b);x<=e_;x++)
+#define fd(x,a,b) for(int x=(a),e_=(b);x>=e_;x--)
+#define two(x) (1<<(x))
+
+const int N=2097153;
+int f[21][N],vis[21][N],tot[N],lg[N],n,m,ans,mx;
+char X[N],c[30];
+
+int main(){
+	int len,nxt,ful,w,go,dt;
+	scanf("%d %d",&n,&m);
+	memset(vis,-1,sizeof(vis));
+	lg[0]=-1;fo(i,1,N-1) lg[i]=lg[i>>1]+1;
+	fo(i,0,n) {
+		len=two(i);
+		scanf("%s",X);
+		fo(j,0,len-1) if(X[j]=='1') vis[i][len+j]=i, f[i][len+j]=1;
+//		printf("\nlen:%d\n",len);
+		
+		fd(z,i,1) {//zero is end state 
+			ful=two(z)-1;
+			fo(s,0,len+len-1) if(vis[z][s]==i) {
+				tot[s>>z]+=f[z][s];
+				nxt=s&ful;
+//				printf("s:%d[%d] f:%d nxt:%d\n",s,z,f[z][s],nxt);
+				if(nxt) {
+					w=lg[nxt];
+					go=((s>>z)<<(w+1)) | (s&(two(w+1)-1));//change together
+					if(vis[w][go]!=i) vis[w][go]=i, f[w][go]=0;
+//					printf("trans to %d[%d]\n",go,w);
+					f[w][go]+=f[z][s];
+				}
+				nxt=ful-nxt;
+				if(nxt) {
+					w=lg[nxt];
+					go=((s>>z)<<(w+1)) | (s&(two(w+1)-1));
+					if(vis[w][go]!=i) vis[w][go]=i, f[w][go]=0;
+//					printf("trans to %d[%d]\n",go,w);
+					f[w][go]+=f[z][s];
+				}
+			}
+		}
+		fo(s,0,len+len-1) if(vis[0][s]==i) {
+//			printf("s:%d[0] f:%d\n",s,f[0][s]);
+			tot[s]+=f[0][s];
+		}
+	}
+//	puts("");
+
+	mx=ans=0;
+	fd(s,two(n+1)-1,0) {
+//		printf("s:%d tot:%d\n",s,tot[s]);
+		if(tot[s]>=m && lg[s]>mx || lg[s]==mx && s<ans) mx=lg[s], ans=s; 
+	}
+//	printf("ans:%d\n",ans);
+
+	for(len=0; ans>1; ans=ans>>1) c[++len]=(ans&1)+48;
+	for(; len; len--) putchar(c[len]);
+	return 0;
+}

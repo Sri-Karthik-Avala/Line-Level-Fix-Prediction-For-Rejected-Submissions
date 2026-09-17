@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int g[21];
+int t[21];
+//pair<pair<int,int>,int>p[21];
+//int conv[];
+int main(){
+	int a,b;
+	while(scanf("%d%d",&a,&b),a){
+		for(int i=0;i<a;i++)
+			g[i]=0;
+		for(int i=0;i<a;i++){
+			int c;scanf("%d%d",t+i,&c);
+			for(int j=0;j<c;j++){
+				int d;scanf("%d",&d);
+				g[i]+=1<<d;
+			}
+		}
+	//	for(int i=0;i<a;i++)p[i]=make_pair(t[i],g[i]),;
+	//	std::sort(p,p+a);
+	//	for(int i=0;i<a;i++){
+	//		t[i]=p[a-1-i].first;
+	//		g[i]=p[a-1-i].second;
+	//	}
+		int sum=0;
+		for(int i=0;i<a;i++)sum+=t[i];
+		int ret=999999999;
+		for(int i=0;i<(1<<a);i++){
+			int q=__builtin_popcount(i);
+			if(ret<=q)continue;
+			int s=sum;
+			bool ok=true;
+			for(int j=0;j<a;j++){
+				if(i&(1<<j)){
+					if((i&g[j])!=g[j]){ok=false;break;}
+				}else{
+					s-=t[j];
+					if(s<b){ok=false;break;}
+				}
+			}
+			if(ok)ret=q;
+		}
+		printf("%d\n",ret);
+	}
+}

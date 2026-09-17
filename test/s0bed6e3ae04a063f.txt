@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e5 + 10;
+int n, s, si;
+ll ans;
+int x[maxn], p[maxn];
+int main()
+{
+	scanf("%d%d", &n, &s);
+	for(int i = 1; i <= n; ++i) scanf("%d%d", &x[i], &p[i]);
+	si = lower_bound(x + 1, x + n + 1, s) - x;
+	int dir = -1;
+	int l = 1, r = n;
+	while(l < si && si <= r)
+	{
+		if(p[l] >= p[r])
+		{
+			if(dir != 1) ans += x[r] - x[l];
+			p[l] += p[r];
+			dir = 1;
+			--r;
+		}
+		else
+		{
+			if(dir != 0) ans += x[r] - x[l];
+			p[r] += p[l];
+			dir = 0;
+			++l;
+		}
+	}
+	if(l >= si) ans += x[r] - s;
+	else ans += s - x[l];
+	printf("%lld\n", ans);
+	return 0;
+}

@@ -1,0 +1,36 @@
+import numpy as np
+mod = 998244353
+n, m = map(int, input().split())
+a = np.array([list(map(int, input().split())) for _ in range(n)])
+
+#F2で考えている
+def rank(a):
+    n, m = len(a), len(a[0])
+    rank = 0
+    i, j = 0, 0
+    while i < n and j < m:
+        if a[i][j]:
+            rank += 1
+        else:
+            for ii in range(i+1, n):
+                if a[ii][j]:
+                    a[i], a[ii] = a[ii], a[i]
+                    rank += 1
+                    break
+
+            #breakで終わらなかった場合
+            else:
+                j += 1
+                continue
+        for ii in range(i+1, n):
+            if a[ii][j]:
+                for jj in range(j, m):
+                    a[ii][jj] = (a[ii][jj] + a[i][jj])%2
+        i += 1
+        j += 1
+
+    return rank
+
+r = rank(a)
+ans = (pow(2, n+m-1, mod)-pow(2, n+m-r-1, mod))%mod
+print(ans)

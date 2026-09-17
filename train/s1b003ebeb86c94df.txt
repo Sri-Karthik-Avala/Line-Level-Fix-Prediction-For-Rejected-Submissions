@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define for_(i,a,b) for(int i=a;i<b;++i)
+#define allof(a) a.begin(),a.end()
+#define minit(a,b) memset(a,b,sizeof(a))
+#define size_of(a) (int)a.size()
+
+typedef long long lint;
+typedef pair<int, int> pii;
+
+double EPS = 1e-9;
+
+struct Point {
+	double x, y;
+	Point(double _x, double _y) : x(_x), y(_y) {}
+};
+typedef Point Vector;
+
+Point operator + (const Point& a, const Point& b) { return Point(a.x + b.x, a.y + b.y); }
+Point operator - (const Point& a, const Point& b) { return Point(a.x - b.x, a.y - b.y); }
+Point operator * (const Point& a, const Point& b) { return Point(a.x * b.x, a.y * b.y); }
+Point operator / (const Point& a, const Point& b) { return Point(a.x / b.x, a.y / b.y); }
+Point operator * (const Point& a, double d) { return Point(a.x * d, a.y * d); }
+Point operator / (const Point& a, double d) { return Point(a.x / d, a.y / d); }
+bool operator < (const Point& a, const Point& b) { return a.x != b.x ? a.x < b.x : b.y < a.y; }
+bool operator > (const Point& a, const Point& b) { return b.x != a.x ? b.x < a.x : b.y < a.y; }
+bool operator == (const Point& a, const Point& b) {
+	return fabs(a.x - b.x) < EPS && fabs(a.y - b.y) < EPS;
+}
+
+double norm(const Point& a) { return a.x * a.x + a.y * a.y; }
+double abs(const Point& a) { return sqrt(norm(a)); }
+double dot(const Vector& a, const Vector& b) { return a.x * b.x + a.y * b.y; }
+double cross(const Vector& a, const Vector& b) { return a.x * b.y - a.y * b.x; }
+double dist(const Point& a, const Point& b) { return abs(a - b); }
+bool isVertical(const Vector& a, const Vector& b) { return fabs(dot(a,b)) < EPS; }
+bool isParralle(const Vector& a, const Vector& b) { return fabs(cross(a, b)) < EPS; }
+
+int ccw(const Point& a, const Point& b, const Point& c) {
+	Point ba = b - a, ca = c - a;
+	if (cross(ba, ca) > EPS) return +1; // ccw;
+	if (cross(ba, ca) < -EPS) return -1; // cw;
+	if (dot(ba, ca) < -EPS) return +2; // c--a--bif
+	if (abs(ba) + EPS < abs(ca)) return -2; // a--b--c
+	return 0;
+}
+
+struct Line {
+	Point s, e;
+	Line(Point _s, Point _e) : s(_s), e(_e) {}
+};
+typedef Line Segment;
+
+double distOfPointToLine(const Point& p, const Line& l) {
+	Point a = l.s, b = l.e, c = p;
+	return fabs(cross(c - a, b - a)) / abs(b - a);
+}
+
+double distOfPointToSeg(const Point& p, const Segment& s) {
+	Point a = s.s, b = s.e, c = p;
+	if (dot(b - a, c - a) < EPS) return abs(c - a);
+	if (dot(a - b, c - b) < EPS) return abs(c - b);
+	return distOfPointToLine(p, s);
+}
+
+double distOfSegToSeg(const Segment& a, const Segment& b) {
+	double res = distOfPointToSeg(b.s, a);
+	res = min(res, distOfPointToSeg(b.e, a));
+	res = min(res, distOfPointToSeg(a.s, b));
+	res = min(res, distOfPointToSeg(a.e, b));
+	return res;
+}
+
+int N1, N2;
+vector<Point> vp1, vp2;
+
+void solve() {
+	double ans = 1e9;
+	
+	for_(i,0,N1 - 1) {
+		Segment s1(vp1[i], vp1[i + 1]);
+		
+		for_(j,0,N2 - 1) {
+			Segment s2(vp2[j], vp2[j + 1]);
+			
+			ans = min(ans, distOfSegToSeg(s1, s2));
+		}
+	}
+	
+	printf("%.9lf\n", ans);
+}
+
+int main() {
+	cin >> N1;
+	for_(i,0,N1) {
+		double x, y; cin >> x >> y;
+		vp1.push_back(Point(x, y));
+	}
+	++N1;
+	vp1.push_back(Point(1000, 0));
+	cin >> N2;
+	for_(i,0,N2) {
+		double x, y; cin >> x >> y;
+		vp2.push_back(Point(x, y));
+	}
+	++N2;
+	vp2.push_back(Point(1000, 1000));
+	solve();
+	return 0;
+}

@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+using namespace std;
+using Int = long long;
+
+template<typename T1,typename T2> inline void chmin(T1 &a,T2 b){if(a>b)a=b;};
+template<typename T1,typename T2> inline void chmax(T1 &a,T2 b){if(a<b)a=b;};
+#define F first
+#define S second
+namespace Geometry{
+
+  
+  typedef long double D;
+  typedef complex<long double> P;
+  const D PI = asin(1) * 2;
+  const D EPS=1e-7;
+
+  
+  P reflect(P vec, P x){return vec * conj(x / vec);}
+  P reflect(P p1, P p2, P x){return p1 + reflect(p2 - p1, x - p1);}
+}
+using namespace Geometry;
+
+signed main(){
+  int n;
+  cin>>n;
+  vector<int> A(n);
+  P s;
+  D x,y;
+  cin>>x>>y;
+  s={x,y};
+  for(int i=0;i<n;i++){A[i]=i;}
+  vector<P> pt(n);
+  for(auto &I:pt){
+    cin>>x>>y;
+    I={x,y};
+    I-=s;
+  }
+  int ans=0;
+  do{
+    vector<pair<P,P>> L;
+    for(auto &I:A){
+      pair<P,P> W={pt[I],pt[(I+1)%n]};
+      for(auto &T:L){
+	T.F=reflect(W.F,W.S,T.F);
+	T.S=reflect(W.F,W.S,T.S);
+      }
+      L.push_back(W);
+    }
+    vector<pair<D,int>> K;
+    bool j=true;
+    for(auto &I:L){
+      P vec=I.S-I.F; vec/=abs(vec);
+      vec*=EPS;
+      I.F+=vec;
+      I.S-=vec;
+      D lf=arg(I.F),rg=arg(I.S);
+      if(abs(rg-lf)<1e-9){j=false;}
+      if(lf>rg){swap(lf,rg);}
+      if(rg-lf>PI){
+	K.emplace_back(-PI-EPS,1);
+	K.emplace_back(lf,-1);
+	K.emplace_back(rg,1);
+	K.emplace_back(PI+EPS,-1);
+      }
+      else{
+	K.emplace_back(lf,1);
+	K.emplace_back(rg,-1);
+      }
+    }
+    if(!j){continue;}
+    j=false;
+    int cnt=0;
+    sort(K.begin(),K.end());
+    for(auto &I:K){
+      cnt+=I.S;
+      if(cnt==n){j=true;}
+    }
+    if(j){ans++;}
+  }while(next_permutation(A.begin(),A.end()));
+  cout<<ans<<endl;
+  
+  return 0;
+}
+

@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+#include <iostream>
+#include <math.h>
+#include <assert.h>
+#include <vector>
+#include <complex>
+
+using namespace std;
+typedef long long ll;
+typedef unsigned int uint;
+typedef unsigned long long ull;
+static const double EPS = 1e-9;
+static const double PI = acos(-1.0);
+
+#define REP(i, n) for (int i = 0; i < (int)(n); i++)
+#define FOR(i, s, n) for (int i = (s); i < (int)(n); i++)
+#define FOREQ(i, s, n) for (int i = (s); i <= (int)(n); i++)
+#define FORIT(it, c) for (__typeof((c).begin())it = (c).begin(); it != (c).end(); it++)
+#define MEMSET(v, h) memset((v), h, sizeof(v))
+
+typedef complex<double> Point;
+
+struct Line : public vector<Point> {
+  Line(){;}
+  Line(Point a, Point b) { push_back(a); push_back(b); }
+};
+
+double cross(const Point &a, const Point &b) {
+  return imag(conj(a) * b);
+}
+double dot(const Point &a, const Point &b) {
+  return real(conj(a) * b);
+}
+int ccw(Point a, Point b, Point c) {
+  b -= a;
+  c -= a;
+  if (cross(b, c) > 0) { return 1; }
+  if (cross(b, c) < 0) { return -1; }
+  if (dot(b, c) < 0) { return 2; }
+  if (norm(b) < norm(c)) { return -2; }
+  return 0;
+}
+bool intersectSS(const Line &s, const Line &t) {
+  return ccw(s[0], s[1], t[0]) * ccw(s[0], s[1], t[1]) <= 0 &&
+    ccw(t[0], t[1], s[0]) * ccw(t[0], t[1], s[1]) <= 0;
+}
+bool intersectLL(const Line &l, const Line &m) {
+  return abs(cross(l[1] - l[0], m[1] - m[0])) > EPS ||
+         abs(cross(l[1] - l[0], m[0] - l[0])) < EPS;
+}
+Point projection(const Line &l, const Point &p) {
+  double t = dot(p - l[0], l[0] - l[1]) / norm(l[0] - l[1]);
+  return l[0] + t * (l[0] - l[1]);
+}
+double distanceLP(const Line &l, const Point &p) {
+  return abs(p - projection(l, p));
+}
+Point crosspointSS(const Line &l, const Line &m) {
+  double A = cross(l[1] - l[0], m[1] - m[0]);
+  double B = cross(l[1] - l[0], l[1] - m[0]);
+  if (abs(A) < EPS && abs(B) < EPS) { return m[0]; }
+  if (abs(A) < EPS) { assert(false); }
+  return m[0] + B / A * (m[1] - m[0]);
+}
+Line move(const Line &l, double d) {
+  Point vect = (l[1] - l[0]) * Point(0, 1);
+  vect = vect * (d / abs(vect));
+  Line s = l;
+  s[0] += vect;
+  s[1] += vect;
+  return s;
+}
+
+int w, h, n, r;
+Line beam[110];
+double width[110];
+const int direction[2] = { 1, -1 };
+
+int main() {
+  while (scanf("%d %d %d %d", &w, &h, &n, &r), w|h|n|r) {
+    MEMSET(width, 0);
+    REP(i, n) {
+      double x1, x2, y1, y2, t;
+      scanf("%lf %lf %lf %lf %lf", &x1, &y1, &x2, &y2, &t);
+      beam[i] = Line(Point(x1, y1), Point(x2, y2));
+      width[i] = t;
+    }
+    beam[n++] = Line(Point(0, 0), Point(w, 0));
+    beam[n++] = Line(Point(w, 0), Point(w, h));
+    beam[n++] = Line(Point(w, h), Point(0, h));
+    beam[n++] = Line(Point(0, h), Point(0, 0));
+    REP(i, n) {
+      REP(dir1, 2) {
+        Line s1 = move(beam[i], direction[dir1] * (width[i] + r));
+        REP(j, n) {
+          if (i == j) { continue; }
+          REP(dir2, 2) {
+            Line s2 = move(beam[j], direction[dir2] * (width[j] + r));
+            if (!intersectLL(s1, s2)) { continue; }
+            Point p = crosspointSS(s1, s2);
+            if (p.real() < EPS || p.real() - w > EPS ||
+                p.imag() < EPS || p.imag() - h < EPS) { continue; }
+            REP(k, n) {
+              if (k == i || k == j) { continue; }
+              if (distanceLP(beam[k], p) - width[k] - r < -EPS) { goto next; }
+            }
+            puts("Yes");
+            goto next_loop;
+next:;
+          }
+        }
+      }
+    }
+    puts("No");
+next_loop:;
+  }
+}

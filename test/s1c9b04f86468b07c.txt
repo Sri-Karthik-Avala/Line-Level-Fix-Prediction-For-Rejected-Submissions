@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <map>
+#include <queue>
+#include <deque>
+#include <complex>
+#define FOR(i,a,b) for(int i=(a);i<(int)(b);i++)
+#define REP(i,a) FOR(i,0,a)
+#define X real() 
+#define Y imag()
+using namespace std;
+typedef long long ll;
+typedef int useType;
+typedef pair<useType,useType> pr;
+typedef vector<useType> VI;
+const int INF=1<<30;
+const int SIZE=1<<20;
+const int p=100000;
+int DP[2][2][2][SIZE];//times beforeJ goodFlag true or false
+char maps[22][22]={};
+int main(){
+	int n,m;
+	string s;
+	cin >> m >> n;
+	REP(i,m){
+		cin >> s;
+		REP(j,n)
+			maps[i][j]=s[j];
+
+	}
+	DP[0][0][0][0]=1;
+	int now=1;
+	REP(i,m)
+		REP(j,n){
+			if(maps[i][j]=='J' || maps[i][j]=='?')
+				REP(gF,2)
+					REP(bJ,2)
+						REP(k,SIZE)
+							DP[now][1][gF][k&(~(1<<j))]+=DP[now^1][bJ][gF][k]%p;
+			if(maps[i][j]=='O' || maps[i][j]=='?')
+				REP(gF,2)
+					REP(bJ,2)
+						REP(k,SIZE)
+							if(bJ && j) 
+								DP[now][0][gF][(k&(~(1<<j)))|(1<<(j-1))]+=DP[now^1][bJ][gF][k]%p;
+							else
+								DP[now][0][gF][k&(~(1<<j))]+=DP[now^1][bJ][gF][k]%p;
+			if(maps[i][j]=='I' || maps[i][j]=='?')
+				REP(gF,2)
+					REP(bJ,2)
+						REP(k,SIZE)
+							{
+							//	if(DP[now^1][bJ][gF][k])
+							//		cout << bJ << "  " << gF << " " << k <<" " << DP[now^1][bJ][gF][k]<< endl;
+							DP[now][0][((1<<j)&k) || gF][k&(~(1<<j))]+=DP[now^1][bJ][gF][k]%p;
+							}
+						
+			now ^=1;
+			REP(j,2)
+				REP(k,2)
+					REP(l,SIZE)
+						DP[now][j][k][l]=0;
+
+	
+		}
+	int sum=0;
+	now^=1;
+	REP(bJ,2)
+		REP(k,SIZE)
+			sum=(sum+DP[now][bJ][1][k])%p;
+	cout << sum << endl;
+
+	return 0;
+}

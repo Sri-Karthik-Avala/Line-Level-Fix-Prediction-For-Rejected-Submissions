@@ -1,0 +1,32 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+int main(){
+  int a,b;
+  cin>>a>>b;
+  vector<int>c(b);
+  rep(i,b)cin>>c[i];
+  string s;
+  rep(i,2*a)s+=i;
+  rep(i,b){
+	if(!c[i]){
+	  string tmp;
+	  rep(j,a){tmp+=s[j];tmp+=s[j+a];}
+	  s=tmp;
+	}else
+	  s=s.substr(c[i])+s.substr(0,c[i]);
+	//rep(i,2*a)cout<<1+s[i];
+	//cout<<endl;
+  }
+  rep(i,2*a)cout<<1+s[i]<<endl;
+}

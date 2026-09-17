@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+char fie[1001][1001];
+int H,W,N;
+int memo[1001][1001];
+char S[1000001];
+int Ds[1000001][4];
+
+int dx[]={0,1,0,-1};//R -> +1 , L -> +1
+int dy[]={-1,0,1,0};
+
+int sx,sy,gx,gy;
+
+struct state{
+  int x,y,c;
+  bool operator>(const state &st) const{
+    return c > st.c;
+  }
+
+};
+
+bool check( int x,int y,int nc){
+  if( x < 0 || y < 0 || x >= W || y >= H ) return false;
+  if( fie[x][y] == '#' ) return false;
+  if( memo[x][y] == -1 ) return true;
+  if( memo[x][y] <= nc ) return false;
+  return true; 
+}
+
+
+
+bool bfs(){
+
+  memset(memo,-1,sizeof(memo));
+
+  priority_queue<state,vector<state>,greater<state> > q;
+
+  q.push( (state){sx,sy,0} );
+  memo[sx][sy] = 0;
+  while( !q.empty() ){
+    state p = q.top(); q.pop();
+    int x = p.x;
+    int y = p.y;
+    int c = p.c;
+
+    //  cout << x<< " " << y << " "<< c << endl;
+
+    for(int i=0;i<4;i++){
+      int nd = i;
+      int nc = Ds[c][nd];
+      if( nc > N ) continue;
+      int nx = x+dx[nd];
+      int ny = y+dy[nd];
+      if( check(nx,ny,nc) ){
+	q.push( (state){nx,ny,nc} );
+	memo[nx][ny] = nc;
+      }
+    }
+  }
+  if( memo[gx][gy] == -1 )
+    return false;
+  return true;
+}
+
+int main(){
+  while(cin >> H >> W >> N && (H||W||N) ){
+    for(int i=1;i<=N;i++){
+      cin >> S[i];
+    }
+    S[0] = 0;
+    int dnc = 0;
+    for(int i=1;i<=N;i++){
+      if( S[i] == 'L' ){
+	dnc+=3;	 
+      } else {
+	dnc++;
+      }
+      dnc %= 4;
+      S[i] = (char)dnc;
+    }
+    
+    int dc[4] = {N+1,N+1,N+1,N+1};
+    for(int i=N;i>-1;i--){
+      dc[(int)S[i]] = i;
+      for(int j=0;j<4;j++){
+	Ds[i][j] = dc[j];
+	//	printf("%d, %d  %d\n",i-1,j,(int)Ds[i-1][j]);
+      }
+    }
+
+    for(int i=0;i<H;i++){
+      for(int j=0;j<W;j++){
+	cin >> fie[j][i];
+	if( fie[j][i] == 'G' ){
+	  gx=j;
+	  gy=i;
+	}
+	if( fie[j][i] == 'S' ){
+	  sx = j;
+	  sy = i;
+	}
+      }
+    }
+    
+    if( bfs() ) cout << "YES" << endl;
+    else cout << "NO" << endl;
+  }
+}

@@ -1,0 +1,51 @@
+#include<iostream>
+#include<vector>
+#define N 1100001
+using namespace std;
+
+
+bool p[N];
+vector<int> pr;
+int num[N];
+
+int main(){
+
+  for(int i=0;i<N;i++)p[i] = true;
+  p[0] = p[1] = false;
+
+  for(int i=2;i*i<N;i++){
+    if(p[i]){
+      for(int j=2*i;j<N;j+=i)p[j] = false;
+    }
+  }
+
+  for(int i=0;i<N;i++)if(p[i])pr.push_back(i);
+
+  long long A,B;
+  cin >> A >> B;
+
+  for(int i=0;i<2*B+1;i++)num[i] = 100000000;
+
+  for(int i=0;i<(int)pr.size();i++){
+    if(A+B<pr[i])break;
+    long long tmp = (A-B+pr[i]-1)/pr[i] * pr[i];
+    for(long long j = tmp;j<=A+B;j+=pr[i]){
+ 
+      if(num[j-(A-B)]<0)continue;
+      int n = 0;
+      long long hoge = j;
+      while(!(hoge%pr[i])){
+	hoge /= pr[i];
+	n++;
+      }
+
+      if(num[j-(A-B)]>=n)num[j-(A-B)] = n;
+      else num[j-(A-B)] = -1;
+    }
+  }
+
+  int ans = 0;
+  long long C = (A-B<2LL)?(2LL+B-A):0LL;
+  for(int i=C;i<2*B+1;i++)if(0<=num[i])ans++;
+  cout << ans << endl;
+}

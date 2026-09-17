@@ -1,0 +1,25 @@
+w, h = list(map(int, input().split()))
+xs = [int(input()) for _ in range(w)]
+ys = [int(input()) for _ in range(h)]
+
+x_cnt = w + 1
+y_cnt = h + 1
+
+i = 0
+j = 0
+xs.sort()
+ys.sort()
+
+ans = 0
+while i < len(xs) or j < len(ys):
+    if i >= len(xs) or ys[j] < xs[i]:
+        ans += x_cnt * ys[j]
+        j += 1
+        y_cnt -= 1
+    else:
+        ans += y_cnt * xs[i]
+        i += 1
+        x_cnt -= 1
+print(ans)
+
+

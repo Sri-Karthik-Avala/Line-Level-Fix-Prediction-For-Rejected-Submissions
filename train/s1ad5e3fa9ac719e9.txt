@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+int n,s,spn;
+void sp(int ne,int ns,bool* flag)
+{
+	if (ne > n) return;
+	if (ne == n && ns == s) spn++;
+    for(int i=0;i<10;++i){
+        if(!flag[i]){
+            flag[i]=true;
+            sp(ne+1,ns+i,flag);
+			flag[i] = false;
+		}
+    }
+}
+int main()
+{
+    while(1)
+    {
+        cin>>n>>s;if(!n)return 0;
+        spn=0;
+        bool flag[10]={false};
+        sp(0,0,flag);
+        if(n!=1)spn/=(n*(n-1));
+        cout<<spn<<endl;
+    }
+    return 0;
+}

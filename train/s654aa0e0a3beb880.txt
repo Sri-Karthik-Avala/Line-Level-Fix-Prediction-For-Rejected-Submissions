@@ -1,0 +1,22 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+def main():
+    # 入力
+    input = []
+    while(True):
+        input_list = list2int(raw_input().split())
+        if len(input_list) > 0:
+            input.append(input_list)
+        else:
+            break
+
+    for x in input:
+        print(sum(x))
+
+# リストの要素をintに変換
+def list2int(list):
+    return [int(x) for x in list]
+
+if __name__=='__main__':
+    main()

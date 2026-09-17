@@ -1,0 +1,29 @@
+import sys
+def divide(p,q):
+    a = p*10 // q
+    b = p*10 - a*q
+    arr1.append(a)
+    if b == 0:
+        return -1
+    elif b in arr2:
+        return arr2.index(b)
+    else:
+        arr2.append(b)
+        return divide(b,q)
+
+for line in sys.stdin:
+    p,q = map(int, line.split())
+    arr1 = []
+    arr2 = []
+    repeat = []
+    r = divide(p,q)
+    if r == -1:
+        print(''.join(map(str, arr1)))
+    else:
+        for i in range(len(arr1)):
+            if i <= r:
+                repeat.append(' ')
+            else:
+                repeat.append('^')
+        print(''.join(map(str, arr1)))
+        print(''.join(repeat))

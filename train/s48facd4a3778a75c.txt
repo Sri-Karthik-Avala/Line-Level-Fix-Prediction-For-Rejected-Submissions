@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+typedef vector<int>vint;
+typedef pair<int,int>pint;
+typedef vector<pint>vpint;
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define reps(i,f,n) for(int i=(f);i<(n);i++)
+#define all(v) (v).begin(),(v).end()
+#define each(it,v) for(__typeof((v).begin()) it=(v).begin();it!=(v).end();it++)
+#define pb push_back
+#define fi first
+#define se second
+template<typename A,typename B>inline void chmin(A &a,B b){if(a>b)a=b;}
+template<typename A,typename B>inline void chmax(A &a,B b){if(a<b)a=b;}
+
+int N,K,S;
+int X[2222][3];
+
+int table[2222][2222];
+
+int f(int a,int b){
+    if(a>b)swap(a,b);
+    return max(0ll,a+S-b);
+}
+vint G[2222];
+
+bool used[2222];
+int dfs(int v,int c,int p){
+    if(c==K){
+        return table[p][v];
+    }
+
+    used[v]=true;
+    int ret=LLONG_MIN;
+    for(auto u:G[v]){
+        if(used[u])continue;
+        int tmp=dfs(u,c+1,p);
+        if(tmp!=LLONG_MIN)chmax(ret,tmp+table[v][u]);
+    }
+    used[v]=false;
+    return ret;
+}
+
+void solve(){
+    rep(i,N)rep(j,3)cin>>X[i][j];
+    memset(table,0,sizeof(table));
+    rep(i,N)G[i].clear();
+    rep(i,N)rep(j,N)if(i!=j){
+        vint v;
+        bool flag=true;
+        rep(k,3){
+            int tmp=f(X[i][k],X[j][k]);
+            if(tmp==0){
+                flag=false;
+            }
+            v.pb(tmp);
+        }
+        if(!flag)continue;
+        G[i].pb(j);
+        rep(k,3)table[i][j]+=v[k]*v[(k+1)%3];
+    }
+
+    memset(used,0,sizeof(used));
+    int ma=LLONG_MIN;
+    rep(i,N){
+        chmax(ma,dfs(i,1,i));
+    }
+
+    if(ma==LLONG_MIN){
+        cout<<-1<<endl;
+        return;
+    }
+    cout<<(3*S*S*K-ma)*2<<endl;
+}
+
+signed main(){
+    while(cin>>N>>K>>S,N||K||S)solve();
+    return 0;
+}

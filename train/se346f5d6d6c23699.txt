@@ -1,0 +1,6 @@
+n,a,b=map(int,input().split())
+
+if n*a >= b:
+  ptiny(b)
+else:
+  print(n*a)

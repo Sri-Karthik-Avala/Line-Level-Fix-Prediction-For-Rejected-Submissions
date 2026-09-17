@@ -1,0 +1,6 @@
+n = int(input())
+s = list(map(int,input().split()))
+ans = 10**10
+for i in range(n):
+    ans = min(ans,(abs(sum(s[:i]) - sum(s[i:]))))
+print(ans)

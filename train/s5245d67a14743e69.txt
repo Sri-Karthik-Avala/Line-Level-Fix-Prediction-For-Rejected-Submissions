@@ -1,0 +1,40 @@
+def main():
+    while True:
+        n = int(input().strip())
+
+        if n == 0:
+            break
+
+        phrases = []
+        for _ in range(n):
+            word = input().strip()
+            phrases.append(word)
+
+        PHRASE_LEN = [5,7,5,7,7]
+        found_flag = False
+
+        for i in range(n):
+            acc_len = 0
+            phrase_idx = 0
+            for j in range(i, n):
+                acc_len += len(phrases[j])
+
+                if acc_len == PHRASE_LEN[phrase_idx]:
+                    if phrase_idx == (len(PHRASE_LEN)-1):
+                        found_flag = True
+                        break
+
+                    acc_len = 0
+                    phrase_idx += 1
+                elif acc_len > PHRASE_LEN[phrase_idx]:
+                    break
+
+            if found_flag:
+                print(i+1)
+                break
+
+if __name__ == "__main__":
+    main()
+~                                                                                                                                                                                                                   
+~                                                                                                                                                                                                                   
+~                       

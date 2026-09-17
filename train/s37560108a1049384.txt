@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef bool boolean;
+ 
+const int N = 150005;
+ 
+typedef class Task {
+    public:
+        int t, d;
+ 
+        boolean operator < (Task b) const {
+            return d < b.d;
+        }
+        void read() {
+            scanf("%d%d", &d, &t);
+			d += t;
+        }
+} Task;
+ 
+int n;
+Task a[N];
+ 
+int main() {
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) {
+        a[i].read();
+    }
+    sort(a + 1, a + n + 1);
+    priority_queue<int> Q;
+    int sum = 0;
+    for (int i = 1; i <= n; i++) {
+        Q.push(a[i].t);
+        sum += a[i].t;
+        if (sum > a[i].d) {
+            sum -= Q.top();
+            Q.pop();
+        }
+    }
+    printf("%d\n", (signed) Q.size());
+    return 0;
+}

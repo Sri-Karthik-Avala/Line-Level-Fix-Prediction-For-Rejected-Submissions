@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct dat {
+  long long a, b, c;
+  dat(long long _a = 0, long long _b = 0, long long _c = 0)
+      : a(_a), b(_b), c(_c) {}
+  bool operator<(const dat &r) const { return b - a > r.b - r.a; }
+};
+
+long long x, y, z, n;
+vector<dat> v;
+priority_queue<long long> pqb;
+map<long long, int> mpu, mpn;
+
+long long solve();
+
+int main() {
+  cin >> x >> y >> z;
+  n = x + y + z;
+  v.resize(n);
+  for (int i = 0; i < n; ++i) cin >> v[i].a >> v[i].b >> v[i].c;
+  sort(v.begin(), v.end());
+  cout << solve() << endl;
+  return 0;
+}
+
+long long solve() {
+  long long res = 0, now = 0;
+  for (int i = 0; i < n; ++i) {
+    if (i < y) {
+      now += v[i].b;
+      pqb.push(v[i].c - v[i].b);
+    } else
+      now += v[i].a;
+  }
+  {  // prepair mp
+    vector<long long> tmp;
+    for (int i = y; i < n; ++i) tmp.push_back(v[i].c - v[i].a);
+    sort(tmp.begin(), tmp.end(), greater<long long>());
+    for (int i = 0; i < v.size(); ++i)
+      if (i < z) {
+        now += tmp[i];
+        ++mpu[tmp[i]];
+      } else
+        ++mpn[tmp[i]];
+  }
+  for (int i = y; i + x <= n; ++i) {
+    res = max(res, now);
+    // b->c
+    pqb.push(v[i].c - v[i].b);
+    now += pqb.top();
+    pqb.pop();
+    // a->b
+    now += v[i].b - v[i].a;
+    long long num = v[i].c - v[i].a;
+    if (mpu.find(num) != mpu.end()) {
+      now -= num;
+      if (--mpu[num] == 0) mpu.erase(num);
+    } else {
+      if (--mpn[num] == 0) mpn.erase(num);
+      if (mpu.size()) {
+        num = (*mpu.begin()).first;
+        now -= num;
+        if (--mpu[num] == 0) mpu.erase(num);
+      }
+    }
+  }
+  return res;
+}

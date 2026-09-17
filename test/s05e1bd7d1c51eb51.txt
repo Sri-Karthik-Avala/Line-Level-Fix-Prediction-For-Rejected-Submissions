@@ -1,0 +1,113 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define fst(t) std::get<0>(t)
+#define snd(t) std::get<1>(t)
+#define thd(t) std::get<2>(t)
+#define unless(p) if(!(p))
+#define until(p) while(!(p))
+
+using ll = long long;
+using ull = unsigned long long;
+using P = std::tuple<int,int>;
+
+const int dx[8] = {-1, 1, 0, 0, -1, -1, 1, 1}, dy[8] = {0, 0, -1, 1, -1, 1, -1, 1};
+
+int N, C, D;
+ll powers[19], numbers101[9];
+std::mt19937 engine;
+
+ll product(ll a, ll b, ll m){
+    ll res = 0ll;
+
+    for(int i=60;i>=0;i-=4){
+        res = (res * 16 + a * (b >> i & 15)) % m;
+    }
+    
+    return res;
+}
+
+template <typename T>
+T expt(T a, T n, T mod = std::numeric_limits<T>::max()){
+    T res = 1;
+    while(n){
+        if(n & 1){res = product(res, a, mod);}
+        a = product(a, a, mod);
+        n >>= 1;
+    }
+    return res;
+}
+
+inline ll isPrime(ll x){
+    if(x % 2 == 0){return x == 2;}
+
+    ll d = x - 1;
+    int s = 0;
+    while(d % 2 == 0){
+        ++s;
+        d /= 2;
+    }
+
+    static int t = 10;    
+    for(int i=0;i<t;++i){
+        ll a = engine() % x, po = expt(a, d, x);
+        
+        bool flag = po == 1;
+        for(int j=0;j<s;++j){
+            if(po == x - 1){flag = true; break;}
+            po = product(po, po, x);
+        }
+
+        if(!flag){return false;}
+    }
+
+    return true;
+}
+
+inline ll reverseNumber(ll x){
+    std::string s = std::to_string(x);
+    reverse(s.begin(), s.end());
+    return std::stoll(s) * powers[N - 1 - s.size()];
+}
+
+int main(){
+    std::cin.tie(nullptr);
+    std::ios::sync_with_stdio(false);
+    
+    for(int i=0;i<=18;++i){
+        powers[i] = expt(10ll, 1ll * i);
+    }
+    
+    std::cin >> N >> C;
+    
+    D = 2 * N + (C >= 0) - 1;
+
+    if(N >= 2 && C == -1){
+        std::cout << std::string(D + 1, '9') << std::endl;
+        return 0;
+    }
+    
+    for(int i=0;i<N;++i){
+        numbers101[i] = powers[D-i] + powers[i];
+    }
+
+    bool founded = false;
+    ll res = -1ll;
+    for(int i=9;!founded&&i>=1;i-=2){
+        for(ll j=powers[N-1]-1;!founded&&j>=0;--j){
+            ll x = (C >= 0 ? powers[N] * C : 0ll) + numbers101[0] * i + (j * powers[N - 1 + (C >= 0 ? 1 : 0)] + reverseNumber(j)) * 10;
+
+            if(isPrime(x)){
+                founded = true;
+                res = x;
+            }
+        }
+    }
+    
+    if(res >= 0){
+        std::cout << res << std::endl;
+    }else{
+        std::cout << std::string(D + 1, '9') << std::endl;
+    }
+}

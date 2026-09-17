@@ -1,0 +1,52 @@
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <stdio.h>
+#include <list>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <math.h>
+#include <utility>
+#include <string>
+#include <ctype.h>
+#include <cstring>
+#include <cstdio>
+#include <sstream>
+#include <functional>
+
+using namespace std;
+
+#define FOR(i,k,n) for(int i = (k); i < (n); i++)
+#define REP(i,n) FOR(i,0,n)
+#define INF 114514810
+#define ll long long
+//#define scanf scanf_s
+
+int main()
+{
+	int n;
+	while (cin >> n, n)
+	{
+		vector<pair<int, int>> v;
+		REP(i, n)
+		{
+			double m, a, b;
+			cin >> m >> a >> b;
+			v.push_back(make_pair(a, m));
+			v.push_back(make_pair(b - 0.5, -m));
+		}
+		sort(v.begin(), v.end());
+		ll w = 0;
+		bool f = true;
+		REP(i, v.size())
+		{
+			w += v[i].second;
+			if (w > 150) f = false;
+		}
+		if (f) cout << "OK" << endl;
+		else cout << "NG" << endl;
+	}
+	return 0;
+}

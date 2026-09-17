@@ -1,0 +1,10 @@
+s = input()
+letters = []
+ans = 'no'
+for i in s:
+  if i in letters:
+    ans = 'yes'
+    break
+  else:
+    letters.append(i)
+print(ans)

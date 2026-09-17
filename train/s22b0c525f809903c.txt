@@ -1,0 +1,6 @@
+n=int(input())
+ans=s[0]+t[0]
+s,t=input().split()
+for i in range(1,n):
+    ans=ans+s[i]+t[i]
+print(ans)

@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define for_(i,a,b) for(int i=a;i<b;++i)
+#define for_rev(i,a,b) for(int i=a;i>=b;--i)
+#define allof(a) a.begin(),a.end()
+#define minit(a,b) memset(a,b,sizeof(a));
+#define size_of(a) (int)a.size()
+
+typedef long long lint;
+typedef double Double;
+typedef pair<int, int> pii;
+
+const int iINF = 1L << 30;
+const lint lINF = 1LL << 60;
+const Double EPS = 1e-9;
+
+string S;
+
+bool parse(int left, int right) {
+	if (left > right) return true;
+	if (S[left] != 'm' || S[right] != 'w') return false;
+	
+	int mcnt = 0, ecnt = 0;	
+	int epos = -1;
+	
+	for_(i,left,right) {
+		if (S[i] == 'm') mcnt++;
+		if (S[i] == 'e') ecnt++;
+		
+		if (mcnt == ecnt) {
+			epos = i;
+			if (!parse(left + 1, epos - 1)) return false;
+			if (!parse(epos + 1, right - 1)) return false;
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+void solve() {
+	if (parse(0, size_of(S) - 1)) cout << "Cat" << endl;
+	else cout << "Rabit" << endl;
+}
+
+int main() {
+	cin >> S;
+	solve();
+	return 0;
+}

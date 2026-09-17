@@ -1,0 +1,62 @@
+#include<stdio.h>
+#include<algorithm>
+#include<vector>
+#include<map>
+using namespace std;
+int dp[110][5100];
+int b[110];
+int c[110];
+map<vector<int>,int> m;
+vector<int>rev[5100];
+int ABS(int a){return max(a,-a);}
+int main(){
+	int a;
+	scanf("%d",&a);
+	for(int i=0;i<a;i++){
+		scanf("%d",b+i);
+	}
+	for(int i=0;i<a;i++)scanf("%d",c+i);
+	for(int i=0;i<110;i++)for(int j=0;j<5100;j++)
+		dp[i][j]=-999999999;
+	vector<int> perm(7);
+	for(int i=0;i<7;i++){
+		perm[i]=i;
+	}
+	int sz=0;
+	do{
+		rev[sz]=perm;
+		m[perm]=sz++;
+		int tmp=0;
+		for(int i=0;i<7;i++){
+			for(int j=i+1;j<7;j++){
+				if(ABS(perm[i]-perm[j])<=b[perm[i]])tmp+=c[perm[i]];
+			}
+		}
+		dp[7][sz-1]=tmp;
+	}while(next_permutation(perm.begin(),perm.end()));
+	for(int i=7;i<a;i++){
+		for(int j=0;j<sz;j++){
+			for(int k=0;k<8;k++){
+				vector<int>to;
+				for(int l=0;l<k;l++){
+					if(rev[j][l]+i-8>=0)to.push_back(rev[j][l]+i-8);
+				}
+				to.push_back(6);
+				for(int l=k;l<7;l++){
+					if(rev[j][l]+i-8>=0)to.push_back(rev[j][l]+i-8);
+				}
+				int val=dp[i][j];
+				for(int l=0;l<k;l++){
+					if(ABS(rev[j][l]-7)<=b[rev[j][l]+i-7])val+=c[rev[j][l]+i-7];
+				}
+				for(int l=k;l<7;l++){
+					if(ABS(rev[j][l]-7)<=b[i])val+=c[i];
+				}
+				dp[i+1][m[to]]=max(dp[i+1][m[to]],val);
+			}
+		}
+	}
+	int ret=0;
+	for(int i=0;i<sz;i++)ret=max(ret,dp[a][i]);
+	printf("%d\n",ret);
+}

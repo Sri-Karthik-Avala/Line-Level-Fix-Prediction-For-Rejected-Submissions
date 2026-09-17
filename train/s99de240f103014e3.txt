@@ -1,0 +1,18 @@
+def generate_square(rest, output=[10000]):                   
+  for i in range(rest, 0, -1):                               
+    if output[-1] >= i:                                      
+        yield from generate_square(rest - i, output + [i])   
+  if rest == 0:                                              
+    yield output                                             
+                                                             
+                                                             
+while 1:                                                     
+  x = int(input().strip())                                   
+  if x == 0:                                                 
+    break                                                    
+  generator = generate_square(x)                             
+  for x in generator:                                        
+    print(" ".join(map(str, x[1:])))                         
+GN-2:python kodairatomonori$                                 
+                                                             
+                                                             

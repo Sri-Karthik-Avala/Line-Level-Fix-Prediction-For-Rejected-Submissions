@@ -1,0 +1,63 @@
+import numpy as np
+
+# i 番目のブロックを取り除くときに、i 番目のブロックが
+# i+k 番目のブロックが連結であるということは
+# i, i+1, ..., i+k 番目のブロックのうち i 番目のブロックを取り除くのが
+# 最も早いということである
+# したがって、i 番目のブロックを取り除くとき、
+# k 個隣のブロックは 1/(k+1) の確率で連結である
+
+def make_modinv_list(n, mod=10**9+7):
+    # 0 から n までの mod 逆元のリストを返す O(n)
+    modinv = [0, 1]
+    for i in range(2, n+1):
+        modinv.append(mod - mod//i * modinv[mod%i] % mod)
+    return modinv
+
+def garner(A, M, mod):
+    # Garner のアルゴリズム
+    # 参考: https://math314.hateblo.jp/entry/2015/05/07/014908
+    M.append(mod)
+    coffs = [1] * len(M)
+    constants = np.zeros((len(M),) + A[0].shape, dtype=np.int64)
+    for i, (a, m) in enumerate(zip(A, M[:-1])):
+        v = (a - constants[i]) * pow(coffs[i], m - 2, m) % m
+        for j, mm in enumerate(M[i + 1:], i + 1):
+            constants[j] = (constants[j] + coffs[j] * v) % mm
+            coffs[j] = coffs[j] * m % mm
+    return constants[-1]
+
+def convolve_mod(A, B, mod=10**9+7):
+    # 任意 mod 畳み込み
+    mods = [1000003, 1000033, 1000037, 1000039]
+    mods_np = np.array(mods, dtype=np.int32)
+    fft, ifft = np.fft.rfft, np.fft.irfft
+    a, b = len(A), len(B)
+    if a == b == 1:
+        return np.array([A[0] * B[0]]) % mod
+    n = a + b - 1  # 畳み込みの結果の長さ
+    k = 1 << (n - 1).bit_length()  # n 以上の最小の 2 冪
+    AB = np.zeros((2, len(mods), k), dtype=np.int64)  # ここの dtype は fft 後の dtype に関係しない
+    AB[0, :, :a] = A
+    AB[1, :, :b] = B
+    AB[:, :, :] %= mods_np[:, None]
+    C = ifft(fft(AB[0]) * fft(AB[1]))[:, :n]
+    C = ((C + 0.5) % mods_np[:, None]).astype(np.int64)
+    assert (C>=0).all()
+    return garner(C, mods, mod)
+
+def main():
+    mod = 10**9+7
+    N = int(input())
+    A = np.array(list(map(int, input().split())))
+    modinv_list = np.array(make_modinv_list(N, mod))
+    C = np.zeros(N*2-1, dtype=np.int64)  # 確率
+    C[N-1:] = modinv_list[1:]
+    C[:N] = modinv_list[:0:-1]
+    Ans = convolve_mod(C, A, mod)
+    frac_N = 1
+    for i in range(2, N+1):
+        frac_N = frac_N * i % mod
+    print(Ans[N-1:2*N-1].sum() % mod * frac_N % mod)
+
+main()

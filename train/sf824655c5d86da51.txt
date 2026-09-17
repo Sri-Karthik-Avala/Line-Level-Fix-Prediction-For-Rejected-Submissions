@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+"""
+http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0301
+WA
+"""
+import sys
+from sys import stdin
+from collections import deque
+input = stdin.readline
+
+
+def main(args):
+    # members = deque(list(range(10)))
+    # numbers = [2, 6, 5, 18, 3]
+    # queries = [3, 0, 5]
+
+    N, M, Q = map(int, input().split(' '))
+    members = list(range(N))
+    numbers = [int(x) for x in input().split(' ')]
+    queries = [int(x) for x in input().split(' ')]
+
+
+    for n in numbers:
+        if n % 2 == 0:
+            members.rotate(-n)
+            members.popleft()
+        else:
+            members.rotate(n)
+            members.popleft()
+
+
+    for q in queries:
+        ans = 1 if q in members else 0
+        print(ans)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

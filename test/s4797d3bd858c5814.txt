@@ -1,0 +1,81 @@
+import math,string,itertools,fractions,heapq,collections,re,array,bisect,sys,random,time,copy,functools
+
+sys.setrecursionlimit(10**7)
+inf = 10**20
+eps = 1.0 / 10**10
+mod = 998244353
+dd = [(0,-1),(1,0),(0,1),(-1,0)]
+ddn = [(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,-1),(-1,0),(-1,1)]
+
+def LI(): return [int(x) for x in sys.stdin.readline().split()]
+def LI_(): return [int(x)-1 for x in sys.stdin.readline().split()]
+def LF(): return [float(x) for x in sys.stdin.readline().split()]
+def LS(): return sys.stdin.readline().split()
+def I(): return int(sys.stdin.readline())
+def F(): return float(sys.stdin.readline())
+def S(): return input()
+def pf(s): return print(s, flush=True)
+
+
+def main():
+    rr = []
+
+    while True:
+        N,M,L,K,A,H = LI()
+        if N == 0:
+            break
+        S = set()
+        if L > 0:
+            S = set(LI())
+        else:
+            input()
+        e = collections.defaultdict(list)
+        for _ in range(K):
+            a,b,d = LI()
+            e[a].append((b,d))
+            e[b].append((a,d))
+
+        def search(s):
+            d = collections.defaultdict(lambda: inf)
+            d[(-M,s)] = 0
+            q = []
+            heapq.heappush(q, (0, -M, s))
+            v = collections.defaultdict(bool)
+            while len(q):
+                k, m, u = heapq.heappop(q)
+                if v[(m,u)]:
+                    continue
+                for mm in range(m,1):
+                    v[(mm,u)] = True
+
+                for uv, ud in e[u]:
+                    if ud > -m or v[(m+ud,uv)]:
+                        continue
+                    vd = k + ud
+                    vm = m+ud
+                    if uv in S:
+                        vm = -M
+                    if d[(vm,uv)] > vd:
+                        d[(vm,uv)] = vd
+                        heapq.heappush(q, (vd, vm, uv))
+
+            return d
+
+        d = search(A)
+        r = inf
+        for k in list(d.keys()):
+            if k[1] == H and r > d[k]:
+                r = d[k]
+        if r == inf:
+            rr.append('Help!')
+        elif r <= M:
+            rr.append(r)
+        else:
+            rr.append(r*2-M*2)
+
+    return '\n'.join(map(str,rr))
+
+
+print(main())
+
+

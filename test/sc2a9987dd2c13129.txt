@@ -1,0 +1,53 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+#define MAX2 501001
+#define MAX 500001
+#define NKMAX 101
+
+int NK;
+double dp[MAX2];
+double p[NKMAX];
+
+int S, N, K;
+
+double calc(int a) {
+	if (a == 0) return 0;
+	double ans = 1;
+	if (a <= MAX) {
+		for (int i = 0; i < NKMAX; i++)
+		{
+			ans += dp[abs(a - i)] * p[i];
+		}
+		dp[a] = ans;
+	}
+	else ans = dp[MAX] + (a - MAX) / (N + 1.0) / K * 2;
+	return ans;
+}
+
+int main() {
+	cin >> S >> N >> K;
+	S = abs(S);
+	p[0] = 1;
+	for (int k = 0; k < K; k++)
+	{
+		for (int i = N * k; i >= 0; i--)
+		{
+			double move = p[i] / N;
+			for (int j = 1; j <= N; j++)
+			{
+				p[i + j] += move;
+			}
+			p[i] = 0;
+		}
+	}
+
+	for (int i = 1; i < MAX2; i++) dp[i] = MAX;
+	for (int i = 0; i < 10000; i++)
+		for (int j = 1; j <= NKMAX; j++)
+			calc(j);
+	for (int i = 1; i <= MAX; i++) calc(i);
+
+	printf("%.14f\n", calc(S));
+	cin >> N;
+}

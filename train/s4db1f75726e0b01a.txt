@@ -1,0 +1,62 @@
+#include<iostream>
+#include<set>
+#include<cstdlib>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+set<int> used;
+int n, k;
+
+void solve2(string str) {
+  int cnt = 0;
+  rep (i, n) if (str[i] == '1') ++cnt;
+  if (cnt == 1) {
+    rep (i, n) if (str[i] == '1') {
+      used.insert(i);
+      return;
+    }
+  }
+  string s;
+  rep (i, n) {
+    if (str[i] == '1' && rand() % 2) s += "1";
+    else s += "0";
+  }
+  cout << "?" + s << endl;
+  cout.flush();
+  int t;
+  cin >> t;
+  if (t == 1) {
+    solve2(s);
+  } else {
+    rep (i, n) s[i] ^= '0' ^ '1';
+    solve2(s);
+  }
+}
+
+void solve() {
+  while (true) {
+    string str;
+    rep (i, n) {
+      str += rand() % 2 ? "1" : "0";
+      if (used.count(i)) str[str.size() - 1] = '0';
+    }
+    cout << "?" + str << endl;
+    cout.flush();
+    int t;
+    cin >> t;
+    if (t == 1) {
+      solve2(str);
+      return;
+    }
+  }
+}
+
+int main() {
+  cin >> n >> k;
+  rep (i, k) solve();
+  for (set<int>::iterator itr = used.begin(); itr != used.end(); ++itr) {
+    cout << *itr + 1 << endl;
+  }  
+}

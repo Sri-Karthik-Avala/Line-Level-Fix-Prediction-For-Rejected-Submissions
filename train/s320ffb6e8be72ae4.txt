@@ -1,0 +1,107 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <algorithm>
+#include <utility>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <cctype>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <climits>
+#include <cassert>
+using namespace std;
+inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<string> vs;
+typedef pair<int, int> pii;
+typedef long long ll;
+#define ALL(a) (a).begin(),(a).end()
+#define RALL(a) (a).rbegin(),(a).rend()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) FOR(i,0,n)
+const double EPS = 1e-9;
+const double PI  = acos(-1.0);
+
+
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
+typedef vector<vvl> vvvl;
+struct node{
+	int y,x,dir;
+	ll cost;
+	node(int y,int x,int dir,ll cost):y(y),x(x),cost(cost),dir(dir){}
+};
+int dx[]={-1,0,1,0},dy[]={0,-1,0,1};
+char dirs[]={'W','N','E','S'};
+const ll MAX=LONG_MAX;
+int main(){
+	int h,w,l;
+	while(cin>>h>>w>>l,h|w|l){
+		vs c(h);
+		pii start;
+		int initdir;
+		REP(i,h){
+			cin>>c[i];
+			REP(j,w){
+				switch(c[i][j]){
+				case 'W':
+					start=make_pair(i,j);
+					initdir=0;
+					break;
+				case 'N':
+					start=make_pair(i,j);
+					initdir=1;
+					break;
+				case 'E':
+					start=make_pair(i,j);
+					initdir=2;
+					break;
+				case 'S':
+					start=make_pair(i,j);
+					initdir=3;
+					break;
+				}
+			}
+		}
+		vvvl cost(h,vvl(w,vl(4,MAX)));
+		queue<node> q;
+		cost[start.first][start.second][initdir]=l;
+		q.push(node(start.first,start.second,initdir,l));
+		while(!q.empty()){
+			node cnode=q.front();q.pop();
+			if(cnode.cost==0){
+				cout<<cnode.y+1<<" "<<cnode.x+1<<" "<<dirs[cnode.dir]<<endl;
+				break;
+			}
+			int d=cnode.dir;
+			int y=cnode.y+dy[d];
+			int x=cnode.x+dx[d];
+			while(!(y>=0&&x>=0&&y<h&&x<w&&c[y][x]!='#')){
+				d=(d+1)%4;
+				y=cnode.y+dy[d];
+				x=cnode.x+dx[d];
+			}
+			if(cost[y][x][d]!=MAX){
+				ll diff=cost[y][x][d]-(cnode.cost-1);
+				cost[y][x][d]=(cnode.cost-1)%diff;
+				q.push(node(y,x,d,(cnode.cost-1)%diff));
+			}else{
+				cost[y][x][d]=cnode.cost-1;
+				q.push(node(y,x,d,cnode.cost-1));
+			}
+		}
+	}
+}

@@ -1,0 +1,57 @@
+'''
+自宅用PCでの解答
+'''
+import math
+#import numpy as np
+import itertools
+import queue
+import bisect
+from collections import deque,defaultdict
+import heapq as hpq
+from sys import stdin,setrecursionlimit
+#from scipy.sparse.csgraph import dijkstra
+#from scipy.sparse import csr_matrix
+ipt = stdin.readline
+setrecursionlimit(10**7)
+mod = 10**9+7 #998244353
+dir = [(-1,0),(0,-1),(1,0),(0,1)]
+alp = "abcdefghijklmnopqrstuvwxyz"
+
+def popcnt(n):
+    return bin(n).count("1")
+
+def main():
+    n = int(ipt())
+    card = [[int(i) for i in ipt().split()] for _ in range(2)]
+#    n = 18
+#    card = [[j*500-i*3+400 for j in range(18)] for i in range(2)]
+    dp = [[10**18]*n for i in range(2**n)]
+
+    for i in range(1,2**n):
+        pi = popcnt(i)
+        if pi == 1:
+            for j in range(n):
+                if (i>>j)&1:
+                    dp[i][j] = 0
+        else:
+            pp = 0
+            for j in range(n-1,-1,-1):
+                if (i>>j)&1:
+                    nn = card[(pi-j+1)%2][j]
+                    pn = i-2**j
+                    dpn = dp[pn]
+                    dpij = dp[i][j]
+                    for k in range(n):
+                        if dpij > dpn[k]+pp:
+    #                        print(k,card[(pi-k)%2][k],nn)
+                            if card[(pi-k)%2][k] <= nn:
+                                dp[i][j] = dpn[k]+pp
+                    pp += 1
+    ans = min(dp[2**n-1])
+    if ans == 10**18:
+        ans = -1
+    print(ans)
+    return None
+
+if __name__ == '__main__':
+    main()

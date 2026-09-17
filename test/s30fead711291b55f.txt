@@ -1,0 +1,98 @@
+#include <bits/stdc++.h>
+#define FOR(i,a,b) for(ut i=(a);i<(int)(b);i++)
+#define REP(i,b) FOR(i,0,b)
+#define ALL(c) c.begin(),c.end()
+#define PB push_back
+#define cat //cout << __LINE__ << endl;
+using namespace std;
+typedef long long LL;
+typedef long double ld;
+typedef int ut;
+typedef vector<ut> VI;
+typedef pair<ut,ut> pr;
+typedef pair<ut,pr> ppr;
+typedef vector<pr> Vpr;
+typedef vector<ppr> Vppr;
+typedef priority_queue<pr,Vpr,greater<pr> > PQ;
+const int SIZE=2*1e5;
+const int INF=1LL<<30;
+const LL p=7+1e9;
+const int rev=10000;
+const int rev2=rev*2;
+Vpr edges[SIZE];
+int dist[SIZE];
+ld nokori[SIZE];
+LL V,E;
+ld dfs(int now,ld nowflow){
+	ld ans=0;
+	if(now==V-1){
+		return nowflow;
+	}
+	REP(i,edges[now].size()){
+		int next=edges[now][i].first;
+		int noko=edges[now][i].second;
+		if(dist[next]!=dist[now]+1) continue;
+		if(nokori[noko]==0) continue;
+		ld inc=dfs(next,min(nokori[edges[now][i].second],nowflow));
+		nowflow-=inc;
+		nokori[noko]-=inc;
+		nokori[(noko+rev)%rev2]+=inc;
+		ans+=inc;
+	}
+	return ans;
+}
+int bfs(){
+	queue<int> qu;
+	dist[0]=0;
+	qu.push(0);
+	while(!qu.empty()){
+		int now=qu.front();
+		qu.pop();
+		REP(i,edges[now].size()){
+			int next=edges[now][i].first;
+			ld noko=nokori[edges[now][i].second];
+			if(noko>0 && dist[next]==INF){
+				dist[next]=dist[now]+1;
+				qu.push(next);
+			}
+		}
+	}
+	return dist[V-1];
+}
+ld dinic(){
+	ld ans=0;
+	while(true){
+		int dists;
+		REP(i,V) dist[i]=INF;
+		dists=bfs();
+		//cout << dists << endl;
+		if(dists==INF) return ans;
+		ans+=dfs(0,INF);	
+		//cout << ans << endl;
+	}
+
+}
+LL solve(){
+	cin >> V >> E;
+	LL s,t;
+	ld c;
+	REP(i,E){
+		cin >> s >> t >> c;
+		if(c==1) c-=0.00001;
+		nokori[i]=c;
+		edges[s].PB(pr(t,i));
+		edges[t].PB(pr(s,i+rev));
+	}
+	ld ans=dinic();
+	return (int)ans;
+}
+int main(){
+	int ans=solve();
+	if(ans>1e7){
+		cout << -1 << endl;
+	}
+	else{
+		cout << ans << endl;
+	}
+	return 0;
+}

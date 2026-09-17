@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MN = 101234;
+int mx = 0;
+int dp[MN], col[MN];
+vector <int> adj[MN];
+
+int LogDo(int x) {
+	int ans = -1;
+	for (int i = 0; i < 30; i++)
+		if (x >> i & 1)
+			ans = i;
+	return ans;
+}
+
+void dfs(int v = 0, int p = 0) {
+	int ans = 0, pre = 0;
+	for (int u: adj[v]) {
+		if (u == p) 
+			continue;
+		dfs(u, v);
+		int msk = (dp[u] >> col[u] | 1 << col[u]);
+		ans = max(ans, LogDo(msk & dp[v] & -1) + 1);
+		dp[v] |= msk;
+		while (dp[v] >> ans & 1)
+			ans++;
+	}
+	col[v] = ans;
+	mx = max(mx, ans);
+}
+
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < n - 1; i++) {
+		int u, v;
+		cin >> u >> v;
+		u--, v--;
+		adj[v].push_back(u);
+		adj[u].push_back(v);
+	}
+	dfs();
+	cout << mx;
+}

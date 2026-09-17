@@ -1,0 +1,9 @@
+a, b = map(int, input().split())
+A = 'ABCDEFGHIJKLMN'
+ans = ""
+for i in range(a):
+  t = list(input().split())
+  if 'snuke' in t:
+    ans += A[t.index("snuke")]
+    ans += str(i + 1)
+print(ans)

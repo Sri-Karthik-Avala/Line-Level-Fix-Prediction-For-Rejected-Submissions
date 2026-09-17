@@ -1,0 +1,57 @@
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int main()
+{
+  while (true) {
+    string s[2];
+    string os1;
+    vector<char> os2;
+    cin >> s[0];
+    if (s[0] == "-") {break;}
+    cin >> s[1] >> os1;
+
+    //cout << s[1] << endl;
+    char next = os1[0];
+    s[1].erase(0, 1);
+    
+    while ((!s[1].empty() || !s[0].empty()) && isalpha(next)) {
+      //cout << "s1, s2, os2 " << s[0] << " " << s[1] << " " << next << " " << os1  << endl;
+      if (os1[0] == next) {
+	//cout << "1" << endl;
+	if (!os1.empty()) os1.erase(0, 1);
+	if (!s[0].empty()) {
+	  next = s[0][0];
+	} else {
+	  next = 1;
+	}
+	if (!s[0].empty()) s[0].erase(0, 1);
+      } else {
+	//cout << "2" << endl;
+	os2.push_back(next);
+	next = s[1][0];
+	if (!s[1].empty()) {
+	  s[1].erase(0, 1);
+	} else {
+	  next = 1;
+	}
+      }
+    }
+    if (isalpha(next)) os2.push_back(next);
+    for (int i = 0; i < s[1].size(); i++) {
+      os2.push_back(s[1][i]);
+    }
+    for (int i = 0; i < s[0].size(); i++) {
+      os2.push_back(s[0][i]);
+    }
+    for (int i = 0; i < os2.size(); i++) {
+      cout << os2[i];
+    }
+    cout << endl;
+  }
+  return 0;
+}

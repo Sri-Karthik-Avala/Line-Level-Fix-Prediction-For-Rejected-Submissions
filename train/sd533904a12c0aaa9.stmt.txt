@@ -1,0 +1,87 @@
+B： 階層的計算機 (Hierarchical Calculator) 
+
+ Problem 
+
+ Ebi-chan has N formulae: y = a_i x for i =1, ..., N (inclusive). Now she considers a subsequence of indices with length k : s_1 , s_2 , ... , s_k . At first, let x_0 be 1 and evaluate s_1 -th formulae with x = x_0 . Next, let x_1 be the output of s_1 and evaluate s_2 -th formulae with x = x_1 , and so on. 
+
+ She wants to maximize the final output of the procedure, x_{s_k} . If there are many candidates, she wants the """shortest one""". If there are still many candidates, she wants the """lexicographically smallest one""". 
+
+ Sequence s is lexicographically smaller than sequence t , if and only if either of the following conditions hold: 
+ 
+ there exists m < |s| such that s_i = t_i for i in 1 to m (inclusive) and s_{m+1} < t_{m+1} , or 
+ s_i = t_i for i in 1 to |s| (inclusive) and |s| < |t| , 
+ 
+ where |s| is the length of the s . 
+
+ Input 
+ 
+ N 
+ a_1 a_2 $\cdots$ a_N 
+ 
+
+ Constraints 
+
+ 
+ 1 \leq N \leq 60 
+ -2 \leq a_i \leq 2 for i=1, ...,N (inclusive) 
+ Every input is given as the integer. 
+ 
+
+ Output 
+ Output k+1 lines. First line, the length of the sequence, k . Following k lines, the index of the i -th element of the subsequence, s_i (one element per line). 
+
+ Sample Input 1 
+ 
+4
+2 0 -2 1
+ 
+
+ Sample Output for Input 1 
+ 
+1
+1
+ 
+
+ She evaluates the first one and gets the maximum value 2 . 
+
+ Sample Input 2 
+ 
+3
+2 -2 -2
+ 
+
+ Sample Output for Input 2 
+ 
+3
+1
+2
+3
+ 
+
+ She evaluates all of them and gets the maximum value 8 . 
+
+ Sample Input 3 
+ 
+2
+-1 0
+ 
+
+ Sample Output for Input 3 
+ 0 
+ She evaluates none of them and gets the maximum value 0 . Empty sequence is the shorter and lexicographically smaller than any other sequences. 
+
+ Sample Input 4 
+ 
+5
+-1 2 1 -2 -1
+ 
+
+ Sample Output for Input 4 
+ 
+3
+1
+2
+4
+ 
+
+ She evaluates $\langle$ 1, 2, 4 $\rangle$ ones and gets the maximum value 4 . Note that $\langle$ 2, 4, 5 $\rangle$ is not lexicographically smallest one.

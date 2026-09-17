@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <cctype>
+#include <algorithm>
+#include <set>
+#include <cmath>
+
+using namespace std;
+string Kanglish[38];
+string get_string(int &cur,string line){
+  while(line[cur] == ' ') ++cur;
+
+  string str;
+  for(int j = 26;j < 38;j++){
+	if(line[cur] == Kanglish[j][0] && line[cur+1] == Kanglish[j][1]){
+	  cur+=2;
+	  return Kanglish[j];
+	}
+  }
+  for(int i = 0;i < 26;i++){
+	if(line[cur] == Kanglish[i][0]){
+	  cur++;
+	  return Kanglish[i];
+	}
+  }	
+  return " " ;
+}
+
+
+int main(){
+  char tmp = 'a';
+  for(int i = 0;i < 26;i++){
+	Kanglish[i] = tmp++;
+  }
+  Kanglish[26]="ld";
+  Kanglish[27]="mb";
+  Kanglish[28]="mp";
+  Kanglish[29]="nc";
+  Kanglish[30]="nd";
+  Kanglish[31]="ng";
+  Kanglish[32]="nt";
+  Kanglish[33]="nw";
+  Kanglish[34]="ps";
+  Kanglish[35]="qu";
+  Kanglish[36]="cw";
+  Kanglish[37]="ts";
+  int n;
+  cin >>n;
+  cin.ignore();
+  vector<map<string,int> > vec(38);
+  for(int i =0;i < n;i++){
+	string line;
+	getline(cin,line);
+	int cur = 0;
+	string current = get_string(cur,line);
+	while(cur < line.size()){
+	  if(line[cur] == ' ') {
+		current = get_string(cur, line);
+	  }
+	  
+	  string next = get_string(cur, line);
+	  
+	  for(int i =0 ;i < 38;i++){
+		if(Kanglish[i] == current){
+		  vec[i][next]++;
+		  break;
+		}
+	  }
+	
+	  current = move(next);
+	}
+  }
+
+  for(int i = 0;i < 38;i++){
+	int max_number = 0;
+	string max_str = "a";
+	for(const auto &e:vec[i]){
+	  if(e.second > max_number && e.first != " "){
+		max_number = e.second;
+		max_str = e.first;
+	  }
+	}
+	cout << Kanglish[i] << " " << max_str << " " << max_number << endl;
+  }
+  
+  
+  return 0;
+}

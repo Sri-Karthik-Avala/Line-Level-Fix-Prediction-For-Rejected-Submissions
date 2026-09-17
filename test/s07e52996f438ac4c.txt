@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<algorithm>
+#include<queue>
+using namespace std;
+int dx[]={1,0,-1,0};
+int dy[]={0,1,0,-1};
+char str[40][40];
+int qd[40][40];
+int ad[40][40];
+int n,m;
+int v[40][40];
+int s,t;
+int dfs(int a,int b,int c){
+	v[a][b]=1;
+	for(int i=0;i<4;i++){
+		if(~c&&(c^2)==i)continue;
+		if(0<=a+dx[i]&&a+dx[i]<n&&0<=b+dy[i]&&b+dy[i]<m&&str[a+dx[i]][b+dy[i]]!='#'){
+			if(v[a+dx[i]][b+dy[i]]){
+				if(a+dx[i]==s&&b+dy[i]==t)return 1;
+			}else{
+				int res=dfs(a+dx[i],b+dy[i],i);
+				if(res)return 1;
+			}
+		}
+	}
+	return 0;
+}
+int main(){
+	int a,b;
+	while(scanf("%d%d",&b,&a),a){
+		n=a;m=b;
+		for(int i=0;i<a;i++)scanf("%s",str[i]);
+		int qr,qc;
+		int ar,ac;
+		for(int i=0;i<a;i++)for(int j=0;j<b;j++){
+			if(str[i][j]=='Q'){qr=i;qc=j;}
+			if(str[i][j]=='A'){ar=i;ac=j;}
+		}
+		queue<pair<int,int> > Q;
+		for(int i=0;i<a;i++)for(int j=0;j<b;j++)qd[i][j]=ad[i][j]=999999999;
+		Q.push(make_pair(qr,qc));
+		qd[qr][qc]=0;
+		while(Q.size()){
+			int row=Q.front().first;
+			int col=Q.front().second;
+			Q.pop();
+			for(int i=0;i<4;i++){
+				if(0<=row+dx[i]&&row+dx[i]<a&&0<=col+dy[i]&&col+dy[i]<b&&str[row+dx[i]][col+dy[i]]!='#'&&qd[row+dx[i]][col+dy[i]]>qd[row][col]+1){
+					qd[row+dx[i]][col+dy[i]]=qd[row][col]+1;
+					Q.push(make_pair(row+dx[i],col+dy[i]));
+				}
+			}
+		}
+		Q.push(make_pair(ar,ac));
+		ad[ar][ac]=0;
+		while(Q.size()){
+			int row=Q.front().first;
+			int col=Q.front().second;
+			Q.pop();
+			for(int i=0;i<4;i++){
+				if(0<=row+dx[i]&&row+dx[i]<a&&0<=col+dy[i]&&col+dy[i]<b&&str[row+dx[i]][col+dy[i]]!='#'&&ad[row+dx[i]][col+dy[i]]>ad[row][col]+1){
+					ad[row+dx[i]][col+dy[i]]=ad[row][col]+1;
+					Q.push(make_pair(row+dx[i],col+dy[i]));
+				}
+			}
+		}
+		bool ok=false;
+		for(int i=0;i<a;i++){
+			for(int j=0;j<b;j++){
+				if(str[i][j]=='E'&&qd[i][j]<ad[i][j])ok=true;
+			}
+		}
+		if(ok){
+			printf("Queen can escape.\n");
+			continue;
+		}
+		for(int i=0;i<a;i++)for(int j=0;j<b;j++){
+			if(str[i][j]!='#'){
+				for(int k=0;k<a;k++)for(int l=0;l<b;l++)v[k][l]=0;
+				s=i;t=j;
+				if(dfs(i,j,-1)&&qd[i][j]<ad[i][j])ok=true;
+			}
+		}
+		if(ok)printf("Queen can not escape and Army can not catch Queen.\n");
+		else printf("Army can catch Queen.\n");
+	}
+}

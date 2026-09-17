@@ -1,0 +1,22 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int c[110][110];
+
+int main() {
+  int N;
+  cin >> N;
+  for (auto i=0; i<N; i++) {
+    for (auto j=0; j<N; j++) {
+      cin >> c[i][j];
+    }
+  }
+  int ans = 0;
+  for (auto i=0; i<N; i++) {
+    for (auto j=i+1; j<N; j++) {
+      ans += min(c[i][j], c[j][i]);
+    }
+  }
+  cout << ans << endl;
+}

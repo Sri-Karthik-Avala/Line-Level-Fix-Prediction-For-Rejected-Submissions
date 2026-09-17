@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+#include <cmath>
+#include <vector>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <queue>
+#include <ctime>
+#include <cassert>
+#include <complex>
+#include <string>
+#include <cstring>
+#include <chrono>
+#include <random>
+#include <bitset>
+
+#define pb push_back
+#define int long long
+#define ld long double
+using namespace std;
+const int M = 1000000007;
+
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    int n, a;
+    cin >> n >> a;
+    __int128 ANS = n + a;
+    for (int x = 2; (x - 2) * (x - 2) <= n; x++) {
+        int p = 1;
+        int lol = 0;
+        while (p <= n) {
+            int rest = (n + p - 1) / p;
+            int kek = 0;
+            int heh = 1;
+            while (heh < rest) {
+                heh *= x;
+                kek++;
+            }
+            __int128 bruh = x * kek + (x - 1) * lol + a * (kek + lol);
+            ANS = min(ANS, bruh);
+            p *= (x - 1);
+            lol++;
+            if (x == 2) break;
+        }
+    }
+    ANS -= a;
+    cout << (int) ANS << '\n';
+}

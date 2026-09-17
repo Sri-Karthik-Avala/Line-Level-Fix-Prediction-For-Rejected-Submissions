@@ -1,0 +1,73 @@
+n=int(input())
+lr=[list(map(int,input().split())) for _ in range(n)]
+lr.sort(key=lambda x:x[0])
+# 右端がもっとも左にある問題
+r0=0
+tmpr=float('inf')
+# 左端がもっとも右にある問題
+l0=0
+tmpl=0
+for i,x in enumerate(lr):
+  l,r=x
+  if tmpl<l:
+    l0=i
+    tmpl=l
+  if tmpr>r:
+    r0=i
+    tmpr=r
+if l0==r0:
+  ans=lr[r0][1]-lr[l0][0]+1
+  tmp=0
+  for i in range(n):
+    if i==l0:continue
+    l,r=lr[i]
+    tmp=max(tmp,r-l+1)
+  ans+=tmp
+  print(ans)
+  exit()
+ans0=max(0,lr[r0][1]-lr[l0][0]+1)
+tmp=0
+for i in range(n):
+  if i==l0 or i==r0:continue
+  l,r=lr[i]
+  tmp=max(tmp,r-l+1)
+ans0+=tmp
+
+
+import heapq
+class pqheap:
+  def __init__(self,key=None):
+    self.p = list()
+    self.q = list()
+  def insert(self,x):
+    heapq.heappush(self.p, x)
+    return
+  def erase(self,x):
+    heapq.heappush(self.q, x)
+    return
+  def minimum(self):
+    while self.q and self.p[0] == self.q[0]:
+      heapq.heappop(self.p)
+      heapq.heappop(self.q)
+    return self.p[0] if len(self.p)>0 else None
+pq=pqheap()
+
+[pq.insert(x[1]) for i,x in enumerate(lr) if i!=l0 and i!=r0]
+l1,r1=lr[r0]
+l2,r2=lr[l0]
+r2=min(r2,pq.minimum())
+ans1=max(r1-l1+1,0)
+ans1+=max(r2-l2+1,0)
+for i,[l,r] in enumerate(lr):
+  if i==l0 or i==r0:continue
+  tmp=0
+  l1=max(l1,l)
+  pq.erase(r)
+  tmp=max(r1-l1+1,0)
+  if pq.minimum():
+    r2=min(lr[l0][1],pq.minimum())
+  else:
+    l2,r2=lr[l0]
+  tmp+=max(r2-l2+1,0)
+  ans1=max(ans1,tmp)
+print(max(ans1,ans0))

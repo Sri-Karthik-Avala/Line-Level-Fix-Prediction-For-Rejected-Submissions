@@ -1,0 +1,104 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<algorithm>
+#include<cmath>
+#include<vector>
+#include<stack>
+#include<climits>
+#include<cstring>
+#include<queue>
+#include<complex>
+using namespace std;
+
+typedef complex<double> P;
+
+struct C {
+    P p; double r;
+    C(const P &p, double r) : p(p), r(r) { }
+};
+
+const double EPS = 1e-8;
+
+namespace std {
+  bool operator < (const P& a, const P& b) {
+    return real(a) != real(b) ? real(a) < real(b) : imag(a) < imag(b);
+  }
+}
+
+int intersection(C &c1, C &c2){
+    if(c1.r > c2.r) swap(c1, c2);
+
+    P p1 = c1.p;
+    P p2 = c2.p;
+    double r1 = c1.r;
+    double r2 = c2.r;
+
+    double centDist = sqrt(norm(p1 - p2));
+    if(r1 + r2 < centDist - EPS) return 4;
+    if(abs(r1 + r2 - centDist) <= EPS) return 3;
+    if(r1 + r2 > centDist + EPS){
+        if( r2 - r1 < centDist - EPS ) return 2;
+        if( abs(r2 - r1 - centDist) <= EPS ) return 1;
+        if( r2 - r1 > centDist + EPS ) return 0;
+    }
+}
+
+
+void commonTangent(C &c1, C &c2){
+    double p = (c2.p).real() - (c1.p).real();
+    double q = (c2.p).imag() - (c1.p).imag();
+    double r = c1.r;
+    double s = c2.r;
+    double D1 = p*p + q*q - (r+s)*(r+s);
+    double D2 = p*p + q*q - (r-s)*(r-s);
+    P a1((p*r*(r+s) + q*r*sqrt(D1))/(p*p+q*q) + (c1.p).real(), (q*r*(r+s) - p*r*sqrt(D1))/(p*p+q*q) + (c1.p).imag());
+    P a2((p*r*(r+s) - q*r*sqrt(D1))/(p*p+q*q) + (c1.p).real(), (q*r*(r+s) + p*r*sqrt(D1))/(p*p+q*q) + (c1.p).imag());
+    P a3((p*r*(r-s) + q*r*sqrt(D2))/(p*p+q*q) + (c1.p).real(), (q*r*(r-s) - p*r*sqrt(D2))/(p*p+q*q) + (c1.p).imag());
+    P a4((p*r*(r-s) - q*r*sqrt(D2))/(p*p+q*q) + (c1.p).real(), (q*r*(r-s) + p*r*sqrt(D2))/(p*p+q*q) + (c1.p).imag());
+    vector<P> tmp;
+    int x = intersection(c1, c2);
+    switch(x){
+        case 4:
+            tmp.push_back(a1);
+            tmp.push_back(a2);
+            tmp.push_back(a3);
+            tmp.push_back(a4);
+            sort(tmp.begin(), tmp.end());
+            printf("%.10f %.10f\n", tmp[0].real(), tmp[0].imag());
+            printf("%.10f %.10f\n", tmp[1].real(), tmp[1].imag());
+            printf("%.10f %.10f\n", tmp[2].real(), tmp[2].imag());
+            printf("%.10f %.10f\n", tmp[3].real(), tmp[3].imag());
+            break;
+        case 3:
+            tmp.push_back(a2);
+            tmp.push_back(a3);
+            tmp.push_back(a4);
+            sort(tmp.begin(), tmp.end());
+            printf("%.10f %.10f\n", tmp[0].real(), tmp[0].imag());
+            printf("%.10f %.10f\n", tmp[1].real(), tmp[1].imag());
+            printf("%.10f %.10f\n", tmp[2].real(), tmp[2].imag());
+            break;
+        case 2:
+            if(a3 < a4) swap(a3, a4);
+            printf("%.10f %.10f\n", a3.real(), a3.imag());
+            printf("%.10f %.10f\n", a4.real(), a4.imag());
+            break;
+        case 1:
+            printf("%.10f %.10f\n", a3.real(), a3.imag());
+            break;
+        case 0:
+            break;
+    }
+}
+
+int main(){
+    double c1x, c1y, c1r, c2x, c2y, c2r;
+    cin >> c1x >> c1y >> c1r >> c2x >> c2y >> c2r;
+    P p1(c1x, c1y);
+    P p2(c2x, c2y);
+    C c1(p1, c1r);
+    C c2(p2, c2r);
+    commonTangent(c1, c2);
+    return 0;
+}

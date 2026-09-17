@@ -1,0 +1,15 @@
+import sys
+def input(): return sys.stdin.readline().strip()
+def mapint(): return map(int, input().split())
+sys.setrecursionlimit(10**9)
+
+N, K = mapint()
+
+ans = 0
+for b in range(K+1, N+1):
+    cnt = 0
+    while b*(cnt+1)<=N:
+        ans += b*(cnt+1)-(b*cnt+K)
+        cnt += 1
+    ans += max(0, N-b*cnt-K+1)
+print(ans)

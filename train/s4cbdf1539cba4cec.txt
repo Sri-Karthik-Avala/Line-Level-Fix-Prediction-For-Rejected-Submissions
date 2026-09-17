@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstdio>
+#include <cassert>
+#include <cstring>
+#include <vector>
+#include <valarray>
+#include <array>
+#include <queue>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+#include <algorithm>
+#include <cmath>
+#include <complex>
+#include <random>
+#include <bitset>
+
+using namespace std;
+typedef long long ll;
+
+const int MN = 100100;
+typedef pair<int, int> P;
+
+vector<int> g[MN];
+bool used[MN];
+bool color[MN];
+int c0, c1;
+bool err;
+void dfs(int p, bool c) {
+    used[p] = true;
+    color[p] = c;
+    if (!c) c0++;
+    else c1++;
+    for (int d: g[p]) {
+        if (used[d]) {
+            if (color[p] == color[d]) err = true;
+            continue;
+        }
+        dfs(d, !c);
+    }
+}
+
+bitset<MN> b;
+ll solve() {
+    int v, e;
+    cin >> v >> e;
+    for (int i = 0; i < e; i++) {
+        int a, b;
+        cin >> a >> b; a--; b--;
+        g[a].push_back(b);
+        g[b].push_back(a);
+    }
+    b[0] = true;
+    for (int i = 0; i < v; i++) {
+        if (used[i]) continue;
+        c0 = c1 = 0;
+        dfs(i, 0);
+        if (err) return -1;
+        b |= (b<<c0) | (b<<c1);
+    }
+    ll sm = -1;
+    for (int i = 0; i < v; i++) {
+        if (!b[i]) continue;
+        sm = max(sm, (ll)(v-i)*i-e);
+    }
+    return sm;
+}
+
+
+int main() {
+    cout << solve() << endl;
+    return 0;
+}

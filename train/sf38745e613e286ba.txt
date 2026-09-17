@@ -1,0 +1,15 @@
+def ge(arr):
+    for i in range(len(arr)):
+        tmp = int(arr[i])
+        if tmp >= 4:
+            tmp += 1
+        if tmp >= 6:
+            tmp += 1
+        arr[i] = str(tmp)
+
+
+while True:
+    n = int(input)
+    if n == 0:
+        break
+    print("".join(ge(list(oct(n))[2:])))

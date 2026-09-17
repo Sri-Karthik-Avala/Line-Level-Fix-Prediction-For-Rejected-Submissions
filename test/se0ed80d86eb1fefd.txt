@@ -1,0 +1,16 @@
+def IOI(n):
+	m = "I"
+	for _ in xrange(n):
+		m += "OI"
+		
+	return m
+
+while True:
+	n = input()
+	if n == 0 : break
+
+	n = IOI(n)
+	m = input()
+	nm = raw_input()
+	
+	print nm.count(n) + 1

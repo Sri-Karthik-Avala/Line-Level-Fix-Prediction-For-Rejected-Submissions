@@ -1,0 +1,118 @@
+#include<iostream>
+#include<cstdlib>
+#include<map>
+#include<utility>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+struct edge{
+  int to,cap,rev;
+};
+
+vector<edge> G[52];
+bool used[52];
+
+void add_edge(int from,int to,int cap){
+  G[from].push_back({to,cap,(int)G[to].size()});
+  G[to].push_back({from,cap,(int)G[from].size()-1});
+}
+
+int dfs(int v,int t,int f){
+  if(v==t)return f;
+  used[v]=true;
+  for(int i=0;i<G[v].size();i++){
+    edge &e=G[v][i];
+    if(!used[e.to]&&e.cap>0){
+      int d=dfs(e.to,t,min(f,e.cap));
+      if(d>0){
+	e.cap-=d;
+	G[e.to][e.rev].cap+=d;
+	return d;
+      }
+    }
+  }
+  return 0;
+}
+
+int max_flow(int s,int t){
+  int flow=0;
+  for(;;){
+    fill(begin(used),end(used),false);
+    int f=dfs(s,t,1e9);
+    if(f==0)return flow;
+    flow+=f;
+  }
+}
+
+int main(){
+  for(int N,M;cin>>N>>M,N|M;){
+    bool nz=false;
+    map<pair<int,int>,vector<int> >pols;
+    for(int i=0;i<M;i++){
+      int u,v;
+      char p[1234];
+      cin>>u>>v>>p;
+      vector<int> c(51);
+      for(char *pp=p;*pp;){
+	pp+=*pp=='+';
+	int cc=1;
+	if(*pp!='x'){
+	  cc=strtol(pp,&pp,10);
+	}
+	int f=0;
+	if(*pp){
+	  pp++;
+	  f=1;
+	  if(*pp=='^'){
+	    f=strtol(pp+1,&pp,10);
+	  }
+	}
+	c[f]=cc;
+      }
+      pols[make_pair(u,v)]=c;
+    }
+    for(int i=51;i>=0;i--){
+      for(auto &e:G){
+	e.clear();
+      }
+      for(auto e:pols){
+	add_edge(e.first.first,e.first.second,e.second[i]);
+      }
+      int f=max_flow(1,N);
+      if(f){
+	if(nz){
+	  cout<<'+';
+	}
+	nz=true;
+	if(f>1||i==0){
+	  cout<<f;
+	}
+	if(i){
+	  cout<<'x';
+	  if(i>1){
+	    cout<<'^'<<i;
+	  }
+	}
+      }
+      for(int j=1;j<=N;j++){
+	for(auto e:G[j]){
+	  auto k=make_pair(j,e.to);
+	  if(pols.count(k)&&e.cap!=0&&e.cap!=pols[k][i]*2){
+	    for(int l=i;l>=0;l--){
+	      pols[k][l]=1e9;
+	    }
+	  }
+	}
+      }
+    }
+    if(!nz){
+      cout<<0;
+    }
+    cout<<endl;
+  }
+}
+
+	
+	

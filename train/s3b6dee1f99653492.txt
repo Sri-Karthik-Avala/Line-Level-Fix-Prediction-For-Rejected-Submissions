@@ -1,0 +1,86 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define INF 1e9
+
+int w,h,sy,sx,gy,gx;
+int field[30][30];
+int dx[4]={1,0,-1,0},dy[4]={0,-1,0,1};
+
+bool contain(int y,int x){
+    return (0<=y && y<h && 0<=x && x<w);
+}
+
+int solve(int y,int x,int T,int F[30][30]){
+    if(T>10)return T;
+
+    int res=INF;
+
+    for(int i=0;i<4;i++){
+        int ny=y+dy[i],nx=x+dx[i];
+
+        if(F[ny][nx]==1 || !contain(ny,nx))continue;
+
+        bool f=false,c=false;
+
+        while(1){
+            ny+=dy[i];nx+=dx[i];
+
+            if(!contain(ny,nx) && ny-dy[i]==gy && nx-dx[i]==gx){
+                c=true;
+                break;
+            }
+            if(!contain(ny,nx))break;
+            if(F[ny][nx]==1){
+                F[ny][nx]=0;
+                f=true;
+                break;
+            }
+        }
+
+        if(!f && !c)continue;
+
+        ny-=dy[i];nx-=dx[i];
+
+        if(ny==gy && nx==gx)res=T+1;
+        else res=min(res,solve(ny,nx,T+1,F));
+
+        if(f)F[ny+dy[i]][nx+dx[i]]=1;
+
+    }
+
+    return res;
+
+}
+
+signed main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    while(1){
+        cin>>w>>h;
+
+        if(w==0)break;
+
+        for(int i=0;i<h;i++){
+            for(int j=0;j<w;j++){
+                cin>>field[i][j];
+
+                if(field[i][j]==2){
+                    sy=i;sx=j;
+                }
+                if(field[i][j]==3){
+                    gy=i;gx=j;
+                }
+            }
+        }
+
+        int ans=solve(sy,sx,0,field);
+        if(ans>10)ans=-1;
+
+        cout<<ans<<endl;
+
+    }
+
+}

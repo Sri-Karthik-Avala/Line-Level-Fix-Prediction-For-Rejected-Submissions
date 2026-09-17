@@ -1,0 +1,93 @@
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <complex>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <cassert>
+#include <climits>
+#include <queue>
+#include <set>
+#include <map>
+#include <valarray>
+#include <bitset>
+#include <stack>
+using namespace std;
+
+#define REP(i,n) for(int i=0;i<(int)n;++i)
+#define FOR(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+#define ALL(c) (c).begin(), (c).end()
+typedef long long ll;
+typedef pair<int,int> pii;
+const int INF = 1<<29;
+const double PI = acos(-1);
+const double EPS = 1e-8;
+
+struct P {
+  int dst, time, cost;
+};
+int cost1[2][601][100];
+int cost2[2][601][100];
+vector<P> g[601][100];
+vector<P> h[601][100];
+int main() {
+  int n, m;
+  while(cin>>m, m) {
+    REP(i, 601) REP(j, 100) {
+      g[i][j].clear();
+      h[i][j].clear();
+    }
+    map<string, int> mp;
+    mp["Tokyo"] = 0;
+    mp["Hakodate"] = 1;
+    n = 2;
+    REP(i, m) {
+      char s[20], t[20];
+      int sh,sm,th,tm, cost;
+      scanf("%s %d:%d %s %d:%d %d", s,&sh,&sm,t,&th,&tm,&cost);
+      int t1 = sh*60+sm - 480, t2 = th*60+tm - 480;
+      if (t1<0 || t1>600 || t2<0 || t2>600) continue;
+      string u(s), v(t);
+      if (!mp.count(u)) mp[u] = n++;
+      if (!mp.count(v)) mp[v] = n++;
+      int a = mp[u], b = mp[v];
+      g[t1][a].push_back((P){b, t2, cost});
+      h[t2][b].push_back((P){a, t1, cost});
+    }
+    REP(k, 2) REP(i, 601) REP(j, 100) cost1[k][i][j] = cost2[k][i][j] = INF;
+    cost1[0][0][0] = cost1[1][0][1] = 0;
+    REP(k, 2) {
+      REP(i, 600) {
+        REP(j, n) {
+          cost1[k][i+1][j] = min(cost1[k][i+1][j], cost1[k][i][j]);
+          FOR(it, g[i][j]) {
+            cost1[k][it->time][it->dst] = min(cost1[k][it->time][it->dst], cost1[k][i][j]+it->cost);
+          }
+        }
+      }
+    }
+    cost2[0][600][0] = cost2[1][600][1] = 0;
+    REP(k, 2) {
+      for (int i=600; i>0; --i) {
+        REP(j, n) {
+          cost2[k][i-1][j] = min(cost2[k][i-1][j], cost2[k][i][j]);
+          FOR(it, h[i][j]) {
+            cost2[k][it->time][it->dst] = min(cost2[k][it->time][it->dst], cost2[k][i][j]+it->cost);
+          }
+        }
+      }
+    }
+    int ans = INF;
+    REP(i, 601-30) {
+      REP(j, n) {
+        ans = min(ans, cost1[0][i][j] + cost1[1][i][j] + cost2[0][i+30][j] + cost2[1][i+30][j]);
+      }
+    }
+    cout << (ans==INF?0:ans) << endl;
+  }
+}

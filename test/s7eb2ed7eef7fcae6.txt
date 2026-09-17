@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return 1; } return 0; }
+template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return 1; } return 0; }
+ 
+#define rep(i, n) for (ll i = 0; i < (ll)(n); i++)
+#define rep1(i, n) for (ll i = 1; i <= (ll)(n); i++)
+#define INF 10000000000
+#define MOD 1000000007
+using ll = long long;
+using pint = pair<int,int>;
+using pll = pair<ll,ll>;
+using Graph = vector<vector<int>>;
+
+int main(){
+    int N; cin>>N;
+    vector<int> A(N); rep(i,N)cin>>A[i];
+    int minus = 1e7, plus = -1e7;
+    vector<pint> res;
+    rep(i,N)minus = min(minus,A[i]), plus = max(plus,A[i]);
+    // cout<<minus<<" "<<plus<<endl;
+    if(plus>=fabs(minus)){
+        int ind = -1;
+        rep(i,N)if(A[i]==plus)ind = i;
+        rep(i,N){
+            if(i!=ind)res.push_back({ind+1,i+1});
+        }
+        rep(i,N-1){
+            res.push_back({i,i+1});
+        }
+    }else{
+        int ind = -1;
+        rep(i,N)if(A[i]==minus)ind = i;
+        rep(i,N){
+            if(i!=ind)res.push_back({ind+1,i+1});
+        }
+        rep(i,N-1){
+            res.push_back({N-i,N-i-1});
+        }
+    }
+    int s = res.size();
+    cout<<s<<endl;
+    rep(i,s)cout<<res[i].first<<" "<<res[i].second<<endl;
+}

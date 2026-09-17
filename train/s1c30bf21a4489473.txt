@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+#define rep(i, n) for (int i = 0; i < (n); ++i)
+using namespace std;
+using ll = long long;
+using P = pair<int, int>;
+
+const int MOD = 1000000007;
+
+vector<long long> fact_inv, inv, Com;
+/*  init_nCk :二項係数のための前処理
+    計算量:O(n)
+*/
+void init_nCk(int n, int SIZE) {
+    fact_inv.resize(SIZE + 5);
+    inv.resize(SIZE + 5);
+    fact_inv[0] = fact_inv[1] = 1;
+    inv[1] = 1;
+    for (int i = 2; i < SIZE + 5; i++) {
+        inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
+        fact_inv[i] = fact_inv[i - 1] * inv[i] % MOD;
+    }
+    Com.resize(SIZE + 5);
+    Com[0] = 1;
+    for (int i = 1; i < SIZE + 5; i++) {
+        Com[i] = Com[i - 1] * ((n - i + 1) * inv[i] % MOD) % MOD;
+    }
+}
+/*  nCk :MODでの二項係数を求める(前処理 int_nCk が必要)
+    計算量:O(1)
+*/
+long long nCk(int k) {
+    assert(!(k < 0));
+    return Com[k];
+}
+
+long long modpow(ll a, ll n) {
+    ll res = 1;
+    while (n > 0) {
+        if (n & 1) res = res * a % MOD;
+        a = a * a % MOD;
+        n >>= 1;
+    }
+    return res;
+}
+
+int main() {
+    int n, a, b;
+    cin >> n >> a >> b;
+
+    init_nCk(n, max(a, b));
+    ll ans = modpow(2LL, n) - 1 - nCk(a) - nCk(b);
+    if (ans < 0) ans += MOD;
+    cout << ans << endl;
+}

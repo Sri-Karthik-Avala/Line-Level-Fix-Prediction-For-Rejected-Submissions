@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <cstring>
+constexpr int P = 998'244'353, N = 400;
+int n;
+int a[N], b[N], factorial[N], invFactorial[N], pw[N];
+int dp[2][N][N];
+int power(int a, int b) {
+    int res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = 1LL * res * a % P;
+        a = 1LL * a * a % P;
+        b >>= 1;
+    }
+    return res;
+}
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    std::cin >> n;
+    for (int i = 0; i < n; ++i)
+        std::cin >> a[i] >> b[i];
+    int s = std::accumulate(a, a + n, 0);
+    int invS = power(s, P - 2);
+    int r = std::accumulate(b, b + n, 0) - n;
+    factorial[0] = 1;
+    for (int i = 1; i <= r; ++i)
+        factorial[i] = 1LL * factorial[i - 1] * i % P;
+    invFactorial[r] = power(factorial[r], P - 2);
+    for (int i = r; i >= 1; --i)
+        invFactorial[i - 1] = 1LL * invFactorial[i] * i % P;
+    int cur = 0;
+    dp[0][0][0] = P - 1;
+    for (int i = 0; i < n; ++i) {
+        cur ^= 1;
+        std::memset(dp[cur], 0, sizeof(dp[cur]));
+        pw[0] = 1;
+        int p = 1LL * a[i] * invS % P;
+        for (int j = 1; j < b[i]; ++j)
+            pw[j] = 1LL * pw[j - 1] * p % P;
+        for (int j = 0; j <= r; ++j) {
+            for (int k = 0; k <= s; ++k) {
+                if (dp[cur ^ 1][j][k] == 0)
+                    continue;
+                dp[cur][j][k] = (dp[cur][j][k] + dp[cur ^ 1][j][k]) % P;
+                for (int l = 0; l < b[i]; ++l)
+                    dp[cur][j + l][k + a[i]] = (dp[cur][j + l][k + a[i]] + 1LL * (P - dp[cur ^ 1][j][k]) * invFactorial[l] % P * pw[l]) % P;
+            }
+        }
+    }
+    int ans = 0;
+    for (int i = 0; i <= r; ++i) {
+        for (int j = 1; j <= s; ++j) {
+            int inv = power(1LL * j * invS % P, P - 2 - i);
+            ans = (ans + 1LL * factorial[i] * dp[cur][i][j] % P * inv) % P;
+        }
+    }
+    std::cout << ans << "\n";
+    return 0;
+}

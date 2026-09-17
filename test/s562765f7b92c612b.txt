@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <array>
+
+using namespace std;
+using ll = long long;
+using Mat = array<array<ll, 2>, 2>;
+constexpr ll MOD = (ll)(1e9 + 7);
+
+Mat operator*(const Mat& m1, const Mat& m2)
+{
+    Mat ans{{{0, 0}, {0, 0}}};
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                ans[i][j] += m1[i][k] * m2[k][j];
+                ans[i][j] %= MOD;
+            }
+        }
+    }
+    return ans;
+}
+
+Mat power(const Mat& m, const ll n)
+{
+    if (n == 0) {
+        return Mat{{{1, 0}, {0, 1}}};
+    }
+    if (n % 2 == 1) {
+        return power(m, n - 1) * m;
+    } else {
+        const Mat mm = power(m, n / 2);
+        return mm * mm;
+    }
+}
+
+ll fib(const ll n)
+{
+    return power(Mat{{{0, 1}, {1, 1}}}, n + 2)[0][1];
+}
+
+ll calc(const ll n)
+{
+    if (n % 2 == 0) {
+        return (n / 2 + 1) * (n / 2 + 1);
+    } else {
+        return (n / 2 + 1) * (n / 2 + 2);
+    }
+}
+
+ll root(const ll k)
+{
+    ll inf = 0;
+    ll sup = 1LL << 30;
+    while (inf < sup) {
+        const ll mid = (inf + sup) / 2;
+        const ll c = calc(mid);
+        if (c > k) {
+            sup = mid;
+        } else if (c == k) {
+            return mid;
+        } else {
+            if (inf == mid) {
+                break;
+            }
+            inf = mid;
+        }
+    }
+    return inf;
+}
+
+int main()
+{
+    ll K;
+    cin >> K;
+    if (K == 1) {
+        cout << 1 << endl;
+        return 0;
+    }
+    const ll rt = root(K - 1);
+    const ll pos = K - calc(rt) - 1;
+    const ll rest = (rt + 1) / 2 - pos;
+    if (pos <= (rt + 1) / 4) {
+        cout << (fib(2 * pos) * fib(rt - 2 * pos + 1)) % MOD << endl;
+    } else {
+        cout << (fib(2 * rest + 1) * fib(rt - 2 * rest)) % MOD << endl;
+    }
+
+
+    return 0;
+}

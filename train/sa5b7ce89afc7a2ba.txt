@@ -1,0 +1,27 @@
+from collections import defaultdict
+def dfs(here,used,match,connect):
+    used[here] = 1
+    for near in connect[here]:
+        m = match[near]
+        if m < 0 or (not used[m] and dfs(m,used,match,connect)):
+            match[here] = near
+            match[near] = here
+            return 1
+    return 0
+
+a_num, b_num, e_num = (int(n) for n in input().split(" "))
+connect = defaultdict(list)
+all_v = a_num + b_num
+match = [-1 for n in range(all_v)]
+for _ in range(e_num):
+    v1, v2 = (int(n) for n in input().split(" "))
+    v2 += a_num
+    connect[v1].append(v2)
+    connect[v2].append(v1)
+answer = 0
+for i in range(all_v):
+    if match[i] < 0:
+        if dfs(i,used,match,connect):
+            used = [0 for n in range(all_v)]
+            answer += 1
+print(answer)

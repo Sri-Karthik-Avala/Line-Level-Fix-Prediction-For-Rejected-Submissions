@@ -1,0 +1,8 @@
+while True:
+    n=input()
+    if n==0:break
+    s=""
+    while n>0:
+        s=str(n%4)+s
+        n/=4
+    print s

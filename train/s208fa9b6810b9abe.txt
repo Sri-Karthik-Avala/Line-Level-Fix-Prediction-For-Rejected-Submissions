@@ -1,0 +1,14 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+    int r,w,c,R;
+    while(cin>>r>>w>>c>>R){
+        int ans=(w*c-r)/R;
+        if((w*c-r)%R)++ans;
+        if(w*c<=r)ans=0;
+        cout<<ans<<endl;
+    }
+    return 0;
+}

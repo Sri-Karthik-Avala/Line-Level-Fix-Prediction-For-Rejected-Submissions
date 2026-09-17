@@ -1,0 +1,29 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main(){
+
+	int n;
+	vector<int> vc;
+	
+	while(cin >> n){
+		if(n == -1) break;
+		vc.clear();
+		
+		while(1){
+			if(n == 0) break;
+			vc.insert(vc.begin(), n % 4);
+			n = (n - n % 4) / 4;
+		}
+		
+		for(int i=0; i<vc.size(); i++){
+			cout << vc[i];
+		}
+		if(n == 0) cout << '0';
+		cout << endl;
+	}
+
+	return 0;
+
+}

@@ -1,0 +1,52 @@
+#include <vector>
+#include <complex>
+#include <iomanip>
+#include <iostream>
+using namespace std;
+typedef complex<double> Point;
+bool intersect(Point p1, double r1, Point p2, double r2) {
+	double d = abs(p1 - p2);
+	if (d < abs(r1 - r2)) return false;
+	if (d > r1 + r2) return false;
+	return true;
+}
+Point crosspoint(Point p1, double r1, Point p2, double r2) {
+	double c = (r1 * r1 + norm(p1 - p2) - r2 * r2) / (2.0 * r1 * abs(p1 - p2));
+	return p1 + (p2 - p1) / abs(p1 - p2) * r1 * Point(c, sqrt(1.0 - c * c));
+}
+int n; double x[109], y[109], v[109];
+int main() {
+	while (cin >> n, n) {
+		for (int i = 0; i < n; i++) cin >> x[i] >> y[i] >> v[i];
+		double l = 0.0, r = 2.0;
+		for (int i = 0; i < 50; i++) {
+			double m = (l + r) * 0.5;
+			bool flag = false;
+			for (int j = 0; j < n; j++) {
+				bool ok = true;
+				for (int k = 0; k < n; k++) {
+					if (abs(Point(x[k] - x[j], y[k] - y[j])) > v[k] * m + 1.0e-7) ok = false;
+				}
+				if (ok) flag = true;
+			}
+			for (int j = 0; j < n; j++) {
+				for (int k = j + 1; k < n; k++) {
+					if (intersect(Point(x[j], y[j]), v[j] * m, Point(x[k], y[k]), v[k] * m)) {
+						Point p1 = crosspoint(Point(x[j], y[j]), v[j] * m, Point(x[k], y[k]), v[k] * m);
+						Point p2 = crosspoint(Point(x[k], y[k]), v[k] * m, Point(x[j], y[j]), v[j] * m);
+						bool ok1 = true, ok2 = true;
+						for (int l = 0; l < n; l++) {
+							if (abs(Point(x[l], y[l]) - p1) > v[l] * m + 1.0e-7) ok1 = false;
+							if (abs(Point(x[l], y[l]) - p2) > v[l] * m + 1.0e-7) ok2 = false;
+						}
+						if (ok1 || ok2) flag = true;
+					}
+				}
+			}
+			if (flag) r = m;
+			else l = m;
+		}
+		cout << fixed << setprecision(10) << l << endl;
+	}
+	return 0;
+}

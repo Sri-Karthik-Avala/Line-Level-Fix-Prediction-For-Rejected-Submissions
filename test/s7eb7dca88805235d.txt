@@ -1,0 +1,80 @@
+#include<bits/stdc++.h>
+#define rep(i,a,b) for(int i=a;i<b;i++)
+#define rrep(i,a,b) for(int i=a;i>=b;i--)
+#define fore(i,a) for(auto &i:a)
+#pragma GCC optimize ("-O3")
+using namespace std; void _main(); int main() { cin.tie(0); ios::sync_with_stdio(false); _main(); }
+//---------------------------------------------------------------------------------------------------
+template<class V, int NV> struct LazySegTree { // [L,R)
+    vector<V> dat, lazy; LazySegTree() { dat.resize(NV * 2, def); lazy.resize(NV * 2, ldef); }
+    void update(int a, int b, V v, int k, int l, int r) { push(k, l, r); if (r <= a || b <= l) return;
+        if (a <= l && r <= b) { setLazy(k, v); push(k, l, r); } else {
+        update(a, b, v, k * 2 + 1, l, (l + r) / 2); update(a, b, v, k * 2 + 2, (l + r) / 2, r);
+        dat[k] = comp(dat[k * 2 + 1], dat[k * 2 + 2]);}}
+    V get(int a, int b, int k, int l, int r) { push(k, l, r); if (r <= a || b <= l) return def;
+        if (a <= l && r <= b) return dat[k]; auto x = get(a, b, k * 2 + 1, l, (l + r) / 2);
+        auto y = get(a, b, k * 2 + 2, (l + r) / 2, r); return comp(x, y);}
+    void update(int a, int b, V v) { update(a, b, v, 0, 0, NV); }
+    V get(int a, int b) { return get(a, b, 0, 0, NV); }
+    // ---- Template ---------------------------------------------------------------------------------
+    // ??????min??£??\,??????min
+    #define INF INT_MAX/2
+    const V def = INF, ldef = INF;
+    V comp(V l, V r) { return min(l, r); }
+    void setLazy(int i, V v) { lazy[i] = min(lazy[i], v); }
+    void push(int k, int l, int r) {
+        if (lazy[k] != ldef) {
+            // modify------------------------------
+            dat[k] = min(dat[k], lazy[k]);
+            // ------------------------------------
+            if (r - l > 1) { setLazy(k * 2 + 1, lazy[k]); setLazy(k * 2 + 2, lazy[k]); }
+            lazy[k] = ldef;
+        }
+    }
+};
+
+/*---------------------------------------------------------------------------------------------------
+????????????????????????????????? ??§?????§  
+??????????????? ??§?????§ ???????´<_??? ?????? Welcome to My Coding Space!
+???????????? ??? ?´_???`??????/??? ???i     
+?????????????????????????????? ???  |???|     
+????????? /?????? /??£??£??£??£/??????|  
+??? ???_(__??????/???    ???/ .| .|????????????  
+??? ????????????/????????????/??????u??????  
+---------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+int N, M, S, T, D[101010];
+vector<pair<int,int>> v;
+LazySegTree<int, 1 << 17> st;
+//--------------------------------------------------------------------------------------------------
+void _main() {
+    cin >> N >> M >> S >> T;
+    S--; T--;
+    rep(i, 0, N) cin >> D[i];
+    rep(i, 0, M) {
+        int a, b; cin >> a >> b;
+        a--; b--;
+        v.push_back({a, b});
+    }
+    sort(v.begin(), v.end(), [&](pair<int, int> a, pair<int, int> b) {
+        if (a.second != b.second) return a.second < b.second;
+        else return a.first < a.first;
+    });
+
+    st.update(0, S + 1, 0);
+    fore(p, v) {
+        int L = p.first;
+        int R = p.second;
+        //printf("%d %d\n", L, R);
+        int c = st.get(0, L + 1) + D[R];
+        st.update(L, R + 1, c);
+    }
+
+    int ans = st.get(T, T + 1);
+    cout << ans << endl;
+}

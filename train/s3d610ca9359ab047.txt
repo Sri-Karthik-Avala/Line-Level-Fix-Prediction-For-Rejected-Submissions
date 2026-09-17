@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef vector<int> vec;
+
+int H,W;
+vec t;
+map< vec , int > dp[10][10];
+
+int mem[10][10][10][10];
+
+bool check(int ay,int ax,int by,int bx){
+  if(mem[ay][ax][by][bx]!=-1)
+    return mem[ay][ax][by][bx];
+
+  mem[ay][ax][by][bx]=false;
+  for(int y=ay;y<=by;y++)
+    for(int x=ax;x<=bx;x++)
+      if( (t[y]>>x&1)==0 )return false;
+
+  mem[ay][ax][by][bx]=true;
+  return true;
+}
+
+int solve(vec p,int y,int x){
+  if(y==H)return 0;
+  
+  if(x==W){
+    return solve(p,y+1,0);
+  }
+  
+  if(dp[y][x].count(p))return dp[y][x][p];
+  int sum=0;
+  for(int i=0;i<H;i++)sum+=p[i];
+  if(sum==0)return 0;
+  
+
+  int res=1e9;
+  if((p[y]>>x&1)==0)res=solve(p,y,x+1);
+
+  for(int i=0;;i++){
+    if(y+i>=H||x+i>=W)break;
+    if(!check(y,x,y+i,x+i))break;
+    if(check(y,x,y+i+1,x+i+1))continue;
+    int ma=(1<<(i+1))-1;
+    vec next=p;
+    for(int j=0;j<=i;j++){
+      next[y+j]|=(ma<<x);
+      next[y+j]-=(ma<<x);
+    }
+
+    if(p==next)continue;
+    res=min(res,solve(next,y,x+1)+1);
+  }
+
+  return dp[y][x][p]=res;
+}
+
+int main(){
+  while(1){
+    cin>>W>>H;
+    if(H==0&&W==0)break;
+    memset( mem, -1, sizeof(mem) );
+    vec si;
+    for(int i=0;i<H;i++){
+      int bit=0,a;
+      for(int j=0;j<W;j++){
+        dp[i][j].clear();
+        
+        cin>>a;
+        if(a==1)bit|=(1<<j);
+      }
+      si.push_back(bit);
+    }
+    t=si;
+    cout<<solve(si,0,0)<<endl;
+  }
+  return 0;
+}

@@ -1,0 +1,13 @@
+n = int(raw_input())
+[out1, out2, out3, out4, out5, out6] = [0 for i in range(6)] 
+for i in range(n):
+    k = float(raw_input())
+    if k < 165.0: out1 += 1
+    elif 165.0 <= k < 170.0: out2 += 1
+    elif 170.0 <= k < 175.0: out3 += 1
+    elif 175.0 <= k < 180.0: out4 += 1
+    elif 180.0 <= k < 185.0: out5 += 1
+    elif 185.0 >= k: out6 += 1
+
+for j,k in zip([i for i in range(1,7)],[out1, out2, out3, out4, out5, out6]):
+    print str(j) + ':' + '*'*k

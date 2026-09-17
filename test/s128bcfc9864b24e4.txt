@@ -1,0 +1,3 @@
+x=int(input())
+x=round(x/100)
+print('ai13333'+'3'*x)

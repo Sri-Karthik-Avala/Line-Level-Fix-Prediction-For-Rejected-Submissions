@@ -1,0 +1,86 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <complex>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <queue>
+#include <string>
+#include <cstring>
+#include <stack>
+#include <cmath>
+#include <iomanip>
+#include <sstream>
+
+using namespace std;
+
+typedef long long ll;
+typedef ll li;
+typedef pair<int,int> PI;
+
+#define rep(i,n) for(int i=0;i<(int)(n);++i)
+#define REP(i,m,n) for(int i=m; i<=(int)(n); ++i)
+#define F first
+#define S second
+#define mp(a,b) make_pair(a,b)
+#define pb(a) push_back(a)
+#define SZ(a) (int)((a).size())
+#define ALL(a) a.begin(),a.end()
+#define FOR(it,a) for(__typeof(a.begin())it=a.begin();it!=a.end();++it)
+
+int n;
+
+string in[5];
+
+bool nok(int sz){
+  rep(i,5)
+    rep(j,SZ(in[i]))
+    if(sz+j<SZ(in[i]))
+      if(in[i][j]=='X' && in[i][sz+j]=='X')
+        return true;
+
+  return false;
+}
+
+bool nokl[200];
+int ans;
+int len[10];
+void dfs(int ne,int nlen){
+  if(ne==10){
+    if(nlen+n-1<ans){
+      ans = nlen+n-1;
+      //cout << ans << endl;
+    }
+    return;
+  }
+  
+  //cout << ne << ' ' << nlen << endl;
+
+  for(int i=nlen;i<=nlen+n-1;++i){
+    //if(i+n>ans) break;
+    bool tok = false;
+    rep(j,ne) if(nokl[i-len[j]]) tok=true;
+    if(tok) continue;
+    len[ne] = i;
+    dfs(ne+1,i+1);
+  }
+}
+
+void solve(){
+  memset(nokl,0,sizeof(nokl));
+  rep(i,5) cin >> in[i];
+
+  
+  rep(i,SZ(in[0])){
+    nokl[i+1] = nok(i+1);
+    if(nokl[i+1]) cout << i+1 << endl;
+  }
+  ans = 10*n;
+  dfs(0,0);
+  cout << ans << endl;
+}
+
+main(){
+  while(cin >> n,n) solve();
+}

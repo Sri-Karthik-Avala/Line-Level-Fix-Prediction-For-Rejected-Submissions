@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef int _loop_int;
+#define REP(i,n) for(_loop_int i=0;i<(_loop_int)(n);++i)
+#define FOR(i,a,b) for(_loop_int i=(_loop_int)(a);i<(_loop_int)(b);++i)
+#define FORR(i,a,b) for(_loop_int i=(_loop_int)(b)-1;i>=(_loop_int)(a);--i)
+
+#define DEBUG(x) cout<<#x<<" : "<<x<<endl
+#define ALL(v) (v).begin(),(v).end()
+
+typedef vector<short> vi;
+
+int main(){
+  string s,t;
+  cin>>s>>t;
+  int n=s.size(),m=t.size();
+  int ans = 0;
+  FOR(l,1,min(n,m)+1){
+    set<vi> S;
+    vi op(26,0);
+    REP(i,l-1)op[s[i]-'a']++;
+    FOR(i,l-1,n){
+      op[s[i]-'a']++;
+      S.insert(op);
+      op[s[i+1-l]-'a']--;
+    }
+    op = vi(26,0);
+    REP(i,l-1)op[t[i]-'a']++;
+    FOR(i,l-1,n){
+      op[t[i]-'a']++;
+      if(S.count(op)){
+        ans = l;
+        break;
+      }
+      op[t[i+1-l]-'a']--;
+    }
+  }
+  printf("%d\n",ans);
+  return 0;
+}

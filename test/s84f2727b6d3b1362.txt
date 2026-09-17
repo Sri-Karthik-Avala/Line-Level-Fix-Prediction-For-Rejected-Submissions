@@ -1,0 +1,84 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+
+int N, M, P;
+map<string,vector<int> > m1;
+map<vector<int>,string > m2;
+map<string,string> var;
+string S;
+int pos;
+bool error_flag;
+
+vector<int> formula();
+vector<int> term();
+vector<int> factor();
+
+vector<int> factor() {
+  if(S[pos] == '(') {
+    ++pos;
+    vector<int> v = formula();
+    ++pos;
+    return v;
+  } else {
+    int begin = pos;
+    while(isalpha(S[pos])) ++pos;
+    return m1[var[S.substr(begin,pos-begin)]];
+  }
+}
+
+vector<int> term() {
+  vector<int> v = factor();
+  while(pos < S.size() && S[pos] == '*' || S[pos] == '/') {
+    int d = S[pos] == '*' ? 1 : -1;
+    ++pos;
+    vector<int> u = factor();
+    for(int i = 0; i < N; ++i) v[i] += u[i]*d;
+  }
+  return v;
+}
+
+vector<int> formula() {
+  vector<int> v = term();
+  while(pos < S.size() && S[pos] == '+' || S[pos] == '-') {
+    ++pos;
+    if(term() != v) {
+      error_flag = true;
+    }
+  }
+  return v;
+}
+
+int main() {
+  while(cin >> N >> M >> P && (N|M|P)) {
+    m1.clear();
+    m2.clear();
+    var.clear();
+    for(int i = 0; i < M; ++i) {
+      string name;
+      vector<int> v(N);
+      cin >> name;
+      for(int j = 0; j < N; ++j) cin >> v[j];
+      m1[name] = v;
+      if(m2.find(v) == m2.end()) m2[v] = name;
+    }
+    cin >> S;
+
+    for(int i = 0; i < P; ++i) {
+      string varname, name;
+      cin >> varname >> name;
+      var[varname] = name;
+    }
+
+    pos = 0;
+    error_flag = false;
+    vector<int> res = formula();
+    if(error_flag) cout << "error" << endl;
+    else if(m2.find(res) != m2.end()) cout << m2[res] << endl;
+    else cout << "undefined" << endl;
+  }
+  return 0;
+}

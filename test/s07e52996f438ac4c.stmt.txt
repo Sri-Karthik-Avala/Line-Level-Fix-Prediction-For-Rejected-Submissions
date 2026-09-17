@@ -1,0 +1,91 @@
+Problem H: Queen's Case 
+
+ 
+A small country called Maltius was governed by a queen. The queen was known as an oppressive ruler.
+People in the country suffered from heavy taxes and forced labor. So some young people decided to form
+a revolutionary army and fight against the queen. Now, they besieged the palace and have just rushed into
+the entrance.
+ 
+ 
+Your task is to write a program to determine whether the queen can escape or will be caught by the army.
+ 
+ 
+Here is detailed description.
+ 
+ 
+ The palace can be considered as grid squares. 
+ The queen and the army move alternately. The queen moves first. 
+ At each of their turns, they either move to an adjacent cell or stay at the same cell. 
+ Each of them must follow the optimal strategy. 
+ If the queen and the army are at the same cell, the queen will be caught by the army immediately. 
+ If the queen is at any of exit cells alone after the army’s turn, the queen can escape from the army. 
+ There may be cases in which the queen cannot escape but won’t be caught by the army forever,
+ under their optimal strategies. 
+ 
+
+
+ Input 
+
+ 
+The input consists of multiple datasets. Each dataset describes a map of the palace. The first line of the input contains two integers W (1 &le; W &le; 30) and H (1 &le; H &le; 30), which indicate the width and height of the palace. The following H lines, each of which contains W characters, denote the map of the palace. " Q " indicates the queen, " A " the army," E " an exit," # " a wall and " . " a floor.
+ 
+
+ 
+The map contains exactly one " Q ", exactly one " A " and at least one " E ". You can assume both the queen and the army can reach all the exits.
+ 
+
+ 
+The last dataset is followed by a line containing two zeros. This line is not a part of any dataset and should not be processed.
+ 
+
+
+ Output 
+
+ 
+For each dataset, output " Queen can escape. ", " Army can catch Queen. " or " Queen can not escape and Army can not catch Queen. " in a line.
+ 
+
+ Sample Input 
+ 
+2 2
+QE
+EA
+3 1
+QAE
+3 1
+AQE
+5 5
+..E..
+.###.
+A###Q
+.###.
+..E..
+5 1
+A.E.Q
+5 5
+A....
+####.
+..E..
+.####
+....Q
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+Queen can not escape and Army can not catch Queen.
+Army can catch Queen.
+Queen can escape.
+Queen can not escape and Army can not catch Queen.
+Army can catch Queen.
+Army can catch Queen.
+ 
+
+ Hint 
+
+ 
+On the first sample input, the queen can move to exit cells, but either way the queen will be caught at the
+next army’s turn. So the optimal strategy for the queen is staying at the same cell. Then the army can
+move to exit cells as well, but again either way the army will miss the queen from the other exit. So the
+optimal strategy for the army is also staying at the same cell. Thus the queen cannot escape but won’t be
+caught.

@@ -1,0 +1,18 @@
+#include<iostream>
+using namespace std;
+long n;
+main()
+{
+	while(cin>>n,n)
+	{
+		for(long long w=4e4;--w;)
+		{
+			if(n>w*(w-1)/2&&(n-w*(w-1)/2)%w<1)
+			{
+				cout<<(n-w*(w-1)/2)/w<<" "<<w<<endl;
+				break;
+			}
+		}
+	}
+}
+

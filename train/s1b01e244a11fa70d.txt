@@ -1,0 +1,9 @@
+def up(n):
+	if n == 0: return 1
+	if n < 0: return 0
+	return up(n-1)+up(n-2)+up(n-3)
+	
+while True:
+	n = int(raw_input())
+	if n == 0: break
+	print (up(n)//10+1)//365+1

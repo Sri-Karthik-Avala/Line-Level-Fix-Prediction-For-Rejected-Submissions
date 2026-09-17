@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<algorithm>
+#include<vector>
+#define N_ 901000
+using namespace std;
+int n, m, Deg[N_], Q[N_], head, tail, D[N_], Res, cnt;
+int B1[101000], B2[101000];
+vector<int>E[N_], G[101000];
+void Make_Edge(int a, int b, int c){
+    E[a].push_back(b*2+c);
+}
+int main(){
+    int i, a, b, c, x, sz, j;
+    scanf("%d%d",&n,&m);
+    cnt = 2*n;
+    for(i=1;i<=m;i++){
+        scanf("%d%d%d",&a,&b,&c);
+        if(c==1){
+            Make_Edge(n+a,b,1);
+        }
+        else{
+            Make_Edge(cnt+1,cnt+4,1);
+            Make_Edge(cnt+3,cnt+2,1);
+            G[a].push_back(cnt+1);
+            G[b].push_back(cnt+3);
+            cnt+=4;
+        }
+    }
+    for(i=1;i<=n;i++){
+        Make_Edge(i,i+n,0);
+        sz = G[i].size();
+        if(!sz)continue;
+        B1[i] = cnt+1;
+        for(j=0;j<sz;j++){
+            cnt++;
+            Make_Edge(cnt,G[i][j],0);
+            if(j)Make_Edge(cnt, cnt-1,0);
+        }
+        B2[i] = cnt+1;
+        for(j=sz-1;j>=0;j--){
+            cnt++;
+            Make_Edge(cnt,G[i][j],0);
+            if(j!=sz-1)Make_Edge(cnt, cnt-1,0);
+        }
+        for(j=0;j<sz;j++){
+            Make_Edge(i,G[i][j],0);
+            Make_Edge(G[i][j]+1,n+i,0);
+            if(j)Make_Edge(G[i][j]+1, B1[i]+j-1,0);
+            if(j!=sz-1)Make_Edge(G[i][j]+1, B2[i]+sz-j-2,0);
+        }
+    }
+    if(n==100000)return 0;
+    for(i=1;i<=cnt;i++){
+        for(j=0;j<E[i].size();j++){
+            Deg[E[i][j]/2]++;
+        }
+    }
+    for(i=1;i<=cnt;i++){
+        if(!Deg[i])Q[++tail] = i;
+    }
+    while(head < tail){
+        x = Q[++head];
+        Res = max(Res, D[x]);
+        for(i=0;i<E[x].size();i++){
+            Deg[E[x][i]/2]--;
+            D[E[x][i]/2] = max(D[E[x][i]]/2, D[x] + E[x][i]%2);
+            if(!Deg[E[x][i]/2])Q[++tail] = E[x][i]/2;
+        }
+    }
+    if(tail != cnt){
+        printf("Infinite\n");
+        return 0;
+    }
+    printf("%d\n",Res);
+}

@@ -1,0 +1,45 @@
+import sys
+from itertools import accumulate
+
+def main():
+  input=sys.stdin.readline
+  n,k=map(int,input().split())
+  A=list(map(int,input().split()))
+  
+  dp=[0]*(k+1)
+  dp[0]=1
+  for a in A:
+    dp=list(accumulate(dp))
+    #print("accumulated",dp)
+    for j,d in enumerate(dp[:k-a],start=a+1):
+      dp[j]-=d
+    dp=[dpi for dpi in dp]
+    #print(dp)
+  print(dp[k])
+"""
+def main():
+  dp=[[0]*(k+1) for _ in range(n+1)]
+  mod=1000000007
+  #i人目までに0個配る方法は1通り
+  #for i in range(n+1):
+  #  dp[i][0]=1
+  for i in range(0,n+1):
+    for j in range(0,k+1):
+      if i==0 and j==0:
+        dp[i][j]=1
+        break
+      if j==0:
+        dp[i][j]=1
+        continue
+      tmp=dp[i - 1][j] + dp[i][j - 1]
+      if tmp>=mod:
+        tmp%=mod
+      dp[i][j]=tmp
+      if j-a[i-1]-1>=0:
+        tmp=dp[i][j]-dp[i-1][j-a[i-1]-1]
+        if tmp>=mod:
+          tmp%=mod
+        dp[i][j]=tmp
+    #print(dp)   
+  print(dp[n][k])"""
+main()

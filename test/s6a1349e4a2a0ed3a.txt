@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int BITS = 30;
+
+vector<long long int> memo(BITS);
+long long int power(int i) {return memo[i] = (i == 0 ? 1 : 2 * power(i - 1));}
+
+int Dijkstra(long long int s, long long int d) {
+  typedef tuple<int, long long int> Node;
+
+  bitset<BITS> start(s > 0 ? s : -s);
+
+  unordered_set<long long int> visited;
+  priority_queue<Node, vector<Node>, greater<Node>> q;
+  q.emplace(0, s);
+  while(!q.empty()) {
+    int step;
+    long long int station;
+    tie(step, station) = q.top();
+    q.pop();
+    if(station == d) return step;
+    visited.insert(station);
+
+    for(int i = BITS - 1; 0 <= i; --i) {
+      if(station != 0 && (station % power(i)) != 0) continue;
+      long long int next = station + power(i);
+      if(d < next) continue;
+      if(visited.count(next)) continue;
+      q.emplace(step + 1, next);
+    }
+  }
+
+  return 0;
+};
+
+int main() {
+  int N;
+  cin >> N;
+  for(int i = 0; i < N; ++i) {
+    long long int s, d;
+    cin >> s >> d;
+
+    cout << Dijkstra(s, d) << endl;
+  }
+}

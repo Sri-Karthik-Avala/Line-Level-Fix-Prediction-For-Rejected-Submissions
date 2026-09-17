@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long int ll;
+const int INF = 1000000000;
+#define REP(i,s,n) for(int i=(int)(s);i<(int)(n);i++)
+#define rep(i,n) REP(i, 0, n)
+const int dx[4] = {1, 0, 0, -1}, dy[4] = {0, 1, -1, 0};
+int H, W;
+map<char, int> dir;
+map<int, char> dir2;
+string ans;
+bool range_out(int x, int y){
+    return x < 0 || y < 0 || W <= x || H <= y;
+}
+bool dfs(const vector<string>& pond, int cx, int cy, int cd, int leaves, string score){
+    if(leaves == 0){
+        ans = score;
+        return true;
+    }
+    rep(i, 4){
+        if(i == 3 - cd) continue;
+        int nx = cx, ny = cy;
+        bool end = false;
+        while(true){
+            nx += dx[i]; ny += dy[i];
+            if(range_out(nx, ny)){
+                end = true;
+                break;
+            }
+            if(pond[ny][nx] == 'o') break;
+        }
+        if(end) continue;
+        vector<string> temp = pond;
+        temp[ny][nx] = '.';
+        string st = score + dir2[i];
+        if(dfs(temp, nx, ny, i, leaves - 1, st)) return true;
+    }
+    return false;;
+}
+int main(){
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin >> H >> W;
+    vector<string> pond(H);
+    rep(i, H) cin >> pond[i];
+    int sx, sy, sd;
+    int leafnum = 0;
+    dir['U'] = 2; dir['D'] = 1; dir['L'] = 3; dir['R'] = 0;
+    for(const auto& k : dir) dir2[k.second] = k.first;
+    rep(i, H) rep(j, W){
+        if(pond[i][j] == 'o')
+          leafnum++;
+        if('A' <= pond[i][j] && pond[i][j] <= 'Z'){
+            sx = j; sy = i;
+            sd = dir[pond[j][i]];
+            pond[j][i] = '.';
+        }
+    }
+    string hoge = "";
+    dfs(pond, sx, sy, sd, leafnum, hoge);
+    cout << ans << endl;
+    return 0;
+}

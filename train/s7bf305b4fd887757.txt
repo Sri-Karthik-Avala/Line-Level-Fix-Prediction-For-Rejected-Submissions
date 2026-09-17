@@ -1,0 +1,56 @@
+# B 하나씩 shift하면서 타겟을 정함. 이제 A -> B' 만드는 게 목표
+A = input()
+B = input()
+N = len(A)
+
+if B.count('1') == 0 and A != B:
+    print(-1)
+    exit()
+
+ans = int(2e18)
+
+ld = [i if B[i] == '1' else -int(1e9) for i in range(N)]
+rd = [i if B[i] == '1' else  int(1e9) for i in range(N)]
+for i in range(1, N): ld[i] = max(ld[i-1], ld[i])
+for i in reversed(range(N-1)): rd[i] = min(rd[i+1], rd[i])
+
+for _ in range(N): # right shift _ times
+    # A -> B 만드는 게 목표임
+    # 연산: B 왼쪽/오른쪽 shift, B가 1인 거 flip
+
+    tl = []
+    tr = []
+
+    for i in range(N):
+        if A[i] != B[i]:
+            tl.append(min(rd[i] - i, (N + rd[0]) - i))
+            tr.append(min(i - ld[i], i - (ld[-1] - N)))
+
+    if len(tl) == 0:
+        cur = min(_, N - _)
+    else:
+        cur = int(1e9)
+
+        posl = [[] for x in range(N)]
+        for i, v in enumerate(tl): posl[v].append(i)
+
+        y = 0
+        for x in reversed(range(N)):
+            cur = min(cur, x+2*y+(_-x+N)%N, 2*x+y+(y+_)%N)
+            for i in posl[x]:
+                y = max(y, tr[i])
+
+        posr = [[] for y in range(N)]
+        for i, v in enumerate(tr): posr[v].append(i)
+
+        x = 0
+        for y in reversed(range(N)):
+            cur = min(cur, x+2*y+(_-x+N)%N, 2*x+y+(y+_)%N)
+            for i in posr[y]:
+                x = max(x, tl[i])
+
+    cur += len(tl)
+    ans = min(ans, cur)
+    B = B[1:] + B[0]
+
+print(ans)

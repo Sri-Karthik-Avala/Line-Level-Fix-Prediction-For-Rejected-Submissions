@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+#define inf (long long)(1e18)
+using namespace std;
+
+long long n;
+vector<long long> a, pre, suf;
+
+long long solve();
+
+int main() {
+  cin >> n;
+  a.resize(n);
+  for (auto& p : a) cin >> p;
+  cout << solve() << endl;
+  return 0;
+}
+
+long long solve() {
+  auto calc = [](vector<long long>& v) {
+    int len = 16;
+    vector<long long> res(n + 1, inf);
+    vector<vector<long long>> dp(n + 1, vector<long long>(len + 1, inf));
+    res[n] = res[n - 1] = 0;
+    for (int i = 0; i <= len; ++i) dp[n - 1][i] = i;
+    for (int i = n - 2; i >= 0; --i) {
+      long long now = v[i];
+      for (int j = 0; j <= len; ++j) {
+        long long nxt = v[i + 1];
+        for (int k = 0; k <= 60; ++k) {
+          if (now <= nxt) {
+            if (k <= len)
+              dp[i][j] = dp[i + 1][k] + j;
+            else
+              dp[i][j] = dp[i + 1][len] + (k - len) * (n - 1 - i) + j;
+            break;
+          }
+          nxt <<= 2;
+        }
+        assert(dp[i][j] != inf);
+        now <<= 2;
+      }
+      res[i] = dp[i][0] << 1;
+    }
+    return res;
+  };
+  suf = calc(a);
+  reverse(a.begin(), a.end());
+  for (auto& p : a) p *= 2;
+  pre = calc(a);
+  reverse(pre.begin(), pre.end());
+  for (int i = 0; i <= n; ++i) pre[i] += i;
+  long long res = inf;
+  for (int i = 0; i <= n; ++i) res = min(res, pre[i] + suf[i]);
+  return res;
+}

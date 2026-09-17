@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+using ll = long long;
+
+int main(){
+	string s1,s2;
+	double d1,d2;
+	double l1,l2;
+	cin >> s1 >> d1 >> l1;
+	cin >> s2 >> d2 >> l2;
+	if(s1=="CD"){
+		d1 += 60.0;
+	}
+	if(s2=="CD"){
+		d2 += 60.0;
+	}
+	if(s1=="DB"){
+		d1 += 120.0;
+	}
+	if(s2=="DB"){
+		d2 += 120.0;
+	}
+	double x1,x2,y1,y2;
+	x1 = l1 * cos(d1/180.0*M_PI);
+	x2 = l2 * cos(d2/180.0*M_PI);
+	y1 = l1 * sin(d1/180.0*M_PI);
+	y2 = l2 * sin(d2/180.0*M_PI);
+	double p1,p2,q1,q2;
+	q1 = 2*y1/sqrt(3);
+	q2 = 2*y2/sqrt(3);
+	p1 = x1-q1/2;
+	p2 = x2-q2/2;
+	while(!(0<=q1&&q1<=2)){
+		if(q1<0){
+			q1 +=2;
+		}else{
+			q1 -=2;
+		}
+	}
+	while(!(0<=q2&&q2<=2)){
+		if(q2<0){
+			q2 +=2;
+		}else{
+			q2 -=2;
+		}
+	}
+	while(!(0<=p1&&p1<=2)){
+		if(p1<0){
+			p1 +=2;
+		}else{
+			p1 -=2;
+		}
+	}
+	while(!(0<=p2&&p2<=2)){
+		if(p2<0){
+			p2 +=2;
+		}else{
+			p2 -=2;
+		}
+	}
+	if(p1+q1>2){
+		p1 = 2.0-p1;
+		q1 = 2.0-q1;
+	}
+	if(p2+q2>2){
+		p2 = 2.0-p2;
+		q2 = 2.0-q2;
+	}
+	int label1=0;int label2=0;
+	if(p1+q1<1){
+		label1 =1;
+	}
+	if(q1>1){
+		label1 =2;
+	}
+	if(p1>1){
+		label1 = 3;
+	}
+	if(p2+q2<1){
+		label2 =1;
+	}
+	if(q2>1){
+		label2 =2;
+	}
+	if(p2>1){
+		label1 = 3;
+	}
+	//cout << p1 << " " << q1 << " " << p2 << " " << q2 << endl;
+	if(label1==label2){
+		cout << "YES" << endl;
+	}else{
+		cout << "NO" << endl;
+	}
+	return 0;
+}

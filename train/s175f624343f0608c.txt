@@ -1,0 +1,85 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <stack>
+#include <queue>
+#include <map>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+#define all(c) (c).begin(), (c).end()
+#define loop(i,a,b) for(int i=a; i<int(b); i++)
+#define rep(i,b) loop(i,0,b)
+#define each(e,c) for(auto& e:c)
+#define iter(it,c) for(auto it=c.begin(); it!=c.end(); ++it)
+
+ll const inf = 1<<28;
+map<string,int> rtoi;
+int d[256][256];
+int V;
+
+void solve(){
+    rep(i,V)rep(j,V){
+        bool C=false, DE=true;
+        if(d[i][j]==1 || d[j][i]==1) continue;
+        rep(k,V){
+            if(k==i || k==j) continue;
+            if((d[i][k]==1||d[k][i]==1) && (d[j][k]==1||d[k][j]==1))
+                C=true;
+            if((d[i][k]==1&&d[k][j]==1) || (d[k][i]==1&&d[j][k]==1))
+                DE=false;
+        }
+        if(C&&DE) d[i][j]=d[j][i]=0;
+    }
+    rep(k,V)rep(i,V)rep(j,V){
+        d[i][j]=min(d[i][j], d[i][k] + d[k][j]);
+    }
+}
+
+bool ask(string const& p, string const& q){
+    int pi=inf,qi=inf;
+    if(rtoi.count(p)==1 && rtoi.count(q)==1){
+        pi=rtoi[p], qi=rtoi[q];
+    }
+    return max(pi,qi)!=inf && d[pi][qi]!=inf && d[pi][qi]&1;
+}
+
+int main(){
+    int n;
+    while(cin>>n, n){
+        rtoi.clear();
+        rep(i,256) rep(j,256) d[i][j]=inf;
+        rep(i,n){
+            string s;cin>>s;
+            int x=s.find('-');
+            string p=s.substr(0,x);
+            string q=s.substr(x+1);
+            if(rtoi.count(p)==0)rtoi[p]=V++;
+            if(rtoi.count(q)==0)rtoi[q]=V++;
+            int ip=rtoi[p], iq=rtoi[q];
+            d[ip][iq]=1;
+        }
+        solve();
+        cout<<V<<endl;
+        int m; cin>>m;
+        rep(i,m){
+            string s;cin>>s;
+            int x=s.find('-');
+            string p=s.substr(0,x), q=s.substr(x+1);
+            puts(ask(p,q) ? "YES" : "NO");
+        }
+    }
+}

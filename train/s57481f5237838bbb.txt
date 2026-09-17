@@ -1,0 +1,13 @@
+import sys
+    
+buf =[]
+
+while True:
+    text = raw_input().split()
+    if text[0] == 'quit':
+        break
+    elif text[0] = 'push':
+        buf.append(text[1])
+    elif text[0] == 'pop':
+        print buf[-1]
+        buf.pop()

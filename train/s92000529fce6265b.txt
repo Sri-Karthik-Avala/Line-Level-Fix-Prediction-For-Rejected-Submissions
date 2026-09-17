@@ -1,0 +1,14 @@
+import sys
+for s in sys.stdin:
+	s = map(int, s.split())
+	if len(s) == 1:
+		continue
+	else:
+		(pm, pe, pj) = tuple(s)
+		if 100 in (pm, pe, pj): c = "A"
+		elif pm + pe >= 180: c = "A"
+		elif pm + pe + pj >= 240: c = "A"
+		elif pm + pe + pj >= 240: c = "B"
+		elif pm + pe + pj >= 150 and (pm >= 80 or pe >= 80): c = "B"
+		else: c = "C"
+	print c

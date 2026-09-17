@@ -1,0 +1,56 @@
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+int main(){
+	int n;	
+
+	while(true){
+		cin >> n;
+
+		if(n==0)break;
+
+		unsigned int c1[100000];
+		unsigned int m1[100000];
+		unsigned int s1[100000];
+		unsigned int m2[100000];
+		unsigned int s2[100000];
+		unsigned int m3[100000];
+		unsigned int s3[100000];
+		unsigned int m4[100000];
+		unsigned int s4[100000];
+
+		for(int i=0;i<n;i++){
+			cin >> c1[i] >> m1[i] >> s1[i] >> m2[i] >> s2[i] >> m3[i] >> s3[i] >> m4[i] >> s4[i];
+			}
+
+		unsigned int sum[100000];
+
+		for(int i=0;i<n;i++){
+			sum[i] = (m1[i]+m2[i]+m3[i]+m4[i])*60+(s1[i]+s2[i]+s3[i]+s4[i]);
+			}
+
+		unsigned int copy[100000];
+
+		for(int i=0;i<n;i++){
+			copy[i] = sum[i];
+			}
+
+		sort(sum,sum+n);
+
+		for(int i=0;i<3;i++){
+			int j=0;
+			while(true){
+				if(sum[i]==copy[j]){
+					cout << c1[j] << endl;
+					break;
+					}
+				else{
+					j++;
+					}
+				}
+			}
+		}
+
+	return 0;
+	}

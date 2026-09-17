@@ -1,0 +1,18 @@
+prime=[2]
+for i in range(3,100,2):
+    primeq=True
+    for p in prime:
+        if i%p==0:
+            primeq=False
+            break
+        if i<p*p:break
+    if primeq:prime.append(i)
+while True:
+    try:
+        n=int(input())
+        ans=0
+        for p in prime:
+            if p>n:break
+            ans+=1
+        print(ans)
+    except:break

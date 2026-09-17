@@ -1,0 +1,93 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+using namespace std;
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define DEBUG(x) cerr << #x << " = " << x << endl
+typedef long long ll;
+const int INF = (int)1e9;
+struct Edge {
+  int from, to, cost;
+  Edge(int f, int t, int c) : from(f), to(t), cost(c) {}
+};
+struct State {
+  int pos;
+  ll cost;
+  State(int p, ll c) : pos(p), cost(c) {}
+  bool operator <(const State &other) const {
+    return cost > other.cost;
+  }
+};
+vector<ll> shortest_path(const vector<vector<Edge>> &G, int s) {
+  vector<ll> d(G.size(), INF);
+  priority_queue<State> Q;
+  Q.emplace(s, 0);
+  while(!Q.empty()) {
+    State cur = Q.top(); Q.pop();
+    if(d[cur.pos] > cur.cost) {
+      d[cur.pos] = cur.cost;
+      for(const Edge &e : G[cur.pos]) {
+        Q.emplace(e.to, cur.cost + e.cost);
+      }
+    }
+  }
+  return d;
+}
+struct BIT {
+  int N;
+  vector<vector<int>> data;
+  BIT(int n) : N(n), data(n + 1) {}
+  void append(int a, int w) {
+    ++a;
+    for(int x = a; x <= N; x += x & -x) {
+      data[x].push_back(w);
+    }
+  }
+  void setup() {
+    for(int a = 1; a <= N; ++a) sort(data[a].begin(), data[a].end());
+  }
+  int moreEq(int a, int w) {
+    // index < a && value >= w
+    int ret = 0;
+    for(int x = a; x > 0; x -= x & -x) {
+      ret += data[x].end() - lower_bound(data[x].begin(), data[x].end(), w);
+    }
+    return ret;
+  }
+};
+int main() {
+  ios::sync_with_stdio(false);
+  int N, M; cin >> N >> M;
+  vector<vector<Edge>> G(N);
+  REP(i, M) {
+    int a, b, c; cin >> a >> b >> c;
+    G[a].emplace_back(a, b, c);
+    G[b].emplace_back(b, a, c);
+  }
+  int Q; cin >> Q;
+  vector<ll> fs(Q), fg(Q);
+  REP(i, Q) cin >> fs[i] >> fg[i];
+  vector<ll> ds = shortest_path(G, 0);
+  vector<ll> dg = shortest_path(G, N - 1);
+  set<ll> values;
+  REP(i, Q) {
+    values.insert(fs[i]);
+    values.insert(fg[i]);
+  }
+  REP(i, N) {
+    values.insert(ds[i]);
+    values.insert(dg[i]);
+  }
+  map<ll, int> cmp;
+  int index = 0;
+  for(ll i : values) cmp[i] = index++;
+  BIT bit(values.size()+1);
+  REP(i, N) bit.append(cmp[ds[i]], cmp[dg[i]]);
+  bit.setup();
+  REP(q, Q) {
+    cout << bit.moreEq(cmp[fs[q]] + 1, cmp[fg[q]]) << endl;
+  }
+}

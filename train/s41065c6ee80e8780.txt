@@ -1,0 +1,75 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<iostream>
+using namespace std;
+
+struct col{
+	char c;
+	struct col *next;
+};
+
+int main(){
+	int size;
+	char script[15];
+	char *pstr;
+	char **mt;
+	int num[100];
+	int p,q;
+	col *start=NULL;
+	col *end=NULL;
+	col *buf;
+	memset(num,0,sizeof(num));
+	fgets(script,10,stdin);
+	size=atoi(script);
+	mt=new char*[size];
+	for(int i=0;i<size;i++){
+		mt[i]=new char[1000];
+	}
+	while(fgets(script,10,stdin)){
+		if(script[0]=='p'){//push or pop
+			if(script[1]=='u'){//push
+				strtok(script," ");
+				pstr=strtok(NULL," ");
+				p=atoi(pstr)-1;
+				pstr=strtok(NULL," ");
+				mt[p][num[p]++]=pstr[0];
+			}
+			else{
+				strtok(script," ");
+				pstr=strtok(NULL," ");
+				p=atoi(pstr)-1;
+				if(start==NULL){
+					start=new col();
+					start->c=mt[p][--num[p]];
+					start->next=NULL;
+					end=start;
+				}
+				else{
+					buf=new col();
+					buf->c=mt[p][--num[p]];
+					buf->next=NULL;
+					end->next=buf;
+					end=buf;
+				}
+			}
+		}
+		else if(script[0]=='m'){
+			strtok(script," ");
+			pstr=strtok(NULL," ");
+			p=atoi(pstr)-1;
+			pstr=strtok(NULL," ");
+			q=atoi(pstr)-1;
+			mt[q][num[q]++]=mt[p][--num[p]];
+		}
+		else break;
+	}
+	buf=start;
+	while(buf!=NULL){
+		cout<<buf->c<<endl;;
+		buf=buf->next;
+	}
+	for(int i=0;i<size;i++) delete []mt[i];
+	delete []mt;
+	return 0;
+}

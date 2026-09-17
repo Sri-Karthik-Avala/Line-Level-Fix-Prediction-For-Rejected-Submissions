@@ -1,0 +1,31 @@
+#include<iostream>
+#include<cstdio>
+#define gmi(a,b) a=(a)<(b)?(a):(b)
+#define FOR(i,a,b) for(int i=a;i<=b;i++)
+#define FOF(i,a,b) for(int i=a;i< b;i++)
+using namespace std;
+typedef long long ll;
+const int N=550;
+const ll INF=1e18;
+int n,x;
+ll ans,a[N][N],b[N][N],f[N][N];
+ll SB(int x,int y){return b[x][x]-b[x][y]-b[y][x]+b[y][y];}
+int main(){
+	freopen("1.in","r",stdin);
+	scanf("%d",&n);
+	FOF(i,0,n)FOF(j,0,n)if(i!=j){
+		scanf("%d",&x);
+		j<i?a[j+1][i]=x:b[i+1][j]=x;
+	}
+	FOR(i,1,n)FOR(j,1,n){
+		a[i][j]+=a[i-1][j]+a[i][j-1]-a[i-1][j-1];
+		b[i][j]+=b[i-1][j]+b[i][j-1]-b[i-1][j-1];
+	}
+	FOR(i,1,n)FOR(j,0,i) f[i][j]=INF;
+	FOR(i,1,n)FOR(j,0,i)FOR(k,0,j)
+		gmi(f[i][j],f[j][k]+a[k][i-1]-a[k][j-1]+SB(i-1,j));
+	//FOR(i,1,n)FOR(j,0,i-1) cout<<f[i][j]<<" \n"[j==i-1];
+	ans=INF;
+	FOF(j,0,n) ans=min(ans,f[n][j]);
+	cout<<ans<<'\n';
+}

@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define reps(i,j,k) for(int i=j; i<k;++i)
+#define rep(i,j) reps(i,0,j)
+#define pb emplace_back
+#define mk make_pair
+
+int n;
+vector<string> a;
+vector<int> b;
+vector<vector<string>> d;
+vector<vector<int>> g;
+vector<long long> e;
+
+typedef long long ll;
+
+int dfs(int i, ll s) {
+	if(i == n) {
+		return 0;
+	}
+
+	if((s >> i) & 1) {
+		return dfs(i + 1, s);
+	}
+
+	int ret = 0;
+
+	if(i != 0 && !(g[i].size() == 1 && ((s >> g[i][0]) & 1))) {
+		ret = dfs(i + 1, s);
+	}
+
+	{
+		ll ns = s | e[i];
+
+		ret = max(ret, dfs(i + 1, ns) + b[i]);
+	}
+
+	return ret;
+}
+
+int main(){
+	while(true) {
+		cin >> n;
+		if(n == 0) {
+			break;
+		}
+
+		a = vector<string>(n);
+		b = vector<int>(n);
+		d = vector<vector<string>>(n);
+		e = vector<long long>(n);
+		rep(i, n) {
+			int c;
+			cin >> a[i] >> b[i] >> c;
+			d[i].resize(c);
+
+			rep(j, c) {
+				cin >> d[i][j];
+			}
+		}
+
+		map<string, int> m;
+		rep(i, n) {
+			m.insert(make_pair(a[i], m.size()));
+		}
+
+		g = vector<vector<int>>(n);
+
+		rep(i, n) {
+			e[i] = 1LL << i;
+			for(auto to : d[i]) {
+				g[i].push_back(m[to]);
+				e[i] = e[i] | (1LL << g[i].back());
+			}
+		}
+
+		cout << dfs(0, 0) << endl;
+	}
+	
+	return 0;
+}

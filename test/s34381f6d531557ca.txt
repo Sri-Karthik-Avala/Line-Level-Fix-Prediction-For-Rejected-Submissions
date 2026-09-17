@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <cmath>
+#include <algorithm>
+#include <cfloat>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <string>
+#include <iostream>
+typedef long long int ll;
+typedef unsigned long long int ull;
+#define BIG_NUM 2000000000
+#define MOD 1000000007
+#define EPS 0.000000001
+using namespace std;
+
+ll calc(ll x,ll y){
+	if(y == 0){
+		return x;
+	}else{
+		return calc(y,x%y);
+	}
+}
+
+int main(){
+
+	ll N,POW[70];
+
+	POW[0] = 1;
+	POW[1] = 2;
+	for(int i = 2; i <= 69; i++){
+		POW[i] = POW[i-1]*2;
+	}
+
+	scanf("%lld",&N);
+
+	for(int i = 0; i <= 69; i++){
+		if(POW[i]-1 == N){
+			printf("%lld\n",N+1);
+			return 0;
+		}
+	}
+
+	if(N%2 == 0){
+		printf("1\n");
+		return 0;
+	}
+
+	vector<ll> bunshi;
+
+	bunshi.push_back(N);
+
+	ll tmp,common;
+
+	for(ll m = 2; ;m += 2){
+
+		ll tmp = N-(m-1);
+
+		if(tmp >= m){
+			common = calc(tmp,m);
+		}else{
+			common = calc(m,tmp);
+		}
+
+		tmp /= common;
+
+		if(tmp%2 == 0){
+			printf("%lld\n",m);
+			return 0;
+		}
+
+	}
+
+	printf("%lld\n",N+1);
+
+	return 0;
+}

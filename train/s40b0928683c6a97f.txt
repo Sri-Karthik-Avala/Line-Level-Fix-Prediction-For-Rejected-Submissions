@@ -1,0 +1,11 @@
+N,W = map(int, input().split())
+dp = [0 for i in range(W+1)]
+for i in range(N):
+	a,b = map(int,input().split())
+	for j in range(b,W+1,b):
+		x = a + dp[j-b]
+		if x >= dp[j]:
+			dp[j] = x
+
+print(max(dp))
+

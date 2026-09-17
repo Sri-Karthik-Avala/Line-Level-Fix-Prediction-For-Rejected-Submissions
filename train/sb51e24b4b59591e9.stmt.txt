@@ -1,0 +1,56 @@
+Problem A: The Mean of Angles 
+
+ Problem 
+ 
+与えられた2つの角度 &theta; 1 , &theta; 2 のちょうど間の角度を求めよ。ここで、ちょうど間の角度を、下図のように「 &theta; 1 &plus; t = &theta; 2 &minus; t を満たす t のうち絶対値が最も小さいものを t’ としたときの &theta; 1 &plus; t’ 」と定義する。
+ 
+
+ 
+ 
+ 
+
+
+ Input 
+ 入力は以下の形式で与えられる。 
+ 
+ &theta; 1 
+ &theta; 2 
+ 
+
+ Constraints 
+ 入力は以下の条件を満たす。 
+ 
+ 角度は度数法(degree)で表される 
+ 0 &le; &theta; 1 , &theta; 2 < 360 
+ &theta; 1 , &theta; 2 は整数 
+ | &theta; 1 &minus; &theta; 2 | &ne; 180 
+ 解答が[0,0.0001]または[359.999, 360)になるような入力は与えられない 
+ 
+
+
+ Output 
+ 
+ &theta; 1 , &theta; 2 のちょうど間の角度を度数法で[0,360)の範囲で1行に出力せよ。ただし0.0001を超える誤差を含んではならない。
+
+ 
+
+ Sample Input 1 
+ 
+10
+20
+ 
+
+ Sample Output 1 
+ 
+15.0
+ 
+
+ Sample Input 2 
+ 
+20
+350
+ 
+
+ Sample Output 2 
+ 
+5.0

@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef pair<int, int> i_i;
+
+int f(int W, vector<vector<int> >& dp, int x) {
+	vector<int> a, b;
+	for (int j = 1; j <= W; j++)
+		for (int k = 0; k < 2; k++)
+			if (dp[k][j] && dp[k][j] >= x) {
+				a.push_back(k);
+				b.push_back(j);
+			}
+	int mini = INT_MAX;
+	for (int i = 0; i + 1 < a.size(); i++)
+		if (a[i] != a[i + 1])
+			mini = min(mini, b[i + 1] - b[i]);
+	return mini;
+}
+
+int main() {
+	vector<int> N(2);
+	int W;
+	cin >> N[0] >> N[1] >> W;
+	vector<vector<int> > m(2), c(2);
+	for (int k = 0; k < 2; k++) {
+		vector<i_i> p(N[k]);
+		for (int i = 0; i < N[k]; i++)
+			cin >> p[i].second >> p[i].first;
+		sort(p.begin(), p.end());
+		for (int i = 0; i < N[k]; i++) {
+			m[k].push_back(p[i].second);
+			c[k].push_back(p[i].first);
+		}
+		c[k].push_back(INT_MAX);
+	}
+	vector<int> i(2);
+	vector<vector<int> > dp(2, vector<int>(W + 1));
+	int mini = INT_MAX;
+	for (;;) {
+		if (i[0] == N[0] && i[1] == N[1]) break;
+		int k = (c[0][i[0]] > c[1][i[1]]);
+		int M = m[k][i[k]], C = c[k][i[k]];
+		for (int j = W - M; j > 0; j--)
+			if (dp[k][j]) {
+				int _j = j + M;
+				dp[k][_j] = max(dp[k][_j], dp[k][j]);
+			}
+		if (M <= W) dp[k][M] = C;
+		int lb = 0, ub = W;
+		while (ub - lb > 1) {
+			int mid = (lb + ub) / 2;
+			if (f(W, dp, C - mid) < mid) ub = mid;
+			else lb = mid;
+		}
+		mini = min(mini, max(f(W, dp, C - lb), lb));
+		mini = min(mini, max(f(W, dp, C - lb - 1), lb + 1));
+		i[k]++;
+	}
+	cout << mini << endl;
+}

@@ -1,0 +1,60 @@
+#include <iostream>
+#include <cstdint>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+#include <tuple>
+#include <iomanip>
+
+double area(const std::vector<std::tuple<double, double> > &vs, int64_t p, int64_t q) {
+    auto n = vs.size();
+    auto vx1 = std::get<0>(vs[(p+1) % n]) - std::get<0>(vs[p]);
+    auto vy1 = std::get<1>(vs[(p+1) % n]) - std::get<1>(vs[p]);
+
+    auto vx2 = std::get<0>(vs[(q+1) % n]) - std::get<0>(vs[q]);
+    auto vy2 = std::get<1>(vs[(q+1) % n]) - std::get<1>(vs[q]);
+
+    return std::abs( vx1 * vy2 - vx2 * vy1 );
+}
+
+double len2(const std::vector<std::tuple<double, double> > &vs, int64_t p, int64_t q) {
+    auto dx = std::get<0>(vs[p]) - std::get<0>(vs[q]);
+    auto dy = std::get<1>(vs[p]) - std::get<1>(vs[q]);
+
+    return dx*dx + dy*dy;
+}
+
+int main() {
+    int64_t n;
+
+    std::cin >> n;
+    
+    std::vector<std::tuple<double, double> > vs(n);
+
+    int64_t p = 0, q = 0;
+    for (int64_t i = 0; i < n; ++i) {
+        std::cin >> std::get<0>(vs[i]) >> std::get<1>(vs[i]);
+
+        if (std::get<0>(vs[i]) < std::get<0>(vs[p])) {
+            p = i;
+        }
+        if (std::get<0>(vs[i]) > std::get<0>(vs[q])) {
+            q = i;
+        }
+    }
+
+    double ans = len2(vs, p, q);
+    for (int64_t i = 0; i < 2*n; ++i) {
+        if (area(vs, p, q) > 0) {
+            q = (q+1) % n;
+        } else {
+            p = (p+1) % n;
+        }
+        ans = std::max(ans, len2(vs, p, q));
+    }
+
+    std::cout << std::fixed << std::setprecision(12) << std::sqrt(ans) << std::endl;
+    
+    return 0;
+}
+

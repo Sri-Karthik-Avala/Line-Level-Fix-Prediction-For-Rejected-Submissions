@@ -1,0 +1,103 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cmath>
+#include<cstdio>
+#include<cassert>
+#include<climits>
+#include<map>
+#include<set>
+#include<queue>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+#define IINF (INT_MAX)
+#define LLINF (LLONG_MAX)
+#define MAX_V 10000
+
+using namespace std;
+
+typedef long long ll;
+
+typedef pair<ll,ll> P;
+struct edge{ 
+  ll to,cap,cost,rev;
+  edge(ll to=LLINF,ll cap=LLINF,ll cost=LLINF,ll rev=LLINF):to(to),cap(cap),cost(cost),rev(rev){}
+};
+int V;
+vector<edge> G[MAX_V];
+ll h[MAX_V],dist[MAX_V],prevv[MAX_V],preve[MAX_V];
+
+void add_edge(ll from,ll to,ll cap,ll cost){
+  G[from].push_back(edge(to,cap,cost,(ll)G[to].size()));
+  G[to].push_back(edge(from,0,-cost,(ll)G[from].size()-1));
+}
+
+ll min_cost_flow(ll s,ll t,ll f){
+  ll res = 0;
+  rep(i,V)h[i] = 0;
+  while( f > 0 ){
+    priority_queue<P,vector<P>,greater<P> > que;
+      rep(i,V)dist[i] = LLINF;
+      dist[s] = 0;
+      que.push(P(0,s));
+      while(!que.empty()){
+	P p = que.top(); que.pop();
+	ll v = p.second;
+	if( dist[v] < p.first )continue;
+	for(int i=0;i<G[v].size();i++){
+	  edge &e = G[v][i];
+	  if( e.cap > 0 && dist[e.to] > dist[v] + e.cost + h[v] - h[e.to] ){
+	    dist[e.to] = dist[v] + e.cost + h[v] - h[e.to];
+	    prevv[e.to] = v;
+	    preve[e.to] = i;
+	    que.push(P(dist[e.to],e.to));
+	  }
+	}
+      }
+      if(dist[t]==LLINF)return -1;
+      for(int v=0;v<V;v++)h[v] += dist[v];
+      ll d = f;
+      for(int v=t;v!=s;v=prevv[v])d = min(d,G[prevv[v]][preve[v]].cap);
+      f -= d;
+      res += d * h[t];
+      for(int v=t;v!=s;v=prevv[v]){
+	edge &e = G[prevv[v]][preve[v]];
+	e.cap -= d;
+	G[v][e.rev].cap += d;
+      }
+  }
+  return res;
+}
+
+int main(){
+  int N;
+  cin >> N;
+  int *A = new int[N];
+  int *B = new int[N];
+  map<int,int> getIndex;
+  int dex = 0;
+  rep(i,N){
+    cin >> A[i] >> B[i];
+    if( getIndex.find(A[i]) == getIndex.end() )getIndex[A[i]] = dex++;
+    if( getIndex.find(B[i]) == getIndex.end() )getIndex[B[i]] = dex++;
+  }
+  V = N + (int)getIndex.size();
+  int source = V,sink = source+1,grave = sink+1;
+  V += 3;
+  add_edge(grave,sink,1,0);
+  rep(i,N)add_edge(source,i,1,0);
+  rep(i,(int)getIndex.size())add_edge(N+i,sink,1,0);
+  rep(i,N){
+    int to1 = getIndex[A[i]]+N;
+    int to2 = getIndex[B[i]]+N;
+    add_edge(i,to1,1,-B[i]);
+    add_edge(i,to2,1,-A[i]);
+    add_edge(i,grave,LLINF,0);
+  }
+  delete [] A;
+  delete [] B;
+  cout << -min_cost_flow(source,sink,N) << endl;
+
+  return 0;
+}

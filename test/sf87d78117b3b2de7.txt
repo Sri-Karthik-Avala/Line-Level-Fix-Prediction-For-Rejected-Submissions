@@ -1,0 +1,52 @@
+#include<iostream>
+
+using namespace std;
+
+int data[10][10];
+
+void func(int x,int y){
+	data[y][x] = 0;
+	for(int i = -3 ; i < 3 ; i ++){
+		if(x+i<0 || 9 < x+i) continue;
+		if(data[y][x+i] == 1)func(x+i,y);
+	}
+	for(int j = -3; j < 3 ; j ++){
+		if(y+j<0 || 9 < y+j)continue;
+		if(data[y+j][x] == 1)func(x,y+j);
+	}
+}
+
+void PrintBoard(){
+	for(int i = 1; i <= 8 ; i ++){
+		for(int j = 1; j <= 8 ; j ++){
+			cout<<data[i][j];
+		}
+		cout<<endl;
+	}
+}
+
+int main(void){
+	int n;
+	cin>>n;
+	for(int i = 0 ; i < 10 ; i ++){
+		for(int j = 0 ; j < 10 ; j ++){
+			data[i][j] = 0 ;
+		}
+	}
+	char tmp;
+	int x,y;
+	for(int k = 1; k <=n ; k++){
+		for(int i = 1 ; i <= 8 ; i ++){
+			for(int j = 1 ; j <= 8 ; j ++){
+				cin>>tmp;
+				data[i][j] = tmp-'0';
+			}
+		}
+		cin>>x;
+		cin>>y;
+		func(x,y);
+		cout<<"Data "<<k<<":"<<endl;
+		PrintBoard();
+	}
+	return 0;
+}

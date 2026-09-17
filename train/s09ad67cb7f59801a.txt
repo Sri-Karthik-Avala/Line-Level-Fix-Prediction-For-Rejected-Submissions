@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std::literals::string_literals;
+using i64 = long long;
+using std::cout;
+using std::endl;
+using std::cin;
+
+template<typename T>
+std::vector<T> make_v(size_t a){return std::vector<T>(a);}
+
+template<typename T,typename... Ts>
+auto make_v(size_t a,Ts... ts){
+  return std::vector<decltype(make_v<T>(ts...))>(a,make_v<T>(ts...));
+}
+
+int main() {
+	int n; scanf("%d", &n);
+	std::vector<std::vector<int>> g(n);
+	for(int i = 0; i < n - 1; i++) {
+		int a, b; scanf("%d%d", &a, &b);
+
+		g[a - 1].push_back(b - 1);
+		g[b - 1].push_back(a - 1);
+	}
+
+	std::vector<double> dp(n);
+	std::vector<std::vector<std::pair<double, int>>> d(n);
+	auto dfs = [&](auto&& dfs, int v, int par) -> void {
+		int deg = g[v].size() - (par != -1);
+		for(auto e: g[v]) {
+			if(e == par) continue;
+			dfs(dfs, e, v);
+			dp[v] += (dp[e] + 1) / deg;
+			d[v].push_back({(dp[e] + 1) / deg, e});
+		}
+	};
+	dfs(dfs, 0, -1);
+	
+	std::vector<double> t(n), ans(n);
+	auto solve = [&](auto&& solve, int v, int par) -> void {
+		double sum = 0;
+		for(auto e: d[v]) sum += e.first;
+		for(auto e: d[v]) t[e.second] = e.first;
+		for(auto e: g[v]) {
+			if(e == par) continue;
+			int deg = g[e].size() - (g[e].size() != 1);
+			double tmp = sum - t[e];
+			ans[e] += (tmp + 1) / g[e].size();
+			ans[v] += (dp[e] + 1) / g[v].size();
+			d[e].push_back({(tmp + 1) / deg, v});
+			solve(solve, e, v);
+		}
+	};
+	solve(solve, 0, -1);
+
+	for(auto v: ans) printf("%.12lf\n", v);
+	return 0;
+}

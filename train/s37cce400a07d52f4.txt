@@ -1,0 +1,29 @@
+#include<stdio.h>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+long long b[110000];
+long long gz[550];
+double eps=1e-9;
+int main(){
+	int a;
+	while(scanf("%d",&a),a){
+		long double A=1;
+		int sz=0;
+		for(int i=0;i<(a+1)*a/2;i++){
+			scanf("%lld",b+i);
+			if(b[i]%2==0){
+				A*=pow(b[i],1.0/a);
+				gz[sz++]=b[i];
+			}else A*=pow(b[i],-1.0/a/(a-1));
+		}
+		long long gs=(long long)(A+eps);
+		printf("%lld\n",gs);
+		std::sort(gz,gz+a);
+		for(int i=0;i<a;i++){
+			if(i)printf(" ");
+			printf("%lld",gz[i]/gs);
+		}
+		printf("\n");
+	}
+}

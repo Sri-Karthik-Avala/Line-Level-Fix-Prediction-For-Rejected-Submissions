@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<cstdio>
+#include<cmath>
+#define pb(in,tmp) in.push_back(tmp)
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,b) loop(i,0,b)
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+using namespace std;
+int main(){
+  int n;
+  cin>>n;
+  while(n--){
+    int a,b;
+	char d;
+	cin>>a>>d>>b;
+	double h=abs(30.0*a-6.5*b);
+	//cout<<h<<endl;
+	if(h<30||360-h<30)cout<<"alert"<<endl;
+	else if(h>=90&&h<=270)cout<<"safe"<<endl;
+	else cout<<"warning"<<endl;
+  }
+}

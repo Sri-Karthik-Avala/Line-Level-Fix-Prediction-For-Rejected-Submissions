@@ -1,0 +1,43 @@
+import math
+
+def checkifprime(NN):
+    for i in range(len(MSprime)):
+        if MSprime[i]>NN:
+            break
+        elif NN%MSprime[i]==0:
+            return -1
+    return NN
+
+
+nummax=int(50000)
+MSall=sorted([7*x-1 for x in range(1,nummax/7)]+[7*x+1 for x in range(1,nummax/7)])
+MSprime=[]
+smax=math.sqrt(nummax)
+i=6
+while i<=smax:
+    for x in MSall:
+        if x%i==0:
+            MSall.remove(x)
+    MSprime.append(i)
+    i=MSall[0]
+MSprime=MSprime+MSall
+
+while(1):
+    N=int(raw_input())
+    if N==1:
+        break
+    else:
+        ok=[]
+        for i in range(len(MSprime)):
+            if MSprime[i]>N:
+            	break
+            elif N%MSprime[i]==0:
+                ok.append(MSprime[i])
+                cifp=checkifprime(N/MSprime[i])
+                if cifp>0:
+                    ok.append(cifp)
+        if len(ok)==0:
+        	ok.append(N)
+        ok.sort()
+                
+        print str(N)+': '+' '.join([str(x) for x in ok])

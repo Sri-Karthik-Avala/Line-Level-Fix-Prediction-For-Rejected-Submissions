@@ -1,0 +1,100 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <cassert>
+
+using namespace std;
+
+#define FOR(i,k,n) for(int i=(k); i<(int)(n); ++i)
+#define REP(i,n) FOR(i,0,n)
+#define FORIT(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template<class T> void debug(T begin, T end){ for(T i = begin; i != end; ++i) cerr<<*i<<" "; cerr<<endl; }
+inline bool valid(int x, int y, int W, int H){ return (x >= 0 && y >= 0 && x < W && y < H); }
+
+typedef long long ll;
+const int INF = 100000000;
+const double EPS = 1e-8;
+const int MOD = 1000000007;
+int dx[8] = {1, 0, -1, 0, 1, -1, -1, 1};
+int dy[8] = {0, 1, 0, -1, 1, 1, -1, -1};
+struct Event{
+  // type 0 - order
+  // type 1 - complete
+  int type, time, dish, customer;
+  Event(int ty, int t, int d, int c):
+    type(ty), time(t), dish(d), customer(c) {}
+  bool operator < (const Event& e) const {
+    if(time != e.time) return time > e.time;
+    if(type != e.type) return type > e.type;
+    return dish > e.dish;
+  }
+};
+struct Dish{
+  string name;
+  int limit, time;
+  Dish() {}
+  bool operator < (const Dish& d) const {
+    return time > d.time;
+  }
+};
+
+int main(){
+  int N, M;
+  while(cin >> N >> M){
+    vector<Dish> dishes(N);
+    REP(i, N) cin >> dishes[i].name >> dishes[i].limit >> dishes[i].time;
+    stable_sort(dishes.begin(), dishes.end());
+    map<string, int> name_to_index;
+    REP(i, N) name_to_index[dishes[i].name] = i;
+    priority_queue<Event> que;
+    REP(i, M){
+      int T, K; cin >> T >> K;
+      REP(j, K){
+        string name; cin >> name;
+        que.push(Event(0, T, name_to_index[name], i));
+      }
+    }
+    vector<int> answer(M);
+    vector<Event> cook_queue;
+    int cooking = 0;
+    while(!que.empty()){
+      Event e = que.top(); que.pop();
+      if(e.type == 0){
+        //printf("customer %d order %s : time %d\n", e.customer, dishes[e.dish].name.c_str(), e.time);
+        cook_queue.push_back(Event(0, 0, e.dish, e.customer));
+      }else if(e.type == 1){
+        //printf("customer %d's %s is finshed: time %d\n", e.customer, dishes[e.dish].name.c_str(), e.time);
+        cooking --;
+        answer[e.customer] = e.time;
+      }
+      if(cooking == 0 && !cook_queue.empty()){
+        // new dish
+        int new_dish = cook_queue[0].dish;
+        for(vector<Event>::iterator it = cook_queue.begin(); it != cook_queue.end(); ){
+          if(it->dish == new_dish){
+            //printf("customer %d's %s is started : time %d -> %d\n", it->customer, dishes[it->dish].name.c_str(), e.time, e.time + dishes[new_dish].time);
+            que.push(Event(1, e.time + dishes[new_dish].time, it->dish, it->customer));
+            cooking++;
+            it = cook_queue.erase(it);
+            if(cooking >= dishes[new_dish].limit) break;
+          }else{
+            it++;
+          }
+        }
+      }
+    }
+    REP(i, M) cout << answer[i] << endl;
+  }
+  return 0;
+}

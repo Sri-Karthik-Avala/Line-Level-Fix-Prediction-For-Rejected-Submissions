@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 2005;
+int n,k; vector<int>G[N];
+int dp[N][N],ans;
+inline void upd(int &x,int v){ v > x ? x = v : 0; }
+int fa[N],siz[N],tmp[N];
+inline void work(int x,int y){
+	int i,j;
+	for (i = 0; i <= k && i <= siz[x]; ++i) tmp[i] = dp[x][i];
+	for (i = 0; i <= siz[x] && i <= k; ++i) if (dp[x][i])
+	for (j = 0; j <= siz[y] && j <= k; ++j) if (dp[y][j] && i + j + 1 <= k)
+		upd(tmp[max(i,j+1)],dp[x][i]+dp[y][j]);
+	siz[x] += siz[y]; for (i = 0; i <= k && i <= siz[x]; ++i) dp[x][i] = tmp[i];
+	for (i = 1; i <= k && i <= siz[x]; ++i) upd(dp[x][i],dp[x][i-1]);
+}
+inline void dfs(int x){
+	int i,j,y;
+	siz[x] = 1;
+	for (i = 0; i <= k; ++i) dp[x][i] = 1; 
+	for (i = 0; i < G[x].size(); ++i) if ((y=G[x][i])^fa[x]) fa[y] = x,dfs(y),work(x,y);
+	for (i = 0; i <= k; ++i) upd(ans,dp[x][i]);
+}
+int main(){
+	int i,x,y;
+	cin >> n >> k;
+	if (k >= n-1){ cout << 0 << '\n'; return 0; }
+	for (i = 1; i < n; ++i) cin >> x >> y,G[x].push_back(y),G[y].push_back(x);
+	int rt = -1;
+	for (i = 1; i <= n; ++i) if (G[i].size() > 1) rt = i;
+	ans = min(n,k+1);
+	dfs(rt);
+	ans = n - ans;
+	cout << ans << '\n';
+	return 0;
+}

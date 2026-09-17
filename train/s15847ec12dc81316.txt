@@ -1,0 +1,11 @@
+while 1:
+    a=int(input())
+    if a==0:break
+    a=[a]+[int(input()) for _ in range(4)]
+    r=a.count(1);s=a.count(2);p=5-r-s
+    if not r or not s or not p and [r,s,p].count(0)!=2:
+        if r and s:w=1
+        elif r and p:w=3
+        else:w=2
+        [print([2,1][w==x])for x in a]
+    else:print('3\n'*5,end='')

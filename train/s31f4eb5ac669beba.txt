@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int dfs(int v, vector<bool> &used, vector<string> &adj){
+	if(used[v]) return 0;
+	used[v] = true;
+	int ret = 1;
+	int n = adj.size();
+	for(int i=0; i<n; i++){
+		if(adj[v][i] == 'Y') ret += dfs(i, used, adj);
+	}
+	return ret;
+}
+
+//先手必勝の手かどうか
+//[偶数サイズの連結成分][奇数サイズの連結成分][余っているフリーの辺の偶奇]
+bool dp[1001][1001][2];
+bool used[1001][1001][2] = {};
+bool win(int even, int odd, int rem){
+	bool &ret = dp[even][odd][rem];
+	if(used[even][odd][rem]) return ret;
+	used[even][odd][rem] = true;
+	if(even+odd == 2){
+		ret = rem==1;
+		return ret;
+	}
+	ret = false;
+	//even--even
+	if(even>=2 && !win(even-1, odd, 1-rem)) ret = true;
+	//even--odd
+	if(even>=1 && odd>=1 && !win(even-1, odd, 1-rem)) ret = true;
+	//odd--odd
+	if(odd>=2 && !win(even+1, odd-2, rem)) ret = true;
+	//pass
+	if(rem==1 && !win(even, odd, 0)) ret = true;
+	return ret;
+}
+
+int main(){
+	int n;
+	cin >> n;
+	vector<string> adj(n);
+	for(int i=0; i<n; i++){
+		cin >> adj[i];
+	}
+	vector<bool> used(n, false);
+	int odd=0, even=0;
+	int rem=0;
+	for(int i=0; i<n; i++){
+		if(used[i]) continue;
+		int size = dfs(i, used, adj);
+		rem += size*(size-1)/2;
+		if(size%2 == 0) even++;
+		else odd++;
+	}
+	for(int i=0; i<n; i++){
+		for(int j=i+1; i<n; i++){
+			if(adj[i][j] == 'Y') rem--;
+		}
+	}
+	if(win(even, odd, rem%2)){
+		cout << "Taro" << endl;
+	}else{
+		cout << "Hanako" << endl;
+	}
+	return 0;
+}

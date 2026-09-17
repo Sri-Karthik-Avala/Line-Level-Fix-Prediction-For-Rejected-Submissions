@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <string>
+using namespace std;
+
+int deg_in[32];
+int deg_out[32];
+int edge[32][32];
+bool visited[32];
+
+int foo(int n) {
+	if(visited[n])
+		return 0;
+	visited[n] = true;
+	int res = 0;
+	for(int i = 0; i < 32; i++) {
+		if(i != n && edge[n][i])
+			res += foo(i);
+	}
+	return res + 1;
+}
+
+int main() {
+	int n;
+	while(cin >> n, n) {
+		for(int i = 0; i < 32; i++) {
+			deg_in[i] = deg_out[i] = 0;
+			visited[i] = true;
+			for(int j = 0; j < 32; j++) {
+				edge[i][j] = 0;
+			}
+		}
+
+		for(int i = 0; i < n; i++) {
+			string s;
+			cin >> s;
+			int a, b;
+			a = s[0] - 'a';
+			b = s[s.size()-1] - 'a';
+			deg_out[a]++; deg_in[b]++;
+			edge[a][b] = 1;
+			visited[a] = visited[b] = false;
+		}
+
+		int flg = true;
+		for(int i = 0; i < 32; i++) {
+			flg &= deg_in[i] == deg_out[i];
+		}
+
+		for(int i = 0; i < 32; i++) {
+			int res = foo(i);
+			flg &= res == 0 || res == n;
+		}
+
+		if(flg)
+			cout << "OK" << endl;
+		else
+			cout << "NG" << endl;
+	}
+}

@@ -1,0 +1,59 @@
+Edit Distance (Levenshtein Distance) 
+ 
+
+ 
+Find the edit distance between given two words s1 and s2 .
+ 
+
+ 
+The disntace is the minimum number of single-character edits required to change one word into the other. The edits including the following operations:
+ 
+ 
+ insertion : Insert a character at a particular position. 
+ deletion : Delete a character at a particular position. 
+ substitution : Change the character at a particular position to a different character 
+ 
+
+ Input 
+
+ 
+ s1 
+ s2 
+ 
+
+ 
+Two words s1 and s2 are given in the first line and the second line respectively. The words will consist of lower case characters.
+ 
+
+ Output 
+
+ 
+Print the edit distance in a line.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; length of s1 &le; 1000 
+ 1 &le; length of s2 &le; 1000 
+ 
+
+ Sample Input 1 
+ 
+acac
+acm
+ 
+ Sample Output 1 
+ 
+2
+ 
+ 
+
+ Sample Input 2 
+ 
+icpc
+icpc
+ 
+ Sample Output 2 
+ 
+0

@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define repd(i,a,b) for (int i=(a);i<(b);i++)
+#define rep(i,n) repd(i,0,n)
+#define all(x) (x).begin(),(x).end()
+template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return true; } return false; }
+template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return true; } return false; }
+typedef long long ll;
+const long long INF = 1LL << 60;
+typedef pair<int, int> P;
+int main()
+{
+    int N, M;
+    cin >> N >> M;
+    string S;
+    cin >> S;
+
+    reverse(all(S));
+
+    vector<int> maze;
+    rep(i, S.size()) {
+        if (S[i] == '0') {
+            maze.push_back(i);
+        }
+    }
+
+    int res = 0;
+    vector<int> ans;
+    while (1) {
+        int index = upper_bound(all(maze), res + M) - maze.begin();
+        index--;
+        if (res >= maze[index]) {
+            cout << -1 << endl;
+            break;
+        }
+        ans.push_back(maze[index] - res);
+        res = maze[index];
+        if (res == N) break;
+    }
+
+    reverse(all(ans));
+    rep(i, ans.size()) cout << ans[i] << endl;
+    return 0;
+}

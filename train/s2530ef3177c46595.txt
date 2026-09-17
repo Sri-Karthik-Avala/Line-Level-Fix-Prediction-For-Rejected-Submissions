@@ -1,0 +1,108 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <set>
+#include <map>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <cstdio>
+#include <istream>
+#include <sstream>
+#include <iomanip>
+#include <iterator>
+#include <climits>
+using namespace std;
+
+typedef ostringstream OSS;
+typedef istringstream ISS;
+
+typedef vector<int> VI;
+typedef vector< VI > VVI;
+
+typedef long long LL;
+
+typedef pair<int, int> PII;
+typedef vector<PII> VPII;
+
+#define X first
+#define Y second
+
+string toUpperCamelCase(string s) {
+	string res;
+
+	for (int i = 0; i < (int)s.size(); i++) {
+		if (i == 0) {
+			res += toupper(s[i]);
+		} else if (s[i] == '_') {
+			res += toupper(s[i] + 1);
+			i++;
+		} else {
+			res += s[i];
+		}
+	}
+
+	return res;
+}
+
+string toLowerCamelCase(string s) {
+	string res;
+
+	for (int i = 0; i < (int)s.size(); i++) {
+		if (i == 0) {
+			res += tolower(s[i]);
+		} else if (s[i] == '_') {
+			res += toupper(s[i + 1]);
+			i++;
+		} else {
+			res += s[i];
+		}
+	}
+
+	return res;
+}
+
+string toSnakeCase(string s) {
+	string res;
+
+	for (int i = 0; i < (int)s.size(); i++) {
+		if (i == 0) {
+			res += tolower(s[i]);
+		} else if (isupper(s[i])) {
+			res += '_';
+			res += tolower(s[i]);
+		} else {
+			res += s[i];
+		}
+	}
+
+	return res;
+}
+
+int main(void) {
+	string s;
+	char c;
+
+	while (true) {
+		cin >> s >> c;
+		if (c == 'X') break;
+
+		switch (c) {
+			case 'L':
+				s = toLowerCamelCase(s);
+				break;
+			case 'U':
+				s = toUpperCamelCase(s);
+				break;
+			case 'D':
+				s = toSnakeCase(s);
+				break;
+		}
+
+		cout << s << endl;
+	}
+
+	return 0;
+}

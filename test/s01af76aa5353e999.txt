@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+
+#define REP(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+int hm[43];
+int r,n;
+
+int main() {
+  while(cin>>r>>n,r){
+    REP(i,43) hm[i]=0;
+    REP(i,n){
+      int xl,xr,h;
+      cin>>xl>>xr>>h;
+      for(int i=xl+21;i<xr+21;++i) hm[i]=max(hm[i],h);
+    }
+    double mx=21;
+    for(int i=21-r;i<=21+r;++i) mx=min(mx,min(hm[i-1],hm[i])+r-sqrt(r*r-(i-21)*(i-21)));
+    cout<<setprecision(10)<<fixed<<mx<<endl;
+  }
+  return 0;
+}

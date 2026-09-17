@@ -1,0 +1,76 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <random>
+#include <cassert>
+#include <cstring>
+#include <chrono>
+
+using namespace std;
+
+typedef unsigned long long ll;
+
+int n;
+vector<string> g;
+
+ll dp[40][40][40][40], dp2[40][40][40][40];
+
+ll DP2(int a, int b, int c, int d);
+
+ll DP(int a, int b, int c, int d) {
+  bool firstEmpty = (a > b);
+  bool secondEmpty = (c > d);
+  if (firstEmpty || secondEmpty) {
+    return firstEmpty && secondEmpty;
+  }
+  ll& result = dp[a][b][c][d];
+  if (result != -1) return result;
+  result = 0;
+  for (int p = a; p <= b; ++p) for (int q = c; q <= d; ++q) {
+    if (g[p][q] == '0') {
+      continue;
+    }
+    result += DP2(a, p - 1, p + 1, b) * DP2(c, q - 1, q + 1, d);
+  }
+  return result;
+}
+
+ll DP2(int a, int b, int c, int d) {
+  bool firstEmpty = (a > b);
+  bool secondEmpty = (c > d);
+  if (firstEmpty || secondEmpty) {
+    return firstEmpty && secondEmpty;
+  }
+  ll& result = dp2[a][b][c][d];
+  if (result != -1) return result;
+  result = 0;
+  for (int p = a; p <= b; ++p) for (int q = c; q <= d; ++q) {
+    result += DP(a, p, q, d) * DP2(p + 1, b, c, q - 1);
+  }
+  return result;
+}
+
+int main()
+{
+  cin >> n;
+  g.resize(2 * n);
+  for (int i = 0; i < 2 * n; ++i) {
+    cin >> g[i];
+  }
+
+  memset(dp, -1, sizeof(dp));
+  memset(dp2, -1, sizeof(dp2));
+
+  ll result = 0;
+
+  for (int a = 2; a < 2 * n - 1; ++ a) {
+    if (g[0][a] == '0') {
+      continue;
+    }
+    result += DP2(1, a - 1, a + 1, 2 * n - 1);
+  }
+
+  cout << result << endl;
+
+  return 0;
+}

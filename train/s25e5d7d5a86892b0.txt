@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define rep1(i,n) for(int i=1;i<=(n);++i)
+#define all(c) (c).begin(),(c).end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl;
+int n,op[500001][2],s[500001],ns[500001],num[500001],d[500000];
+void calc(int v){
+	int a=op[v][0],b=op[v][1];
+	num[v]=num[a]+num[b];
+	ns[v]=ns[a]+ns[b]+num[v];
+	s[v]=min(ns[v],1+s[a]+d[v]+1+s[b]);
+	s[v]=min(s[v],ns[a]+num[a]+1+s[b]);
+	s[v]=min(s[v],ns[b]+num[b]+1+s[a]);
+}
+int main(){
+	cin>>n;
+	rep(i,n-1){
+		scanf("%d%d",&op[i][0],&op[i][1]);
+		op[i][0]--,op[i][1]--;
+		d[op[i][0]]=d[i]+1;
+		d[op[i][1]]=d[i]+1;
+	}
+	num[n-1]=1;
+	s[n-1]=0;
+	ns[n-1]=0;
+	for(int i=n-2;i>=0;i--) calc(i);
+	cout<<min(s[0],ns[0])<<endl;
+}

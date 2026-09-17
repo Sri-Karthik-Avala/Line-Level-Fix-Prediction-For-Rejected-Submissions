@@ -1,0 +1,16 @@
+from bisect import bisect
+MAXN = 1000002
+ham = [False]*MAXN
+def func(n):
+    if not (n>MAXN or ham[n]):
+        ham[n] = True
+        for m in [2,3,5]:
+            func(m*n)
+func(1)
+H = filter(lambda i:ham[i],xrange(MAXN))
+while True:
+    line = raw_input()
+    if line == "0":
+        break
+    m,n = map(int,line.split())
+    print bisect(H,n)-bisect(H,m)+1

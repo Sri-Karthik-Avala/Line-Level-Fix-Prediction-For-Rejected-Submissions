@@ -1,0 +1,96 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int var[26][20];
+int perm[26];
+char in[2];
+char str[1100];
+int cur;
+int n;
+struct wolf{
+	int p[20];
+	wolf(){for(int i=0;i<20;i++)p[i]=i;}
+};
+wolf expr();
+wolf term(){
+	if(str[cur]=='('){
+		cur++;
+		wolf ret=expr();
+		cur++;
+		return ret;
+	}
+	if('A'<=str[cur]&&str[cur]<='Z'){
+		char ch=str[cur];
+		cur++;
+		wolf ret;
+		for(int i=0;i<n;i++)ret.p[i]=var[ch-'A'][i];
+		return ret;
+	}
+	int ks=0;
+	while('0'<=str[cur]&&str[cur]<='9'){
+		ks*=10;
+		ks+=str[cur]-'0';
+		cur++;
+	}
+	wolf ret;
+	wolf mat=term();
+	wolf to;
+//	for(int i=0;i<n;i++)mat.p[i]=var[str[cur]-'A'][i];
+	while(ks){
+		if(ks%2){
+			for(int i=0;i<n;i++)to.p[i]=mat.p[ret.p[i]];
+			for(int i=0;i<n;i++)ret.p[i]=to.p[i];
+		}
+		ks/=2;
+		for(int i=0;i<n;i++)to.p[i]=mat.p[mat.p[i]];
+		for(int i=0;i<n;i++)mat.p[i]=to.p[i];	
+	}
+	cur++;
+	return ret;
+}
+wolf expr(){
+	wolf ret=term();
+	while(str[cur]=='+'){
+		cur++;
+		wolf tmp=term();
+		wolf to;
+		for(int i=0;i<n;i++)to.p[i]=tmp.p[ret.p[i]];
+		ret=to;
+	}
+	return ret;
+}
+int ans[20];
+int main(){
+	int a,b;
+	scanf("%d%d",&a,&b);
+	n=a;
+	for(int i=0;i<b;i++){
+		int p,q;
+		scanf("%s%d",in,&q);
+		for(int j=0;j<a;j++)perm[j]=j;
+		for(int j=0;j<q-1;j++){
+			for(int k=0;k<a-1;k++){
+				int r;scanf("%d",&r);
+				if(r)swap(perm[k],perm[k+1]);
+			}
+		}
+		for(int j=0;j<a;j++){
+			var[in[0]-'A'][perm[j]]=j;
+		}
+	//	for(int j=0;j<a;j++)printf("%d ",var[in[0]-'A'][j]);
+	//	printf("\n");
+	}
+	int c;
+	scanf("%d",&c);
+	while(c--){
+		scanf("%s",str);
+		cur=0;
+		wolf ret=expr();
+		for(int i=0;i<a;i++)ans[ret.p[i]]=i;
+		for(int i=0;i<a;i++){
+			if(i)printf(" ");
+			printf("%d",ans[i]+1);
+		}
+		printf("\n");
+	}
+}

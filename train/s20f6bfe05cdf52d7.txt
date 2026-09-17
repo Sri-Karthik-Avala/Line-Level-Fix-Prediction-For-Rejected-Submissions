@@ -1,0 +1,9 @@
+import math 
+if __name__=="__main__":
+    while True:
+        x=int(raw_input())
+        h=int(raw_input())
+        if x==0 and h==0 :
+            break
+        tra=math.sqrt((x/2)**2+h**2)
+        print x**2+tra*x/2*4              

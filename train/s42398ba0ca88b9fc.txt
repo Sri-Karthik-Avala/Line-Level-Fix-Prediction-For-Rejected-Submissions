@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+int main(void)
+{
+	int a,s[500],d[500],f,g,h,i,j,flg1=0,flg2=0;
+	scanf("%d",&a);
+	for(i=0;i<a;i++)
+		scanf("%d %d",&s[i],&d[i]);
+	for(i=0;i<a;i++){
+		for(f=1;f<=5;f++){
+			g=f*100;
+			if(g>s[i]){
+				h=f;
+				break;
+			}
+			if(g==s[i]){
+				flg1=1;
+				h=f;
+				break;
+			}
+		}
+		//printf("h = %d\n",h);
+		f=0;
+		while(1){
+			if(f==180)
+				break;
+		//	printf("%d\n",f);
+			if(f<d[i]){
+				h+=5;
+			}
+			if(f>d[i]){
+				break;
+			}
+			if(f==d[i]){
+				flg2=1;
+				break;
+			}
+			f+=30;
+		}
+		if(flg1==0&&flg2==0)
+			printf("%d %d %d %d\n",h-6,h-5,h-1,h);
+		else if(flg1==1&&flg2==0)
+			printf("%d %d\n",h-5,h);
+		else if(flg1==0&&flg2==1)
+			printf("%d %d\n",h-1,h);
+		else if(flg1==1&&flg2==1)
+			printf("%d\n",h);
+		flg1=0;
+		flg2=0;
+	}
+	return 0;
+}

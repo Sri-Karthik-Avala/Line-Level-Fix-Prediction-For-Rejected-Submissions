@@ -1,0 +1,26 @@
+# Str -> Bool
+def solve(s):
+
+    if len(s) < 3:
+        return False
+
+    t = s
+    while t.find("ABC") != -1:
+        if t[0:3] == "ABC":
+            t = t.replace("ABC", "A")
+        elif t[-3:] == "ABC":
+            t = t.replace("ABC", "C")
+        else:
+            t = t.replace("ABC", "B")
+
+    return len(t) == 1
+
+def main():
+    s = input()
+    if solve(s):
+        print("Yes")
+    else:
+        print("No")
+
+if __name__ == '__main__':
+    main()

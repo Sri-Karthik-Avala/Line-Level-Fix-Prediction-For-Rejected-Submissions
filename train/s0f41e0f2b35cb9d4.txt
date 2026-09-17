@@ -1,0 +1,96 @@
+# 0-index segment tree
+
+
+class SegmentTree:
+    """
+    init(init_val, ide_ele): 配列init_valで初期化  O(N)
+    update(k, x): k番目の値をxに更新                O(logN)
+    query(l, r): 区間[l, r)をsegfuncしたものを返す   O(logN)
+    """
+
+    def __init__(self, init_val, segfunc, ide_ele):
+        """
+        init_val: 配列の初期値
+        segfunc: 区間にしたい操作
+        ide_ele: 単位元
+        n: 要素数
+        num: n以上の最小の2のべき乗
+        tree: セグメント木(0-index)
+        """
+        n = len(init_val)
+        self.segfunc = segfunc
+        self.ide_ele = ide_ele
+        self.num = 1 << (n - 1).bit_length()
+        self.tree = [ide_ele] * 2 * self.num
+        # 配列の値を葉にセット
+        for i in range(n):
+            self.tree[self.num - 1 + i] = init_val[i]
+        # 構築していく
+        for i in range(self.num - 2, -1, -1):
+            self.tree[i] = self.segfunc(self.tree[2 * i + 1], self.tree[2 * i + 2])
+
+    def update(self, k, x):
+        """
+        k番目の値をxに更新
+        k: index(0-index)
+        x: update value
+        """
+        k += self.num - 1
+        # self.tree[k]  = x   <- when updated
+        # self.tree[k] += x  <- when added
+        self.tree[k] = x
+        while k > 0:
+            k = (k - 1) // 2
+            self.tree[k] = self.segfunc(self.tree[2 * k + 1], self.tree[2 * k + 2])
+
+    def query(self, left, right):
+
+        if left >= right:
+            print("left must be smaller than right")
+            exit(0)
+
+        if right > self.num:
+            print("right must be smaller than self.num")
+            exit(0)
+
+        """
+        [l, r)のsegfuncしたものを得る
+        l: index(0-index)
+        r: index(0-index)
+        """
+        res = self.ide_ele
+
+        left += self.num - 1
+        right += self.num - 1
+        while left < right:
+            if left & 1 == 0:
+                res = self.segfunc(res, self.tree[left])
+            if right & 1 == 0:
+                right -= 1
+                res = self.segfunc(res, self.tree[right])
+            left >>= 1
+            right >>= 1
+        return res
+
+
+MAX_NUM = 10
+n, k = map(int, input().split())
+
+a = []
+for i in range(n):
+    a.append(int(input()))
+
+dp = [0] * (MAX_NUM + 5)
+
+segfunc = max
+ide_ele = -float("inf")
+
+st = SegmentTree(dp, segfunc, ide_ele)
+
+for num in a:
+    left = max(0, num - k)
+    right = min(MAX_NUM, num + k) + 1
+
+    st.update(num, st.query(left, right) + 1)
+
+print(st.query(0, MAX_NUM + 1))

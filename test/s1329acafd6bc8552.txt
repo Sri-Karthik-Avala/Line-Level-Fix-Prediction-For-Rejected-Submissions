@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef vector<int> row;
+typedef vector<row> matrix;
+
+matrix multi(const matrix& a, const matrix& b, const int mod)
+{
+  matrix c(a.size(), row(b[0].size(), 0));
+  for(int i = 0; i < a.size(); i++) {
+    for(int j = 0; j < b.size(); j++) {
+      for(int k = 0; k < b[0].size(); k++) {
+	c[i][k] = (c[i][k] + a[i][j]*b[j][k]) % mod;
+      }
+    }
+  }
+  return c;
+}
+
+matrix pow(matrix a, int n, const int mod)
+{
+  matrix b(a.size(), row(a.size(), 0));
+  for(int i = 0; i < a.size(); i++) b[i][i] = 1;
+  while(n > 0) {
+    if(n & 1) b = multi(b, a, mod);
+    a = multi(a, a, mod);
+    n >>= 1;
+  }
+  return b;
+}
+
+int main()
+{
+  int N, M, A, B, C, T;
+  while(cin >> N >> M >> A >> B >> C >> T, N) {
+    matrix a(N, row(N, 0)), b(N, row(1, 0));
+    for(int i = 0; i < N; i++) {
+      if(i > 0) a[i][i-1] = C;
+      a[i][i] = B;
+      if(i+1 < N) a[i][i+1] = A;
+    }
+    for(int i = 0; i < N; i++) cin >> b[i][0];
+    a = multi(pow(a, T, M), b, M);
+    for(int i = 0; i < N; i++) cout << a[i][0] << (i == N-1 ? '\n' : ' ');
+  }
+  return 0;
+}

@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(0);
+  cout << setprecision(20) << fixed;
+  int N, A, B;
+  cin >> N >> A >> B;
+  vector<int> city(N);
+  for(int i = 0; i < N; i++) cin >> city[i];
+  long long ans = 0;
+  for(int i = 0; i < N-1; i++){
+    ans += min((city[i+1] - city[i]) * A, B);
+  }
+  cout << ans <<endl;
+}

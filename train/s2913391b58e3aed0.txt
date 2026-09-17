@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <string>
+#include <map>
+#include <set>
+#include <stack>
+#include <tuple>
+#include <deque>
+#include <numeric>
+#include <bitset>
+#include <iomanip>
+#include <cassert>
+#include <chrono>
+#include <random>
+#include <limits>
+#include <iterator>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <cstring>
+using namespace std;
+
+using ll = long long;
+using P = pair<int, int>;
+constexpr int INF = 1001001001;
+// constexpr int mod = 1000000007;
+constexpr int mod = 998244353;
+
+template<class T>
+inline bool chmax(T& x, T y){
+    if(x < y){
+        x = y;
+        return true;
+    }
+    return false;
+}
+template<class T>
+inline bool chmin(T& x, T y){
+    if(x > y){
+        x = y;
+        return true;
+    }
+    return false;
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N;
+    cin >> N;
+    vector<vector<int>> graph(N);
+    for(int i = 0; i < N - 1; ++i){
+        int a, b;
+        cin >> a >> b;
+        --a, --b;
+        graph[a].emplace_back(b);
+        graph[b].emplace_back(a);
+    }
+    vector<vector<int>> val(3);
+    int mod3 = 1;
+    for(int i = 1; i <= N; ++i){
+        val[mod3++].emplace_back(i);
+        if(mod3 == 3)   mod3 = 0;
+    }
+    vector<vector<int>> idx(2);
+    auto dfs = [&](auto&& self, int from = 0, int group = 0, int par = -1) -> void {
+        idx[group].emplace_back(from);
+        group ^= 1;
+        for(int to : graph[from]){
+            if(to == par)   continue;
+            self(self, to, group, from);
+        }
+    };
+    dfs(dfs);
+    vector<int> ans(N, -1);
+    if(idx[0].size() >= val[1].size() + val[2].size()){
+        int cur = 0;
+        for(int x : val[1]) ans[idx[0][cur++]] = x;
+        for(int x : val[2]) ans[idx[0][cur++]] = x;
+        int cur_idx = 0;
+        while(cur < (int)idx[0].size()) ans[idx[0][cur++]] = val[0][cur_idx++];
+        for(int v : idx[1]) ans[v] = val[0][cur_idx++];
+    }
+    else if(idx[1].size() >= val[1].size() + val[2].size()){
+        int cur = 0;
+        for(int x : val[1]) ans[idx[1][cur++]] = x;
+        for(int x : val[2]) ans[idx[1][cur++]] = x;
+        int cur_idx = 0;
+        while(cur < (int)idx[1].size()) ans[idx[1][cur++]] = val[0][cur_idx++];
+        for(int v : idx[0]) ans[v] = val[0][cur_idx++];
+    }
+    else{
+        if(idx[0].size() < val[1].size())   swap(idx[0], idx[1]);
+        int cur = 0;
+        for(int x : val[1]) ans[idx[0][cur++]] = x;
+        int cur_idx = 0;
+        while(cur < (int)idx[0].size()) ans[idx[0][cur++]] = val[0][cur_idx++];
+        cur = 0;
+        for(int x : val[2]) ans[idx[1][cur++]] = x;
+        while(cur < (int)idx[1].size()) ans[idx[1][cur++]] = val[1][cur_idx++];
+    }
+    for(int i = 0; i < N; ++i){
+        cout << ans[i];
+        cout << ((i == N - 1) ? '\n' : ' ');
+    }
+}

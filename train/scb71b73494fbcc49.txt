@@ -1,0 +1,62 @@
+import sys
+from bisect import bisect
+
+
+class BinaryIndexedTree:
+
+    def __init__(self, n, MOD):
+        self.size = n + 1
+        self.tree = [0] * (n + 2)
+        self.MOD = MOD
+
+    def sum(self, i):
+        i += 1
+        s = 0
+        while i > 0:
+            s = (s + self.tree[i]) % self.MOD
+            i -= i & -i
+        return s
+
+    def add(self, i, x):
+        i += 1
+        while i <= self.size:
+            self.tree[i] = (self.tree[i] + x) % self.MOD
+            i += i & -i
+
+    def debug_print(self, limit=None):
+        if limit is None:
+            limit = self.size
+        acc = [0] + [self.sum(i) for i in range(limit)]
+        aaa = [a1 - a0 for a0, a1 in zip(acc, acc[1:])]
+        print(aaa)
+
+
+def solve(n, a, b, sss):
+    if a > b:
+        a, b = b, a
+
+    for s0, s2 in zip(sss, sss[2:]):
+        if s2 - s0 < a:
+            return 0
+
+    MOD = 10 ** 9 + 7
+
+    bit = BinaryIndexedTree(n, MOD)
+    bit.add(0, 1)
+    bit.add(1, 1)
+
+    sss.insert(0, -10 ** 18 - 1)
+
+    for i in range(1, n):
+        s0 = sss[i]
+        s1 = sss[i + 1]
+        lim = bisect(sss, s1 - b) - 1
+        bit.add(i + 1, bit.sum(lim))
+        if s1 - s0 < a:
+            bit.add(i - 1, -bit.sum(i - 1))
+
+    return bit.sum(n)
+
+
+n, a, b, *sss = map(int, sys.stdin.read().split())
+print(solve(n, a, b, sss))

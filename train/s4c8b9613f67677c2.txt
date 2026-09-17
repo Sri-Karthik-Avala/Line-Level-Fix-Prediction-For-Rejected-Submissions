@@ -1,0 +1,70 @@
+#include<iostream>
+#include<cstdlib>
+#include<sstream>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < int(n); ++i)
+
+int main() {
+  while (true){
+    int n;
+    cin >> n;
+    if (n == 0) break;
+    string str[n];
+    rep (i, n) cin >> str[i];
+    rep (i, n) if (str[i] == "-") str[i] = "";
+    bool re[n];
+    rep (i, n) {
+      if (str[i][str[i].size() - 1] == 'v') {
+	re[i] = true;
+	str[i] = str[i].substr(0, str[i].size() - 1);
+      } else {
+	re[i] = false;
+      }
+    }
+    int num[n];
+    rep (i, n) num[i] = 0;
+    rep (i, n) if (str[i].size()) {
+      int k = 0;
+      while (isalpha(str[i][k])) ++k;
+      stringstream ss;
+      ss << str[i].substr(k);
+      ss >> num[i];
+      str[i] = str[i].substr(0, k);
+    }
+    bool used[n];
+    rep (i, n) used[i] = false;
+    //rep (i, n) cerr << str[i] << " " << num[i] << " " << re[i] << endl;
+    int pos = -1;
+    while (true) {
+      ++pos;
+      if (pos == n) break;
+      if (used[pos]) continue;
+      if (re[pos]) continue;
+      if (num[pos] > 1) continue;
+      cout << pos + 1 << endl;
+      used[pos] = true;
+      int nn = num[pos];
+      if (nn == 1) {
+	int p = pos;
+	nn = 2;
+	while (p > 0) {
+	  --p;
+	  if (used[p]) continue;
+	  if (str[pos] != str[p]) continue;
+	  if (nn != num[p]) continue;
+	  ++nn;
+	  pos = p;
+	  used[pos] = true;
+	  cout << p + 1 << endl;
+	}
+      }
+      if (pos != 0 && re[pos - 1]) {
+	pos -= 2;
+	re[pos + 1] = false;
+      }
+    }
+  }
+  return 0;
+}

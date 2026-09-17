@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define REP(i,b) FOR(i,0,b)
+#define BE(c) c.begin(),c.end()
+#define PB push_back
+#define F first
+#define S second
+#define BEB(s) s
+using namespace std;
+int main(){
+	char com;
+	double BMI,b,c;
+	int a;
+	while(cin>>a>>com>>b>>com>>c){
+		if(25<b/(c*c))cout<<a<<endl;
+	}
+	return 0;
+}

@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<n;i++)
+int n,q;
+vector<int>v[1919];
+int z,t,x;
+int main(){
+    cin>>n;
+    while(q--){
+        cin>>z>>t;
+        if(z==0){
+            cin>>x;
+            v[t].push_back(x);
+        }
+        if(z==1){
+            rep(i,v[t].size()){
+                cout<<v[t][i];
+                if(i!=v[t].size()-1)cout<<" ";
+            }
+            cout<<endl;
+        }
+        if(z==2)v[t].clear();
+    }
+    return 0;
+}

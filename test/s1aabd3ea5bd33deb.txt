@@ -1,0 +1,16 @@
+while 1:
+    a,p=map(int,input().split())
+    if not a and not p:break
+    a=str(a).zfill(p)
+    b=[a]
+    f=lambda l:int("".join(l))
+
+    for j in range(10):
+        m=sorted(a)
+        a=str(f(m[::-1])-f(m)).zfill(p)
+        if a in b:
+            i=b.index(a)
+            break
+        b.append(a)
+    print(i,int(a),j+1-i)
+

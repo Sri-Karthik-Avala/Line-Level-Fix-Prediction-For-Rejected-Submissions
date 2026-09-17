@@ -1,0 +1,14 @@
+numset = set([])
+q = int(input())
+for i in range(q):
+    query, x = list(map(int, input().split(' ')))
+    if query == 0:
+        numset.add(x)
+        print(len(numset))
+    elif query == 1:
+        if set([x]).issubset(numset):
+            print(1)
+        else:
+            print(0)
+    else:
+        numset.remove(x)

@@ -1,0 +1,81 @@
+/*
+ * 2509.cc: Sim Forest 2013
+ */
+
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<map>
+#include<set>
+#include<stack>
+#include<list>
+#include<queue>
+#include<deque>
+#include<algorithm>
+#include<numeric>
+#include<utility>
+#include<complex>
+#include<functional>
+ 
+using namespace std;
+
+/* constant */
+
+/* typedef */
+
+/* global variables */
+
+/* subroutines */
+
+bool ok(int ct, int wn, int tr) {
+  int h = ct / 60 % 24, d = (ct / (24 * 60)) % 7;
+  return
+    ((wn == -1 || wn == d) &&
+     (tr == 0 ||
+      (tr == 1 && d >= 6 && d < 18) ||
+      (tr == 2 && (d < 6 || d>= 18))));
+}
+
+/* main */
+
+int main() {
+  for (;;) {
+    int s, n, t, p, m;
+    string wd, tm;
+    cin >> s >> n >> t >> wd >> tm >> p >> m;
+    if (s == 0) break;
+
+    int wn = -1;
+    if (wd == "Sun") wn = 0;
+    else if (wd == "Mon") wn = 1;
+    else if (wd == "Tue") wn = 2;
+    else if (wd == "Wed") wn = 3;
+    else if (wd == "Thu") wn = 4;
+    else if (wd == "Fri") wn = 5;
+    else if (wd == "Sat") wn = 6;
+
+    int tr = 0;
+    if (tm == "Day") tr = 1;
+    else if (tm == "Night") tr = 2;
+
+    double pn = pow((double)(p - 1) / p, n);
+    double minp = 1.0;
+    
+    for (int st = 0; st < 7 * 24 * 60; st++) {
+      double pmul = 1.0;
+      for (int i = 0; i < m; i++) {
+	int ct0 = st + i * t, ct1 = ct0 + s;
+
+	if (ok(ct0, wn, tr) && ok(ct1, wn, tr)) pmul *= pn;
+      }
+      if (minp > pmul) minp = pmul;
+    }
+
+    printf("%.10lf\n", 1.0 - minp);
+  }
+  return 0;
+}

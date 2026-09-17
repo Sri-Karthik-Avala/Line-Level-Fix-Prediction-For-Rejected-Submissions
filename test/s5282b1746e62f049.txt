@@ -1,0 +1,88 @@
+#include <bits/stdc++.h>
+#define INF 1LL<<60
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> P;
+typedef pair<P,int> PP;
+
+ll labs(ll v){
+	if(v<0LL)return -v;
+	return v;
+}
+
+int n;
+ll dp[4001][4001];
+vector<ll> d1;
+vector<P> vec;
+
+void solve(){
+	d1.clear();
+	vec.clear();
+	ll sum=2;
+	for(int i=0;i<n;i++){
+		int p,d;
+		scanf("%d%d",&p,&d);
+		sum+=d-2;
+		if(d==1){
+			d1.push_back(p);
+		}else{
+			vec.push_back(P(p,d));
+		}
+	}
+	sort(d1.begin(),d1.end());
+	sort(vec.begin(),vec.end());
+	if(sum<0){
+		printf("-1\n");
+		return;
+	}
+	if(vec.size()==0){
+		printf("%lld\n",d1[1]-d1[0]);
+		return;
+	}
+	for(int i=0;i<=d1.size();i++){
+		dp[0][i]=INF;
+	}
+	dp[0][0]=0;
+	for(int i=0;i<vec.size();i++){
+		//cout << vec[i].first << " "<< vec[i].second << endl;
+		int rest=vec[i].second-2;
+		if(i==0 || i+1==vec.size()){
+			rest++;
+		}
+		for(int j=0;j<=d1.size();j++){
+			dp[i+1][j]=dp[i][j];
+		}
+		deque<PP> deq;
+		ll lazysum=0;
+		for(int j=0;j<d1.size();j++){
+			if(rest==0)break;
+			while(deq.size()>0 && deq[0].second<j+1-rest){
+				deq.pop_front();
+			}
+			while(deq.size()>0 && deq.back().first.first+lazysum-deq.back().first.second>=dp[i][j]){
+				deq.pop_back();
+			}
+			deq.push_back(PP(P(dp[i][j],lazysum),j));
+			lazysum+=labs(d1[j]-vec[i].first);
+			dp[i+1][j+1]=min(dp[i+1][j+1],deq[0].first.first+lazysum-deq[0].first.second);
+		}
+	}
+	/*
+	for(int i=0;i<=vec.size();i++){
+		for(int j=0;j<=d1.size();j++){
+			printf("%lld ",dp[i][j]);
+		}
+		printf("\n");
+	}
+	*/
+	printf("%lld\n",dp[vec.size()][d1.size()]+vec[vec.size()-1].first-vec[0].first);
+}
+
+int main(void){
+	while(1){
+		scanf("%d",&n);
+		if(n==0)break;
+		solve();
+	}
+	return 0;
+}

@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+
+//#include <atcoder/all>
+#define For(i, a, b) for (int(i) = (int)(a); (i) < (int)(b); ++(i))
+#define rFor(i, a, b) for (int(i) = (int)(a)-1; (i) >= (int)(b); --(i))
+#define rep(i, n) For((i), 0, (n))
+#define rrep(i, n) rFor((i), (n), 0)
+#define fi first
+#define se second
+using namespace std;
+typedef long long lint;
+typedef unsigned long long ulint;
+typedef pair<int, int> pii;
+typedef pair<lint, lint> pll;
+template <class T>
+bool chmax(T &a, const T &b) {
+    if (a < b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+template <class T>
+bool chmin(T &a, const T &b) {
+    if (a > b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+template <class T>
+T div_floor(T a, T b) {
+    if (b < 0) a *= -1, b *= -1;
+    return a >= 0 ? a / b : (a + 1) / b - 1;
+}
+template <class T>
+T div_ceil(T a, T b) {
+    if (b < 0) a *= -1, b *= -1;
+    return a > 0 ? (a - 1) / b + 1 : a / b;
+}
+
+constexpr lint mod = 1000000007;
+constexpr lint INF = mod * mod;
+constexpr int MAX = 100010;
+
+constexpr int h = 8;
+int n, q;
+lint v[1 << 18], w[1 << 18], dp[10][MAX];
+vector<pii> qs[1 << 18];
+lint ans[MAX];
+
+void dfs(int t, int d) {
+    if (d <= h) {
+        dp[d][0] = 0;
+        For(i, 1, MAX) {
+            dp[d][i] = max(dp[d][i - 1], dp[d - 1][i]);
+            if (i >= w[t]) chmax(dp[d][i], dp[d - 1][i - w[t]] + v[t]);
+        }
+    }
+    for (auto [id, L] : qs[t]) {
+        if (d <= h)
+            ans[id] = dp[d][L];
+        else {
+            ans[id] = 0;
+            vector<lint> vs, ws;
+            for (int td = d, tt = t; td > h; --td, tt /= 2) {
+                vs.push_back(v[tt]);
+                ws.push_back(w[tt]);
+            }
+            rep(S, 1 << vs.size()) {
+                lint tv = 0, tw = 0;
+                rep(i, vs.size()) if (S >> i & 1) {
+                    tv += vs[i];
+                    tw += ws[i];
+                }
+                if (tw <= L) chmax(ans[id], dp[h][L - tw] + tv);
+            }
+        }
+    }
+    if (t * 2 <= n) dfs(t * 2, d + 1);
+    if (t * 2 + 1 <= n) dfs(t * 2 + 1, d + 1);
+}
+
+int main() {
+    scanf("%d", &n);
+    For(i, 1, n + 1) scanf("%lld%lld", &v[i], &w[i]);
+    scanf("%d", &q);
+    rep(i, q) {
+        int t, L;
+        scanf("%d%d", &t, &L);
+        qs[t].emplace_back(i, L);
+    }
+    rep(i, MAX) dp[0][i] = 0;
+    dfs(1, 1);
+    rep(i, q) printf("%lld\n", ans[i]);
+}

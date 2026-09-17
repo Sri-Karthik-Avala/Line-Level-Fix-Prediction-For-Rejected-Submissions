@@ -1,0 +1,22 @@
+import bisect
+n=int(raw_input())
+a=[int(raw_input()) for _ in xrange(n)]
+a=a+a
+suma=[0]*(2*n+1)
+for i in xrange(n*2):
+    suma[i+1]+=suma[i]+a[i]
+suma=suma+[n*10**9+5]+[float('inf')]
+ans=0
+for i in xrange(n):
+    r=n*10**9
+    l=0
+    while r-l>1:
+        m=(r+l)/2
+        c2=bisect.bisect_left(suma,m+suma[i])
+        c3=bisect.bisect_left(suma,m+suma[c2])
+        if suma[n+i]-suma[c3]>=m:
+            l=m
+        else:
+            r=m
+    ans=max(ans,m)
+print(ans)

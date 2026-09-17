@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#pragma warning(disable : 4996)
+using namespace std;
+int N, W, w[100009], v[100009], cnt; vector<pair<double, int> > d1, d2;
+double solve(double x) {
+	double ret = 0.0, sum1 = 0.0, sum2 = 0.0;
+	for (int i = 0; i < d1.size() && d1[i].first > 0.0; i++) {
+		if (sum1 + d1[i].second < W + x) {
+			ret += d1[i].first * d1[i].second;
+			sum1 += d1[i].second;
+		}
+		else {
+			ret += d1[i].first * (W + x - sum1);
+			break;
+		}
+	}
+	for (int i = 0; i < d2.size(); i++) {
+		if (sum2 + d2[i].second < x) {
+			ret += d2[i].first * d2[i].second;
+			sum2 += d2[i].second;
+		}
+		else {
+			ret += d2[i].first * (x - sum2);
+			break;
+		}
+	}
+	return ret;
+}
+int main() {
+	scanf("%d%d", &N, &W);
+	double sum = 0.0, sum2 = 0.0;
+	for (int i = 0; i < N; i++) {
+		scanf("%d%d", &w[i], &v[i]);
+		if (w[i] == 0) sum += max(v[i], 0);
+		if (w[i] > 0) d1.push_back(make_pair(1.0 * v[i] / w[i], w[i]));
+		else d2.push_back(make_pair(-1.0 * v[i] / w[i], -w[i])), sum2 -= w[i];
+	}
+	sort(d1.begin(), d1.end(), greater<pair<double, int> >());
+	sort(d2.begin(), d2.end(), greater<pair<double, int> >());
+	double l = 0.0, r = sum2;
+	for (int i = 0; i < 90; i++) {
+		double m1 = (l * 2.0 + r) / 3.0;
+		double m2 = (l + r * 2.0) / 3.0;
+		if (solve(m1) < solve(m2)) l = m1;
+		else r = m2;
+	}
+	printf("%.10lf\n", solve(l) + sum);
+	return 0;
+}

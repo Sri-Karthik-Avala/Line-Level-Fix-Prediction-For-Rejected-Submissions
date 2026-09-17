@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define int long long
+#define all(v) (v).begin(), (v).end()
+#define resz(v, ...) (v).clear(), (v).resize(__VA_ARGS__)
+#define reps(i, m, n) for(int i = (int)(m); i < (int)(n); i++)
+#define rep(i, n) reps(i, 0, n)
+
+template<class T1, class T2> void chmin(T1 &a, T2 b){if(a>b)a=b;}
+template<class T1, class T2> void chmax(T1 &a, T2 b){if(a<b)a=b;}
+
+using Pi = pair<int, int>;
+using Tapris = tuple<int, int, int>;
+using vint = vector<int>;
+
+const int inf = 1LL << 55;
+const int mod = 1e9 + 7;
+
+int h, w;
+char s, t;
+string mas[55];
+
+signed main() {
+  cin.tie(0);
+  ios_base::sync_with_stdio(0);
+  cout << fixed << setprecision(12);
+
+  cin >> h >> w >> s >> t;
+  rep(i, h) cin >> mas[i];
+
+  vector<Pi> pos(30, Pi(-1, -1));
+  rep(i, h) {
+    rep(j, w) {
+      if(isalpha(mas[i][j])) {
+	pos[mas[i][j]-'A'] = Pi(i, j);
+      }
+    }
+  }
+
+  const int dy[] = {1, 0, -1, 0};
+  const int dx[] = {0, 1, 0, -1};
+
+  auto in = [&](int i, int j) {
+    return 0<=i&&i<h&&0<=j&&j<w;
+  };
+
+  int ss = s-'A', tt = t-'A';
+  queue<int>  que;
+  vint dist(30, -1);
+  que.push(ss);
+  dist[ss] = 0;
+  while(!que.empty()) {
+    int u = que.front(); que.pop();
+    rep(i, 4) {
+      int ny = pos[u].first+dy[i], nx = pos[u].second+dx[i];
+      ny += dy[i];
+      nx += dx[i];
+      int cnt = 0;
+      while(in(ny, nx) && (mas[ny][nx] == '|' || mas[ny][nx] == '-')) {
+	ny += dy[i];
+	nx += dx[i];
+	++cnt;
+      }
+      if(cnt == 0) continue;
+      ny += dy[i];
+      nx += dx[i];
+      if(!in(ny, nx) || !isalpha(mas[ny][nx])) continue;
+      int v = mas[ny][nx]-'A';
+      if(dist[v] != -1) continue;
+      dist[v] = dist[u]+1;
+      que.push(v);
+    }
+  }
+
+  cout << dist[tt] << endl;
+
+  return 0;
+}
+

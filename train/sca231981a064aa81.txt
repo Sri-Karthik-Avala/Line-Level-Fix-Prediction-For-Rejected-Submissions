@@ -1,0 +1,6 @@
+L = int(input())
+l = int(L / 3) 
+L -= l
+b = L / 2
+h = L - b
+print(l * b * h)

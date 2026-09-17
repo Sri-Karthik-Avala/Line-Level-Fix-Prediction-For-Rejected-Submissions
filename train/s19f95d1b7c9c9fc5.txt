@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define FOR(i,k,n) for(int i = (k); i < (n); i++)
+#define REP(i,n) FOR(i,0,n)
+#define INF 114514810
+#define ll long long
+#define ALL(a) (a).begin(),(a).end()
+#define SORT(v) sort(ALL(v))
+//#define scanf scanf_s
+typedef pair<int, int> P;
+
+int n;
+int w, h;
+int tizu[105][105];
+int main()
+{
+	while (cin >> n, n)
+	{
+		memset(tizu, 0, sizeof(tizu));
+		cin >> w >> h;
+		REP(i, n)
+		{
+			int x, y;
+			cin >> x >> y;
+			tizu[y-1][x-1] = 1;
+		}
+		int s, t;
+		cin >> s >> t;
+		int ans = 0;
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int cnt = 0;
+				REP(k, t)REP(l, s)
+				{
+					cnt += tizu[k + i][l + j];
+				}
+				ans = max(cnt, ans);
+			}
+		}
+		cout << ans << endl;
+
+	}		
+	return 0;
+}

@@ -1,0 +1,49 @@
+#coding:UTF-8                                                                                                                                                                                                     
+                                                                                                                                                                                                                  
+def Calculate(rows) :                                                                                                                                                                                             
+    up, down = 0, 0                                                                                                                                                                                               
+                                                                                                                                                                                                                  
+    for x in range(0, len(rows) - 1) :                                                                                                                                                                            
+        tmp = rows[x + 1] - rows[x]                                                                                                                                                                               
+                                                                                                                                                                                                                  
+        if tmp < 0 :                                                                                                                                                                                              
+            tmp = abs(tmp)                                                                                                                                                                                        
+                                                                                                                                                                                                                  
+            if down < tmp :                                                                                                                                                                                       
+                down = tmp                                                                                                                                                                                        
+                                                                                                                                                                                                                  
+        elif tmp > 0 :                                                                                                                                                                                            
+            if up < tmp :                                                                                                                                                                                         
+                up = tmp                                                                                                                                                                                          
+                                                                                                                                                                                                                  
+        else :                                                                                                                                                                                                    
+            pass                                                                                                                                                                                                  
+                                                                                                                                                                                                                  
+    print("{0} {1}".format(up, down))                                                                                                                                                                             
+                                                                                                                                                                                                                  
+    return(up, down)                                                                                                                                                                                              
+                                                                                                                                                                                                                  
+def Main() :                                                                                                                                                                                                      
+    fields = int(input())                                                                                                                                                                                         
+    up, down = [], []                                                                                                                                                                                             
+                                                                                                                                                                                                                  
+    for x in range(fields) :                                                                                                                                                                                      
+        blocks_q = int(input())                                                                                                                                                                                   
+
+        blocks = input().split(' ')
+        blocks = [int(x) for x in blocks]
+
+        if blocks_q != len(blocks) : 
+            # error
+            pass
+
+        tmp_up, tmp_down = Calculate(blocks)
+        up.append(tmp_up)
+        down.append(tmp_down)
+    
+    for x in range(len(up)) : 
+        print("{0} {1}".format(up[x], down[x]))
+
+
+if __name__ == "__main__" : 
+    Main()

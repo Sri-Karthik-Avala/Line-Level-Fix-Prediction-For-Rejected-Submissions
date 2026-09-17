@@ -1,0 +1,39 @@
+#include<stdio.h>
+int main(void)
+{
+	int n,i;
+	int pm,pe,pj;
+	int meh,h;
+	int flg=0;
+	scanf("%d",&n);
+	while(n!=0){
+		for(i=0;i<n;i++){
+			scanf("%d %d %d",&pm,&pe,&pj);
+			meh=(pm+pe)/2;
+			h=(pm+pe+pj)/3;
+			if(pe>=80 || pj>=80){
+				flg=1;
+			}
+			if(pm==100 || pe==100 || pj==100){
+				printf("A\n");
+			}
+			else if(meh>=90){
+				printf("A\n");
+			}
+			else if(h>=80){
+				printf("A\n");
+			}
+			else if(h>=70){
+				printf("B\n");
+			}
+			else if(h>=50 && flg==1){
+				printf("B\n");
+			}
+			else{
+				printf("C\n");
+			}
+		}
+		scanf("%d",&n);
+	}
+	return 0;
+}

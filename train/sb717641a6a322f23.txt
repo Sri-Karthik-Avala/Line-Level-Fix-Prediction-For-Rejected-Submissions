@@ -1,0 +1,18 @@
+N, M = map(int, raw_input().split(' '))
+
+q = [ int(input()) for _ in range(N) ]
+poll = set()
+
+cnt = 0
+
+for _ in reversed(q):
+	if not _ in poll:
+		print(_)
+		
+		cnt = cnt + 1
+		
+		if cnt == M:
+			break	
+		
+		poll.append(_)
+		

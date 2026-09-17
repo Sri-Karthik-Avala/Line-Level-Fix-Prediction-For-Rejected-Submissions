@@ -1,0 +1,16 @@
+def main():
+    N, M = map(int, input().split())
+    a_b_dict = dict([tuple(map(int, input().split())) for _ in range(N)])
+    ans = 0
+    for a, b in sorted(a_b_dict.items()):
+        if M >= b:
+            M -= b
+            ans += a * b
+        else:
+            ans += a * M
+            break
+    print(ans)
+
+
+if __name__ == '__main__':
+    main()

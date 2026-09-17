@@ -1,0 +1,43 @@
+//#define _GLIBCXX_DEBUG
+#include <bits/stdc++.h>
+
+using namespace std;
+
+//----------------------- Print Function ----------------------//
+
+inline void print() {
+    cout << endl;
+}
+template <typename First, typename... Rest>
+void print(const First &first, const Rest &... rest) {
+    cout << first << ' ';
+    print(rest...);
+}
+
+//------------------------- Libraries -------------------------//
+
+//--------------------------- Solve ---------------------------//
+
+void solve() {
+    int N; cin >> N;
+    vector<int> t(N+1), x(N+1), y(N+1);
+    for (int i = 1; i <= N; i++) cin >> t[i] >> x[i] >> y[i];
+    bool ans = true;
+    for (int i = 1; i <= N; i++) {
+        int time = t[i] - t[i-1];
+        int dist = abs(x[i] - x[i-1]) + abs(y[i] + y[i-1]);
+        if (time < dist) ans = false;
+        else if (time > dist && (time - dist)&1) ans = false;
+    }
+    
+    cout << (ans ? "Yes" : "No") << '\n';
+}
+
+int main() {
+    cin.tie(nullptr);
+    ios_base::sync_with_stdio(false);
+
+    solve();
+
+    return 0;
+}

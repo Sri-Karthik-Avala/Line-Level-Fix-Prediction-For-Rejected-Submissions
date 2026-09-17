@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <numeric>
+#include <cctype>
+
+// BEGIN CUT HERE
+#ifdef _MSC_VER
+#include <agents.h>
+#endif
+// END CUT HERE 
+
+#define FOR(i, a, b) for(int i = (a); i < (int)(b); ++i)
+#define rep(i, n) FOR(i, 0, n)
+#define ALL(v) v.begin(), v.end()
+#define REV(v) v.rbegin(), v.rend()
+#define MEMSET(v, s) memset(v, s, sizeof(v))
+#define MP make_pair
+#define MT make_tuple
+#define X first
+#define Y second
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> P;
+
+int h, w, n;
+
+void pp(vector<string> &vs){
+	for (auto s : vs){
+		cout << s << endl;
+	}cout << endl;
+}
+
+bool drop(vector<string> &v){
+	bool dr = false;
+	for (int i = h - 2; i >= 0; --i) rep(j, w){
+		if (v[i][j] == '.') continue;
+		int i2 = i + 1;
+		while (i2 < h && v[i2][j] == '.') ++i2;
+		if (i != i2 - 1) dr = true;
+		swap(v[i][j], v[i2 - 1][j]);
+	}
+	pp(v);
+	return dr;
+}
+
+void erase(vector<string> &v){
+	vector<string> nxt = v;
+	rep(i, h) rep(j, w){
+		char c = v[i][j];
+		if (c == '.') continue;
+		if (i + n <= h){
+			int cnt = 0;
+			rep(d, n) cnt += c == v[i + d][j];
+			if (cnt == n) rep(d, n) nxt[i + d][j] = '.';
+		}
+		if (j + n <= w){
+			int cnt = 0;
+			rep(d, n) cnt += c == v[i][j + d];
+			if (cnt == n) rep(d, n) nxt[i][j + d] = '.';
+		}
+	}
+	v.swap(nxt);
+}
+
+bool simulate(vector<string> v){
+	drop(v);
+	while (1){
+		erase(v);
+		if (!drop(v)) break;
+	}
+	rep(i, h) rep(j, w) if (v[i][j] != '.') return false;
+	return true;
+}
+
+int main(){
+	while (cin >> h >> w >> n){
+		vector<string> vs(h);
+		rep(i, h) cin >> vs[i];
+
+		bool ans = false;
+		rep(i, h) rep(j, w){
+			if (j + 1 < w && vs[i][j] != vs[i][j + 1]){
+				swap(vs[i][j], vs[i][j + 1]);
+				ans |= simulate(vs);
+				swap(vs[i][j], vs[i][j + 1]);
+			}
+		}
+		cout << (ans ? "YES" : "NO") << endl;
+	}
+
+	return 0;
+}

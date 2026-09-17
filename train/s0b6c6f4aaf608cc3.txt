@@ -1,0 +1,112 @@
+#include<iostream>
+using namespace std;
+typedef long long ll;
+
+int N,K;
+
+int A[14][10];
+int B[14][10];
+
+int check(int y,int m){
+  if(m==2){
+    if(y%400==0)return 29;
+    else if(y%100==0)return 28;
+    else if(y%4==0)return 29;
+    else return 28;
+  }else if(m==4||m==6||m==9||m==11)return 30;
+  else return 31;
+}
+
+ll t[100];
+ll u[100];
+
+void make(){
+  int y=0,m=1,d=1;
+  while(y<10000){
+    
+    int sum=0;
+    sum+=B[0][y/1000];
+    sum+=B[1][(y/100)%10];
+    sum+=B[2][(y/10)%10];
+    sum+=B[3][y%10];
+    sum+=B[4][m/10];
+    sum+=B[5][m%10];
+    sum+=B[6][d/10];
+    sum+=B[7][d%10];
+    t[sum]++;
+
+    d++;
+    int last=check(y,m);
+    if(d>last){
+      d=1;m++;
+    }
+    if(m>12){
+      m=1;y++;
+    }
+  }
+}
+
+void make2(){
+  int h=0,m=0,s=0;
+  while(h<24){
+
+    int sum=0;
+    sum+=B[8][h/10];
+    sum+=B[9][h%10];
+    sum+=B[10][m/10];
+    sum+=B[11][m%10];
+    sum+=B[12][s/10];
+    sum+=B[13][s%10];
+    u[sum]++;
+    
+    s++;
+    if(s>59){
+      s=0;m++;
+    }
+    if(m>59){
+      m=0;h++;
+    }
+  }
+}
+
+void init(){
+  for(int i=0;i<14;i++){
+    for(int j=0;j<10;j++){
+      A[i][j]=1;
+      B[i][j]=0;
+    }
+  }
+  for(int i=0;i<100;i++)t[i]=u[i]=0;
+}
+
+int main(){
+  while(cin>>N>>K){
+    init();
+    for(int i=0;i<K;i++){
+      int a,b;
+      cin>>a>>b;
+      A[a][b]=0;
+    }
+    for(int i=0;i<14;i++){
+      B[i][1]=A[i][2]+A[i][5];
+      B[i][2]=A[i][0]+A[i][2]+A[i][3]+A[i][4]+A[i][6];
+      B[i][3]=A[i][0]+A[i][2]+A[i][3]+A[i][5]+A[i][6];
+      B[i][4]=A[i][1]+A[i][2]+A[i][3]+A[i][5];
+      B[i][5]=A[i][0]+A[i][1]+A[i][3]+A[i][5]+A[i][6];
+      B[i][6]=A[i][0]+A[i][1]+A[i][3]+A[i][4]+A[i][5]+A[i][6];
+      B[i][7]=A[i][0]+A[i][2]+A[i][3];
+      B[i][8]=A[i][0]+A[i][1]+A[i][2]+A[i][3]+A[i][4]+A[i][5]+A[i][6];
+      B[i][9]=A[i][0]+A[i][1]+A[i][2]+A[i][3]+A[i][5]+A[i][6];
+      B[i][0]=A[i][0]+A[i][1]+A[i][2]+A[i][4]+A[i][5]+A[i][6];
+    }
+    make();
+    make2();
+
+    ll ans=0;
+    for(int i=0;i<=N;i++){
+      ans+=t[i]*u[N-i];
+    }
+    cout<<ans<<endl;
+  }
+  return 0;
+}

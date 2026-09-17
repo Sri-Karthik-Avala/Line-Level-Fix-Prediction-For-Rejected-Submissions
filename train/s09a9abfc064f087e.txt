@@ -1,0 +1,40 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int dp[2][5001][2];/* 今いる位置、切った長さ、ここで切ったか */
+int N;
+int t[10010];
+int ans = 1 << 30;
+int main(){
+    cin >> N;
+    for(int i = 1; i < N; i++){
+        cin >> t[i];
+    }
+    for(int i = 0; i <= 1; i++){
+        for(int j = 1; j <= N / 2; j++){
+            for(int k = 0; k <= 1; k++){ 
+                dp[i][j][k] = 1 << 30;
+            }
+        }
+    }
+    dp[1][1][0] = 0;
+    for(int i = 1; i < N; i++){
+        for(int j = 1; j <= N / 2; j++){
+            for(int k = 0; k < 2; k++){
+                int to = (i + 1) & 1;
+                dp[to][j + 1][0] = min(dp[to][j + 1][0], dp[i & 1][j][0]);
+                dp[to][j][1] = min(dp[to][j][1], dp[i & 1][j][0] + t[i]);
+                dp[to][j + 1][0] = min(dp[to][j + 1][to], dp[i & 1][j][1] + t[i]);
+                dp[to][j][1] = min(dp[to][j][1], dp[i & 1][j][1]);
+            }
+        }
+        for(int j = 1; j <= N / 2; j++){
+            for(int k = 0; k < 2; k++){
+                dp[i & 1][j][k] = 1 << 30;
+            }
+        }
+    }
+    ans = min(dp[N & 1][N / 2][1], dp[N & 1][N / 2][0]);
+    cout << ans << endl;
+    return 0;
+}

@@ -1,0 +1,82 @@
+#include <bits/stdc++.h>
+#pragma GCC optimize("Ofast", "unroll-loops")
+using namespace std;
+#define ll long long
+#define int ll
+#define FOR(i,a,b) for (int i=(a);i<(b);i++)
+#define REP(i,n) FOR(i,0,n)
+#define REP1(i,n) FOR(i,1,n+1)
+#define RREP(i,n) for (int i=(n)-1;i>=0;i--)
+#define pii pair<int, int>
+#define f first
+#define s second
+#define pb push_back
+#define ALL(x) x.begin(), x.end()
+#define SZ(x) (int)(x.size())
+ 
+#ifdef TOAD
+#define IOS()
+#define bug(x) cerr<<"Line "<<__LINE__<<": "<<#x<<" is "<<x<<endl
+#else 
+#define IOS() ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define bug(x)
+#endif 
+const ll inf=(1ll<<60);
+const double PI=acos(-1);
+const int iinf=2147483647;
+const ll mod=1e9+7;
+const ll maxn=1e5+5;
+ll pw(ll x, ll p){
+	ll ret=1;
+	while(p>0){
+		if (p&1){
+			ret*=x;
+			ret%=mod;
+		}
+		p>>=1;
+		x*=x;
+		x%=mod;
+	}
+	return ret;
+}
+int op(int a, int qq){
+	if (qq==0){
+		return a;
+	}
+	else if (qq==1){
+		return (a*3+1)%mod;
+	}
+	int x=a*pw(3,qq)%mod;
+	int y=pw(3,qq-1)*qq%mod;
+	return (x+y)%mod;
+}
+signed main(){
+	IOS();
+	int n; cin>>n;
+	string str; cin>>str;
+	int sum=0;
+	int as=0, qs=0;
+	vector<pii> vc(n);
+	RREP(i,n){
+		if (i==n-1) {
+			vc[i]={0,0};
+		}
+		else{
+			vc[i]={vc[i+1].f+(str[i+1]=='C'), vc[i+1].s+(str[i+1]=='?')};
+		}
+	}
+	FOR(i,0,n){
+		//cout<<vc[i].f<<' '<<vc[i].s<<endl;
+ 
+		int va=op(as, qs);
+		int vb=op(vc[i].f, vc[i].s);
+		if (str[i]=='?'||str[i]=='B') sum+=va*vb%mod;
+		sum%=mod;
+		if (str[i]=='A'){
+			as++;
+		}
+		else if (str[i]=='?') qs++;
+		
+	}
+	cout<<sum<<endl;
+}

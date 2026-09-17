@@ -1,0 +1,106 @@
+Problem B: Repeated Substitution with Sed 
+
+ 
+Do you know "sed," a tool provided with Unix? Its most popular use is to substitute every
+occurrence of a string contained in the input string (actually each input line) with another
+string &beta; . More precisely, it proceeds as follows.
+ 
+
+ 
+ Within the input string, every non-overlapping (but possibly adjacent) occurrences of &alpha; are
+ marked. If there is more than one possibility for non-overlapping matching, the leftmost
+ one is chosen. 
+ Each of the marked occurrences is substituted with &beta; to obtain the output string; other
+ parts of the input string remain intact. 
+ 
+
+ 
+For example, when &alpha; is " aa " and &beta; is " bca ", an input string " aaxaaa " will produce " bcaxbcaa ",
+but not " aaxbcaa " nor " bcaxabca ". Further application of the same substitution to the string
+" bcaxbcaa " will result in " bcaxbcbca ", but this is another substitution, which is counted as the
+second one.
+ 
+ 
+In this problem, a set of substitution pairs ( &alpha; i , &beta; i ) ( i = 1, 2, ... , n ), an initial string &gamma; , and a
+final string &delta; are given, and you must investigate how to produce &delta; from &gamma; with a minimum
+number of substitutions. A single substitution ( &alpha; i , &beta; i ) here means simultaneously substituting
+all the non-overlapping occurrences of &alpha; i , in the sense described above, with &beta; i .
+ 
+
+ 
+You may use a specific substitution ( &alpha; i , &beta; i ) multiple times, including zero times.
+ 
+
+ Input 
+
+ 
+The input consists of multiple datasets, each in the following format.
+ 
+
+ 
+ n 
+ &alpha; 1 &beta; 1 
+ &alpha; 2 &beta; 2 
+ . 
+ . 
+ . 
+ &alpha; n &beta; n 
+ &gamma; 
+ &delta; 
+ 
+
+ 
+ n is a positive integer indicating the number of pairs. &alpha; i and &beta; i are separated by a single space.
+You may assume that 1 &le; | &alpha; i | < | &beta; i | &le; 10 for any i (| s | means the length of the string s ),
+
+ &alpha; i &ne; &alpha; j for any i &ne; j , n &le; 10 and 1 &le; | &gamma; | < | &delta; | &le; 10. All the strings consist solely of lowercase
+letters. The end of the input is indicated by a line containing a single zero.
+ 
+
+ Output 
+
+ 
+For each dataset, output the minimum number of substitutions to obtain &delta; from &gamma; . If &delta; cannot
+be produced from &gamma; with the given set of substitutions, output -1 .
+
+ 
+
+ Sample Input 
+ 
+2
+a bb
+b aa
+a
+bbbbbbbb
+1
+a aa
+a
+aaaaa
+3
+ab aab
+abc aadc
+ad dee
+abc
+deeeeeeeec
+10
+a abc
+b bai
+c acf
+d bed
+e abh
+f fag
+g abe
+h bag
+i aaj
+j bbb
+a
+abacfaabe
+0
+ 
+
+ Output for the Sample Input 
+ 
+3
+-1
+7
+4

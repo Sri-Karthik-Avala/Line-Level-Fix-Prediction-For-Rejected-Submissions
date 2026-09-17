@@ -1,0 +1,25 @@
+import heapq
+from collections import namedtuple
+
+Data = namedtuple("Data", ("time", "number"))
+
+all_player = []
+
+for _ in range(3):
+    player = [input().split(" ") for lp in range(8)]
+    player = [Data(float(time), number) for number, time in player]
+
+    heapq.heapify(player)
+    data = heapq.heappop(player)
+    print(data.number, data.time)
+    data = heapq.heappop(player)
+    print(data.number, data.time)
+
+    all_player.extend(player)
+
+heapq.heapify(all_player)
+data = heapq.heappop(all_player)
+print(data.number, data.time)
+data = heapq.heappop(all_player)
+print(data.number, data.time)
+

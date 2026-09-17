@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+#define REP(i, a, n) for(ll i = ((ll) a); i < ((ll) n); i++)
+using namespace std;
+typedef long long ll;
+
+const double EPS = 1e-10;
+
+double dist(double px, double py, double qx, double qy) {
+  return sqrt((px - qx) * (px - qx) + (py - qy) * (py - qy));
+}
+
+int main(void) {
+  ll N, M;
+  cin >> N >> M;
+  vector<ll> P(N);
+  REP(i, 0, N) {
+    ll X, Y;
+    cin >> X >> Y;
+    P[i] = X * 100000000 + Y;
+  }
+
+  sort(P.begin(), P.end());
+  P.erase(unique(P.begin(), P.end()), P.end());
+
+  N = P.size();
+  vector<double> X(N), Y(N);
+  REP(i, 0, N) {
+    X[i] = P[i] / 100000000;
+    Y[i] = P[i] % 100000000;
+  }
+
+  vector<double> radius(1LL << N);
+  REP(s, 0, 1LL << N) {
+    ll cnt = 0;
+    REP(i, 0, N) if(s & (1LL << i)) cnt++;
+    if(cnt < 2) {
+      radius[s] = 0.0;
+      continue;
+    }
+
+    double minr = 1e10;
+    REP(i, 0, N) REP(j, i + 1, N) {
+      if(!((s & (1LL << i)) && (s & (1LL << j)))) continue;
+
+      double d = dist(X[i], Y[i], X[j], Y[j]) / 2.0;
+      double dx = +(Y[i] - Y[j]) / (d * 2.0);
+      double dy = -(X[i] - X[j]) / (d * 2.0);
+      double mx = (X[i] + X[j]) / 2.0;
+      double my = (Y[i] + Y[j]) / 2.0;
+
+      bool ok = true;
+      REP(k, 0, N) if(s & (1LL << k)) if(dist(X[k], Y[k], mx, my) > d + EPS) ok = false;
+      if(ok) {
+        minr = min(minr, d);
+        continue;
+      }
+
+      double l1 = d, h1 = 1e10;
+      REP(_, 0, 100) {
+        double m = (l1 + h1) / 2.0;
+        double t = sqrt(m * m - d * d);
+
+        double c1x = mx + dx * t;
+        double c1y = my + dy * t;
+        bool ok1 = true;
+        REP(k, 0, N) if(s & (1LL << k)) if(dist(X[k], Y[k], c1x, c1y) > m + EPS) ok1 = false;
+
+        (ok1 ? h1 : l1) = m;
+      }
+
+      double l2 = d, h2 = 1e10;
+      REP(_, 0, 100) {
+        double m = (l2 + h2) / 2.0;
+        double t = sqrt(m * m - d * d);
+
+        double c2x = mx - dx * t;
+        double c2y = my - dy * t;
+        bool ok2 = true;
+        REP(k, 0, N) if(s & (1LL << k)) if(dist(X[k], Y[k], c2x, c2y) > m + EPS) ok2 = false;
+
+        (ok2 ? h2 : l2) = m;
+      }
+
+      minr = min(minr, min(h1, h2));
+    }
+    radius[s] = minr;
+  }
+
+  vector< vector<double> > dp(1LL << N, vector<double>(M + 1, 1e10));
+  dp[0][0] = 0.0;
+  REP(s, 0, 1LL << N) REP(i, 0, M) {
+    ll sup = 0;
+    REP(j, 0, N) if(!(s & (1LL << j))) sup = sup | (1LL << j);
+
+    ll sub = sup;
+    do {
+      dp[s | sub][i + 1] = min(dp[s | sub][i + 1], max(dp[s][i], radius[sub]));
+      sub = (sub - 1) & sup;
+    } while(sub != sup);
+  }
+
+  double ans = 1e10;
+  REP(i, 0, M + 1) ans = min(ans, dp[(1LL << N) - 1][i]);
+  printf("%.15lf\n", ans);
+}
+

@@ -1,0 +1,17 @@
+for r in range(input()):
+	if r > 0: print
+	A  = [raw_input().split() for i in range(9)]
+	RA = [[A[h][w] for h in range(9)] for w in range(9)] 
+	A9 = [[A[h][w:w+3]+A[h+1][w:w+3]+A[h+2][w:w+3] for w in range(0,9,3)] for h in range(0,9,3)]
+	P = [[" "]*9 for i in range(9)]
+	for h in range(9):
+		for w in range(9):
+			if P[h][w] != "*":
+				if A[h].count(A[h][w]) > 1:
+					P[h][w] == "*"
+				elif RA[w].count(A[h][w]) > 1:
+					P[h][w] = "*"
+				elif A9[h/3][w/3].count(A[h][w]) > 1:
+					P[h][w] = "*"
+	for h in range(9):
+		print "".join([P[h][w]+A[h][w] for w in range(9)])

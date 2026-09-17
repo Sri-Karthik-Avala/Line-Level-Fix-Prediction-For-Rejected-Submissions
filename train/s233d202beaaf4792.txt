@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+
+const int maxn = 10010;
+const int mod = 998244353;
+const int g = 3;
+
+int qpow(int x, int y) {
+	int ret = 1;
+	while (y) {
+		if (y & 1) ret = 1ll * ret * x % mod;
+		x = 1ll * x * x % mod;
+		y >>= 1;
+	}
+	return ret;
+}
+
+struct poly {
+	int *a, len;
+	poly(int l) {
+		len = l;
+		a = new int[len];
+		for (int i = 0; i < len; i++) {
+			a[i] = 0;
+		}
+	}
+};
+
+int wa[maxn<<2], wb[maxn<<2], wc[maxn<<2], rev[maxn<<2];
+
+void ntt(int *a, int _l, int ty) {
+	int len = (1 << _l);
+	for (int i = 1; i < len; i++) rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (_l - 1));
+	for (int i = 0; i < len; i++) if (i < rev[i]) swap(a[i], a[rev[i]]);
+	for (int l = 2; l <= len; l <<= 1) {
+		int wl = qpow(g, (mod - 1) / l);
+		for (int s = 0; s < len; s += l) {
+			int w = 1;
+			for (int i = 0; i < (l >> 1); i++) {
+				int v1 = a[s + i], v2 = 1LL * w * a[s + i + (l >> 1)] % mod;
+				a[s + i] = (v1 + v2) % mod;
+				a[s + i + (l >> 1)] = (v1 + mod - v2) % mod;
+				w = 1LL * w * wl % mod;
+			}
+		}
+	}
+	if (ty == -1) {
+		int inv = qpow(len, mod-2);
+		for (int i = 0; i < len; i++) a[i] = 1LL * a[i] * inv % mod;
+		for (int i = 1; i < len - i; i++) swap(a[i], a[len - i]);
+	}
+}
+
+poly operator*(const poly &p1, const poly &p2) {
+	poly ret(p1.len + p2.len - 1);
+	int l = 0; while ((1 << l) < ret.len) ++ l;
+	for (int i = 0; i < (1 << l); i++) wa[i] = wb[i] = 0;
+	for (int i = 0; i < p1.len; i++) wa[i] = p1.a[i];
+	for (int i = 0; i < p2.len; i++) wb[i] = p2.a[i];
+	ntt(wa, l, 1), ntt(wb, l, 1);
+	for (int i = 0; i < (1 << l); i++) wc[i] = 1LL * wa[i] * wb[i] % mod;
+	ntt(wc, l, -1);
+	for (int i = 0; i < ret.len; i++) ret.a[i] = wc[i];
+	return ret;
+}
+
+poly qpow(poly p, int k) {
+	poly ret(1); ret.a[0] = 1;
+	while (k) {
+		if (k & 1) ret = ret * p;
+		p = p * p;
+		k >>= 1;
+	}
+	return ret;
+}
+
+int n, c1, c2, c3, fac[maxn], ifac[maxn];
+char A[maxn], B[maxn];
+
+int main() {
+	scanf("%s", A+1);
+	scanf("%s", B+1);
+	n = int (strlen (A+1));
+	for (int i = 1; i <= n; i++) {
+		if (A[i] == '1' && B[i] == '0') ++ c1;
+		if (A[i] == '1' && B[i] == '1') ++ c2;
+		if (A[i] == '0' && B[i] == '1') ++ c3;
+	}
+	fac[0] = ifac[0] = 1;
+	for (int i = 1; i <= n; i++) {
+		fac[i] = 1LL * fac[i-1] * i % mod;
+		ifac[i] = qpow(fac[i], mod-2);
+	}
+	poly C(c2+1), P(c2+1);
+	for (int i = 0; i <= c2; i++) C.a[i] = 1;
+	for (int i = 0; i <= c2; i++) P.a[i] = ifac[i+1];
+	poly res = qpow(P, c1) * C;
+	printf("%d\n", int (1LL * fac[c1] * fac[c2] % mod * fac[c1 + c2] % mod * res.a[c2] % mod));
+	return 0;
+}

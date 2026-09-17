@@ -1,0 +1,47 @@
+import sys
+def input(): return sys.stdin.readline().strip()
+def mapint(): return map(int, input().split())
+sys.setrecursionlimit(10**9)
+
+N, M = mapint()
+edges = [[10**18]*N for _ in range(N)]
+used = [[False]*N for _ in range(N)]
+
+ab = []
+for _ in range(M):
+    a, b, c = mapint()
+    edges[a-1][b-1] = c
+    edges[b-1][a-1] = c
+    ab.append((a-1, b-1))
+
+from heapq import heappop, heappush
+
+def dijkstra(start):
+    dist = [10**18]*N
+    Q = [(0, start, start)]
+    cnt = 0
+    while Q:
+        d, v, e = heappop(Q)
+        if d>=dist[v]:
+            continue
+        else:
+            dist[v] = d
+        cnt += 1
+        used[v][e] = True
+        used[e][v] = True
+        for nx in range(N):
+            if edges[v][nx]==10**18:
+                continue
+            if dist[nx] > d + edges[v][nx]:
+                heappush(Q, (d + edges[v][nx], nx, v))
+        if cnt==N:
+            break
+
+for i in range(N):
+    dijkstra(i)
+ans = 0
+for a, b in ab:
+    if not used[a][b]:
+        ans += 1
+print(ans)
+        

@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+typedef long long ll;
+const int MAXN = 210;
+
+int N, K;
+ll P;
+
+ll dp[MAXN][MAXN];
+ll choose[MAXN][MAXN];
+
+ll res[MAXN];
+
+ll rr[MAXN][MAXN];
+
+ll gogo (int A, int B)
+{
+    if (B < A / 2) return 0;
+    if (A == 1) return 1;
+    if (B > A - 2) B = A - 2;
+
+    int blo = (A - 1 - B);
+    ll ans = 0;
+    for (int k = blo; k <= B; k++)
+    {
+        for (int i = 0; i <= A + 1; i++)
+            for (int j = 0; j <= A + 1; j++)
+                rr[i][j] = 0;
+
+        rr[0][k] = 1;
+        for (int l = 1; l <= k; l++)
+        {
+            ll cc = rr[l-1][blo];
+            for (int m = blo; m <= min (B, N - l - 1); m++)
+            {
+                cc += rr[l-1][m+1];
+                cc %= P;
+                rr[l][m] = cc;
+            }
+        }
+        for (int l = blo; l <= B; l++)
+        {
+            ans += rr[k][l];
+            ans %= P;
+        }
+    }
+    //cout << A << " " << B << " " << ans << "\n";
+    return ans;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+
+    cin >> N >> K >> P;
+
+    choose[0][0] = 1;
+    for (int i = 1; i < MAXN; i++)
+        for (int j = 0; j <= i; j++)
+        {
+            choose[i][j] = choose[i-1][j];
+            if (j)
+                choose[i][j] = (choose[i][j] + choose[i-1][j-1]) % P;
+        }
+
+    ll ans = 0;
+    for (int i = 1; i <= N; i++)
+    {
+        // bottom cycle size
+        ll v = gogo (i, K - (N - i));
+        for (int j = 1; j <= N; j++)
+            if (j != i)
+                v = (v * j) % P;
+        ans += v;
+    }
+    cout << ans % P << "\n";
+}

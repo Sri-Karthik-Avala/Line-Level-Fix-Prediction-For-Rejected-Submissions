@@ -1,0 +1,25 @@
+#include<stdio.h>
+
+int main() {
+    while (1) {
+        int i;
+        int n;
+	int possibility = 0;
+    
+        scanf("%d", &n);
+        if (n == 0) return 0;
+
+        for (i=0; i<n; i++) {
+	     int a;
+
+	     scanf("%d", &a);
+	     if (a >= 2) possibility = 1;
+        }
+
+	if (possibility) {
+	    printf("%d\n", n + 1);
+	} else {
+	    printf("NA\n");
+	}
+    }
+}

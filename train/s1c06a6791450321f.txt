@@ -1,0 +1,97 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <cassert>
+
+using namespace std;
+
+#define FOR(i,k,n) for(int i=(k); i<(int)(n); ++i)
+#define REP(i,n) FOR(i,0,n)
+#define FORIT(i,c) for(__typeof((c).begin())i=(c).begin();i!=(c).end();++i)
+
+template<class T> void debug(T begin, T end){ for(T i = begin; i != end; ++i) cerr<<*i<<" "; cerr<<endl; }
+inline bool valid(int x, int y, int W, int H){ return (x >= 0 && y >= 0 && x < W && y < H); }
+
+typedef long long ll;
+const int INF = 100000000;
+const double EPS = 1e-8;
+const int MOD = 1000000007;
+int dx[8] = {1, 0, -1, 0, 1, -1, -1, 1};
+int dy[8] = {0, 1, 0, -1, 1, 1, -1, -1};
+typedef vector<int> Node;
+struct S{
+  S() : N(0), M(0) {}
+  int N, M;
+  vector<char> cv;
+  vector<Node> G;
+};
+S input(){
+  S s;
+  cin >> s.N >> s.M;
+  s.cv = vector<char>(s.N);
+  REP(i, s.N) cin >> s.cv[i];
+  s.G = vector<Node>(s.N);
+  REP(i, s.M){
+    int a, b; cin >> a >> b;
+    s.G[a - 1].push_back(b - 1);
+  }
+  return s;
+}
+set<char> infinite(S& s){
+  set<char> res;
+  bool d[100][100] = {};
+  REP(i, s.N)FORIT(e, s.G[i]){
+    d[i][*e] = true;
+  }
+  REP(k, s.N)REP(i, s.N)REP(j, s.N) d[i][j] |= (d[i][k] & d[k][j]);
+  REP(i, s.N) if(d[i][i]) res.insert(s.cv[i]);
+  return res;
+}
+int memo[100][100];
+int dfs(int u, int v, S& A, S& B){
+  if(memo[u][v] != -1) return memo[u][v];
+  int& res = memo[u][v];
+  res = 0;
+  if(A.cv[u] == B.cv[v]){
+    FORIT(e1, A.G[u])FORIT(e2, B.G[v]){
+      res = max(res, dfs(*e1, *e2, A, B));
+    }
+    res += 1;
+  }else{
+    FORIT(e1, A.G[u])FORIT(e2, B.G[v]){
+      res = max(res, dfs(*e1, *e2, A, B));
+    }
+    FORIT(e1, A.G[u]){
+      res = max(res, dfs(*e1, v, A, B));
+    }
+    FORIT(e2, B.G[v]){
+      res = max(res, dfs(u, *e2, A, B));
+    }
+  }
+  return res;
+}
+int solve(S& A, S& B){
+  set<char> inf1 = infinite(A);
+  set<char> inf2 = infinite(B);
+  FORIT(it, inf1)if(inf2.count(*it)) return -1;
+  memset(memo, -1, sizeof(memo));
+  int ans = 0;
+  REP(i, A.N)REP(j, B.N) ans = max(ans, dfs(i, j, A, B));
+  return ans;
+}
+int main(){
+    S A = input();
+    S B = input();
+    cout << solve(A, B) << endl;
+  return 0;
+}

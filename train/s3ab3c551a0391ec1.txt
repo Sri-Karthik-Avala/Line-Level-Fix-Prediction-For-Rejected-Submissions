@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import sys
+
+
+def calc_inverse_polish_notation_string(s):
+    tokens = [token for token in s.split(' ') if token != '']
+    stack = []
+    for token in tokens:
+        if token in ['+', '-', '*', '/']:
+            val2 = stack.pop()
+            val1 = stack.pop()
+            result = eval("%s %s %s" % (val1, token, val2))
+            stack.append(result)
+        else:
+            stack.append(token)
+
+    return stack[0]  # if len(stack) != 1, it should throw an exception
+
+
+def main():
+    for line in sys.stdin.readlines():
+        print(calc_inverse_polish_notation_string(line))
+
+if __name__ == "__main__":
+    main()

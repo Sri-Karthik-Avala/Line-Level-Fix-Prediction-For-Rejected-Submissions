@@ -1,0 +1,53 @@
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <set>
+#include <map>
+#include <iostream>
+
+using namespace std;
+typedef long long ll;
+
+int MAX = 10000000;
+
+int main(){
+    int n,a,b,xmin=MAX,ymin=MAX,xmax=0,ymax=0,ans=0,ans2=0,c,d;
+    vector<int> X,Y;
+    
+    scanf("%d",&n);
+    
+    for(int i=0;i<n;i++){
+        scanf("%d%d",&a,&b);
+        
+        X.push_back(a+b);
+        Y.push_back(a-b);
+        
+        xmin=min(xmin,a+b);
+        ymin=min(ymin,a-b);
+        xmax=max(xmax,a+b);
+        ymax=max(ymax,a-b);
+    }
+    
+    for(int i=0;i<n;i++){
+        c = max(xmax-X[i],Y[i]-ymin);
+        d = max(X[i]-xmin,ymax-Y[i]);
+        
+        ans=max(ans,min(c,d));
+        
+    }
+    
+    for(int i=0;i<n;i++){
+        c = max(xmax-X[i],ymax-Y[i]);
+        d = max(X[i]-xmin,Y[i]-ymin);
+        
+        ans2=max(ans,min(c,d));
+        
+    }
+    
+    printf("%d\n",min(ans,ans2));
+    
+    return 0;
+}

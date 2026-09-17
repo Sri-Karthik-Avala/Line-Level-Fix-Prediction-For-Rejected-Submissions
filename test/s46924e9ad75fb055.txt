@@ -1,0 +1,105 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+typedef long long ll;
+const int maxn=1e4+5,maxm=4e4+5;
+const ll inf=1e18;
+inline int fa(int u){ return u/2; }
+inline int ls(int u){ return u*2; }
+inline int rs(int u){ return u*2+1; }
+struct heap{
+	int hea[maxn],pos[maxn],siz;
+	ll *dis;
+	heap(ll a[],int n){
+		dis=a; siz=n;
+		int i;
+		for (i=1;i<=n;i++){
+			dis[i]=inf; hea[i]=i; pos[i]=i;
+		}
+	}
+	void hswap(int u,int v){
+		swap(hea[u],hea[v]);
+		pos[hea[u]]=u; pos[hea[v]]=v;
+	}
+	void update(int u){
+		if (u==1) return;
+		if (dis[hea[fa(u)]]<=dis[hea[u]]) return;
+		hswap(u,fa(u));
+		update(fa(u));
+	}
+	void pushdown(int u){
+		int v=u;
+		if (ls(u)<=siz&&dis[hea[ls(u)]]<dis[hea[v]]) v=ls(u);
+		if (rs(u)<=siz&&dis[hea[rs(u)]]<dis[hea[v]]) v=rs(u);
+		if (u==v) return;
+		hswap(u,v);
+		pushdown(v);
+	}
+	void change(int u,ll val){
+		dis[u]=val;
+		update(pos[u]);
+		pushdown(pos[u]);
+	}
+	int pop(){
+		hswap(1,siz);
+		siz--;
+		pushdown(1);
+		return hea[siz+1];
+	}
+};
+struct gragh{
+	int head[maxn],next[maxm],to[maxm],tot;
+	ll wei[maxm],cost[maxn];
+	gragh(){
+		memset(head,-1,sizeof(head));
+		tot=0;
+	}
+	void clear(){
+		memset(head,-1,sizeof(head));
+		tot=0;
+	}
+	void add(int u,int v,ll w,ll c){
+		next[tot]=head[u];
+		head[u]=tot;
+		to[tot]=v;
+		wei[tot]=w;
+		cost[tot]=c;
+		tot++;
+	}
+	void dijkstra(ll dis[],ll val[],int st,int n){
+		heap hp(dis,n);
+		hp.change(st,0);
+		int i,u,v,ed;
+		for (i=1;i<=n;i++) val[i]=inf;
+		val[st]=0;
+		while (hp.siz){
+			u=hp.pop();
+			for (ed=head[u];ed!=-1;ed=next[ed])
+				if (dis[v=to[ed]]>dis[u]+wei[ed])
+					hp.change(v,dis[u]+wei[ed]);
+		}
+		for (u=1;u<=n;u++) for (ed=head[u];ed!=-1;ed=next[ed])
+			if (dis[v=to[ed]]==dis[u]+wei[ed])
+			val[v]=min(val[v],cost[ed]);
+	}
+};
+gragh g;
+ll dis[maxn],val[maxn];
+int main(){
+	int n,m,i,u,v;
+	ll w,c,ans;
+	while (scanf("%d%d",&n,&m)&&(n||m)){
+		g.clear();
+		for (i=0;i<m;i++){
+			scanf("%d%d%lld%lld",&u,&v,&w,&c);
+			g.add(u,v,w,c);
+			g.add(v,u,w,c);
+		}
+		g.dijkstra(dis,val,1,n);
+		ans=0;
+		for (i=1;i<=n;i++) ans+=val[i];
+		printf("%lld\n",ans);
+	}
+	return 0;
+}

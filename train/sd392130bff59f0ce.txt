@@ -1,0 +1,77 @@
+from collections import deque
+
+w, h = map(int, input().split())
+mp = [input() for _ in range(h)]
+
+springs = []
+tile_cnt = 0
+for y in range(h):
+  for x in range(w):
+    if mp[y][x] == "*":
+      springs.append((x, y))
+    if mp[y][x] == "g":
+      gx, gy = x, y
+    if mp[y][x] == "s":
+      sx, sy = x, y
+      tile_cnt += 1
+    if mp[y][x] == ".":
+      tile_cnt += 1
+
+vec = ((1, 0), (0, -1), (-1, 0), (0, 1))
+INF = 10 ** 10
+
+g_dist = [[INF] * w for _ in range(h)]
+que = deque()
+que.append((0, gx, gy))
+g_dist[gy][gx] = 0
+while que:
+  score, x, y = que.popleft()
+  for dx, dy in vec:
+    nx, ny = x + dx, y + dy
+    if mp[ny][nx] in (".", "s"):
+      if g_dist[ny][nx] == INF:
+        g_dist[ny][nx] = score + 1
+        que.append((score + 1, nx, ny))
+
+s_dist = [[INF] * w for _ in range(h)]
+que = deque()
+for x, y in springs:
+  s_dist[y][x] = 0
+  que.append((0, x, y))
+while que:
+  score, x, y = que.popleft()
+  for dx, dy in vec:
+    nx, ny = x + dx, y + dy
+    if mp[ny][nx] in (".", "s"):
+      if s_dist[ny][nx] == INF:
+        s_dist[ny][nx] = score + 1
+        que.append((score + 1, nx, ny))
+
+sorted_tiles = sorted([(g_dist[y][x] - s_dist[y][x] if g_dist[y][x] != INF else INF, x, y) for y in range(h) for x in range(w) if mp[y][x] in (".", "s")])
+
+acc_g = 0
+acc_s = 0
+acc_t = 0
+acc_g_dic = {}
+acc_s_dic = {}
+acc_t_dic = {}
+keys = set()
+for key, x, y in sorted_tiles:
+  acc_g += g_dist[y][x]
+  acc_s += s_dist[y][x]
+  acc_t += 1
+  acc_g_dic[key] = acc_g
+  acc_s_dic[key] = acc_s
+  acc_t_dic[key] = acc_t
+  keys.add(key)
+keys = sorted(list(keys))
+
+length = len(keys)
+for i in range(length - 1):
+  key = keys[i]
+  next_key = keys[i + 1]
+  E = (acc_g_dic[key] + acc_s - acc_s_dic[key]) / acc_t_dic[key]
+  if key <= E < next_key:
+    break
+
+print(min(g_dist[sy][sx], s_dist[sy][sx] + E))

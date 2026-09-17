@@ -1,0 +1,101 @@
+RMQ and RUQ 
+
+ 
+Write a program which manipulates a sequence A = { a 0 , a 1 , . . . , a n&minus;1 } with the following operations:
+ 
+
+ 
+ update(s, t, x) : change a s , a s+1 , ..., a t to x . 
+ find(s, t) : report the minimum element in a s , a s+1 , ..., a t . 
+
+ 
+
+ 
+Note that the initial values of a i ( i = 0, 1, . . . , n&minus;1 ) are 2 31 -1.
+ 
+
+ Input 
+
+
+ 
+ n q 
+ query 1 
+ query 2 
+:
+ query q 
+ 
+
+ 
+ In the first line, n (the number of elements in A ) and q (the number of queries) are given. Then, i th query query i is given in the following format:
+ 
+
+ 
+0 s t x 
+ 
+
+ 
+ or
+ 
+
+ 
+1 s t 
+ 
+
+ 
+ The first digit represents the type of the query. '0' denotes update(s, t, x) and '1' denotes find(s, t) .
+ 
+
+
+ Output 
+
+ 
+For each find operation, print the minimum value.
+ 
+
+ Constraints 
+
+ 
+ 
+ 1 &le; n &le; 100000 
+ 
+ 
+ 1 &le; q &le; 100000 
+ 
+ 
+ 0 &le; s &le; t < n 
+ 
+ 
+ 0 &le; x < 2 31 &minus;1 
+ 
+ 
+
+
+ Sample Input 1 
+ 
+3 5
+0 0 1 1
+0 1 2 3
+0 2 2 2
+1 0 2
+1 1 2
+ 
+ Sample Output 1 
+ 
+1
+2
+ 
+
+
+ 
+
+ Sample Input 2 
+ 
+1 3
+1 0 0
+0 0 0 5
+1 0 0
+ 
+ Sample Output 2 
+ 
+2147483647
+5

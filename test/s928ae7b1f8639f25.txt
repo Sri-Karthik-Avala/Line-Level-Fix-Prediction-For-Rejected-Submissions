@@ -1,0 +1,19 @@
+N,K = map(int,input().split())
+A = list(map(int,input().split()))
+nums = [0]*N
+
+for i in range(N):
+  nums[A[i]-1] += 1
+
+nums.sort()
+
+while True:
+  if nums[0] == 0:
+    del nums[0]
+  else:
+    break
+
+if len(nums) <= K:
+  print(0)
+else:
+  print(sum(nums[:len(nums)-K]))

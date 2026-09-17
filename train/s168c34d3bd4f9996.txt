@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+
+  int n;
+  cin >> n;
+  vector<int> V,S;
+  for(int i = 0; i < n; i++){
+    int p;
+    cin >> p;
+    S.push_back(p);
+  }
+  int res = 0;
+  int ans = 10000;
+
+for(int j = 0; j < 2; j++){
+  V = S;
+  for(int i = j; i < n-1; i++){
+    while( !(V[i] <= 0) ){
+      V[i]--; V[i+1]--;
+      res+=2;
+    }
+  }
+  while( !(V[n-1] <= 0) ){
+      V[n-1]--; res++;
+  }
+  while( !(V[0] <= 0) ){
+      V[0]--; res++;
+  }
+  if(j == 0 && S[0] > S[1]) res -= S[0] - S[1];
+  ans = min(ans,res);
+  //cout << res << " ";
+  res = 0;
+}
+  cout << ans << endl;
+
+  return 0;
+}
+

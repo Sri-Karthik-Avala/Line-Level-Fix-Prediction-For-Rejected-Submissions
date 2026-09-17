@@ -1,0 +1,25 @@
+from sys import stdin
+from collections import deque
+
+num = int(input())
+
+q = deque()
+
+for i in range(num):
+
+	cmd = stdin.readline().strip().split()
+
+	if cmd[0] == "0":
+		#末尾に挿入
+		q.append(cmd[1])
+
+	elif cmd[0] == "1":
+		#要素の出力
+		print(q[int(cmd[1])])
+	else:
+		#末尾の削除
+		q.pop()
+
+print(*q,sep='\n')
+
+

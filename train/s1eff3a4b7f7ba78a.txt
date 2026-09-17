@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+char s[2100000], t[2100000];
+int len;
+
+long long calc(int &en)
+{
+    if (t[en] == '>'){
+        en--;
+        long long l = calc(en);
+        l = (l * l) % 1000000007;
+        en -= 2;
+        if (en < 0 || t[en] == '<') return (l);
+        en -= 2;
+        return (calc(en) >> l);
+    }
+    else {
+        long long l = 0, b = 1;
+        while (isdigit(t[en])){
+            l = l + (t[en--] - '0') * b;
+            b *= 10;
+        }
+        
+        if (en < 0 || t[en] == '<') return (l);
+        en -= 2;
+        
+        long long l2 = calc(en);
+        while (l-- && l2){
+            l2 /= 2;
+        }
+        
+        return (l2);
+    }
+}
+
+int main()
+{
+    while (fgets(s, sizeof(s), stdin) && s[0] != '#'){
+        len = 0;
+        for (int i = 0; s[i]; i++){
+            if (s[i] != ' ' && s[i] != '\n') t[len++] = s[i];
+        }
+        
+        --len;
+        printf("%lld\n", calc(len));
+    }
+    
+    return (0);
+}

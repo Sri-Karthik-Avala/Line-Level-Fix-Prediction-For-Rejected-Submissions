@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+char s[55];
+const char* t = "AKIHABARA";
+
+#define NO puts("NO"), exit(0);
+
+int main() {
+	scanf("%s", s);
+	const char *p = s, *q = t;
+	while (*p && *q) {
+		if (*p ^ *q) {
+			if (*q == 'A') {
+				q++;
+			} else NO;
+		} else {
+			p++, q++;
+		}
+	}
+	if (*p)
+		NO;
+	puts("YES");
+	return 0;
+}

@@ -1,0 +1,77 @@
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <bitset>
+#include <numeric>
+#include <climits>
+#include <cfloat>
+using namespace std;
+
+vector<bool> check;
+
+void dfs(vector<vector<int> >& a, vector<int> pos, int& ret)
+{
+    int n = a.size();
+
+    if(count(pos.begin(), pos.end(), -1) == n - 1){
+        ret = min(ret, *(max_element(pos.begin(), pos.end())));
+        return;
+    }
+
+    for(int i=0; i<n; ++i){
+        if(pos[i] == -1)
+            continue;
+
+        vector<int> pos2 = pos;
+        int maxPos = 0;
+        for(int j=0; j<n; ++j){
+            if(pos2[j] != -1){
+                pos2[j] = max(pos2[i], pos2[i] + a[i][j]);
+                maxPos = max(maxPos, pos2[j]);
+            }
+        }
+        pos2[i] = -1;
+
+        if(maxPos >= ret)
+            continue;
+        dfs(a, pos2, ret);
+    }
+}
+
+int solve(vector<vector<int> >& a)
+{
+    int n = a.size();
+    vector<int> pos(n, 0);
+    int ret = INT_MAX;
+    dfs(a, pos, ret);
+    return ret;
+}
+
+int main()
+{
+    for(;;){
+        int n;
+        cin >> n;
+        if(n == 0)
+            return 0;
+
+        vector<vector<int> > a(n, vector<int>(n, 0));
+        for(int i=0; i<n; ++i){
+            for(int j=0; j<n; ++j){
+                int tmp;
+                cin >> tmp;
+                a[i][j] = a[j][i] = max(a[i][j], max(a[j][i], tmp));
+            }
+        }
+        cout << solve(a) << endl;
+    }
+}

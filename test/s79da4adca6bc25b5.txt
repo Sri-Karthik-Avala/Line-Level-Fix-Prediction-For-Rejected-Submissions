@@ -1,0 +1,5 @@
+K=input()
+r='ACL'
+for i in range(1,int(k)):
+  r='ACL'+ r 
+print(r)

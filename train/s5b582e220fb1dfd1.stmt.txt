@@ -1,0 +1,65 @@
+Naive String Search 
+
+ 
+ Find places where a string P is found within a text T .
+ 
+ Print all indices of T where P found. The indices of T start with 0.
+ 
+
+ Input 
+
+ 
+ In the first line, a text T is given. In the second line, a string P is given.
+ 
+
+ output 
+
+ 
+ Print an index of T where P found in a line. Print the indices in ascending order.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; length of T &le; 1000 
+ 1 &le; length of P &le; 1000 
+ The input consists of alphabetical characters and digits 
+ 
+
+ Sample Input 1 
+ 
+aabaaa
+aa
+ 
+
+ Sample Output 1 
+ 
+0
+3
+4
+ 
+
+ Sample Input 2 
+ 
+xyzz
+yz
+ 
+
+ Sample Output 2 
+ 
+1
+ 
+
+
+
+ Sample Input 3 
+ 
+abc
+xyz
+ 
+
+ Sample Output3 
+ 
+ 
+ 
+The ouput should be empty.

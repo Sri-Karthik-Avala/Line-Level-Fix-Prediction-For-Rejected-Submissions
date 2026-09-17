@@ -1,0 +1,92 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+typedef pair<int,int>P;
+const int SIZE=1<<17;
+
+struct seg_tree{
+    int N;
+    vector<int>ma,lazy;
+
+    seg_tree(int n){
+        N=1;
+        while(n>N)N*=2;
+        ma.resize(N*2-1,0);
+        lazy.resize(N*2-1,0);
+    }
+
+    void evaluate(int k){
+        ma[k]+=lazy[k];
+        if(k<N-1){
+            lazy[k*2+1]+=lazy[k];
+            lazy[k*2+2]+=lazy[k];
+        }
+        lazy[k]=0;
+    }
+
+    void update_node(int k){
+        ma[k]=max(ma[k*2+1],ma[k*2+2]);
+    }
+
+    void add(int a,int b,int x){add(a,b,x,0,0,N);}
+    void add(int a,int b,int x,int k,int l,int r){
+        evaluate(k);
+        if(r<=a||b<=l)return;
+        if(a<=l&&r<=b){
+            lazy[k]+=x;
+            evaluate(k);
+            return;
+        }
+        int m=(l+r)/2;
+        add(a,b,x,k*2+1,l,m);
+        add(a,b,x,k*2+2,m,r);
+        update_node(k);
+    }
+
+    int get_max(int a,int b){return get_max(a,b,0,0,N);}
+    int get_max(int a,int b,int k,int l,int r){
+        evaluate(k);
+        if(r<=a||b<=l)return 0;
+        if(a<=l&&r<=b)return ma[k];
+        int m=(l+r)/2;
+        int vl=get_max(a,b,k*2+1,l,m);
+        int vr=get_max(a,b,k*2+2,m,r);
+        return max(vl,vr);
+    }
+};
+
+int N,H;
+int d[100000],h[100000];
+
+signed main(){
+
+    cin>>N>>H;
+    for(int i=0;i<N-1;i++)cin>>d[i]>>h[i];
+
+    seg_tree seg(N);
+    int cur=H;
+    int ans=0;
+    priority_queue<P>que;
+    for(int i=0;i<N-1;i++){
+        seg.add(i,i+1,cur);
+        cur-=d[i];
+
+        que.push(P(h[i],i));
+
+        while(cur<=0){
+            P p=que.top();que.pop();
+            int ma=seg.get_max(p.second,i+1);
+            if(p.first+ma>H){
+                que.push(P(H-ma,p.second));
+                continue;
+            }
+            int x=min(abs(cur)/p.first+1,(H-ma)/p.first);
+            ans+=x;
+            cur+=x*p.first;
+            seg.add(p.second,i+1,p.first*x);
+        }
+    }
+
+    cout<<ans<<endl;
+    return 0;
+}

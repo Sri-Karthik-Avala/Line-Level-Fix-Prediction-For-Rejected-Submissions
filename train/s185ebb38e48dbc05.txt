@@ -1,0 +1,54 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+#define REP(i,b,n) for(int i=b;i<n;i++)
+#define rep(i,n)   REP(i,0,n)
+
+typedef long long ll;
+
+const int N=1000000;
+double ans;
+
+bool a[N];
+int b[N];
+int ind;
+
+int generate(){
+  for(int i=0;i<N;i++)a[i]=i%2;
+  for(int i=3;i*i<=N;i+=2){
+    if (a[i])for(int j=2*i;j<N;j+=i)a[j]=false;
+  }
+  int index=0;
+  b[index++]=2;
+  for(int i=3;i<N;i+=2){
+    if (a[i])b[index++]=i;
+  }
+  return index;
+}
+
+void solve(ll n,int *pri,int now,ll val,double sum){
+  if (val > n || now == ind)return;
+  ans=max(ans,sum/val);
+  if (pri[now] > n)return;
+  
+  ll tmp  =  1;
+  ll tsum =  1;
+  while(true){
+    if (tmp > n)break;
+    if (tmp!=1)solve(n,pri,now+1,val*tmp,sum*tsum);
+    tmp*=pri[now];
+    tsum+=tmp;
+  }
+
+}
+
+main(){
+  ind=generate();
+  ll n;
+  while(cin>>n && n){
+    ans = 1;
+    solve(n,b,0,1,1);
+    printf("%.6lf\n",ans);
+  }
+  return false;
+}

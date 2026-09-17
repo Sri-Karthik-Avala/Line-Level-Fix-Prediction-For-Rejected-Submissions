@@ -1,0 +1,104 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef pair<int, int> Pair;
+
+int getRightSide(Pair p) {
+  if(p.first == 1 && p.second == 2) return 3;
+  if(p.first == 1 && p.second == 3) return 5;
+  if(p.first == 1 && p.second == 4) return 2;
+  if(p.first == 1 && p.second == 5) return 4;
+  if(p.first == 2 && p.second == 1) return 4;
+  if(p.first == 2 && p.second == 3) return 1;
+  if(p.first == 2 && p.second == 4) return 6;
+  if(p.first == 2 && p.second == 6) return 3;
+  if(p.first == 3 && p.second == 1) return 2;
+  if(p.first == 3 && p.second == 2) return 6;
+  if(p.first == 3 && p.second == 5) return 1;
+  if(p.first == 3 && p.second == 6) return 5;
+  if(p.first == 4 && p.second == 1) return 5;
+  if(p.first == 4 && p.second == 2) return 1;
+  if(p.first == 4 && p.second == 5) return 6;
+  if(p.first == 4 && p.second == 6) return 2;
+  if(p.first == 5 && p.second == 1) return 3;
+  if(p.first == 5 && p.second == 3) return 6;
+  if(p.first == 5 && p.second == 4) return 1;
+  if(p.first == 5 && p.second == 6) return 4;
+  if(p.first == 6 && p.second == 2) return 4;
+  if(p.first == 6 && p.second == 3) return 2;
+  if(p.first == 6 && p.second == 4) return 5;
+  if(p.first == 6 && p.second == 5) return 3;
+}
+
+const int dx[] = {1,0,-1,0};
+const int dy[] = {0,1,0,-1};
+
+Pair rotate(Pair p, int d) {
+  if(d == 0) return Pair(7-getRightSide(p), p.second);
+  if(d == 1) return Pair(7-p.second, p.first);
+  if(d == 2) return Pair(getRightSide(p), p.second);
+  if(d == 3) return Pair(p.second, 7-p.first);
+}
+
+int getSide(Pair p, int d) {
+  if(d == 0) return getRightSide(p);
+  if(d == 1) return p.second;
+  if(d == 2) return 7 - getRightSide(p);
+  if(d == 3) return 7 - p.second;
+}
+
+const int MAXN = 202;
+Pair G[MAXN][MAXN][MAXN];
+
+int main() {
+  for(int n; cin >> n && n;) {
+    fill(G[0][0], G[MAXN][0], Pair(0,0));
+    while(n--) {
+      Pair p; cin >> p.first >> p.second;
+      int x = MAXN/2, y = MAXN/2, z = MAXN-1;
+      while(1) {
+        if(z == 0) {
+          G[z][y][x] = p;
+          break;
+        }
+        if(G[z-1][y][x].first) {
+          Pair v;
+          for(int k = 0; k < 4; ++k) {
+            if(getSide(p, k) >= 4 &&
+               !G[z][y+dy[k]][x+dx[k]].first &&
+               !G[z-1][y+dy[k]][x+dx[k]].first) {
+              v = max(v, Pair(getSide(p, k), k));
+            }
+          }
+          if(!v.first) {
+            G[z][y][x] = p;
+            break;
+          }
+          int k = v.second;
+          p = rotate(p, k);
+          x += dx[k];
+          y += dy[k];
+          --z;
+        } else {
+          --z;
+        }
+      }
+    }
+    vector<int> res(6);
+    for(int y = 0; y < MAXN; ++y) {
+      for(int x = 0; x < MAXN; ++x) {
+        for(int z = MAXN-1; z >= 0; --z) {
+          if(G[z][y][x].first) {
+            res[G[z][y][x].first-1] += 1;
+            break;
+          }
+        }
+      }
+    }
+    for(int i = 0; i < res.size(); ++i) {
+      if(i) cout << " ";
+      cout << res[i];
+    }
+    cout << endl;
+  }
+  return 0;
+}

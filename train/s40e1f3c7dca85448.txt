@@ -1,0 +1,13 @@
+# author:  Taichicchi
+# created: 28.09.2020 23:24:54
+
+import sys
+
+n, m = map(int, input().split())
+
+if n == 1:
+    print(m - 2)
+elif m == 1:
+    print(n - 2)
+else:
+    print((n - 2) * (m - 2))

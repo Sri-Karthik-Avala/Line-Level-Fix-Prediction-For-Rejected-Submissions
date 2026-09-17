@@ -1,0 +1,78 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement You are given a string of length N . Calculate the number of distinct substrings of S . 
+ 
+ 
+ 
+ 
+ Constraints 
+ 1 \leq N \leq 500,000 
+ S consists of lowercase English letters. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ S 
+ 
+ 
+ 
+ 
+ 
+ Output Print the answer. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 abcbcba
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 21
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 2 mississippi
+ 
+ 
+ 
+ 
+ 
+ Sample Output 2 53
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 3 ababacaca
+ 
+ 
+ 
+ 
+ 
+ Sample Output 3 33
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 4 aaaaa
+ 
+ 
+ 
+ 
+ 
+ Sample Output 4 5

@@ -1,0 +1,98 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define rep1(i,n) for(int i=1;i<=(int)(n);i++)
+#define all(c) c.begin(),c.end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl
+#define chmin(x,y) x=min(x,y)
+#define chmax(x,y) x=max(x,y)
+using namespace std;
+typedef long long ll;
+typedef pair<int,ll> P;
+ll inf=1e18;
+string s;
+ll K;
+P dp[2000][2001][2];
+int N;
+void change(P& x,P y){
+	y.fs+=2;
+	if(x.fs>y.fs) x=y;
+	else if(x.fs==y.fs) x.sc+=y.sc,chmin(x.sc,inf);
+}
+int main(){
+	cin>>s>>K;
+	N=s.size();
+	rep(i,N) rep(j,N+1) rep(k,2) dp[i][j][k]=P(1e9,0);
+	rep(i,N) dp[i][i][0]=P(0,1);
+	rep(i,N) dp[i][i+1][1]=P(1,1);
+	for(int d=2;d<=N;d++){
+		rep(l,N+1-d) rep(e,3){
+			int r=l+d;
+			if(s[l]==s[r-1]){
+				change(dp[l][r][e],dp[l+1][r-1][e]);
+			}else{
+				change(dp[l][r][e],dp[l][r-1][e]);
+				change(dp[l][r][e],dp[l+1][r][e]);
+			}
+		}
+	}
+	int e=1;
+	if(dp[0][N][0].fs<dp[0][N][1].fs) e=0;
+	int l=0,r=N,len=dp[0][N][e].fs;
+	if(dp[0][N][e].sc<K){
+		puts("NONE");
+		return 0;
+	}
+	string ans(len,'?');
+	int i=0;
+	while(true){
+		if(r-l==1){
+			ans[i++]=s[l];
+			break;
+		}
+		if(r==l) break;
+		len-=2;
+		if(s[l]==s[r-1]){
+			ans[i++]=s[l];
+			l++,r--;
+			continue;
+		}else if(s[l]<s[r-1]){
+			if(dp[l+1][r][e].fs==len){
+				if(dp[l+1][r][e].sc>=K){
+					ans[i++]=s[l];
+					l++;
+					continue;
+				}else{
+					ans[i++]=s[r-1];
+					K-=dp[l+1][r][e].sc;
+					r--;
+					continue;
+				}
+			}else{
+				ans[i++]=s[r-1];
+				r--;
+			}
+		}else{
+			if(dp[l][r-1][e].fs==len){
+				if(dp[l][r-1][e].sc>=K){
+					ans[i++]=s[r-1];
+					r--;
+					continue;
+				}else{
+					ans[i++]=s[l];
+					K-=dp[l][r-1][e].sc;
+					l++;
+					continue;
+				}
+			}else{
+				ans[i++]=s[l];
+				l++;
+			}
+		}
+	}
+	int L=ans.size();
+	rep(i,L) ans[L-1-i]=ans[i];
+	cout<<ans<<endl;
+}

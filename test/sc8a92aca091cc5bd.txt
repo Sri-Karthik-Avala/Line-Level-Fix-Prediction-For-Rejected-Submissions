@@ -1,0 +1,29 @@
+def gcd(m, n):
+    r = m % n
+    return gcd(n, r) if r else n
+def f(v):
+    d = v.find(".")
+    if d == -1:
+        return int(v), 1
+    a = int(v[:d]+v[d+1:])
+    n = 10**(len(v)-d-1)
+    if a == 0:
+        return 0, 1
+    g = gcd(n, a)
+    return int(a/g), int(n/g)
+s = input()
+l = s.find("(")
+r = s.find(")")
+if l == -1:
+    res = f(s)
+else:
+    assert l>=2 and r == len(s)-1
+    aa, na = f(s[:l])
+    ab, nb = f("0." + "0"*(l-2) + s[l+1:r])
+    t = r-l-1
+    a = (10**t - 1)*aa*nb + 10**t*ab*na
+    n = (10**t - 1)*na*nb
+
+    g = gcd(a, n)
+    res = int(a/g), int(n/g)
+print("%d/%d" % res)

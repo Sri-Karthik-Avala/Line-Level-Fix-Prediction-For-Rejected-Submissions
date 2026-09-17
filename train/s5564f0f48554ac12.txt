@@ -1,0 +1,84 @@
+#include "bits/stdc++.h"
+using namespace std;
+struct Node{
+  int parent,left,right;
+};
+Node T[100005];
+int n,D[1000005],hei[1000005];
+
+void setDepth(int u, int p){
+  if(u==-1)return;
+  D[u]=p;
+  setDepth(T[u].left,p+1);
+  setDepth(T[u].right,p+1);
+}
+
+int setHeight(int u){
+  int h=0,hh=0;
+  if(T[u].left!=-1){
+    h=setHeight(T[u].left)+1;
+  }
+  if(T[u].right!=-1){
+    hh=setHeight(T[u].right)+1;
+  }
+  if(h>hh)return hei[u]=h;
+  else return hei[u]=hh;
+}
+int get(int u){
+  if(T[u].parent==-1){
+    return -1;
+  }
+  if(T[T[u].parent].right!=-1&&T[T[u].parent].right!=u){
+    return T[T[u].parent].right;
+  }
+  if(T[T[u].parent].left!=-1&&T[T[u].parent].left!=u){
+    return T[T[u].parent].left;
+  }
+  return -1;
+}
+int main(){
+  int i=0,j=0,k=0,c=0,l=0,r=0,Tc=0;
+  int id=0;
+  cin>>n;
+  for(i=0;i<n;i++){
+    T[i].parent=T[i].left=T[i].right=-1;
+  }
+  for(i=0;i<n;i++){
+    cin>>id>>l>>r;
+    T[id].left=l;
+    T[id].right=r;
+    if(l!=-1)T[l].parent=id;
+    if(r!=-1)T[r].parent=id;
+  }
+  for(i=0;i<n;i++){
+    if(T[i].parent==-1){
+      Tc=i;
+    }
+  }
+  setDepth(Tc,0);
+  setHeight(Tc);
+  for(i=0;i<n;i++){
+    printf("node %d: parent = %d, sibling = %d, ",i,T[i].parent,get(i));
+    int c=0;
+    if(T[i].left!=-1)c++;
+    if(T[i].right!=-1)c++;
+    printf("degree = %d, depth = %d, height = %d, ",c,D[i],hei[i]);
+    if(T[i].parent==-1)cout<<"root"<<endl;
+    else if(T[i].left==-1&&T[i].right)cout<<"leaf"<<endl;
+    else cout<<"internal node"<<endl;
+    //cout<<"[";
+    //for(j=0,Tc=T[i].left;Tc!=-1;j++,Tc=T[Tc].right){
+      //while(1){
+      //if(j)cout<<", ";
+      //cout<<Tc;
+	//if(T[i].left==-1||T[i].left==T[T[i].left].right)break;
+    //}
+    //cout<<"]"<<endl;
+    /*while(1){
+      if(T[i].left==-1)break;
+      
+    }*/
+  }
+  return 0;
+}
+

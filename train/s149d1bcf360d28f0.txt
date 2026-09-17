@@ -1,0 +1,60 @@
+from collections import deque
+n=int(input())
+S=list(input())
+G=[[] for i in range(n)]
+for i in range(n-1):
+  a,b=map(int,input().split())
+  G[a-1].append(b-1)
+  G[b-1].append(a-1)
+ans=10**10
+for i in range(n):#根
+  D=deque([i])
+  A=[i]
+  V=[0]*n
+  V[i]=1
+  C=[[] for i in range(n)]
+  while len(D)>0:
+    x=D[0]
+    D.popleft()
+    for j in range(len(G[x])):
+      if V[G[x][j]]==0:
+        V[G[x][j]]=1
+        D.append(G[x][j])
+        A.append(G[x][j])
+        C[x].append(G[x][j])
+  A=A[::-1]
+  Ans=[[0]*3 for i in range(n)]
+  for v in A:
+    if len(C[v])==1:
+      vc=C[v][0]
+      Ans[v]=[Ans[vc][0],Ans[vc][1]+Ans[vc][2],Ans[vc][2]]
+    elif len(C[v])!=0:
+      L=[]
+      LL=[]
+      cc=0
+      s=0
+      M=0
+      MM=0
+      for vc in C[v]:
+        m=Ans[vc][1]+Ans[vc][2]
+        if m>M:
+          M=m
+          MM=Ans[vc][0]
+        L.append(Ans[vc][1]+Ans[vc][2])
+        LL.append(2*Ans[vc][0]+Ans[vc][1]+Ans[vc][2])
+        cc=cc+Ans[vc][2]
+        s=s+Ans[vc][0]
+      if sum(LL)-M-2*MM>=M:
+        ss=sum(L)//2
+      else:
+        ss=sum(LL)-M-2*MM-s
+      Ans[v]=[s+ss,sum(L)-2*ss,cc]
+    if S[v]=="1":
+      Ans[v][2]+=1
+  if Ans[i][1]==0:
+    if Ans[i][0]<ans:
+      ans=Ans[i][0]
+if ans==10**10:
+  print(-1)
+else:
+  print(ans)

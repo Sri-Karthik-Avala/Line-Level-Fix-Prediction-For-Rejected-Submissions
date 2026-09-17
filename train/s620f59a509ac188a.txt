@@ -1,0 +1,51 @@
+// includes {{{
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <deque>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <random>
+#include <set>
+#include <stack>
+#include <tuple>
+#include <vector>
+// }}}
+// #include<bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+string operator*(string a, int t) {
+  string r;
+  while(t) {
+    if(t&1) r += a;
+    a += a;
+    t >>= 1;
+  }
+  return r;
+}
+
+string sol(int x, int y, int z, string a, string b, string c) {
+  if(y + z == 0) return a * x;
+  if(x == 0) return sol(y, z, 0, b, c, "");
+  int p = x / (y + z);
+  int q = x % (y + z);
+  string t = a * p;
+  if(q < z) {
+    // aa...ac, aa...b, aa...c
+    return sol(q, y, z - q, t + a + c, t + b, t + c);
+  } else {
+    // aa...ac, aa...ab, aa...b
+    return sol(z, q - z, y - (q - z), t + a + c, t + a + b, t + b);
+  }
+}
+
+int main() {
+  std::ios::sync_with_stdio(false), std::cin.tie(0);
+  int x, y, z;
+  cin >> x >> y >> z;
+  cout << sol(x, y, z, "a", "b", "c") << endl;
+  return 0;
+}

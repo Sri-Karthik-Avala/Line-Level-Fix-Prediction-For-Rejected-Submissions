@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+//FILE* in = freopen("./B","r",stdin);
+
+typedef long long LL;
+#define REP(i,a,b)for(LL i=(LL)a;i<(LL)b;i++)
+
+
+#define MAX_V 3100
+#define INF 1000000
+
+struct edge{int to,cost,time;edge(int t,int c,int h):to(t),cost(c),time(h){}};
+typedef pair<int, int> P;
+
+int V=MAX_V;
+vector<edge> G[MAX_V];
+int d[MAX_V];
+
+int dijkstra(int s,int g,bool flag){
+	priority_queue<P, vector<P>, greater<P> > que;
+	fill(d, d+V, INF);
+	d[s] = 0;
+	que.push(P(0,s));
+
+	while(!que.empty()){
+		P p=que.top(); que.pop();
+		int v = p.second;
+		if(v==g)return d[v];
+		if( d[v] < p.first ) continue;
+		for(int i = 0;i<G[v].size();i++){
+			edge e = G[v][i];
+			if(flag==0){
+			if(d[e.to] > d[v] + e.cost ){
+				d[e.to] = d[v] + e.cost;
+				que.push(P(d[e.to],e.to));
+			}
+			}else{
+				if(d[e.to] > d[v] + e.time ){
+				d[e.to] = d[v] + e.time;
+				que.push(P(d[e.to],e.to));
+			}
+
+			}
+		}
+	}
+	return -1;
+}
+
+int main(void){
+
+	while(1){
+
+
+		G->clear();
+
+		int N,M;
+		int cost,time,a,b;
+		int K,start,goal,R;
+
+		cin >> N>>M;
+
+		if(!N&&!M)break;
+
+		REP(i,0,N){
+			cin >> a>>b>>cost>>time;
+			G[a].push_back(edge(b,cost,time));
+			G[b].push_back(edge(a,cost,time));
+		}
+
+		cin >> K;
+
+		REP(i,0,K){
+			cin >> start>>goal>>R;
+			cout << dijkstra(start,goal,R)<<endl;
+		}
+
+	}
+
+	return 0;
+}

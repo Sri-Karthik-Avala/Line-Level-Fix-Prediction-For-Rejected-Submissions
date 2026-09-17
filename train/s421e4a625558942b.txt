@@ -1,0 +1,77 @@
+// UTPC2010 C. RpC
+
+#include <iostream>
+#include <string>
+#include <queue>
+#include <string.h>
+
+using namespace std;
+
+char dx[] = {-1, 0, 1, 0};
+char dy[] = {0, -1, 0, 1};
+
+int main(){
+	string s[12];
+	bool visit[12][6], erase[12][6];
+        int T; cin >> T;
+	while(T--){
+		for(int i=0;i<12;i++) cin >> s[i];
+		int ans = 0;
+		while(true){
+			memset(visit, false, sizeof(visit));
+			memset(erase, false, sizeof(erase));
+			for(int i=0;i<12;i++){
+				for(int j=0;j<6;j++){
+					if(!visit[i][j]&&s[i][j]!='.'&&s[i][j]!='O'){
+						queue< pair<int, int> > qu; qu.push(make_pair(i,j));
+						int cnt = 0;
+						while(!qu.empty()){
+							pair<int, int> p = qu.front(); qu.pop();
+							if(erase[p.first][p.second]) continue;
+							erase[p.first][p.second] = true;
+							cnt++;
+							for(int k=0;k<4;k++){
+								int nx = p.first + dx[k], ny = p.second + dy[k];
+								if(nx < 0 || 12 <= nx || ny < 0 || 6 <= ny || s[p.first][p.second]!=s[nx][ny]) continue;
+								qu.push(make_pair(nx,ny));
+							}
+						}
+						if(cnt >= 4) memcpy(visit, erase, sizeof(visit));
+						memcpy(erase, visit, sizeof(erase));
+					}
+				}
+			}
+			for(int i=0;i<12;i++){
+				for(int j=0;j<6;j++){
+					if(s[i][j]!='O') continue;
+					for(int k=0;k<4;k++){
+						int nx = i + dx[k], ny = j + dy[k];
+						if(nx < 0 || 12 <= nx || ny < 0 || 6 <= ny || !erase[nx][ny]) continue;
+						erase[i][j] = true;
+					}
+				}
+			}
+			bool next = false;
+			for(int i=0;i<12;i++){
+				for(int j=0;j<6;j++){
+					if(erase[i][j]){
+						next = true;
+						s[i][j] = '.';
+					}
+				}
+			}
+			for(int i=0;i<6;i++){
+				vector<char> vc;
+				for(int j=11;j>=0;j--){
+					if(s[j][i]!='.') vc.push_back(s[j][i]);
+					s[j][i] = '.';
+				}
+				for(int j=0;j<vc.size();j++)
+					s[11-j][i] = vc[j];
+			}
+			if(next) ans++;
+			else     break;
+		}
+		cout << ans << endl;
+	}
+}

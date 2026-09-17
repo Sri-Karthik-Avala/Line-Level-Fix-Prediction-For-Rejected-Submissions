@@ -1,0 +1,39 @@
+while True:
+    n = int(input())
+    if not n:
+        break
+
+    puyos = []
+    pre = int(input())
+    cnt = 1
+    for _ in range(n - 1):
+        p = int(input())
+        if pre != p:
+            puyos.append((pre, cnt))
+            pre = p
+            cnt = 0
+        cnt += 1
+    puyos.append((pre, cnt))
+    lp = len(puyos)
+
+    min_puyo = n
+    for i, puyo in enumerate(puyos):
+        color, num = puyo
+        if num > 1:
+            continue
+        tn, j = n, 1
+        while True:
+            if i - j < 0 or i + j >= lp:
+                break
+            tp_c, tp_n = puyos[i - j]
+            up_c, up_n = puyos[i + j]
+            if tp_c != up_c:
+                break
+            dp = tp_n + up_n + int(j == 1)
+            if dp < 4:
+                break
+            tn -= dp
+            j += 1
+        if min_puyo > tn:
+            min_puyo = tn
+    print(min_puyo)

@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+#define ll long long
+#define ld long double
+#define db double
+#define pint pair<int,int>
+#define mk(x,y) make_pair(x,y)
+#define pb(x) push_back(x)
+#define eb(x,y) emplace_back(x,y)
+#define fi first
+#define se second
+#define Rep(x,y,z) for(int x=y;x<=z;x++)
+#define Red(x,y,z) for(int x=y;x>=z;x--)
+using namespace std;
+const int MAXN=2e5+5;
+char buf[1<<12],*pp1=buf,*pp2=buf,nc;int ny;
+inline char gc() {return pp1==pp2&&(pp2=(pp1=buf)+fread(buf,1,1<<12,stdin),pp1==pp2)?EOF:*pp1++;}
+//inline char gc(){return getchar();}
+inline ll read(){
+	ll x=0;for(ny=1;nc=gc(),(nc<48||nc>57)&&nc!=EOF;)if(nc==45)ny=-1;if(nc<0)return nc;
+	for(x=nc-48;nc=gc(),47<nc&&nc<58&&nc!=EOF;x=(x<<3)+(x<<1)+(nc^48));return x*ny;
+}
+int n,b[MAXN],c[MAXN],stk[MAXN],top;ll a[MAXN];
+inline bool pd(int x,int y,int z){return (y-x)*(a[z]-a[y])>=(z-y)*(a[y]-a[x]);}
+int main(){
+//	freopen("std.in","r",stdin);
+//	freopen("std.out","w",stdout);
+	n=read();
+	Rep(i,1,n)a[i]=read();
+	Rep(i,1,n)b[i]=read();
+	int k=max_element(a+1,a+n+1)-a;
+	rotate(a+1,a+k,a+n+1),rotate(b+1,b+k,b+n+1),a[++n]=a[1],b[n]=b[1];
+	Rep(i,2,n-1)c[i+1]=2*(b[i]+c[i])-c[i-1];Rep(i,1,n)a[i]-=c[i];
+	Rep(i,1,n){for(;top>1&&pd(stk[top-1],stk[top],i);top--);stk[++top]=i;}
+	ll ans=0;
+	Rep(i,1,top-1){
+		int d=stk[i+1]-stk[i];
+		ans+=a[stk[i]]*(d+1)+a[stk[i+1]]*(d-1);
+	}Rep(i,1,n-1)ans+=2*c[i];
+	printf("%.12lf",(db)ans/(2*(n-1)));
+	return 0;
+}
+
+

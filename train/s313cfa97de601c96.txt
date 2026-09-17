@@ -1,0 +1,6 @@
+N, A, B = map(int, input().split())
+# 先頭からN個のボール, 列の末尾にA個の青ボール追加, B個の赤ボール追加
+
+count = A * N // (A + B)
+count += min(N - count, A)
+print(count)

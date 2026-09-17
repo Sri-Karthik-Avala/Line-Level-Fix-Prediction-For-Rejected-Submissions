@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n;
+int ax[50],bx[50];
+int ay[50],by[50];
+int az[50],bz[50];
+
+int input(){
+  int fi,se;
+  cin>>fi>>se;
+  return fi*60+se;
+}
+
+int main(){
+  cin>>n;
+  vector<int> X,Y,Z;
+  for(int i=0;i<n;i++){
+    ax[i]=input();
+    bx[i]=input();
+    ay[i]=input();
+    by[i]=input();
+    az[i]=input();
+    bz[i]=input();
+    X.push_back(ax[i]);
+    Y.push_back(ay[i]);
+    Z.push_back(az[i]);
+  }
+  
+  typedef pair<int,int> P;
+  P t[50];
+  
+  int maxm=0;
+  for(int I=0;I<(int)X.size();I++){
+    int p=X[I];
+    for(int J=0;J<(int)Y.size();J++){
+      int q=Y[J];
+      int cnt=0;
+      for(int i=0;i<n;i++){
+        if(ax[i]<=p&&p<=bx[i]){
+          if(ay[i]<=q&&q<=by[i]){
+            t[cnt++]=P(az[i],1);
+            t[cnt++]=P(bz[i]+1,-1);
+          }
+        }
+      }
+      sort(t,t+cnt);
+      int v=0,sum=0;
+      for(int i=0;i<cnt;i++){
+        sum+=t[i].second;
+        v=max(v,sum);
+      }
+      maxm=max(maxm,v);
+    }
+  }
+  cout<<maxm<<endl;
+  return 0;
+}
+

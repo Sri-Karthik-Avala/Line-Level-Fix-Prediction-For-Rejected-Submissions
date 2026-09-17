@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define MAX 100
+
+int n, pre, pos;
+int Preorder[MAX], Inorder[MAX], Postorder[MAX];
+
+int find_parent(int key){
+  for(int i=0; i<n; i++){
+    if(key == Inorder[i]) return i;
+  }
+}
+
+void reconstruction(int left, int right){
+  if(left >= right) return;
+  
+  int key=Preorder[pre++];
+  int position=find_parent(key);
+
+  printf("%d\n", key);
+  
+  reconstruction(left, position);
+  reconstruction(position+1, right);
+  
+  Postorder[pos++]=key;
+}
+
+int main(void){
+  scanf("%d", &n);
+
+  for(int i=0; i<n; i++) scanf("%d", &Preorder[i]);
+  for(int i=0; i<n; i++) scanf("%d", &Inorder[i]);
+
+  reconstruction(0, n);
+
+  for(int i=0; i<n; i++){
+    if(i) printf(" ");
+    printf("%d", Postorder[i]);
+  }
+
+  printf("\n");
+}
+

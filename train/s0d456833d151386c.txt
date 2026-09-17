@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <vector>
+#pragma warning(disable : 4996)
+using namespace std;
+int N, Q; char buf[9];
+int main() {
+	scanf("%d%d", &N, &Q);
+	vector<int> tp(Q), a(Q), b(Q), c(Q);
+	for (int i = 0; i < Q; i++) {
+		scanf("%s%d%d", &buf, &a[i], &b[i]); a[i]--, b[i]--;
+		if (buf[0] == 'C') tp[i] = 1;
+		if (tp[i] == 0) scanf("%d", &c[i]);
+	}
+	vector<int> x(N); vector<bool> vis(N);
+	vector<vector<int> > g(N); vector<int> r(N);
+	for (int i = 0; i < N; i++) g[i] = vector<int>({ i }), r[i] = i;
+	for (int i = 0; i < Q; i++) {
+		if (tp[i] == 0) {
+			if (!vis[b[i]]) {
+				x[a[i]] += c[i];
+				x[b[i]] = x[a[i]] + c[i];
+				r[b[i]] = r[a[i]];
+				g[r[a[i]]].push_back(b[i]);
+				g[b[i]].clear();
+			}
+			else if (!vis[a[i]] && vis[b[i]]) {
+				x[b[i]] += c[i];
+				x[a[i]] = x[b[i]] - c[i];
+				r[a[i]] = r[b[i]];
+				g[r[b[i]]].push_back(a[i]);
+				g[a[i]].clear();
+			}
+			else {
+				if (r[a[i]] != r[b[i]]) {
+					int z1 = r[a[i]], z2 = r[b[i]], e = x[a[i]] - x[b[i]] - c[i];
+					if (g[z1].size() < g[z2].size()) swap(z1, z2), e = -e;
+					g[z1].insert(g[z1].end(), g[z2].begin(), g[z2].end());
+					for (int i : g[z2]) x[i] += e, r[i] = r[z1];
+					g[z2].clear();
+				}
+				x[a[i]] += c[i];
+				x[b[i]] += c[i];
+			}
+			vis[a[i]] = vis[b[i]] = true;
+		}
+		else {
+			if (r[a[i]] != r[b[i]]) puts("WARNING");
+			else printf("%d\n", x[b[i]] - x[a[i]]);
+		}
+	}
+	return 0;
+}

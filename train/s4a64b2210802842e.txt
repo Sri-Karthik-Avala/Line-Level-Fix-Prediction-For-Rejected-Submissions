@@ -1,0 +1,9 @@
+n, q = map(int, input().split())
+a = [2 ** 31 - 1] * n
+for _ in range(q):
+    query = input().split()
+    if query[0] == '0':
+        s, t, x = map(int, query[1:])
+        a[s:t + 1] = [x] * (t - s + 1)
+    else:
+        print(a[int(query[1])])

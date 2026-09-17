@@ -1,0 +1,115 @@
+#include <iostream>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+int dx[]={0,-1,1,0};
+int dy[]={-1,0,0,1};
+
+class Cube
+{
+public:
+	int x,y,c;
+	int t,b,n,s,e,w;
+	
+	Cube(int x, int y)
+	:x(x),y(y),c(0),t(1),b(6),n(5),s(2),e(3),w(4)
+	{}
+	
+	Cube(Cube& cb, int d, int x, int y)
+	:x(x),y(y),c(cb.c)
+	{
+		if(d==0||d==3)
+		{
+			e=cb.e;
+			w=cb.w;
+		}
+		else
+		{
+			n=cb.n;
+			s=cb.s;
+		}
+		if(d==0)
+		{
+			n=cb.t;
+			b=cb.n;
+			s=cb.b;
+			t=cb.s;
+			
+		}
+		if(d==1)
+		{
+			w=cb.t;
+			b=cb.w;
+			e=cb.b;
+			t=cb.e;
+		}
+		if(d==2)
+		{
+			t=cb.w;
+			w=cb.b;
+			b=cb.e;
+			e=cb.t;
+		}
+		if(d==3)
+		{
+			t=cb.n;
+			n=cb.b;
+			b=cb.s;
+			s=cb.t;
+			
+		}
+	}
+	
+	bool operator<(const Cube& C) const
+	{
+		return c>C.c;
+	}
+};
+
+bool memo[10][10][6][6];
+int f[10][10];
+
+int main()
+{
+	int H,W;
+	while(cin >> H >> W,(W||H))
+	{
+		memset(memo,0,sizeof(memo));
+		for(int i=0; i<H; i++)
+		for(int j=0; j<W; j++)
+			cin >> f[j][i];
+			
+		int sx,sy,gx,gy;
+		cin >> sy >> sx >> gy >> gx;
+			
+		priority_queue<Cube> q;
+		q.push(Cube(sx,sy));
+		while(1)
+		{
+			Cube c=q.top(); q.pop();
+			if(memo[c.x][c.y][c.t][c.w]) continue;
+			memo[c.x][c.y][c.t][c.w]=1;
+			
+			if(c.x==gx&&c.y==gy)
+			{
+				cout << c.c << endl;
+				break;
+			}
+			
+			for(int i=0; i<4; i++)
+			{
+				int tx=c.x+dx[i], ty=c.y+dy[i];
+				if(tx<0||ty<0||tx>=W||ty>=H) continue;
+				
+				Cube tc=Cube(c,i,tx,ty);
+				if(memo[tc.x][tc.y][tc.t][tc.w]) continue;
+				
+				tc.c+=f[tx][ty]*tc.b;
+				
+				q.push(tc);
+			}
+		}
+		
+	}
+}

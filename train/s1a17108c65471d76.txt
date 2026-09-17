@@ -1,0 +1,91 @@
+#include <set>
+#include <queue>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#pragma warning(disable : 4996)
+using namespace std;
+FILE *in = freopen("./input.txt", "r", stdin);
+FILE *out = freopen("./output.txt", "w", stdout);
+const int INF = 999999999;
+int N, M, Q;
+int main() {
+	scanf("%d%d%d", &N, &M, &Q);
+	vector<vector<int> > G(N);
+	vector<int> s(M), t(M);
+	for (int i = 0; i < M; i++) {
+		scanf("%d%d", &s[i], &t[i]); s[i]--, t[i]--;
+		G[s[i]].push_back(t[i]);
+		G[t[i]].push_back(s[i]);
+	}
+	queue<int> que1; que1.push(0);
+	vector<int> dist(N, INF); dist[0] = 0;
+	while (!que1.empty()) {
+		int u = que1.front(); que1.pop();
+		for (int i : G[u]) {
+			if (dist[i] == INF) {
+				dist[i] = dist[u] + 1;
+				que1.push(i);
+			}
+		}
+	}
+	for (int i = 0; i < M; i++) {
+		if (dist[s[i]] > dist[t[i]]) swap(s[i], t[i]);
+		if (dist[s[i]] + 1 != dist[t[i]]) s[i] = -1;
+	}
+	vector<int> x(Q), f(M);
+	for (int i = 0; i < Q; i++) scanf("%d", &x[i]), f[--x[i]] = 1;
+	vector<set<int> > G2(N);
+	vector<vector<int> > G3(N);
+	for (int i = 0; i < M; i++) {
+		if (!f[i] && s[i] != -1) G2[s[i]].insert(t[i]);
+		if (s[i] != -1) G3[t[i]].push_back(s[i]);
+	}
+	queue<int> que2; que2.push(0);
+	vector<int> dist2(N, INF); dist2[0] = 0;
+	while (!que2.empty()) {
+		int u = que2.front(); que2.pop();
+		for (int i : G2[u]) {
+			if (dist2[i] == INF) {
+				dist2[i] = dist2[u] + 1;
+				que2.push(i);
+			}
+		}
+	}
+	vector<int> ok(N);
+	for (int i = 0; i < N; i++) {
+		if (dist[i] == dist2[i]) ok[i] = 1;
+	}
+	int sum = 0;
+	for (int i = 0; i < N; i++) sum += ok[i];
+	reverse(x.begin(), x.end());
+	vector<int> ret(Q);
+	for (int i = 0; i < Q; i++) {
+		ret[i] = N - sum;
+		int z = x[i];
+		if (s[z] == -1) continue;
+		G2[s[z]].insert(t[z]);
+		if (ok[s[z]] == ok[t[z]]) continue;
+		if (!ok[s[z]]) swap(s[z], t[z]);
+		queue<int> que3; que3.push(s[z]);
+		while (!que3.empty()) {
+			int u = que3.front(); que3.pop();
+			vector<int> moved;
+			for (int i : G2[u]) {
+				if (!ok[i]) {
+					ok[i] = 1; sum++;
+					moved.push_back(i);
+					que3.push(i);
+				}
+			}
+			for (int i : moved) {
+				for (int j : G3[i]) {
+					G2[j].erase(i);
+				}
+			}
+		}
+	}
+	reverse(ret.begin(), ret.end());
+	for (int i : ret) printf("%d\n", i);
+	return 0;
+}

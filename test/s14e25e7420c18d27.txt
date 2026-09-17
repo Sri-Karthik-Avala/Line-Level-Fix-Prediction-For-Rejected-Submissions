@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <bitset>
+#define pb push_back
+#define rep(i,n) for (int i = 0; i < n; ++i)
+#define rrep(i,n) for (int i = 1; i <= n; ++i)
+#define drep(i,n) for (int i = (n)-1; i >= 0; --i)
+#define mins(x,y) x = min(x,y)
+#define maxs(x,y) x = max(x,y)
+#define rng(x) x.begin(),x.end()
+#define sz(x) int((x).size())
+using namespace std;
+typedef vector<int> vi;
+
+const int MX = 305;
+const int INF = 1001001001;
+
+int n, s, sx;
+int a[MX], b[MX], c[MX], d[MX];
+int dp[MX][MX];
+
+int main() {
+  scanf("%d%d%d",&n,&s,&sx);
+  rep(i,n) {
+    scanf("%d%d%d%d",&a[i],&b[i],&c[i],&d[i]);
+  }
+  int m = MX-2;
+  rep(i,m)rep(j,m) dp[i][j] = INF;
+  rep(i,m) dp[i][0] = 0;
+  rep(i,n)drep(j,s+1)drep(k,m) {
+    if (j+a[i] <= s) mins(dp[j+a[i]][k], dp[j][k]-b[i]);
+    if (k+d[i] <= s) mins(dp[j][k+d[i]], dp[j][k]+c[i]);
+  }
+  int ans = 0;
+  rep(j,m) {
+    if (dp[s][j] <= sx) ans = j;
+  }
+  cout<<ans<<endl;
+  return 0;
+}

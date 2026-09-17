@@ -1,0 +1,51 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <cmath>
+#include <queue>
+#include <set>
+#include <map>
+#include <iomanip>
+#include <fstream>
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> pii;
+const int mod = 1000000007;
+
+int c[200005], d[200005], q[200005], l[200005], r[200005], s[200005], o = 0;
+vector<int> g[200005], b[200005], y[200005];
+vector<pii> e[200005];
+
+void dfs(int x, int p) {
+    q[x] = p;
+    l[x] = ++o;
+    d[x] = 1;
+    if (b[c[x]].size()) e[b[c[x]].back()].push_back({x, s[b[c[x]].back()]});
+    b[c[x]].push_back(x);
+    for (int i : g[x]) if (i != p) {
+        dfs(i, x);
+        d[x] += d[i];
+        s[x]++;
+    }
+    b[c[x]].pop_back();
+    r[x] = o;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    int n, u, v, t[200005] = {};
+    ll z[200005];
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> c[i], t[c[i]]++;
+    for (int i = 1; i < n; i++) cin >> u >> v, g[u].push_back(v), g[v].push_back(u);
+    dfs(1, 1);
+    for (int i = 1; i <= n; i++) {
+        vector<int> f;
+        for (int j : g[i]) if (j != q[i]) f.push_back(d[j]);
+        for (pii j : e[i]) f[j.second] -= d[j.first];
+        for (int j : f) t[c[i]] += j, z[c[i]] += 1ll * j * (j + 1) / 2;
+    }
+    for (int i = 1; i <= n; i++) z[i] += 1ll * (n - t[i]) * (n - t[i] + 1) / 2;
+    for (int i = 1; i <= n; i++) cout << 1ll * n * (n + 1) / 2 - z[i] << '\n';
+}

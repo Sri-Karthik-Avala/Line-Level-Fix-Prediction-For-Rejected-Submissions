@@ -1,0 +1,43 @@
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <set>
+#include <cctype>
+#include <queue>
+#include <stack>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+using namespace std;
+#define INF 100000000
+typedef long long ll;
+typedef pair<int, pair<int, int> > cube_t;
+
+int main(void) {
+    int n, h;
+    string s;
+    int a, b;
+    while (1) {
+        cin >> n >> h;
+        if (n == 0 && h == 0) break;
+        set<cube_t> cube;
+        for (int i = 0; i < h; i++) {
+            cin >> s >> a >> b;
+            for (int j = 0; j < n; j++)
+            if (s == "xy") {
+                cube.insert(make_pair(a, make_pair(b, j)));
+            } else if (s == "xz") {
+                cube.insert(make_pair(a, make_pair(j, b)));
+            } else {
+                cube.insert(make_pair(j, make_pair(a, b)));
+            }
+        }
+        cout << n*n*n-cube.size() << endl;
+    }
+    return 0;
+}

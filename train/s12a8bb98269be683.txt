@@ -1,0 +1,13 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+  long long i,j,n,m,k;
+  cin>>n>>m>>k;
+  i=max(n,m);
+  if(k%i==0)   cout<<k/i<<endl;
+  cout<<k/i+1<<endl;
+
+    return 0;
+}

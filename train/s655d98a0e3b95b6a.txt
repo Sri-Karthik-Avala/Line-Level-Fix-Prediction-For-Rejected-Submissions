@@ -1,0 +1,115 @@
+//q6.cpp
+
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+
+typedef long long ll;
+using namespace std;
+
+#define SEGSIZE 16777216
+#define MAX 14348907
+
+int n,p;
+ll d,xy1[30],xy2[30],ans;
+
+struct NODE{
+    ll a;
+    ll b;
+    ll c;
+    
+    bool operator<(const NODE &B) const {
+        return a<B.a;
+    }
+};
+
+NODE seg[SEGSIZE*2];
+
+ll sk,da,db;
+
+ll segq(int k=0){
+    
+    if(seg[k].b<da || db<seg[k].a) return 0;
+    
+    if(da<=seg[k].a && seg[k].b<=db) return seg[k].c+sk;
+    
+    return max(segq(k*2+1),segq(k*2+2));
+}
+
+int pow3[18]={1};
+
+int main(){
+    
+    scanf("%d%lld",&n,&d);
+    
+    for(int i=0;i<n;i++) scanf("%lld%lld",xy1+i,xy2+i);
+    
+    for(int i=0;i<15;i++) pow3[i+1] = pow3[i]*3;
+    
+    p = (n+1)/2;
+    
+    for(int i=0;i<pow3[p];i++){
+        int I=i;
+        ll As=0LL,Ak=0LL;
+        
+        for(int j=0;j<p;j++){
+            if(I%3==1){
+                As+=xy1[j];
+                Ak-=xy2[j];
+            }else if(I%3==2){
+                As-=xy1[j];
+                Ak+=xy2[j];
+            }
+            I/=3;
+        }
+        
+        seg[SEGSIZE-1+i].a = As;
+        seg[SEGSIZE-1+i].b = As;
+        seg[SEGSIZE-1+i].c = Ak;
+    }
+    
+    
+    sort(seg+SEGSIZE-1,seg+SEGSIZE-1+pow3[p]);
+    
+    for(int i=SEGSIZE-2;i>=0;i--){
+        
+        seg[i].a = min(seg[i*2+1].a,seg[i*2+2].a);
+        seg[i].b = max(seg[i*2+1].b,seg[i*2+2].b);
+        seg[i].c = max(seg[i*2+1].c,seg[i*2+2].c);
+        
+    }
+    
+    for(int i=0;i<pow3[n/2];i++){
+        int I=i;
+        ll As=0LL,Ak=0LL;
+        
+        for(int j=p;j<n;j++){
+            if(I%3==1){
+                As-=xy1[j];
+                Ak-=xy2[j];
+            }else if(I%3==2){
+                As+=xy1[j];
+                Ak+=xy2[j];
+            }
+            I/=3;
+        }
+        
+        sk = Ak;
+        da = As-d;
+        db = d+As;
+        ans=max(ans,segq());
+    }
+    
+    
+    printf("%lld\n",ans);
+    
+    return 0;
+}

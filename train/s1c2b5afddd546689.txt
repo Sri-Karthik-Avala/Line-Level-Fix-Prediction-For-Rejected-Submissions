@@ -1,0 +1,110 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <utility>
+using namespace std;
+
+#define DEBUG(x) cerr << #x << " = " << x << endl
+
+// cargo(y,x) schwars(y,x)
+int D[7+2][7+2][7+2][7+2];
+
+bool F[7+2][7+2];
+const int INF = (int)1e9;
+
+struct Node {
+  int cY, cX, wY, wX;
+  Node(int cy_, int cx_, int wy_, int wx_) : cY(cy_), cX(cx_), wY(wy_), wX(wx_) { }
+};
+
+int main() {
+  while(true) {
+    int W, H; cin >> W >> H;
+    if(W == 0 && H == 0) break;
+    for(int i = 0; i < 7+2; ++i) {
+      for(int j = 0; j < 7+2; ++j) {
+        if(i == 0 || i == H + 1 || j == 0 || j == W + 1) {
+          F[i][j] = true;
+        }
+        else {
+          F[i][j] = false;
+        }
+        for(int a = 0; a < 7 + 2; ++a) {
+          for(int b = 0; b < 7 + 2; ++b) {
+            D[i][j][a][b] = INF;
+          }
+        }
+      }
+    }
+
+    int gX, gY, wX, wY, cX, cY;
+    for(int i = 1; i <= H; ++i) {
+      for(int j = 1; j <= W; ++j) {
+        int d; cin >> d;
+        if(d == 1) {
+          F[i][j] = true;
+        }
+        if(d == 2) {
+          cY = i;
+          cX = j;
+        }
+        if(d == 3) {
+          gY = i;
+          gX = j;
+        }
+        if(d == 4) {
+          wY = i;
+          wX = j;
+        }
+      }
+    }
+    queue<Node> Q;
+    Q.emplace(cY, cX, wY, wX);
+    D[cY][cX][wY][wX] = 0;
+    while(!Q.empty()) {
+      Node node = Q.front(); Q.pop();
+      int cy = node.cY, cx = node.cX;
+      int wy = node.wY, wx = node.wX;
+#if 0
+      for(int i = 0; i < H + 2; ++i) {
+        for(int j = 0; j < W + 2; ++j) {
+          if(i == cy && j == cx) cerr << 'C';
+          else if(i == wy && j == wx) cerr << 'W';
+          else cerr << F[i][j];
+        }
+        cerr << endl;
+      }
+      cerr << endl;
+#endif
+      if(cy == gY && cx == gX) break;
+      for(int i = 0; i < 4; ++i) {
+        static int dx[] = { 1, 0, -1, 0 };
+        static int dy[] = { 0, -1, 0, 1 };
+        int ny = wy + dy[i];
+        int nx = wx + dx[i];
+        if(ny == cy && nx == cx && F[cy + dy[i]][cx + dx[i]] == false
+            && D[cy + dy[i]][cx + dx[i]][cy][cx] > D[cy][cx][wy][wx] + 1) {
+          D[cy + dy[i]][cx + dx[i]][cy][cx] = D[cy][cx][wy][wx] + 1;
+          Q.emplace(cy + dy[i], cx + dx[i], cy, cx);
+        }
+        if((ny != cy || nx != cx) && F[ny][nx] == false
+            && D[cy][cx][ny][nx] > D[cy][cx][wy][wx]) {
+          D[cy][cx][ny][nx] = D[cy][cx][wy][wx];
+          Q.emplace(cy, cx, ny, nx);
+        }
+      }
+    }
+    int ans = INF;
+    for(int i = 1; i <= H; ++i) {
+      for(int j = 1; j <= W; ++j) {
+        ans = min(ans, D[gY][gX][i][j]);
+      }
+    }
+    if(ans == INF) {
+      cout << -1 << endl;
+    }
+    else {
+      cout << ans << endl;
+    }
+  }
+}

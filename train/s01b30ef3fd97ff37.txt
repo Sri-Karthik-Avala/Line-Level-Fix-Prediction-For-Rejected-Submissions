@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+int main()
+{
+  int w;
+  char d[20];
+
+  cin>>w;
+
+  for(int i = 0;i<20;i++)d[i] = 'a';
+
+  while(1){
+    bool flag=false;
+    int count=0;
+    for(int i=0;i<20;i++){
+      char ans;
+      count+=pow(3,i);
+      if(abs(w)<=count){
+        if(w>0){
+	 
+	  w -=pow(3,i);
+	 
+	  ans = '+';
+	}
+	else if(w<0){
+	  w +=pow(3,i);
+	  ans = '-';
+	}
+	else if(w==0){
+	  flag = true;
+	}
+	for(int j=0;j<=i;j++){
+	  d[i] = '0';
+	}
+	d[i] = ans;
+	break;
+      }
+    }
+    if(flag)break;
+  }
+  bool f = false;
+  for(int i = 19;i>=0;i--){
+    if(d[i]!='a')f = true;
+    if(f){
+      if(d[i]!='a')cout<<d[i];
+      else cout<<'0';
+    }
+  }
+  cout<<endl;
+  return 0;
+}

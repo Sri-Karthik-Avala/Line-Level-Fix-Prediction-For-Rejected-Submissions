@@ -1,0 +1,10 @@
+W,H,N = map(int, raw_input().split())
+ans = 0
+pX,pY = map(int, raw_input().split())
+ans = 0
+for _ in range(N-1):
+    X,Y = map(int, raw_input().split())
+    ans += abs(X-pX)+abs(Y-pY)
+    if X-pX>0 and Y-pY>0 or X-pX<0 and Y-pY<0:
+        ans -= min(abs(X-pX), abs(Y-pY))
+print ans

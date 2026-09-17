@@ -1,0 +1,114 @@
+#include <iostream>
+#include <set>
+#include <vector>
+using namespace std;
+
+// 入力関連
+long long N;
+long long A[1 << 18];
+long long B[1 << 18];
+long long S[1 << 18];
+
+// その他
+long long min_value = 0, sa = 0;
+multiset<int> SetL, SetR;
+
+void measure(int pos) {
+	auto itr = SetL.end(); itr--;
+	min_value += abs(S[pos] - (*itr));
+}
+
+int main() {
+	cin >> N;
+	for (int i = 1; i <= N; i++) cin >> A[i];
+	for (int i = 1; i <= N; i++) cin >> B[i];
+	for (int i = 1; i <= N; i++) S[i] = S[i - 1] + B[i];
+
+	// 直線を追加していく
+	SetL.insert(0);
+	SetR.insert(0);
+	for (int i = 1; i <= N; i++) {
+		sa += A[i];
+		if (!SetL.empty() && SetR.size() == 0) {
+			auto itr = SetL.end(); itr--;
+			SetR.insert((*itr) - sa + A[i]);
+		}
+		if (sa < S[i]) {
+			auto itr = SetR.begin();
+			SetL.insert((*itr) + sa);
+			SetR.erase(itr);
+			measure(i);
+			continue;
+		}
+
+		if (SetL.empty() && SetR.empty()) {
+			SetL.insert(S[i]);
+			SetR.insert(S[i] - sa);
+		}
+		else {
+			// Case #1: 両方左側のパターン
+			auto itr = SetL.end(); itr--;
+			if (S[i] < (*itr)) {
+				SetL.insert(S[i]);
+				SetL.insert(S[i]);
+				auto itr1a = SetL.end(); itr1a--;
+				long long val1a = (*itr1a);
+				SetR.insert((*itr1a) - sa);
+				SetL.erase(itr1a);
+
+				auto itr1b = SetL.end(); itr1b--;
+				long long val1b = (*itr1b);
+				min_value += (val1a - val1b);
+			}
+			else {
+				long long val1 = (1LL << 60);
+				if (!SetR.empty()) {
+					auto itr2 = SetR.begin();
+					val1 = (*itr2);
+				}
+
+				// Case #2: 両方右側のパターン
+				if (val1 < S[i]) {
+					SetR.insert(S[i] - sa);
+					SetR.insert(S[i] - sa);
+					auto itr3a = SetR.begin();
+					SetL.insert((*itr3a) + sa);
+					SetR.erase(itr3a);
+				}
+				else {
+					// Case #3: 片方右側のパターン
+					SetL.insert(S[i]);
+					SetR.insert(S[i] - sa);
+				}
+			}
+		}
+		measure(i);
+	}
+
+	// 最後の調整
+	vector<long long> vec1, vec2;
+	while (!SetL.empty()) {
+		auto itr = SetL.begin();
+		vec1.push_back((*itr));
+		SetL.erase(itr);
+	}
+	while (!SetR.empty()) {
+		auto itr = SetR.begin();
+		vec2.push_back((*itr) + sa);
+		SetR.erase(itr);
+	}
+
+	if (vec1.size() >= 1 && vec1[vec1.size() - 1] > S[N]) {
+		for (int i = 0; i < vec1.size(); i++) {
+			if (vec1[i] > S[N]) min_value += (vec1[i] - S[N]);
+		}
+	}
+	if (vec2.size() >= 1 && S[N] > vec2[0]) {
+		for (int i = 0; i < vec2.size(); i++) {
+			if (S[N] > vec2[i]) min_value += (S[N] - vec2[i]);
+		}
+	}
+	
+	cout << min_value << endl;
+	return 0;
+}

@@ -1,0 +1,52 @@
+import sys
+readline = sys.stdin.readline
+from collections import Counter
+
+N, M = map(int, readline().split())
+D = list(map(int, readline().split()))
+Edge = [[] for _ in range(N)]
+Edgenum = Counter()
+for i in range(M):
+    u, v = map(int, readline().split())
+    u -= 1
+    v -= 1
+    Edge[u].append((D[v], i, v))
+    Edge[v].append((D[u], i, u))
+    Edgenum[(u, v)] = i
+    Edgenum[(v, u)] = i
+
+inf = 10**9+7
+table = [inf]*M
+
+Col = [None]*N
+def solve():
+    Di = sorted([(D[i], i) for i in range(N)])
+    for dvn, vn in Di:
+        dvf, enum, vf = min(Edge[vn])
+        if dvn < dvf:
+            return False
+        table[enum] = dvn
+    
+    used = set()
+    for i in range(N):
+        if i in used:
+            continue
+        Col[i] = 1
+        stack = [i]
+        while stack:
+            vn = stack.pop()
+            for _, enum, vf in Edge[vn]:
+                if table[enum] == inf:
+                    continue
+                if vf in used:
+                    continue
+                Col[vf] = not Col[vn]
+                used.add(vf)
+                stack.append(vf)
+        return True
+
+if not solve():
+    print(-1)
+else:
+    print(''.join(['B' if Col[i] else 'W' for i in range(N)]))
+    print('\n'.join(map(str, table)))

@@ -1,0 +1,42 @@
+//#pragma GCC optimize("O3")
+//#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,tune=native")
+//#pragma GCC optimize ("unroll-loops")
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+typedef long double old;
+
+const int N = 200;
+
+int a[N][N];
+
+int main() {
+    //freopen("input.txt", "r", stdin);
+    //freopen("output.txt", "w", stdout);
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            string s(n, 0);
+            s[i] = s[j] = '1';
+            cout << "? " << s << endl;
+            int x;
+            cin >> x;
+            if (x) {
+                a[i][j] = 1;
+            }
+        }
+    }
+    cout << '!';
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            if (a[i][j]) {
+                cout << " (" << i << ',' << j << ')';
+            }
+        }
+    }
+    cout << endl;
+    return 0;
+}

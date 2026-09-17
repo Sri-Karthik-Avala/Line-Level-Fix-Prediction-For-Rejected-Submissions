@@ -1,0 +1,4 @@
+a = input()
+b = ('abc')
+c = b + a
+print( c )

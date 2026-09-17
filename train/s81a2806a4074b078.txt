@@ -1,0 +1,11 @@
+s = raw_input()
+n = input()
+ans = 0
+for i in xrange(n):
+    t = raw_input()
+    t2 = t+t
+    for j in xrange(len(t)):
+        if s==t[j:j+len(s)]:
+            ans += 1
+            break
+print ans

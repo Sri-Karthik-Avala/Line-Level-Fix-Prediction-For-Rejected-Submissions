@@ -1,0 +1,69 @@
+Coin Combination Problem 
+
+ 
+You have 4 bags A, B, C and D each of which includes N coins (there are totally 4N coins). Values of the coins in each bag are a i , b i , c i and d i respectively.
+ 
+
+ 
+ Find the number of combinations that result when you choose one coin from each bag (totally 4 coins) in such a way that the total value of the coins is V . You should distinguish the coins in a bag. 
+ 
+
+ Constraints 
+
+ 
+ 1 &le; N &le; 1000 
+ 1 &le; a i , b i , c i , d i &le; 10 16 
+ 1 &le; V &le; 10 16 
+ All input values are given in integers 
+ 
+
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+ N V 
+ a 1 a 2 ... a N 
+ b 1 b 2 ... b N 
+ c 1 c 2 ... c N 
+ d 1 d 2 ... d N 
+ 
+
+
+ Output 
+
+ 
+ Print the number of combinations in a line.
+ 
+
+
+ Sample Input 1 
+ 
+3 14
+3 1 2
+4 8 2
+1 2 3
+7 3 2
+ 
+ Sample Output 1 
+ 
+9
+ 
+
+
+ 
+
+ Sample Input 2 
+ 
+5 4
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+ 
+ Sample Output 2 
+ 
+625

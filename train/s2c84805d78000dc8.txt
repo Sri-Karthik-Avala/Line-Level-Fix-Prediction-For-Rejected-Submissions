@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct StronglyConnectedComponents
+{
+  vector< vector< int > > gg, rg;
+  vector< pair< int, int > > edges;
+  vector< int > comp, order, used;
+
+  StronglyConnectedComponents(size_t v) : gg(v), rg(v), comp(v, -1), used(v, 0) {}
+
+  void add_edge(int x, int y)
+  {
+    gg[x].push_back(y);
+    rg[y].push_back(x);
+    edges.emplace_back(x, y);
+  }
+
+  int operator[](int k)
+  {
+    return (comp[k]);
+  }
+
+  void dfs(int idx)
+  {
+    if(used[idx]) return;
+    used[idx] = true;
+    for(int to : gg[idx]) dfs(to);
+    order.push_back(idx);
+  }
+
+  void rdfs(int idx, int cnt)
+  {
+    if(comp[idx] != -1) return;
+    comp[idx] = cnt;
+    for(int to : rg[idx]) rdfs(to, cnt);
+  }
+
+  int build(vector< vector< int > > &t)
+  {
+    for(int i = 0; i < gg.size(); i++) dfs(i);
+    reverse(begin(order), end(order));
+    int ptr = 0;
+    for(int i : order) if(comp[i] == -1) rdfs(i, ptr), ptr++;
+
+    t.resize(ptr);
+    set< pair< int, int > > connect;
+    for(auto &e : edges) {
+      int x = comp[e.first], y = comp[e.second];
+      if(x == y) continue;
+      if(connect.count({x, y})) continue;
+      t[x].push_back(y);
+      connect.emplace(x, y);
+    }
+    return (ptr);
+  }
+};
+
+int main()
+{
+  int N, M;
+  cin >> N >> M;
+  StronglyConnectedComponents scc(N);
+  for(int i = 0; i < M; i++) {
+    int s, t;
+    cin >> s >> t;
+    scc.add_edge(s, t);
+  }
+  vector< vector< int > > g;
+  if(scc.build(g) == 1) {
+    cout << 0 << endl;
+  } else {
+    bool in[100000] = {}, out[100000] = {};
+    for(int i = 0; i < g.size(); i++) {
+      in[i] = g[i].empty();
+      for(auto &to : g[i]) out[to] = true;
+    }
+
+    int latte = 0, malta = 0;
+    for(int i = 0; i < g.size(); i++) {
+      latte += in[i] ^ 1;
+      malta += out[i] ^ 1;
+    }
+    cout << max(latte, malta) << endl;
+  }
+}

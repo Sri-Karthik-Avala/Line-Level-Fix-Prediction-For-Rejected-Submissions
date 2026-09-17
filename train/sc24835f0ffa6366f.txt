@@ -1,0 +1,12 @@
+n,x = map(int,input().split())
+l = 2*n-1
+d = n-x
+if (n>3 and (3 <= x <= l-2)) or (n==3 and 2 <= x <= 4) or (n==2 and x == 2):
+    print("Yes")
+    ans = []
+    for i in range(l):
+        ans.append((l-d+i)%l+1)
+    for i in ans:
+        print(i)
+else:
+    print("No")

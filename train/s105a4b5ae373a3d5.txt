@@ -1,0 +1,102 @@
+#include<iostream>
+using namespace std;
+
+void make_name(char *dist[]);
+char *name[20];
+int m, n;
+
+//data[i]はi桁目(10進数)、これをn乗。
+void pwd(int *data, int n) {
+	int i, j, k;
+	int BigNum[201] = {0}, MBigNum[201] = {0};
+	
+	BigNum[0] = 1;
+	for( i = 0; i < n; i++ ) {
+		for( j = 0; j < 100; j++ ) {
+			for( k = 0; k < 100; k++ ) {
+				MBigNum[j+k] += BigNum[j] * data[k];
+				MBigNum[j+k+1] += MBigNum[j+k]/10;
+				MBigNum[j+k] %= 10;
+			}
+		}
+		for( j = 0; j < 100; j++ ) {
+			BigNum[j] = MBigNum[j];
+			MBigNum[j] = 0;
+		}
+	}
+	
+	for( j = 0; j < 100; j++ ) {
+		data[j] = BigNum[j];
+	}
+}
+
+int main() {
+	int i;
+	int BigNum[200] = {0};
+	make_name(name);
+	while(cin >> m >> n) {
+		if(!m) break;
+		BigNum[0] = m%10;
+		BigNum[1] = m/10;
+		pwd(BigNum, n);
+		int l, r;
+		for(i = 0; i < 100; i++ ) {
+			if( BigNum[i] )
+				break;
+		}
+		l = i;
+		for(i = 99; i >= 0; i--) {
+			if( BigNum[i] )
+				break;
+		}
+		r = i;
+		
+		bool disp0 = true;
+		for(i = r; i >= l; i--) {
+			if( BigNum[i] == 0 && !disp0 )
+				continue;
+			cout << BigNum[i];
+			if( BigNum[i] != 0 ) {
+				disp0 = true;
+			}
+			if( i % 4 == 0 ) {
+				cout << name[i/4];
+				disp0 = false;
+			}
+		}
+		
+		l = i/4 * 4;
+		for(; i >= l; i--) {
+			cout << BigNum[i];
+			if( i % 4 == 0 ) {
+				cout << name[i/4];
+			}
+		}
+		cout << endl;
+		
+		for( i = 0; i < 100; i++ )
+			BigNum[i] = 0;
+	}
+	return 0;
+}
+
+void make_name(char *dist[]) {
+	dist[0] = "";
+	dist[1] = "Man";
+	dist[2] = "Oku";
+	dist[3] = "Cho";
+	dist[4] = "Kei";
+	dist[5] = "Gai";
+	dist[6] = "Jo";
+	dist[7] = "Jou";
+	dist[8] = "Ko";
+	dist[9] = "Kan";
+	dist[10] = "Sei";
+	dist[11] = "Sai";
+	dist[12] = "Gok";
+	dist[13] = "Ggs";
+	dist[14] = "Asg";
+	dist[15] = "Nyt";
+	dist[16] = "Fks";
+	dist[17] = "Mts";
+}

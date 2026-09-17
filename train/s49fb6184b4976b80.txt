@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <cmath>
+#include <algorithm>
+#include <cfloat>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <set>
+#include <map>
+#include <time.h>
+typedef long long int ll;
+typedef unsigned long long int ull;
+#define BIG_NUM 2000000000
+#define MOD 1000000007
+#define EPS 0.000000001
+using namespace std;
+
+
+struct Point{
+	void set(double arg_x,double arg_y){
+		x = arg_x;
+		y = arg_y;
+	}
+	double x,y;
+};
+
+int N;
+Point point[1000];
+double R;
+
+Point calc_Cross_Point(double x1,double x2,double x3,double x4,double y1,double y2,double y3,double y4){
+	Point ret;
+	ret.x = ((x2-x1)*(y3*(x4-x3)+x3*(y3-y4))-(x4-x3)*(y1*(x2-x1)+x1*(y1-y2)))/((y2-y1)*(x4-x3)-(y4-y3)*(x2-x1));
+	if(x1 != x2){
+		ret.y = ((y2-y1)*ret.x+y1*(x2-x1)+x1*(y1-y2))/(x2-x1);
+	}else{
+		ret.y = ((y4-y3)*ret.x+y3*(x4-x3)+x3*(y3-y4))/(x4-x3);
+	}
+	return ret;
+}
+
+double calc_S(Point a,Point b,Point c,Point d){
+	return fabs((b.x*a.y - b.y*a.x)+(c.x*b.y - c.y*b.x)+(d.x*c.y - d.y*c.x)+(a.x*d.y - a.y*d.x))/2;
+}
+
+void func(){
+
+	if(N%3 == 0)N /= 3;
+
+	if(N == 1){
+		printf("0.433013\n");
+		return;
+	}
+
+	double base_degree = 360.0/(double)(3*N);
+
+	for(int i = 0; i < 3*N; i++){
+		point[i].x = R*cos(((90-base_degree*i)*M_PI)/180.0);
+		point[i].y = R*sin(((90-base_degree*i)*M_PI)/180.0);
+	}
+
+	Point a,b,c,d,ret;
+	a.set(point[0].x,point[0].y);
+
+	ret = calc_Cross_Point(point[0].x,point[N].x,point[1].x,point[2*N+1].x,point[0].y,point[N].y,point[1].y,point[2*N+1].y);
+	b.set(ret.x,ret.y);
+
+	c.set(0,0);
+
+	ret = calc_Cross_Point(point[0].x,point[2*N].x,point[3*N-1].x,point[N-1].x,point[0].y,point[2*N].y,point[3*N-1].y,point[N-1].y);
+	d.set(ret.x,ret.y);
+
+	printf("%.10lf\n",(double)3*N*calc_S(a,b,c,d));
+}
+
+
+int main(){
+
+	R = 1.0/sqrt(3.0);
+
+	while(true){
+		scanf("%d",&N);
+		if(N == 0)break;
+
+		func();
+	}
+}

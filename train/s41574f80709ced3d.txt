@@ -1,0 +1,87 @@
+#include<queue>
+#include<cstdio>
+#include<algorithm>
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+
+int main(){
+	for(int m,c,n;scanf("%d%d%d",&m,&c,&n),m;){
+		queue<int> Q[100];
+		rep(i,n){
+			int sz; scanf("%d",&sz);
+			rep(j,sz){
+				int a; scanf("%d",&a);
+				Q[i].push(a);
+			}
+		}
+
+		int ans=0;
+		deque<int> dai[10];
+		while(1){
+			bool end=true;
+			rep(i,n) if(!Q[i].empty()) {
+				end=false;
+
+				// 本を取る
+				int book=Q[i].front(); Q[i].pop();
+				int pos=m;
+				rep(j,m) if(count(dai[j].begin(),dai[j].end(),book)>0) {
+					pos=j;
+					break;
+				}
+				if(pos<m){
+					dai[pos].erase(find(dai[pos].begin(),dai[pos].end(),book));
+				}
+				ans+=pos+1;
+
+				// 本を置く
+				if(dai[0].size()<c){
+					dai[0].push_back(book);
+					ans+=1;
+				}
+				else{
+					// step 1
+					int pos2=m;
+					for(int j=1;j<m;j++) if(dai[j].size()<c) {
+						pos2=j;
+						break;
+					}
+					if(pos2<m){
+						dai[pos2].push_back(book);
+					}
+					ans+=pos2+1;
+
+					// step 2
+					int sub=dai[0].front(); dai[0].pop_front();
+					ans++;
+
+					// step 3
+					int pos3=m;
+					for(int j=1;j<m;j++) if(dai[j].size()<c) {
+						pos3=j;
+						break;
+					}
+					if(pos3<m){
+						dai[pos3].push_back(sub);
+					}
+					ans+=pos3+1;
+
+					// step 4
+					dai[pos2].erase(find(dai[pos2].begin(),dai[pos2].end(),book));
+					ans+=pos2+1;
+
+					// step 5
+					dai[0].push_back(book);
+					ans++;
+				}
+			}
+			if(end) break;
+		}
+
+		printf("%d\n",ans);
+	}
+
+	return 0;
+}

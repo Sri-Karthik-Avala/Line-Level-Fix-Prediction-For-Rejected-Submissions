@@ -1,0 +1,61 @@
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+typedef struct
+{
+	double x;
+	double y;
+} POINT;
+
+POINT v[100];
+
+bool cmp(POINT A, POINT B)
+{
+	if (A.x == B.x){
+		return (A.y < B.y);
+	}
+	return (A.x < B.x);
+}
+
+double dif(double y, double x)
+{
+	return (sqrt(y * y + x * x));
+}
+
+int main()
+{
+	int m = 0;
+	
+	while (scanf("%lf,%lf", &v[m].x, &v[m].y) != EOF){
+		m++;
+	}
+	
+	sort(v, v + m, cmp);
+
+/*	
+	for (int i = 0; i < m; i++){
+		printf("%lf %lf\n", v[i].x, v[i].y);
+	}
+*/
+	
+	double S = 0.0;
+	
+	for (int i = 0; i < m - 1; i++){
+		double a = dif(v[0].y - v[i].y, v[0].x - v[i].x);
+		double b = dif(v[i].y - v[i + 1].y, v[i].x - v[i + 1].x);
+		double c = dif(v[i + 1].y - v[0].y, v[i + 1].x - v[0].x);
+		double z = (a + b + c) / 2;
+		
+//		printf("%lf %lf %lf %lf\n", a, b, c, z);
+		
+		S += sqrt(z * (z - a) * (z - b) * (z - c));
+		
+//		printf("%lf\n", S);
+	}
+	
+	printf("%lf\n", S);
+	
+	return 0;
+}

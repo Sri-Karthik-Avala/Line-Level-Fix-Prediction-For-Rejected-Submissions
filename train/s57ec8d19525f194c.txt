@@ -1,0 +1,39 @@
+for i in range(input()):
+    s=raw_input()
+    cur=0
+    for j in range(input()):
+        cmd=raw_input()
+        if cmd=="forward char":
+            cur=min(cur+1,len(s))
+        elif cmd=="forward word":
+            while cur<len(s) and s[cur]==" ":
+                cur+=1
+            while cur<len(s) and s[cur]!=" ":
+                cur+=1
+        elif cmd=="backward char":
+            cur=max(cur-1,0)
+        elif cmd=="backward word":
+            while cur>0 and s[cur-1]==" ":
+                cur-=1
+            while cur>0 and s[cur-1]!=" ":
+                cur-=1
+        elif cmd=="delete char":
+            if cur!=len(s):
+                s=s[:cur]+s[cur+1:]
+        elif cmd=="delete word":
+            temp=cur
+            if temp>=len(s):
+                continue
+            while s[temp]==" ":
+                temp+=1
+            if temp>=len(s):
+                continue
+            while temp<len(s) and s[temp]!=" ":
+                temp+=1
+            s=s[:cur]+s[temp:]
+        elif "insert" in cmd:
+            idx1=cmd.find('"')
+            idx2=cmd.find('"',idx1+1)
+            s=s[:cur]+cmd[idx1+1:-1]+s[cur:]
+            cur+=idx2-idx1-1
+    print s[:cur]+"^"+s[cur:]

@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <map>
+#include <queue>
+#include <deque>
+#include <complex>
+#define FOR(i,a,b) for(int i=(a);i<(int)(b);i++)
+#define REP(i,a) FOR(i,0,a)
+#define X real() 
+#define Y imag() 
+using namespace std;
+typedef complex<int> cli;
+typedef vector<cli> vcl;
+typedef vector<int> vi;
+int num=0;
+int ans=0;
+int direct[40][4];
+void search(int now,int reach){
+	if(now==0){
+		if(reach+1==2<<num)
+			ans++;
+			
+		return;
+	}
+	REP(i,4){
+		int next=direct[now][i];
+		while((next!=-1) && (1<<next & reach)) next=direct[next][i];
+		if(next!=-1)
+			search(next,reach+(1<<next ));
+	}
+}
+int main() {
+	int m,n;
+	while(cin >> m >> n && n){
+	ans=0;
+	num=0;
+	vi edge[40];	
+	int maps[11][11]={};
+	REP(i,n)
+		REP(j,m){
+			cin >> maps[i][j];
+			if(maps[i][j]==2){
+				maps[i][j]=0;
+			}
+			else if(maps[i][j]){
+				maps[i][j]=++num;
+			}
+			else 
+				maps[i][j]=-1;
+		}
+	int nx,ny[11]={};
+	REP(i,11)
+		ny[i]=-1;
+	REP(i,40)
+		REP(j,4)
+			direct[i][j]=-1;
+	REP(i,n){
+		nx=-1;
+		REP(j,m){
+			if(maps[i][j]>=0){
+				if(nx>=0){
+					edge[maps[i][j]].push_back(maps[i][nx]);
+					edge[maps[i][nx]].push_back(maps[i][j]);
+					direct[maps[i][j]][3]=maps[i][nx];
+					direct[maps[i][nx]][0]=maps[i][j];
+				}
+				nx=j;
+				if(ny[j]>=0){
+					edge[maps[i][j]].push_back(maps[ny[j]][j]);
+					edge[maps[ny[j]][j]].push_back(maps[i][j]);
+					direct[maps[i][j]][1]=maps[ny[j]][j];
+					direct[maps[ny[j]][j]][2]=maps[i][j];
+					
+				}
+				ny[j]=i;
+			}
+				
+		}
+	}
+	REP(i,edge[0].size())
+		search(edge[0][i],1<<edge[0][i]);
+		cout <<ans << endl;
+	// your code goes here
+	}
+	return 0;
+}

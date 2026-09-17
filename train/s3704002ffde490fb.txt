@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+#define ll  long long
+//#define int long long
+#define inf 0x3f3f3f3f
+#define fi first
+#define se second
+#define pb push_back
+#define pa pair<int,int>
+#define mkp(a,b) make_pair(a,b)
+const int N=2e5+10;
+const int mod=998244353;
+using namespace std;
+
+
+struct Point
+{
+   int x,y;
+   Point(){}
+   Point(int x,int y):x(x),y(y){}
+};
+typedef Point Vector;
+inline int cross(Vector a,Vector b){return a.x*b.y-a.y*b.x;}
+inline int dot(Vector a,Vector b){return a.x*b.x+a.y*b.y;}
+int x[5],y[5];
+int32_t main()
+{
+   //ios::sync_with_stdio(0); cin.tie(0);cout.tie(0);
+   int q; scanf("%d",&q);
+   while(q--)
+   {
+   	  for(int i=1;i<=4;i++) scanf("%d%d",&x[i],&y[i]);
+   	  if(max(x[1],x[2])<=min(x[3],x[4])||min(x[1],x[2])>=max(x[3],x[4])||max(y[1],y[2])<=min(y[3],y[4])||min(y[1],y[2])>=max(y[3],y[4])) 
+   	  {
+   	  	puts("0");
+   	  	continue;
+   	  }	
+   	  ll p1=cross(Point(x[3]-x[1],y[3]-y[1]),Point(x[2]-x[1],y[2]-y[1])); 
+   	  ll p2=cross(Point(x[4]-x[1],y[4]-y[1]),Point(x[2]-x[1],y[2]-y[1]));
+   	  ll p3=cross(Point(x[1]-x[3],y[1]-y[3]),Point(x[4]-x[3],y[4]-y[3]));  
+   	  ll p4=cross(Point(x[2]-x[3],y[2]-y[3]),Point(x[4]-x[3],y[4]-y[3]));   
+   	  if(p1*p2<=0&&p3*p4<=0) puts("1");
+   	  else puts("0");
+   }
+return 0;
+}
+/*
+
+*/
+

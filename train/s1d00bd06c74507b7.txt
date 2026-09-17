@@ -1,0 +1,78 @@
+#pragma GCC optimize("O2,unroll-loops")
+#pragma GCC target("avx,popcnt")
+#include<bits/stdc++.h>
+#define all(x) x.begin(), x.end()
+#define pb push_back
+using namespace std;
+using ll = long long;
+using ld = long double;
+const int maxn = 1<<17, mod = 1e9 + 7, i2 = (mod+1)/2;
+int n, owo = -1, f[maxn], vis[maxn];
+vector<int> g[maxn], trail;
+void cyc(int v, int p) {
+	vis[v] = 1;
+	trail.pb(v);
+	for(auto i : g[v]) if(i != p) {
+		if(vis[i] == 1) {
+			owo = v;
+			//cout << i << " : ";
+			//for(auto i : trail) cout << i << " "; cout << endl;
+			while(true) {
+				f[trail.back()] = 1;
+				if(trail.back() == i) break;
+				else trail.pop_back();
+			}
+		} else cyc(i, v);
+		if(owo != -1) return;
+	}
+	vis[v] = 2;
+	trail.pop_back();
+}
+
+int val[maxn];
+int get(int v) {
+	if(val[v] != -1) return val[v];
+	vector<int> t;
+	for(auto i : g[v]) {
+		t.pb(get(i));
+	}
+	sort(all(t));
+	int mex = 0;
+	for(auto i : t) {
+		if(i > mex) break;
+		mex += mex==i;
+	}
+	return val[v] = mex;
+}
+bool check(int v, int x) {
+	memset(val, -1, sizeof val);
+	val[v] = x;
+	for(int i = 1; i <= n; i++) get(i);
+	val[v] = -1;
+	return get(v) == x;
+}
+int main() {
+	cin.tie(0)->sync_with_stdio(0);
+	cin >> n;
+	for(int t, i = 1; i <= n; i++) {
+		cin >> t;
+		g[t].pb(i);
+	}
+	for(int i = 1; owo == -1 && i <= n; i++) if(!vis[i])
+	cyc(i, i);
+	if(owo == -1) return cout << "POSSIBLE\n", 0;
+	memset(val, -1, sizeof val);
+	vector<int> t;
+	int nxt = 0;
+	for(auto i : g[owo]) if(!f[i]) {
+		t.pb(get(i));
+	} else nxt = i;
+	sort(all(t));
+	int mex = 0;
+	for(auto i : t) {
+		if(i > mex) break;
+		mex += mex==i;
+	}
+	cout << (check(owo, mex)||check(nxt, mex)?"POSSIBLE":"IMPOSSIBLE");
+	return 0;
+}

@@ -1,0 +1,49 @@
+Prime Factorization 
+ 
+
+ 
+Factorize a given integer n .
+ 
+
+ Input 
+
+ 
+ n 
+ 
+
+ 
+An integer n is given in a line.
+ 
+
+ Output 
+
+ 
+Print the given integer n and : . Then, print prime factors in ascending order. If n is divisible by a prime factor several times, the prime factor should be printed according to the number of times. Print a space before each prime factor.
+ 
+
+ Constraints 
+
+ 
+ 
+2 &le; n &le; 10 9 
+ 
+ 
+
+
+ Sample Input 1 
+ 
+12
+ 
+ Sample Output 1 
+ 
+12: 2 2 3
+ 
+ 
+
+ Sample Input 2 
+ 
+126
+ 
+ Sample Output 2 
+ 
+126: 2 3 3 7

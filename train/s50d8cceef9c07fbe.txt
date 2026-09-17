@@ -1,0 +1,15 @@
+while(1):
+    [n,k]=[int(x) for x in raw_input().split()]
+    if n==0: break
+    clist=[]
+    for i in range(n):
+        clist.append(int(raw_input()))
+    d1,d2=0,0
+    for i in range(n-k+1):
+        d1=max(reduce(lambda x,y:x*y,clist[i:i+k]),d1)
+    for j in range(n-k+1):
+        sect=sorted(clist[i:i+k])
+        sect[0]=max(clist[:i]+clist[i+k:])
+        d2=max(reduce(lambda x,y:x*y,sect),d2)
+    print max(d2-d1,0)
+    

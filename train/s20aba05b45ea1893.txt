@@ -1,0 +1,30 @@
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main(void){
+  int n, m, i;
+  bool lock;
+  string u, t, mess;
+  map<string, bool> mp;
+
+  cin >> n;
+  for(i=0;i<n;i++){
+    cin >> u;
+    mp[u] = true;
+  }
+  
+  lock = true;
+  cin >> m;
+  for(i=0;i<m;i++){
+    cin >> t;
+    if(mp.find(t) == mp.end()){
+      cout << "Unknown " << t << endl;
+    }else{
+      mess = lock ? "Opened by ":"Colsed by ";
+      lock = not lock;
+      cout << mess << t << endl;
+    }
+  }
+  return 0;
+}

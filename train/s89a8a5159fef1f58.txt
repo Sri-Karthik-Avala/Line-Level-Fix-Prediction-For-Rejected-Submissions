@@ -1,0 +1,12 @@
+n = int(input())
+ng = 0
+def prime(a):
+    if a == 2: return True
+    if a < 2 or a & 1 == 0: return False
+    return pow(2, a - 1, a) == 1
+
+for i in range(n):
+    a = 2 * int(input()) + 1
+    ng += prime(a)
+    
+print(ng)

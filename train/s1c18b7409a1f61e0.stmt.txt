@@ -1,0 +1,52 @@
+Problem B: OOllOll 
+ Problem 
+ 
+ 非負整数$x$を2進数表記したときの各桁の和を$f(x)$とする。 
+ 正整数$N$が与えられるので$f(0)$,$f(1)$,...,$f(N)$の中で最大のものを出力せよ。 
+ 
+ 
+ 関数$f(5)$の計算の例: 
+ 5を2進数表記すると101で各桁の和は1+0+1=2 
+ よって$f(5) = 2$となる。 
+ 
+
+ 
+ Note: https://ja.wikipedia.org/wiki/二進法 
+ 
+
+ Input 
+ 入力は以下の形式で与えられる。 
+ 
+$N$
+ 
+ 
+正整数$N$が1行に与えられる。
+ 
+
+ Constraints 
+ 入力は以下の条件を満たす。 
+ 
+ $1 \le N \le 10^9$ 
+ 
+
+ Ouput 
+ $f(0)$,$f(1)$,...,$f(N)$の中で最大のものを1行に出力する。 
+
+ Sample Input 1 
+ 
+2
+ 
+
+ Sample Output 1 
+ 
+1
+ 
+
+ Sample Input 2 
+ 
+9
+ 
+
+ Sample Output 2 
+ 
+3

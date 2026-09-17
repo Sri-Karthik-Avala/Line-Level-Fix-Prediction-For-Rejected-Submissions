@@ -1,0 +1,14 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+  unsigned long long n,m,ans,mod=1e9+7;
+  cin>>n>>m;
+  if(n==1)cout<<(m+1)%mod<<endl;
+  else if(m==0)cout<<1<<endl;
+  else{
+    ans=((((m)/(n-1))%mod)*((m-n+2)+((m)%(n-1)+1))%mod)%mod+1+m;
+    // ans=((m-(n-1)+2+m%(n-1))%mod*(m/(n-1))%mod)+m+1;
+  cout<<ans%mod<<endl;
+  }
+  return 0;
+}

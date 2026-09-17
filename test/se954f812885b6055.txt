@@ -1,0 +1,58 @@
+#include<iostream>
+using namespace std;
+#define REP(i,b,n) for(int i=b;i<n;i++)
+#define rep(i,n)   REP(i,0,n)
+#define H 0
+#define V 1
+
+const int dx[]={1,-1};
+const int dy[]={1,-1};
+bool vis[801][801];
+bool  ismirror[9][9][2];
+
+void solve(){
+  int x = 75,y=25;
+  int xdir=0,ydir=0;
+  while(true){
+    if (vis[y][x]){
+      //cout << x << " " << y << endl;
+      cout << 75 <<" "<< 25 << endl;
+      break;
+    }
+    vis[y][x]=true;
+    if (y%100 == 0){
+      if (ismirror[y/100][x/100][H]){
+	ydir=1-ydir;
+      }else if (y == 800 || y == 0){
+	cout << x <<" " << y << endl;
+	break;
+      }
+    }else if (x%100 == 0){
+      if (ismirror[y/100][x/100][V]){
+	xdir=1-xdir;
+      }else if (x == 800 || x == 0){
+	cout <<x <<" " << y << endl;
+	break;
+      }
+    }
+    x+=dx[xdir];
+    y+=dy[ydir];
+  }
+  return;
+}
+
+main(){
+  int n;
+  while(cin>>n&& n >-1){
+    rep(i,9)rep(j,9)ismirror[i][j][H]=ismirror[i][j][V]=false;
+    rep(i,801)rep(j,801)vis[i][j]=false;
+    rep(i,n){
+      char dir;
+      int x,y;
+      cin>>dir>>x>>y;
+      if (dir == 'x')ismirror[y][x][H]=true;
+      else ismirror[y][x][V]=true;
+    }
+    solve();
+  }
+}

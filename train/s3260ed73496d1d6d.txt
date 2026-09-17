@@ -1,0 +1,12 @@
+n = int)input())
+xs = []
+for i in range(n): xs.append(input())
+m = int(input())
+flag = 1
+for i in range(m):
+    s = input()
+    if s in xs:
+        print("Opened" if flag == 1 else "Closed", "by", s)
+        flag ^= 1
+    else:
+        print("Unknown", s)

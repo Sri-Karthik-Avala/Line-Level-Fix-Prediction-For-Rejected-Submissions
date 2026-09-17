@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <queue>
+
+static const int MOD = 1000000007;
+using ll = long long;
+using u32 = unsigned;
+using namespace std;
+
+template<class T>
+constexpr T INF = ::numeric_limits<T>::max() / 32 * 15 + 208;
+
+int main() {
+    int x, a, b, c, d;
+    int aa = 0;
+    while(cin >> x, x){
+        if(aa) puts("");
+        aa++;
+        scanf("%d%d%d%d", &a, &b, &c, &d);
+        array<int, 4> ans{};
+        int sum = 400;
+        for (int i = 0; i <= a; ++i) {
+            for (int j = 0; j <= b; ++j) {
+                for (int k = 0; k <= c; ++k) {
+                    for (int l = 0; l <= d; ++l) {
+                        int s = 10*i+50*j+100*k+500*l;
+                        if(x > s) continue;
+                        int p = s-x, f = 0;
+                        f += p/500; p %= 500;
+                        f += p/100; p %= 100;
+                        f += p/50; p %= 50;
+                        f += p/10;
+                        if(sum > f) ans = {i, j, k, l}, sum = f;
+                    }
+                }
+            }
+        }
+        if(ans[0]) printf("10 %d\n", ans[0]);
+        if(ans[1]) printf("50 %d\n", ans[1]);
+        if(ans[2]) printf("100 %d\n", ans[2]);
+        if(ans[3]) printf("500 %d\n", ans[3]);
+    }
+    return 0;
+}
+

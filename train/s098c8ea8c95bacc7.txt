@@ -1,0 +1,115 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <set>
+#include <map>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <algorithm>
+#include <cstring>
+#include <functional>
+#include <cmath>
+#include <complex>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define rep1(i,n) for(int i=1;i<=(n);++i)
+#define all(c) (c).begin(),(c).end()
+#define fs first
+#define sc second
+#define pb push_back
+#define show(x) cout << #x << " " << x << endl
+struct edge{int to,cap,rev;};
+const int MAX_V=1000,inf=1e8;
+vector<edge> G[MAX_V];
+int level[MAX_V],iter[MAX_V],ord[MAX_V];
+int N,M,S,T,a[10000],b[10000];
+void add_edge(int from,int to,int cap,int i){
+	edge e1={to,cap,(int)G[to].size()},e2={from,0,(int)G[from].size()};
+	G[from].pb(e1);
+	G[to].pb(e2);
+	ord[i]=G[from].size()-1;
+}
+void bfs(int s){
+	memset(level,-1,sizeof(level));
+	queue<int> que;
+	level[s]=0;
+	que.push(s);
+	while(!que.empty()){
+		int v=que.front();
+		que.pop();
+		rep(i,G[v].size()){
+			edge &e=G[v][i];
+			if(e.cap>0&&level[e.to]<0){
+				level[e.to]=level[v]+1;
+				que.push(e.to);
+			}
+		}
+	}
+}
+int dfs(int v,int t,int f){
+	if(v==t) return f;
+	for(int &i=iter[v];i<G[v].size();i++){
+		edge &e=G[v][i];
+		if(e.cap>0&&level[v]<level[e.to]){
+			int d=dfs(e.to,t,min(f,e.cap));
+			if(d>0){
+				e.cap-=d;
+				G[e.to][e.rev].cap+=d;
+				return d;
+			}
+		}
+	}
+	return 0;
+}
+int max_flow(int s,int t){
+	int flow=0;
+	while(true){
+		bfs(s);
+		if(level[t]<0) return flow;
+		memset(iter,0,sizeof(iter));
+		int f;
+		while((f=dfs(s,t,inf))>0) flow+=f;
+	}
+}
+bool froms[MAX_V],tot[MAX_V];
+void dfs1(int v){//from s
+	froms[v]=1;
+	for(auto e:G[v]){
+		if(e.cap<=0) continue;
+		if(froms[e.to]) continue;
+		dfs1(e.to);
+	}
+}
+void dfs2(int v){//to t
+	tot[v]=1;
+	for(auto e:G[v]){
+		if(e.cap>0) continue;
+		if(tot[e.to]) continue;
+		dfs2(e.to);
+	}
+}
+int main(){
+	while(true){
+		cin>>N>>M>>S>>T;
+		if(N==0) break;
+		rep(i,N) G[i].clear();
+		S--,T--;
+		rep(i,M) cin>>a[i]>>b[i];
+		rep(i,M){
+			a[i]--,b[i]--;
+			add_edge(a[i],b[i],1,i);
+		}
+		int f=max_flow(S,T);
+		int cnt=0;
+		rep(i,N) froms[i]=0,tot[i]=0;
+		dfs1(S);
+		dfs2(T);
+		rep(i,M){
+			if(G[a[i]][ord[i]].cap<1) continue;
+			if(froms[b[i]]&&tot[a[i]]) cnt++;
+		}
+		if(cnt>0) f++;
+		cout<<f<<" "<<cnt<<endl;
+	}
+}

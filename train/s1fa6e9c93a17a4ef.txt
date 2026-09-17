@@ -1,0 +1,110 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ll  long long
+#define ld  double
+
+#define sz(x)   (int)x.size()
+#define all(x)  x.begin(),x.end()
+
+#define pb  emplace_back
+#define X   first
+#define Y   second
+
+const int   N   = 205;
+const int   mod = 1e9 + 7;
+
+typedef pair<ll,ll> pll;
+
+ll  a[N];
+ll  b[N];
+
+int main()  {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+
+    int n;  cin >> n;
+    ll  K;  cin >> K;
+
+    map<vector<ll>,vector<pll> >    mp;
+
+    for(int i = 0 ; i <  n ; ++i)   cin >> a[i];    sort(a,a + n);
+    for(int t = 0 ; t < 60 ; ++t)   {
+        vector<ll>  vec;
+
+        for(int i = 0 ; i < n ; ++i)
+            vec.pb(a[i] & ((1ll << t) - 1));
+
+        sort(all(vec));
+        vec.erase(unique(all(vec)),vec.end());
+
+        ll  lst = -1;
+
+        for(ll  x : vec)    {
+            if (x > a[0])   break;
+
+            for(int i = 0 ; i < n ; ++i)    b[i] = (a[i] - x) >> t;
+            for(int i = 1 ; i < n ; ++i)    assert(b[i] >= b[i - 1]);
+
+            ll  cnt = t;
+            if (lst >= 0)   {
+                for(int b = 59 ; b >= 0 ; --b)  {
+                    int u = (lst >> b & 1);
+                    int v = (x   >> b & 1);
+
+                    if (v)  cnt++;
+                    if (u != v)
+                        break;
+                }
+            }
+            lst = x;
+
+            if (K < cnt)
+                continue;
+
+            vector<ll>  d;
+            for(int i = 1 ; i < n ; ++i)
+                d.pb(b[i] - b[i - 1]);
+            
+            mp[d].pb(pll(b[0] - K + cnt,b[0]));
+        }
+    }
+    ll  ans = 0;
+    
+    for(auto&it : mp)   {
+        vector<pll>&vec = it.Y;
+        sort(all(vec));
+
+        ll  L = 0;
+        ll  R = -1;
+
+        for(pll T : vec)    {
+            if (R < T.X)    {
+                ans += R - L + 1;
+                ans %= mod;
+                L = T.X;
+            }
+            R = max(R,T.Y);
+        }
+        ans += R - L + 1;
+        ans %= mod;
+
+/*        for(pll T : it.Y)
+            swp[T.X]++,
+            swp[T.Y + 1]--;
+        
+        ll  lst = 0;
+        int Sum = 0;
+
+        for(auto it : swp)  {
+            if (Sum)    {
+                ans += it.X - lst;
+                ans %= mod;
+            }
+            Sum += it.Y;
+            lst  = it.X;
+        }*/
+    }
+    cout << ans<< endl;
+}

@@ -1,0 +1,27 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int n, m;
+int a[100];
+
+int main() {
+	int i, j;
+	
+	cin >> n >> m;
+	for (i = 0; i < n; i++) cin >> a[i];
+	
+	int ans = 0;
+	for (i = 0; ; i++) {
+		int maxi = -84101;
+		int mini =  84101;
+		for (j = (i * m) % n; j != (i * m + m) % n; j = (j + 1) % n) {
+			maxi = max(maxi, a[j]);
+			mini = min(mini, a[j]);
+		}
+		ans += maxi - mini;
+		if (j == 0) break;
+	}
+	cout << ans << endl;
+	return 0;
+}

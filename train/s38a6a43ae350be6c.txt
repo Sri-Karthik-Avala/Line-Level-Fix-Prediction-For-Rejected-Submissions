@@ -1,0 +1,109 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <map>
+#include <utility>
+#include <set>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <sstream>
+#include <complex>
+#include <stack>
+#include <queue>
+#include <cstring>
+using namespace std;
+static const double EPS = 1e-9;
+typedef long long ll;
+#define rep(i,n) for(int i=0;i<n;i++)
+#define rev(i,n) for(int i=n-1;i>=0;i--)
+#define sz(a) a.size()
+#define all(a) a.begin(),a.end()
+#define mp(a,b) make_pair(a,b)
+#define pb(a) push_back(a)
+#define SS stringstream
+#define DBG1(a) rep(_X,sz(a)){printf("%d ",a[_X]);}puts("");
+#define DBG2(a) rep(_X,sz(a)){rep(_Y,sz(a[_X]))printf("%d ",a[_X][_Y]);puts("");}
+#define bitcount(b) __builtin_popcount(b)
+#define REP(i, s, e) for ( int i = s; i <= e; i++ )  
+#define fi first
+#define se second
+int dp[1024][1024];
+struct Item{
+	int l,r,S1,S2;
+};
+vector<Item> item;
+bool operator < (const Item &a,const Item &b){
+	if( a.l != b.l ) return a.l < b.l;
+	return a.r < b.r;
+}
+
+int nextNode[1024];
+int n;
+int dfs(int x,int y){
+	if( dp[x][y] != -1) return dp[x][y];
+	int ans = 0;
+	int xNext = nextNode[x];
+	int yNext = nextNode[y];
+	if( x == n && y == n ) return 0;
+	else if( x == n ){
+		return dp[x][y] = max( dfs(x,y+1) , dfs(x,yNext)+item[y].S2 );
+	}else if( y == n){
+		return dp[x][y] = max( dfs(x+1,y) , dfs(xNext,y)+item[x].S1 );
+	}
+	if( y < x ){
+		ans = max( ans , dfs(x,y+1) );
+		ans = max( ans , dfs(x,yNext) + item[y].S2 );
+	}else if( x == y ){
+		ans = max( ans , dfs(x+1,y+1) );
+		ans = max( ans , dfs(xNext,xNext) + item[x].S1);
+		ans = max( ans , dfs(x+1,yNext) + item[y].S2);
+	}else{
+		ans = max( ans , dfs(x+1,y) );
+		ans = max( ans , dfs(xNext,y) + item[x].S1 );
+	}
+	return dp[x][y] = ans;
+}
+
+
+int conv(string t){
+	t[2] = ' ';
+	stringstream ss(t);
+	int h,m;
+	ss >> h >> m;
+	
+	return h * 60 + m;
+}
+
+int main(){
+	while(cin >> n && n){
+		memset(dp,-1,sizeof(dp));
+		item.clear();
+		for(int i = 0 ; i < n ; i++){
+			string nm;
+			string a,b;
+			cin >> nm >> a >> b;
+			int r1,r2;
+			cin >> r1 >> r2;
+			item.push_back({conv(a),conv(b),r1,r2});
+			//cout << a << " " << b << endl;
+		}
+		sort(item.begin(),item.end());
+		for(int i = 0 ; i < n ; i++){
+			nextNode[i] = n;
+			for(int j = i+1 ; j < n ; j++)
+				if( item[i].r <= item[j].l ){
+					nextNode[i] = j;
+					break;
+				}
+		}
+		cout << dfs(0,0) << endl;
+	}
+	
+	
+}

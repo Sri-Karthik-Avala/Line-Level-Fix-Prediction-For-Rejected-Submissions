@@ -1,0 +1,22 @@
+N,K = map(int,input().split())
+A = list(map(int,input().split()))
+F = list(map(int,input().split()))
+
+A.sort()
+F.sort(reverse=True)
+
+ok = 10000000
+ng = 0
+
+while ok-ng>1:
+    mid = ng + (ok-ng)//2
+    trainings = 0
+    for i in range(N):
+        t = A[i]-mid//F[i]
+        if t > 0:
+            trainings += t
+    if trainings <= K:
+        ok = mid
+    else:
+        ng = mid
+print(ok)

@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+  int N,n[100001],s,t,min,sum=0;
+  cin>>N>>s;
+  t=0;
+  min=100001;
+  for(int i=0;i<N;i++){
+    cin>>n[i];
+    sum+=n[i];
+
+    if(sum>s){
+      while(sum>=s){
+	sum-=n[t];
+	t++;
+      }
+      t--;
+      sum+=n[t];
+      if(min>i-t+1)min=i-t+1;
+      sum-=n[t];
+      t++;
+    }
+  }
+  if(min==100001)cout<<"0"<<endl;
+  else cout<<min<<endl;
+  return 0;
+}

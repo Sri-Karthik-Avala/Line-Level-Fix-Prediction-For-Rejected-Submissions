@@ -1,0 +1,72 @@
+#include <iostream>
+using std::cin;
+using std::cout;
+using std::endl;
+using ll = long long;
+
+template <typename T>
+T min(T a, T b){
+  return (a < b) ? a : b;
+}
+
+template <typename T>
+class SegTree{
+  static const int MAXN = 100010;
+  T INF;
+  int n;
+  T A[MAXN*4];
+  public:
+  SegTree(int size, T INF): INF(INF){
+    n = 1;
+    while(n < size){
+      n *= 2;
+    }
+    for(int i = 0; i < MAXN*4; i++) A[i] = INF;
+  }
+
+  T query(int a, int b){
+    return _query(a, b, 0, 0, n);
+  }
+
+  T _query(int a, int b, int k, int l, int r){
+    if(a >= r || b <= l){
+      return INF;
+    }
+    if(l >= a && r <= b){
+      return A[k];
+    }
+    T v1 = _query(a, b, 2*k + 1, l, (l+r)/2);
+    T v2 = _query(a, b, 2*k + 2, (l+r)/2, r);
+    return min(v1, v2);
+  }
+
+  void update(int _idx, int value){
+    int offset = n - 1;
+    int idx = _idx + offset;
+    A[idx] = value;
+    while(idx > 0){
+      idx = (idx-1)/2;
+      A[idx] = min(A[idx*2+1], A[idx*2+2]);
+    }
+  }
+};
+
+int main(void){
+  const int INF=1000000010;
+  int N, L; cin >> N >> L;
+  SegTree<int> rmq(N, INF);
+  for(int i = 0; i < N; i++) {
+    int a; cin >> a;
+    rmq.update(i, a);
+  }
+
+  for(int i = 0; i <= N - L; i++){
+    if(i == 0){
+      cout << rmq.query(i, i+L);
+    }else{
+      cout << " " << rmq.query(i, i+L);
+    }
+  }
+  cout << '\n';
+}
+

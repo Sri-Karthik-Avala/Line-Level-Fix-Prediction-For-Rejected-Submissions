@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+#define ll long long
+#define fastio cin.sync_with_stdio(false); cin.tie(NULL)
+using namespace std;
+
+int main(){
+  fastio;
+  string a[3];
+  cin>>a[0]>>a[1]>>a[2];
+  int pos[3]={};
+  int curr=0;
+  while (pos[curr]<a[curr].size()){
+    pos[curr]++;
+    if (pos[curr]==a[curr].size()) break;
+    curr=a[curr][pos[curr]-1]-'a';
+  }
+  cout<<(char)(curr+'A')<<endl;
+  return 0;
+}

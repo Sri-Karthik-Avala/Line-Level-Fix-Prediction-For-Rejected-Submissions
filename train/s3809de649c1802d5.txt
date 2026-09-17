@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> P;
+typedef pair<int,ll> Q;
+#define mp make_pair
+#define pb push_back
+#define INF 10000000
+int n,m;
+int s[100005],p[100005];
+int q[200005];
+int main(){
+	cin >> n >> m;
+	for(int i=1;i<=m;i++){
+		cin >> s[i] >> p[i];
+	}
+	for(int i=m+1;i<=n;i++) cin >> s[i];
+	int lb = 0;
+	int ub = 1e9+50;
+	while(ub-lb>1){
+		int mid = (lb+ub)/2;
+		int x = 1,y = n;
+		fill(q+1,q+n+1,1);
+		for(int i=1;i<=m;i++) if(s[i]>=mid) q[p[i]] = 0;
+		while(y-x>1){
+			int sum = q[x]+q[x+1]+q[x+2];
+			sum -= max(q[x],max(q[x+1],q[x+2]));
+			q[y+1] = sum;
+			x+=3;
+			y++;
+		}
+		int cnt = 0;
+		for(int i=m+1;i<=n;i++) cnt += (s[i]>=mid);
+		if(q[y]<=cnt) lb = mid;
+		else ub = mid;
+	}
+	cout << lb << endl;
+}

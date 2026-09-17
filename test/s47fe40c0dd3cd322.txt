@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+const double EPS = 1e-10;
+const double INF = 1e+10;
+const double PI = acos(-1);
+int sig(double r) { return (r < -EPS) ? -1 : (r > +EPS) ? +1 : 0; }
+inline double ABS(double a){return max(a,-a);}
+struct Pt {
+	double x, y;
+	Pt() {}
+	Pt(double x, double y) : x(x), y(y) {}
+	Pt operator+(const Pt &a) const { return Pt(x + a.x, y + a.y); }
+	Pt operator-(const Pt &a) const { return Pt(x - a.x, y - a.y); }
+	Pt operator*(const Pt &a) const { return Pt(x * a.x - y * a.y, x * a.y + y * a.x); }
+	Pt operator-() const { return Pt(-x, -y); }
+	Pt operator*(const double &k) const { return Pt(x * k, y * k); }
+	Pt operator/(const double &k) const { return Pt(x / k, y / k); }
+	double ABS() const { return sqrt(x * x + y * y); }
+	double abs2() const { return x * x + y * y; }
+	double arg() const { return atan2(y, x); }
+	double dot(const Pt &a) const { return x * a.x + y * a.y; }
+	double det(const Pt &a) const { return x * a.y - y * a.x; }
+};
+double tri(const Pt &a, const Pt &b, const Pt &c) { return (b - a).det(c - a); }
+double aCC(Pt a, double r, Pt b, double s) {
+	double d = (a - b).ABS();
+	if (sig(r - s - d) >= 0) return s * s * PI;
+	if (sig(s - r - d) >= 0) return r * r * PI;
+	if (sig(r + s - d) <= 0) return 0;
+	double x = (d * d + r * r - s * s) / (d * 2);
+	double h = sqrt(r * r - x * x);
+	return r * r * atan2(h, x) + s * s * atan2(h, d - x) - d * h;
+}
+int main(){
+	int a,b,c,d,e;
+	while(scanf("%d%d%d%d%d",&a,&b,&c,&d,&e),a){
+		double r1=sqrt((double)c/PI);
+		double r2=sqrt((double)d/PI);
+		double L=0;
+		double R=r1+r2;
+		for(int i=0;i<100;i++){
+			double M=(L+R)/2;
+			double S=aCC(Pt(0,0),r1,Pt(M,0),r2);
+			if(S>(double)e){	
+				L=M;
+			}else R=M;
+		}
+		if(r1<r2)swap(r1,r2);
+	//	printf("%f\n",L);
+		if(max(r1*2,r2*2)>min((double)a,(double)b)){
+			printf("impossible\n");continue;
+		}
+		Pt p1=Pt(r1,r1);
+		Pt p2=Pt((double)a-r2,(double)b-r2);
+		if((p1-p2).ABS()<L){
+			printf("impossible\n");continue;
+		}
+		Pt p3=p1+(p2-p1)*L/(p2-p1).ABS();
+		printf("%.12f %.12f %.12f %.12f %.12f %.12f\n",p1.x,p1.y,r1,p3.x,p3.y,r2);
+	}
+}

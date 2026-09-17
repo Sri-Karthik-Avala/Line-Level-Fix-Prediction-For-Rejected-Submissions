@@ -1,0 +1,25 @@
+N=int(input())
+city=[0]*N
+for i in range(N):
+    x,y=map(int,input().split())
+    city[i]=(i,x,y)
+city.sort(key=lambda x:x[1])
+data=[(city[i][0],city[i+1][0],city[i+1][1]-city[i][1]) for i in range(N-1)]
+city.sort(key=lambda x:x[2])
+data+=[(city[i][0],city[i+1][0],city[i+1][2]-city[i][2]) for i in range(N-1)]
+data.sort(key=lambda x:x[2])
+f = list(range(N))
+costs = [0] * N
+def find(x):
+    if f[x] != x:
+        f[x] = find(f[x])
+    return f[x]
+res = 0
+for i, j, k in data:
+    fi, fj = find(i), find(j)
+    if fi == fj:
+        continue
+    else:
+        f[fi] = fj
+        res += k
+print(res)

@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int l;
+    cin >> l;
+
+    vector<int> a(l);
+    for(int i=0; i<l; i++){
+        cin >> a[i];
+    }
+
+    vector<vector<long long int>> dp(5, vector<long long int>(l+1));
+    for(int i=0; i+1<=l; i++){
+        dp[0][i+1] =      dp[0][i]                                           + abs(a[i] - 0);
+        dp[1][i+1] = min({dp[0][i], dp[1][i]})                               + abs(a[i] % 2);
+        dp[2][i+1] = min({dp[0][i], dp[1][i], dp[2][i]})                     + abs((a[i]+1) % 2);
+        dp[3][i+1] = min({dp[0][i], dp[1][i], dp[2][i], dp[3][i]})           + abs((a[i]) % 2);
+        dp[4][i+1] = min({dp[0][i], dp[1][i], dp[2][i], dp[3][i], dp[4][i]}) + abs(a[i] - 0);
+
+        if(a[i] == 0){
+            dp[1][i+1] += 2;
+            dp[2][i+1] += 1;
+            dp[3][i+1] += 2;
+        }
+    }
+    cout << min({dp[0][l], dp[1][l], dp[2][l], dp[3][l], dp[4][l]}) << endl;
+    return 0;
+}

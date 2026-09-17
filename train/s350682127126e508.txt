@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int N = 15, M = 1000, INF = 0x3f3f3f3f;
+int n, m;
+int du[N];
+int dis[N][N];
+int dp[1 << 16];
+vector<int> v;
+
+inline int nextInt(void) {
+	int res;
+	scanf("%d", &res);
+	return res;
+}
+
+inline void addEdge(int x, int y, int w) {
+	dis[x][y] = dis[y][x] = min(dis[x][y], w);
+	du[x]++;
+	du[y]++;
+}
+
+inline int getBits(int x) {
+	int res = 0;
+	for (int i = 0; i < x; i++)
+		res |= (1 << i);
+	return res;
+}
+
+inline void Floyd(void) {
+	for (int k = 0; k < n; k++)
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				dis[i][j] = min(dis[i][j], dis[i][k] + dis[k][j]);
+}
+
+inline int bitAt(int bits, int pos) {
+	return (bits >> pos) & 1;
+}
+
+inline int chgBits(int bits, int x, int y) {
+	bits &= !((1 << x) | (1 << y));
+}
+
+inline int DP(int bits) {
+	if (~dp[bits])
+		return dp[bits];
+	if (!bits)
+		return dp[bits] = 0;
+	dp[bits] = INF;
+	for (int i = 0; i < v.size(); i++)
+		for (int j = i; j < v.size(); j++)
+			if (i != j && bitAt(bits, i) && bitAt(bits, j))
+				dp[bits] = min(dp[bits], DP(chgBits(bits, i, j)) + dis[v[i]][v[j]]);
+	return dp[bits];
+}
+
+signed main(void) {
+	n = nextInt();
+	m = nextInt();
+	int ans = 0;
+	memset(dis, 0x3f, sizeof(dis));
+	memset(du, 0, sizeof(du));
+	memset(dp, -1, sizeof(dp));
+	for (int i = 0; i < m; i++) {
+		int x = nextInt();
+		int y = nextInt();
+		int w = nextInt();
+		addEdge(x, y, w);
+		ans += w;
+	}
+	Floyd();
+	for (int i = 0; i < n; i++)
+		if (du[i] & 1)
+			v.push_back(i);
+	printf("%d\n", ans + DP(getBits(v.size())));
+	return 0;
+}

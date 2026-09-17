@@ -1,0 +1,43 @@
+//http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=1180
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+#include <map>
+#include <cmath>
+#include <algorithm>
+#include <iomanip>
+#include <queue>
+using ll = long long;
+using namespace std;
+
+int const MOD = 1e9 + 7;
+
+int GCD(int x, int y)
+{
+    if (y == 0)
+        return x;
+    return GCD(y, x % y);
+}
+int main(void)
+{
+    ll p, q;
+    cin >> p >> q;
+
+    int d = GCD(p, q);
+    p /= d;
+    q /= d;
+
+    int ans = 1;
+    for (int i = 2; i <= sqrt(q); ++i)
+    {
+        if (q % i == 0)
+        {
+            ans *= i;
+            q /= i;
+        }
+    }
+    ans *= q;
+    cout << ans << endl;
+    return 0;
+}

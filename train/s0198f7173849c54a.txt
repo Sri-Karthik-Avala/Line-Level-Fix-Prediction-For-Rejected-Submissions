@@ -1,0 +1,49 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+typedef long long int LL;
+
+int main(void)
+{
+	LL n, k;
+	LL come_T[10000];
+
+	LL burning_T;
+
+	LL i;
+
+	scanf("%lld %lld",&n,&k);
+
+	burning_T = n;
+
+	for (i = 0; i < n; i++)
+	{
+		scanf("%lld", &come_T[i]);
+	}
+
+	LL use_k = n;
+	LL poket_T;
+	LL T[100000];
+	LL cnt = 0;
+
+	for (i = 0; i < n - 1; i++)
+	{
+		T[i] = come_T[i + 1] - come_T[i] - 1;
+	}
+
+	sort(T, T + (n - 1) );
+
+	for (i = 0; i < n - k; i++)
+	{
+		//printf("i= %lld T=%lld\n",i, T[i]);
+
+		burning_T += T[i];
+	}
+
+	printf("%lld\n", burning_T);
+
+	return 0;
+}
+

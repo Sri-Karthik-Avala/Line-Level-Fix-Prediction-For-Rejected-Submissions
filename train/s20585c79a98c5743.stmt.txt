@@ -1,0 +1,60 @@
+Problem J: Char Swap 
+
+ Problem 
+ 
+ 長さが偶数の文字列 S が与えられる。 
+ あなたは、文字列 S の隣り合った2つの文字を入れ替える操作を何回でも行うことができる。 
+ 文字列 S を回文にするためには、最小で何回の操作を行う必要があるだろうか? 
+ 回文にすることが不可能な場合は-1を出力せよ。
+ 
+
+ Input 
+ 入力は以下の形式で与えられる。 
+ 
+ S 
+ 
+ 
+1行に文字列 S が与えられる。
+ 
+
+ Constraints 
+
+ 
+ 2 &le; | S | &le; 4 &times; 10 5 
+ 文字列はすべて英小文字で構成されている 
+ 文字列の長さは偶数である 
+ 
+
+ Output 
+ 
+文字列 S を回文にするための最小の操作回数を1行に出力する。回文にすることが不可能な場合は代わりに-1を1行に出力をする。
+ 
+
+ Sample Input 1 
+ 
+acca
+ 
+
+ Sample Output 1 
+ 
+0
+ 
+
+ Sample Input 2 
+ 
+acpcacpc
+ 
+
+ Sample Output 2 
+ 
+3
+ 
+
+ Sample Input 3 
+ 
+aizu
+ 
+
+ Sample Output 3 
+ 
+-1

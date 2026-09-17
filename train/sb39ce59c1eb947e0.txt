@@ -1,0 +1,22 @@
+=int(raw_input())
+
+def comb(tr):
+    l=len(tr)
+    res=[]
+    for i in range(l):
+        head,tail=tr[i:],tr[:i]
+        headrev=head[::-1]
+        tailrev=tail[::-1]
+        res.append(head+tail)
+        res.append(headrev+tail)
+        res.append(head+tailrev)
+        res.append(headrev+tailrev)
+        res.append(tail+head)
+        res.append(tailrev+head)
+        res.append(tail+headrev)
+        res.append(tailrev+headrev)
+    return len(set(res))
+    #return res
+for i in range(n):
+    tr = raw_input()
+    print comb(tr)

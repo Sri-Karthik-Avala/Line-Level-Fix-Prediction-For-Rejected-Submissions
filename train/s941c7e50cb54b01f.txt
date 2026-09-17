@@ -1,0 +1,6 @@
+n = int(raw_input())
+if n == 0:
+	break
+for i in [raw_input().replace("Hoshino", "Hoshina") for i in range(n)]:
+	print i
+	 

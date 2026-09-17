@@ -1,0 +1,27 @@
+import bisect
+N = int(input())
+A = list(map(int, input().split()))
+
+A_sum = []
+tmp = 0
+for a in A:
+  tmp += a
+  A_sum.append(tmp)
+
+ans = 10**10
+for part_mid in range(1,N-2):
+  sum_l = A_sum[part_mid]
+  part_lft = bisect.bisect_right(A_sum, (A_sum[part_mid]+0)//2)-1
+  if part_lft == 0 or abs(2*A_sum[part_lft+1] - A_sum[part_mid]) < abs(2*A_sum[part_lft] - A_sum[part_mid]):
+    part_lft += 1
+  
+  part_rgt = bisect.bisect_right(A_sum, (A_sum[N-1]+A_sum[part_mid])//2)-1
+  if part_rgt == part_mid or abs(2*A_sum[part_rgt+1] - (A_sum[N-1]+A_sum[part_mid])) < abs(2*A_sum[part_rgt] - (A_sum[N-1]+A_sum[part_mid])):
+    part_rgt += 1
+  s = [A_sum[part_lft], A_sum[part_mid] - A_sum[part_lft], A_sum[part_rgt]-A_sum[part_mid], A_sum[N-1] - A_sum[part_rgt]]
+  ans = min(ans, max(s) - min(s))
+  
+print(ans)
+  
+  
+         

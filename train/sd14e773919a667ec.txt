@@ -1,0 +1,5 @@
+number = [for i in input().split()]
+number.sort()
+print(' '.join(number))
+
+

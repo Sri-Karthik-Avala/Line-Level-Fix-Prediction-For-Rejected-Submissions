@@ -1,0 +1,100 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+const int N=200000+5,mod=998244353;
+int ksm(int b,int n){
+	int res=1;
+	while(n){
+		if(n&1) res=res*b%mod;
+		b=b*b%mod; n>>=1;
+	}
+	return res;
+}
+int add(int x,int y){
+	return (x+y)%mod;
+}
+int mul(int x,int y){
+	return x*y%mod;
+}
+vector<int> e[N];
+int n,dis[N],pre[N];
+int dp[N][3][3];
+int bfs(int st){
+	queue<int> q;
+	int res=0;
+	for(int i=1;i<=n;++i)
+		dis[i]=0;
+	dis[st]=1; pre[st]=0; q.push(st);
+	while(!q.empty()){
+		int u=q.front();q.pop();
+		if(dis[u]>dis[res]) res=u;
+		//cout<<st<<" "<<u<<" "<<dis[u]<<" "<<res<<endl;
+		for(int i=0;i<e[u].size();++i)
+			if(dis[e[u][i]]==0) q.push(e[u][i]),dis[e[u][i]]=dis[u]+1,pre[e[u][i]]=u;
+	}
+	return res;
+}
+int L,tmp[3][3];
+void dfs(int u,int fath,int dep){
+	//cout<<u<<" "<<fath<<" "<<dep<<endl;
+	if(dep==L/2) cout<<u<<endl,dp[u][1][1]=1;
+	else dp[u][0][0]=1;
+	for(int i=0;i<e[u].size();++i){
+		int v=e[u][i];
+		if(v==fath) continue;
+		dfs(v,u,dep+1);
+		for(int x=0;x<=2;++x)
+			for(int y=0;y<=2;++y)
+				tmp[x][y]=0;
+		for(int x=0;x<=2;++x)
+			for(int y=0;y<=2;++y)
+				for(int a=0;a<=2;++a)
+					for(int b=0;b<=2;++b)
+						for(int type=0;type<=2;++type){
+							int p=min(x+(type==1)*a,2ll),q=min(y+(type==2)*b,2ll);
+							tmp[p][q]=add(tmp[p][q],mul(dp[u][x][y],dp[v][a][b]));
+						}
+		for(int x=0;x<=2;++x)
+			for(int y=0;y<=2;++y)
+				dp[u][x][y]=tmp[x][y];
+	}
+	//for(int x=0;x<=2;++x)
+	//	for(int y=0;y<=2;++y)
+		//	cout<<u<<" "<<x<<" "<<y<<" "<<dp[u][x][y]<<endl;
+}
+int c[N],tot;
+void solve(){
+	int from=bfs(1),to=bfs(from);
+	tot=0;while(to) c[++tot]=to,to=pre[to];
+	L=tot;
+	if(tot&1){
+		from=c[(tot+1)/2];
+		dfs(from,0,0);
+		cout<<mul(dp[from][1][1],ksm(2,mod-2));
+		return;
+	}
+	else{
+		from=c[tot/2],to=c[(tot+2)/2];
+	//	cout<<from<<" "<<to<<" "<<tot<<endl;
+		dfs(from,to,1);
+		int x=0,y=0;
+		for(int i=0;i<=2;++i)
+			x=add(x,dp[from][i][1]);
+		dfs(to,from,1);
+		for(int i=0;i<=2;++i)
+			y=add(y,dp[to][1][i]);
+		cout<<mul(x,y);
+		return;
+	}
+}
+signed main(){
+	int ans=0,u,v;
+	cin>>n;
+	for(int i=1;i<n;++i){
+		cin>>u>>v;
+		e[u].push_back(v);
+		e[v].push_back(u);
+	}
+	solve();
+	return 0;
+}

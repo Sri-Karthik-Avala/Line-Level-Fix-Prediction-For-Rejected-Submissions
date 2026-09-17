@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <memory.h>
+#include <math.h>
+#include <assert.h>
+#include <stack>
+#include <queue>
+#include <map>
+#include <set>
+#include <string>
+#include <algorithm>
+#include <iostream>
+#include <functional>
+
+using namespace std;
+typedef long long ll;
+typedef pair<int, int> Pi;
+#define Fi first
+#define Se second
+#define pb(x) push_back(x)
+#define sz(x) (int)x.size()
+#define rep(i,n) for(int i=0;i<n;i++)
+#define all(x) x.begin(),x.end()
+
+int n, w, d;
+Pi p[1010], q[1010], D[1010];
+
+int get(int x,int y,int dir){
+	// 3 0
+	// 2 1
+	if(dir == 0){
+		if(w - x > d - y)return x + (d - y);
+		else return w + d - (y + (w - x));
+	}
+	else if(dir == 1){
+		if(w - x > y)return w + d + w - (x + y);
+		else return w + d - (y - (w - x));
+	}
+	else if(dir == 2){
+		if(x > y)return w + d + w - (x - y);
+		else return w + d + w + (y - x);
+	}
+	else{
+		if(x >= d - y)return x - (d - y);
+		else return w + d + w + (x + y);
+	}
+	// [0, 2*(w+d)-1]
+}
+
+bool comp(const Pi &a, const Pi &b){
+	return a.Se != b.Se ? a.Se < b.Se : a.Fi < b.Fi;
+}
+
+void solve(int tc){
+	scanf("%d%d%d", &n, &w, &d);
+	for(int i=0;i<n;i++){
+		int x, y;
+		char ch[2];
+		scanf("%d%d%s", &x, &y, ch);
+		if(ch[0] == 'E'){
+			p[i].Fi = get(x, y, 0);
+			p[i].Se = get(x, y, 1);
+		}
+		else if(ch[0] == 'S'){
+			p[i].Fi = get(x, y, 1);
+			p[i].Se = get(x, y, 2);
+		}
+		else if(ch[0] == 'W'){
+			p[i].Fi = get(x, y, 2);
+			p[i].Se = get(x, y, 3);
+		}
+		else{
+			p[i].Fi = get(x, y, 3);
+			p[i].Se = get(x, y, 0);
+		}
+	}
+	
+	sort(p, p+n, comp);
+	//for(int i=0;i<n;i++)printf("%d %d\n", p[i].Fi, p[i].Se);puts("");puts("");
+	
+	
+	int ans = ~0u>>1;
+	int SZ = 2 * (d + w);
+	for(int i=0;i<n;i++){
+		//put at p[i].Se;
+		int top = 0;
+		for(int j=i+1;j<n;j++){
+			if(p[j].Se != p[i].Se && p[j].Fi > p[i].Se && p[j].Fi < p[j].Se)q[top++] = Pi(p[j].Fi - p[i].Se, p[j].Se - p[i].Se);
+		}
+		for(int j=0;j<i;j++){
+			if(p[j].Se != p[i].Se && (p[j].Fi > p[i].Se || p[j].Fi < p[j].Se))q[top++] = Pi((p[j].Fi - p[i].Se + SZ) % SZ, p[j].Se - p[i].Se + SZ);
+		}
+		
+		
+		//for(int i=0;i<top;i++)printf("%d %d\n", q[i].Fi, q[i].Se);puts("");
+		
+		int z = 0, mx = 0;
+		D[z++] = Pi(0, 0);
+		for(int j=0;j<top;j++){
+			int v = (lower_bound(D, D+z, Pi(p[j].Fi-1, 100001)) - 1)->Se;
+			D[z++] = Pi(p[j].Se, mx = max(mx, v + 1));
+		}
+		ans = min(ans, mx + 1);
+	}
+	printf("%d\n", ans);
+}
+
+int main(){
+	int Tc = 1;// scanf("%d",&Tc);
+	for(int i=1;i<=Tc;i++){
+		solve(i);
+	}
+	return 0;
+}

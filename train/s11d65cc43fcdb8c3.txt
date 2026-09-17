@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+// typedef __int128 ll;
+typedef pair<int,int> pii;
+typedef pair<ll,ll> pll;
+#define FR first
+#define SE second
+#define MP make_pair
+#define PB push_back
+#define vc vector
+#define db double
+#define all(x) (x).begin(),(x).end()
+#define sz(x) ((int)(x).size())
+#define bin(x) (1ll<<(x))
+#define fo(i,l,r) for(int i=(l),I=(r);i<=I;i++)
+#define fd(i,r,l) for(int i=(r),I=(l);i>=I;i--)
+#define mem(x,val) memset(x,val,sizeof x)
+#define Swap(a,b,n) for(int I=0;I<=n;I++) swap(a[I],b[I])
+#define PC __builtin_popcountll
+#ifdef DEBUG
+	#define debug(A,args...) fprintf(stderr,A,##args)
+#else
+	#define debug(A,args...) printf("")
+#endif
+#define deb debug("line %d\n",__LINE__)
+namespace mine
+{
+	ll qread()
+	{
+		ll ans=0,f=1;char c=getchar();
+		while(c<'0' or c>'9') {if(c=='-')f=-1;c=getchar();}
+		while('0'<=c and c<='9') ans=ans*10+c-'0',c=getchar();
+		return ans*f;
+	}
+	void write(ll num){if(num<0) putchar('-'),num=-num;if(num>=10) write(num/10);putchar('0'+num%10);}
+	void write1(ll num){write(num);putchar(' ');}
+	void write2(ll num){write(num);putchar('\n');}
+	template<typename T>inline bool chmax(T&a,const T&b){return a<b?a=b,1:0;}
+	template<typename T>inline bool chmin(T&a,const T&b){return a>b?a=b,1:0;}
+	ll gcd(ll x,ll y){return y?gcd(y,x%y):x;}
+	bool IN(ll x,ll l,ll r){return l<=x and x<=r;}
+	void GG(){puts("-1");exit(0);}
+
+	const db eps=1e-8;
+	const int INF=0x3f3f3f3f;
+	//const int MOD=998244353;
+    int MOD;
+	int mm(const int x){return x>=MOD?x-MOD:x;}
+	template<typename T> void add(T &x,const int &y){x=(x+y>=MOD?x+y-MOD:x+y);}
+	ll qpower(ll x,ll e,int mod=MOD){ll ans=1;while(e){if(e&1)ans=ans*x%mod;x=x*x%mod;e>>=1;}return ans;}
+	ll invm(ll x){return qpower(x,MOD-2);}
+	const int MM=5e6+10;
+	ll fac[MM],facinv[MM],Inv[MM];ll Comb(int n,int m){return n<0 or n<m?0:fac[n]*facinv[m]%MOD*facinv[n-m]%MOD;}
+	void PRE()
+	{
+		fac[0]=1;fo(i,1,MM-1) fac[i]=fac[i-1]*i%MOD;
+		facinv[MM-1]=invm(fac[MM-1]);fd(i,MM-1,1) facinv[i-1]=facinv[i]*i%MOD;
+		Inv[1]=1;fo(i,2,MM-1) Inv[i]=(MOD-MOD/i)*Inv[MOD%i]%MOD;
+	}
+	const int N=3e2+10;
+	//------------------FIXED------------------
+    int C[N][N];
+	int f[N][N],f2[N][N],g[N][N];
+	void main()
+	{
+		int n=qread(),K=qread();MOD=qread();C[0][0]=1;fo(i,1,N-1){ C[i][0]=1;fo(j,1,i) C[i][j]=mm(C[i-1][j]+C[i-1][j-1]); }
+		fd(val,K,0)
+		{
+            f[1][val]=1,f2[1][val]=(K-val+1),g[0][val]=1;
+			fo(S,1,n){ g[S][val]=f2[S][val+1];fo(ad,1,S-1) add(g[S][val],1ll*g[S-ad][val]*f2[ad][val+1]%MOD*C[S-1][ad-1]%MOD); }
+			fo(S,2,n+1){ f[S][val]=g[S-1][val];f2[S][val]=mm(f2[S][val+1]+f[S][val]); }
+		}write(f[n+1][0]);
+	}
+};//变量重名！
+signed main()
+{
+	#ifdef DEBUG
+	//freopen("a.in","r",stdin);
+	freopen("z.txt","r",stdin);
+	//freopen("a.out","w",stdout);
+	#endif
+	srand(time(0));
+	mine::main();
+	debug("\n------------------------------------------\nTime: %.2lf s\n",1.0*clock()/CLOCKS_PER_SEC);
+}

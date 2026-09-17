@@ -1,0 +1,38 @@
+// slow 100
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll M = 1e9+7;
+const int E = 2.7e7;
+int bo[E];
+int main() {
+	ll n;
+	cin >> n;
+	ll l = 1,r = 1;
+	ll so = 0;
+	bo[0] = 0;
+	for(int i=1;i<E;i++) {
+		bo[i] = bo[i/10]+1;
+	}
+	ll res = 0;
+	for(;l<10000000;l++) {
+		while(so < n) {so += bo[r];r++;
+		}
+		if(so == n) {res++;}
+		so -= bo[l];
+	}
+	ll pot = 9e7;
+	for(ll i=8;i<=n;i++) {
+		ll se = (n/i) - n%i;
+		if(!(n%i)) {
+			res += pot-(n/i)+1;
+			se -= i;
+		}
+		if(se > 0) {
+			res += (se+i)/(i+1);
+		}
+		pot = pot*10%M;
+	}
+	res = ((res%M)+M)%M;
+	cout << res << '\n';
+}

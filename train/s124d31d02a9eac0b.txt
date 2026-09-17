@@ -1,0 +1,16 @@
+A,B,C,X,Y = map(int,input().split())
+ans=0
+
+
+if A+B > c*2:
+    Z = min(X,Y)
+    ans += 2*C*Z
+    X -= Z
+    Y -= Z
+a = min(A,2*C)
+b = min(B,2*C)
+
+ans += a*X
+ans += b*Y
+
+print(ans)

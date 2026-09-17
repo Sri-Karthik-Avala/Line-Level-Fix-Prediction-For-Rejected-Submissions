@@ -1,0 +1,14 @@
+def calculate_digit_num(num):
+    z = num / 10
+    if z == 0:
+        return 1
+    else:
+        return 1 + calculate_digit_num(z)
+
+while True:
+    try:
+        num_list = int(raw_input().split(' '))
+        summation = sum_of_num(sum(num_list))
+        print calculate_digit_num(summation)
+    except:
+        break

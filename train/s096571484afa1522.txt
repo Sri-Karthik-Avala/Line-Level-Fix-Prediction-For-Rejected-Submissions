@@ -1,0 +1,28 @@
+#include <vector>
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+    int q;
+    scanf("%d",&q);
+    vector<int> vi;
+    while(q--){
+        long long x,k;
+        scanf("%lld",&x);
+        if(x == 2) {
+            if(!vi.empty())
+                vi.pop_back();
+        }
+        else if(x == 1){
+            scanf("%lld",&k);
+            if(!vi.empty())
+                printf("%lld\n",vi[k]);
+        }
+        else{
+            scanf("%lld",&k);
+            vi.push_back(k);
+        }
+    }
+    
+}

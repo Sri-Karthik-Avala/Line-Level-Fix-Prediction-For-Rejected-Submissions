@@ -1,0 +1,39 @@
+#include"bits/stdc++.h"
+using namespace std;
+int r,c,n;
+bool on_boundary(int x,int y)
+{
+	return (x==0 or x==r or y==0 or y==c);
+}
+int enc(int x, int y)
+{
+	if(x==0)return y;
+	if(y==c)return c+x;
+	if(x==r)return 2*c+r-y;
+	return 2*c+2*r-x;
+}
+int main()
+{
+	cin>>r>>c>>n;
+	vector<pair<int,int>> p;
+	for(int i=0;i<n;i++)
+	{
+		int x1,y1,x2,y2;
+		cin>>x1>>y1>>x2>>y2;
+		if(on_boundary(x1,y1) and on_boundary(x2,y2))
+		{
+			p.push_back({enc(x1,y1),i});
+			p.push_back({enc(x2,y2),i});
+		}
+		sort(p.begin(),p.end());
+		stack<int> s;
+		for(auto i:p)
+		{
+			if(s.empty() or s.top()!=i.second)s.push(i.second);
+			else s.pop();
+		}
+		if(s.empty())puts("YES");
+		else puts("NO");
+	}
+
+}

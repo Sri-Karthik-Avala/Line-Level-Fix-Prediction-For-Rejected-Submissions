@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define mp make_pair
+#define pb push_back
+#define pii pair<int,int>
+const int maxn = 400 + 5;
+const int mod = 1e9 + 7;
+ll dp[maxn][maxn] , mi[maxn][maxn] , temp[maxn][maxn];
+//dp[i][j][k]代表前i个位置，总共j个糖果,最后一个物品选k次的总和
+pair<int,int> a[maxn];
+int main()
+{
+    ios::sync_with_stdio(false);
+    int n , c; cin >> n >> c;
+    for (int i = 1 ; i <= n ; i++)
+        cin >> a[i].first;
+    for (int i = 1 ; i <= n ; i++)
+        cin >> a[i].second;
+    dp[0][0] = 1;
+    for (int i = 1 ; i <= n ; i++){
+        for (int j = 0 ; j <= c ; j++){
+            for (ll k = a[i].first ; k <= a[i].second ; k++){
+                temp[j][k] = (dp[i - 1][j]%mod + temp[j - 1][k] * k%mod)%mod;
+            }
+            ll res = 0;
+            for (ll k = a[i].first ; k <= a[i].second ; k++){
+                res = (res + temp[j][k]) %mod;
+            }
+            dp[i][j] = res;
+        }
+    }
+    cout << dp[n][c] << endl;
+    return 0;
+}
+
+/*
+2 3
+1 2
+1 2
+*/

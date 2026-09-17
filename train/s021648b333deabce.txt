@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+typedef long long ll;
+
+#define REP(i,n) for(ll i=0;i<(ll)(n);i++)
+#define REPD(i,n) for(ll i=n-1;i>=0;i--)
+#define FOR(i,a,b) for(ll i=a;i<=(ll)(b);i++)
+#define FORD(i,a,b) for(ll i=a;i>=(ll)(b);i--)
+//定数
+//#define INF 1000000000000 //10^12:極めて大きい値,∞
+//略記
+#define PB push_back //vectorヘの挿入
+#define MP make_pair //pairのコンストラクタ
+#define F first //pairの一つ目の要素
+#define S second //pairの二つ目の要素
+
+const ll INF=ll(1e18)+1;
+
+int main(){
+    ll N,K;
+    cin>>N>>K;
+    vector<ll> a(N);
+    rep(i,N){
+      cin>>a[i];
+    }
+    sort(a.begin(),a.end());
+    ll l=-INF, r=INF;
+    while(r-l>1){
+        ll x=(l+r)/2;
+        bool ok=[&]{
+            int tot=0;
+            rep(i,N){
+                if(a[i]>=0){
+                    int l=-1, r=N;
+                    while(r-l>1){
+                        int c=(r+l)/2;
+                        if(a[i]*a[c]<x) l=c; else r=c;
+                    }
+                    tot+=r;
+                }
+                else{
+                    int l=-1, r=N;
+                    while(r-l>1){
+                        int c=(r+l)/2;
+                        if(a[i]*a[c]<x) r=c; else l=c;
+                    }
+                    tot+=N-r;
+                }
+                if(a[i]*a[i]<x) tot--;
+            }
+            tot/=2;
+            return tot < K;
+        }();
+        if(ok) l=x; else r=x;
+    }
+    cout << l << endl;
+    return 0;
+}

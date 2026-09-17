@@ -1,0 +1,81 @@
+Problem E: Huge Family 
+
+ 
+Mr. Dango's family has extremely huge number of members. Once it had about 100 members, and now it has as many as population of a city. It is jokingly guessed that the member might fill this planet in near future. They all have warm and gracious personality and are close each other.
+ 
+
+ 
+They usually communicate by a phone. Of course, They are all taking a family plan. This family plan is such a thing: when a choose b , and b choose a as a partner, a family plan can be applied between them and then the calling fee per unit time between them discounted to f ( a , b ), which is cheaper than a default fee. Each person can apply a family plan at most 2 times, but no same pair of persons can apply twice. Now, choosing their partner appropriately, all members of Mr. Dango's family applied twice.
+ 
+ 
+Since there are huge number of people, it is very difficult to send a message to all family members by a phone call. Mr. Dang have decided to make a phone calling network that is named ' clan ' using the family plan. Let us present a definition of clan .
+ 
+
+ 
+Let S be an any subset of all phone calls that family plan is applied. Clan is S such that:
+ 
+ For any two persons (let them be i and j ), if i can send a message to j through phone calls that family plan is applied (directly or indirectly), then i can send a message to j through only phone calls in S (directly or indirectly). 
+ Meets condition 1 and a sum of the calling fee per unit time in S is minimized. 
+ 
+ 
+
+ 
+ Clan allows to send a message efficiently. For example, we suppose that one have sent a message through all calls related to him in the clan. Additionaly we suppose that every people follow a rule, "when he/she receives a message through a call in clan, he/she relays the message all other neibors in respect to clan." Then, we can prove that this message will surely be derivered to every people that is connected by all discounted calls, and that the message will never be derivered two or more times to same person.
+ 
+
+ 
+By the way, you are given information about application of family plan of Mr. Dango's family. Please write a program that calculates that in how many ways a different clan can be constructed. You should output the answer modulo 10007 because it may be very big.
+ 
+
+
+ Input 
+
+ 
+The input consists of several datasets.
+ 
+
+ 
+The first line of each dataset contains an integer n , which indicates the number of members in the family.
+ 
+
+ 
+Next n lines represents information of the i -th member with four integers. The first two integers respectively represent b [0] (the partner of i ) and f( i , b [0]) (the calling fee per unit time between i and b [0]). The following two integers represent b [1] and f ( i , b [1]) in the same manner.
+ 
+
+ 
+Input terminates with a dataset where n = 0.
+ 
+
+ Output 
+
+ 
+For each dataset, output the number of clan modulo 10007.
+ 
+
+ Constraints 
+
+ 
+ 3 &le; n &le; 100,000 
+ 
+
+ Sample Input 
+ 
+3
+1 1 2 3
+0 1 2 2
+1 2 0 3
+7
+1 2 2 1
+0 2 3 2
+0 1 3 1
+2 1 1 2
+5 3 6 2
+4 3 6 1
+4 2 5 1
+0
+ 
+
+ Output for the Sample Input 
+ 
+1
+2

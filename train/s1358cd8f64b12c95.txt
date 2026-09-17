@@ -1,0 +1,25 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+const static int M_MAX = 20;
+
+int main() {
+  int m, n;
+  int cont[ M_MAX ];
+  int maxN = -1;
+  cin >> m >> n;
+  for( int i = 0; i < m; i++ ) {
+    for( int j = 0; j < n; j++ ) {
+      int score;
+      cin >> score;
+      cont[ i ] += score;
+    }
+  }
+  for( int i = 0; i < m; i++ ) {
+    maxN = max( maxN, cont[ i ] );
+  }
+  cout << maxN << endl;
+
+  return EXIT_SUCCESS;
+}

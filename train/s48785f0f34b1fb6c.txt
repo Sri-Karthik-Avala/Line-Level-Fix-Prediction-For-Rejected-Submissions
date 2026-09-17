@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+unordered_map<int,bool> mp;
+int n,a[14],ans[52],c;
+
+int cal(){
+  int res=0;
+  for(int i=1;i<13;i++)res=res*5+a[i];
+  return res;
+}
+
+bool dfs(int s,int d){
+  if(d==n)return 1;
+  int y=cal();
+  if(mp.count(y))return mp[y];
+  for(int i=13;i>0;i--){
+    if(a[i]&&s%i==0){
+      ans[d]=i;
+      a[i]--;
+      if(dfs(s-i,d+1))return mp[y]=1;
+      a[i]++;
+    }
+  }
+  return 0;
+}
+
+int main(){
+  while(cin>>n,n){
+    memset(a,0,sizeof(a));
+    mp.clear();
+    c=0;
+    for(int i=0,b;i<n;i++)scanf("%d",&b),a[b]++,c+=b;
+    if(dfs(c,0)){
+      for(int i=n-1;i>=0;i--){
+	if(i)printf(" ");
+	printf("%d",ans[i]);
+      }
+    }else printf("No");
+    printf("\n");
+  }
+  return 0;
+}

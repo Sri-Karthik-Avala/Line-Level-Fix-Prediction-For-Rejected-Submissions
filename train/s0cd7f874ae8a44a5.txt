@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int n, k;
+  cin >> n >> k;
+
+  int x[3010], y[3010];
+  for(int i = 0;i < n;i++){
+    cin >> x[i] >> y[i];
+  }
+
+  bool fin;
+  for(int i = 0;i < n;i++){
+    map<double, int> cnt;
+    int zero = 0;
+
+    for(int j = 0;j < n;j++){
+      if(i == j) continue;
+
+      double y2 = y[j] - y[i];
+      double x2 = x[j] - x[i];
+
+      if(x2 == 0){
+        zero++;
+        if(zero == k-1){
+          fin = true;
+          break;
+        }
+      }else{
+        double tmp = y2 / x2;
+        cnt[tmp]++;
+        if(cnt[tmp] == k-1){
+          fin = true;
+          break;
+        }
+      }
+    }
+    if(fin) break;
+  }
+
+  if(fin){
+    cout << 1 << endl;
+  }else{
+    cout << 0 << endl;
+  }
+
+  return 0;
+}

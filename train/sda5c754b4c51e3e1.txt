@@ -1,0 +1,3 @@
+W=sorted([input() for i in range(10)])
+K=sorted([input() for i in range(10)])
+print sum(W[:3]),sum(K[:3])

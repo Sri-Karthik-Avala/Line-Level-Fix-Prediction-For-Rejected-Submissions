@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int n, t, mod = 1e9 + 7;
+  std::cin >> n >> t;
+  vector<int> d(n);
+  for (int i = 0; i < n; i++) {
+    std::cin >> d[i];
+  }
+  sort(d.begin(), d.end());
+  vector<int> dp(n);
+  vector<int> hoge(n, 1);
+  for (int i = 1; i < n; i++) {
+    hoge[i] = (d.begin() + i) -
+      lower_bound(d.begin(), d.end(), d[i] - t) + 1;
+  }
+  int ans = 1;
+  for (int i = 0; i < n; i++) {
+    ans *= hoge[i];
+    ans %= mod;
+  }
+  std::cout << ans << std::endl;
+  return 0;
+}

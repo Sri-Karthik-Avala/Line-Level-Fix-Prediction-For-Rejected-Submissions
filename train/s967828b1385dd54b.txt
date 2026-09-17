@@ -1,0 +1,26 @@
+import sys
+def oncount(x):
+    r=0
+    while x>0:
+        r+=x&1
+        x=x>>1
+    return r
+
+dp=[[0]*331 for i in range(1024)]
+for i in range(10):
+    dp[1<<i][i]=1
+for i in range(1024):
+    for j in range(331):
+        t=oncount(i)
+        for k in range(10):
+            if 1&(i>>k):
+                x=j-t*k
+                if x>=0: dp[i][j]+=dp[i&~(1<<k)][x]
+                
+for a in sys.stdin
+    n,s=map(int,a.split())
+    ans=0
+    if s<=330:
+        for i in range(1024):
+            if oncount(i)==n:ans+=dp[i][s]
+    print ans

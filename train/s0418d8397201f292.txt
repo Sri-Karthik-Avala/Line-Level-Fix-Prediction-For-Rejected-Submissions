@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+int main(){
+  int n,m,ans=0;
+  cin >> n >> m;
+  vector<int> a(m),vec(m-1);
+  rep(i,m){
+    cin >> a.at(i);
+  }
+  sort(a.begin(),a.end());
+  rep(i,m-1){
+    vec.at(i)=abs(a.at(i+1)-a.at(i));
+    ans+=vec.at(i);
+    cout << vec.at(i)<<endl;
+  }
+  sort(vec.begin(),vec.end());
+  reverse(vec.begin(),vec.end());
+  rep(i,n-1){
+    ans-=vec.at(i);
+  }
+  cout << ans;
+}
+    
+  
+  

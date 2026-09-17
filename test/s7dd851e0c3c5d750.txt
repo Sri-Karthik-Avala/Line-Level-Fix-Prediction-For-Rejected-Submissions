@@ -1,0 +1,119 @@
+#include <bits/stdc++.h>
+
+#define x first
+#define y second
+#define pb push_back
+#define pii pair<int,int>
+#define ll long long
+#define FOR(i, a, b) for(int i = (int)(a); i < (int)(b); i++)
+#define REP(i, a) FOR(i, 0, a)
+#define TRACE(x) cout << #x << " " << x << endl
+#define _ << " _ " <<
+
+using namespace std;
+
+//#define task "a"
+
+const int MAXM = 100010;
+
+class inter {
+ public:
+  int h, l;
+  vector<int> V;
+  void reset() {
+    h = l = 0;
+    V.clear();
+  }
+} a[MAXM*2];
+
+int n, m, q;
+int par[MAXM*2];
+vector<int> graf[MAXM*2];
+
+int nadji(int x) {
+  if (par[x] == x) return x;
+  return par[x] = nadji(par[x]);
+}
+
+void spoji(int i1, int i2) {
+  i1 = nadji(i1);
+  i2 = nadji(i2);
+  par[i1] = i2;
+  //  printf("Spajam %d %d\n", i1, i2);
+}
+
+int cnt;
+int sol[MAXM*2];
+int bio[MAXM*2];
+
+void DFS(int curr) {
+  //  TRACE(curr);
+  if (curr <= n) {
+    sol[cnt++] = curr;
+    bio[curr] = 1;
+  }
+  for (auto it: graf[curr]) {
+    DFS(it);
+  }
+}
+
+int main(){
+  while(1==1) {
+    cnt = 1;
+    memset(sol, 0, sizeof sol);
+    memset(bio, 0, sizeof bio);
+    REP(i, MAXM*2) par[i] = i;
+    //  freopen(task ".in", "r", stdin);
+    //  freopen(task ".out", "w", stdout);
+
+    scanf("%d%d%d", &n, &m, &q);
+    if (n == 0 && m == 0 && q == 0) break;
+    REP(i, m) {
+      scanf("%d%d", &a[i].h, &a[i].l);
+      REP(j, a[i].l) {
+	int pom;
+	scanf("%d", &pom);
+	a[i].V.pb(pom);
+      }
+    }
+    sort(a, a + m, [](const inter &i1, const inter &i2){ return i1.h > i2.h; });
+
+    int tr = n + 1;
+    REP(i, m) {
+      REP(j, a[i].V.size()) {
+	int pom = nadji(a[i].V[j]);
+	graf[tr].pb(pom);
+	//	printf("Edge %d %d\n", tr, pom);
+	spoji(pom, tr);
+      }
+      tr++;
+    }
+    for (int i = tr - 1; i > 0; i--) {
+      if (par[i] == i) {
+	par[i] = tr;
+	graf[tr].pb(i);
+	//	printf("Edge %d %d\n", tr, i);     
+      }
+    }
+    
+    DFS(tr);
+    //    FOR(i, 1, n+1) {
+    //      if (bio[i] == 0) sol[cnt++] = i;
+    //    }
+
+    REP(i, q) {
+      int pom;
+      scanf("%d", &pom);
+      printf("%d\n", sol[pom]);
+    }
+
+    REP(i, tr+1) {
+      graf[i].clear();
+      a[i].reset();
+    }
+    printf("\n");
+  }
+  
+  
+  return 0;
+}

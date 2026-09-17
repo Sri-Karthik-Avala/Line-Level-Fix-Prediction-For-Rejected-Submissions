@@ -1,0 +1,21 @@
+import math
+M = 256
+while 1:
+    N = int(raw_input())
+    if N == 0: break
+    H = 1e10
+    l = map(int,raw_input().split())
+    for S in range(16):
+        for A in range(16):
+            for C in range(16):
+                R = S
+                O = [0]*N
+                for i in range(N):
+                    R = (A*R+C)%M
+                    O[i] = (l[i]+R)%M
+                X = [O.count(i) for i in set(O)]
+                tmp = -sum(float(x)/N*math.log(float(x)/N,2) for x in X)
+                if tmp < H:
+                    H = tmp
+                    ans = [S,A,C]
+    print " ".join(map(str,ans))

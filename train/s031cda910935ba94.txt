@@ -1,0 +1,97 @@
+#include<iostream>
+#include<complex>
+#include<utility>
+#include<vector>
+
+using namespace std;
+
+typedef complex<double> P;
+
+int x_1[100],y_1[100],x_2[100],y_2[100];
+double eps=1e-5;
+
+double cross(P a,P b){
+  return a.real()*b.imag()-a.imag()*b.real();
+}
+
+bool on(P a,pair<P,P> l){
+  return fabs(cross(a-l.first,l.second-l.first))<eps;
+}
+
+P cp(pair<P,P> e,pair<P,P> f){
+  P a=e.second-e.first;
+  P b=f.second-f.first;
+  double acb=cross(a,b);
+  if(fabs(acb)<eps)throw 0;
+  return e.first+a*cross(f.first-e.first,b)/acb;
+}  
+
+vector<pair<P,P> > elines(int x1,int x2){
+  P a1=P(x_1[x1],y_1[x1]),a2=P(x_2[x1],y_2[x1]);
+  P b1=P(x_1[x2],y_1[x2]),b2=P(x_2[x2],y_2[x2]);
+  vector<pair<P,P> > v;
+  try{
+    auto cpab=cp(make_pair(a1,a2),make_pair(b1,b2));
+    P ac=a1-a2,bc=b1-b2;
+    P d=ac/abs(ac)+bc/abs(bc);
+    v.emplace_back(cpab,cpab+d);
+    v.emplace_back(cpab,cpab+d*P(0,1));
+  }catch(...){
+    P m=(a1+b1)/2.;
+    v.emplace_back(m,m+a2-a1);
+  }
+  return v;
+}
+    
+int main(){
+  for(int n;cin>>n,n;){
+    vector<pair<P,P> > lines;
+    vector<P> points;
+    for(int i=0;i<n;i++){
+      cin>>x_1[i]>>y_1[i]>>x_2[i]>>y_2[i];
+      for(int j=0;j<i;j++){
+	if(i==1){
+	  lines=elines(i,j);
+	}else{
+	  vector<pair<P,P> > nl;
+	  vector<P> np;
+	  for(auto e:elines(i,j)){
+	    for(auto f:lines){
+	      try{
+		auto cpef=cp(e,f);
+		np.push_back(cpef);
+	      }catch(...){
+		if(on(f.first,e)&&on(f.second,e)){
+		  nl.push_back(f);
+		}
+	      }
+	    }
+	    for(auto f:points){
+	      if(on(f,e)){
+		np.push_back(f);
+	      }
+	    }
+	  }
+	  lines=nl;
+	  points.clear();
+	  for(int i=0;i<np.size();i++){
+	    bool has=false;
+	    for(auto e:points){
+	      has|=abs(e-np[i])<eps;
+	    }
+	    if(!has){
+	      points.push_back(np[i]);
+	    }
+	  }
+	}
+      }
+    }
+    if(n==1||!lines.empty()||points.size()>1){
+      cout<<"Many"<<endl;
+    }else if(points.empty()){
+      cout<<"None"<<endl;
+    }else{
+      cout<<fixed<<points[0].real()<<' '<<points[0].imag()<<endl;
+    }
+  }
+}

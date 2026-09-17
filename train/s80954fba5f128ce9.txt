@@ -1,0 +1,52 @@
+import sys
+import math
+import heapq
+mod=10**9+7
+inf=float("inf")
+from math import sqrt, ceil
+from collections import deque, Counter, defaultdict, OrderedDict
+#すべてのkeyが用意されてる defaultdict(int)で初期化
+#順序を保ったdict
+input=lambda: sys.stdin.readline().strip()
+sys.setrecursionlimit(11451419)
+from decimal import ROUND_HALF_UP,Decimal  #変換後の末尾桁を0や0.01で指定
+  #Decimal((str(0.5)).quantize(Decimal('0'), rounding=ROUND_HALF_UP))
+from functools import lru_cache
+#メモ化再帰defの冒頭に毎回 @lru_cache(maxsize=10**10)
+#引数にlistはだめ
+#######ここまでテンプレ#######
+#ソート、"a"+"b"、再帰ならPython3の方がいい
+#######ここから天ぷら########
+n=int(input())
+s=input()
+A=[int(i)-1 for i in s]
+
+RUI2=[pow(2,i) for i in range(21)]
+import bisect as bi
+@lru_cache(maxsize=10**10)
+def tan(n):
+    if n==0:return [1]
+    if n==1:return [1,1]
+    if n==2:return [1,0,1]
+    i= bi.bisect_right(RUI2,n)-1
+    return tan(n-pow(2,i)) + [0]*(pow(2,i+1)-n-1) + tan(n-pow(2,i))
+
+
+# for i in range(n-1):
+#     if A[i]==A[i+1]: A[i]=0
+#     elif (A[i]^A[i+1])&1 : A[i]=1
+#     else:A[i]=2
+# for i in range(n-2):
+#     if (A[i]^A[i+1])&1 : A[i]=1
+#     else:A[i]=0
+
+# print(A[:-2],tan(n-3))
+if A.count(1)!=0:
+    A=[i%2!=1 for i in A]
+    a=[i&j for i,j in zip(A,tan(n-1))]
+    # print(a)
+    print(1 if sum(a)%2==1 else 0)
+else:
+    a=[(i-1)&j for i,j in zip(A,tan(n-1))]
+    print(2 if sum(a)%2==1 else 0)
+    

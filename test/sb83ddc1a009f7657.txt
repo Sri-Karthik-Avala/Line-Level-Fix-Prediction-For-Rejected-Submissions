@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+
+#define REP(i,s,n) for(int i=s;i<n;i++)
+#define rep(i,n) REP(i,0,n)
+
+using namespace std;
+
+int N;
+char a[110][110];
+int win[110];
+
+int main(){
+  srand((unsigned int)time(NULL));
+  cin >> N;
+  rep(i,N) {
+    string s;
+    cin >> s;
+    rep(j,N) { 
+      a[i][j] = s[j];
+      if( j < i && a[i][j] == 'o' ) ++win[i];
+    }
+  }
+  int maxi_p = 0;
+  rep(i,N) if( win[maxi_p] < win[i] ) maxi_p = i;
+  bool definitely = false;
+  if( win[maxi_p] == N-1 ) definitely = true;
+
+  int judge_ai_hand = 1;
+  int use = 0;
+  rep(_,1000){
+    if( definitely ) {
+      printf("%d\n",maxi_p+1); fflush(stdout);
+    } else {
+      if( rand() % 1000 >= 130 ) {
+        printf("%d\n",rand()%N+1); fflush(stdout);
+      } else {
+        printf("%d\n",maxi_p+1); fflush(stdout);
+
+      }
+    }
+    scanf("%d", &judge_ai_hand);
+  }
+  return 0;
+}

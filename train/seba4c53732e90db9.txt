@@ -1,0 +1,16 @@
+n,K=[int(x) for x in input().split()]
+ans=0
+from collections import defaultdict
+d=defaultdict(int)
+for i in [0]*n:
+    d[input()[0]]+=1
+while True:
+    for j,_ in zip(sorted(d.items(),key=lambda x:x[1],reverse=True),[0]*K):
+        k,v=j
+        if v==0 or len(d)<K:
+            print(ans//K)
+            import sys
+            sys.exit()
+        print(k,v)
+        ans+=1
+        d[k]-=1

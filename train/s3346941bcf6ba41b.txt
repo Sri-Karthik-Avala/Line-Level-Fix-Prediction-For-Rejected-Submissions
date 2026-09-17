@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <vector>
+#include <set>
+#include <cstdlib>
+#include <deque>
+#include <stack>
+#include <sstream>
+
+using namespace std;
+const long long P = 1000000007;
+const long long INF = 1LL << 60;
+
+int main() {
+  int n,m;
+  cin >> n >> m;
+  int a[n],b[n];
+  map<int,int> mp;
+  bool flag = false;
+  for(int i = 0; i < m; i++) {
+    cin >> a[i] >> b[i];
+    if(a[i] == 1) {
+      mp[b[i]]++;
+      if(mp[b[i]] == 2) {
+        flag = true;
+        break;
+      }
+    }
+    if(b[i] == n) {
+      mp[a[i]]++;
+      if(mp[a[i]] == 2) {
+        flag = true;
+        break;
+      }
+    }
+  }
+  if(flag) {
+    cout << "POSSIBLE" << endl;
+  }else {
+    cout << "IMPOSSIBLE" << endl;
+  }
+  return 0;
+}

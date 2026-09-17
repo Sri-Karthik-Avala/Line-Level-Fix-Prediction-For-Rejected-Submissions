@@ -1,0 +1,69 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int taro[110],hana[110],ta,ha,cnt,nw;
+int main(){
+	while(1){
+	int N;
+	cin>>N;
+	if(N==0){
+		break;
+	}
+	for(int i=0;i<N;i++){
+		cin>>taro[i];
+	}
+	for(int i=1;i<=2*N;i++){
+		for(int j=0;j<N;j++){
+			if(i==taro[j]){
+				break;
+			}
+		
+		if(j==N-1){
+			hana[cnt]=i;
+			cnt++;
+		}
+		}
+	}
+	sort(taro,taro+N);
+	sort(hana,hana+N);
+	ta=N;
+	ha=N;
+	while(1){
+		if(ta==0 || ha==0){
+			break;
+		}
+		for(int i=0;i<N;i++){
+			if(nw<taro[i]){
+				nw=taro[i];
+				taro[i]=0;
+				ta--;
+			
+				break;
+			}
+			if(i==N-1){
+				nw=0;
+			}
+		}
+		if(ta==0){
+			break;
+		}
+		for(int i=0;i<N;i++){
+			if(nw<hana[i]){
+				nw=hana[i];
+				hana[i]=0;
+				ha--;
+				break;
+			}
+			if(i==N-1){
+				nw=0;
+			}
+		}
+
+
+	}
+	cout<<ha<<endl<<ta<<endl;
+	}
+
+
+	return 0;
+}

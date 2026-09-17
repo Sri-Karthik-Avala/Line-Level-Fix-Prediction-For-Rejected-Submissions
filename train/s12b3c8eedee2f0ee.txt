@@ -1,0 +1,16 @@
+while 1:
+    n=input()
+    if n==0:break
+    table={}
+    for i in xrange(n):
+        a,b=raw_input().split()
+        table[a]=b
+    m=input()
+    ans=""
+    for i in xrange(m):
+        s=raw_input()
+        if s in table:
+            ans+=table[s]
+        else:
+            ans+=s
+    print(ans)

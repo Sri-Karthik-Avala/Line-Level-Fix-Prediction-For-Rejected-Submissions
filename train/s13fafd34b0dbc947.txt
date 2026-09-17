@@ -1,0 +1,113 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<cstring>
+#include<vector>
+#include<set>
+#include<queue>
+#include<cstdlib>
+#include<algorithm>
+
+using namespace std;
+#define pb push_back
+#define mp make_pair
+#define SZ(x) (int)(x).size()
+
+typedef long long LL;
+typedef pair<int, int> pii;
+typedef pair<double, double> pdd;
+typedef pair<LL, LL> pll;
+
+const double eps = 1e-10;
+const double PI = acos(-1.0);
+//const double PI = 3.14159265358979323846264338327950288419716939937510
+int dcmp(const double &x) { if (fabs(x) < eps) return 0; return x < 0 ? -1 : 1; }
+const int MOD = 1e9 + 7;
+const int INF = 2e9;
+const double INF_d = 1e64;
+
+template<class T> 
+T qmod(T a, T b){ T ret = 1; while (b){ if (b & 1) ret *= a; b >>= 1; a *= a; } return ret; }
+template<class T>
+T gcd(T a, T b){ return !b ? a : gcd(b, a % b); }
+template<class T>
+T ex_gcd(T a, T b, T &x, T &y){
+    if (!b){ x = 1, y = 0; return a; }
+    T t, ret;
+    ret = ex_gcd(b, a % b, x, y);
+    t = x, x = y, y = t - a / b * y;
+    return ret;
+}
+template<class T>
+T inv(T t, T p){ return t == 1 ? 1 : (p - p / t) * inv(p % t, p) % p; }
+// head
+
+typedef double db;
+
+struct point{
+    db x, y;
+    point(){}
+    point(db a, db b): x(a), y(b){}
+    point operator + (const point &p){ return point(x + p.x, y + p.y); }
+    point operator - (const point &p){ return point(x - p.x, y - p.y); }
+    point operator * (const db &k){ return point(x * k, y * k); }
+    point operator / (const db &k){ return point(x / k, y / k); }
+    db operator ^ (const point &p){ return x * p.y + y * p.x; }
+    db operator * (const point &p){ return x * p.x + y * p.y; }
+    bool operator == (const point &p){ return !dcmp(x - p.x) && !dcmp(y - p.y); }
+    bool operator != (const point &p){ return dcmp(x - p.x) || dcmp(y - p.y); }
+    bool operator < (const point &p){ return x == p.x ? y < p.y : x < p.x; }
+    void read(){
+        scanf("%lf%lf", &x, &y);
+    }
+    void print(){
+        printf("%.10f %.10f\n", x, y);
+    }
+    point rotate(db &ang){ return point(x * cos(ang) - y * sin(ang), y * cos(ang) + x * sin(ang)); }
+    point norm() { return point(-y, x); }
+    db len() { return sqrt(x * x + y * y); }
+    db len2(){ return x * x + y * y; }
+};
+
+point proj(point A, point B, point P){ // projection point of P in segment AB
+    point AB = B - A, AP = P - A;
+    return A + AB * (AP * AB / AB.len2());
+}
+
+point refl(point A, point B, point P){ // reflection point of P int segment AB
+    return proj(A, B, P) * 2 - P;
+}
+
+point a, b;
+int n;
+
+int main(){
+    a.read(), b.read();
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++){
+        point x; x.read();
+        int sgn = dcmp((b - a) ^ (x - a));
+        if (!sgn){
+            if (dcmp((b - a) * (x - a)) < 0){
+                puts("ONLINE_BACK");
+            }
+            else{
+                if (dcmp((b - a).len() - (x - a).len()) < 0){
+                    puts("ONLINE_FRONT");
+                }
+                else{
+                    puts("ON_SEGMENT");
+                }
+            }
+        }
+        else{
+            if (sgn > 0){
+                puts("COUNTER_CLOCKWISE");
+            }
+            else{
+                puts("CLOCKWISE");
+            }
+        }
+    }
+    return 0;
+}

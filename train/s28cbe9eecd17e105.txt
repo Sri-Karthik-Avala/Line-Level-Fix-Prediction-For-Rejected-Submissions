@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+#define MN 100005
+typedef long long ll;
+int n,q,N;
+ll num[MN],que[MN],mul[MN];
+void calc(int x,ll nn,ll&gg)
+{
+	if(!nn) return;
+	int pos=std::upper_bound(que+1,que+x,nn)-que-1;
+	if(!pos) return(void)(num[std::min(1ll*n,nn)]+=gg);
+	mul[pos]+=(nn/que[pos])*gg;
+	calc(pos,nn%que[pos],gg);
+}
+int main()
+{
+	scanf("%d%d",&n,&q);
+	for(int i=1;i<=q;i++)
+	{
+		ll x;
+		scanf("%lld",&x);
+		for(;N&&x<=que[N];N--);
+		que[++N]=x;
+	}
+	mul[N]=1;que[0]=n;
+	for(int i=N;i>=1;i--) {
+		calc(i,que[i]%que[i-1],mul[i]);
+		mul[i-1]+=mul[i]*(que[i]/que[i-1]);
+	}
+	num[n]+=mul[0];
+	for(int i=n;i>1;i--) num[i-1]+=num[i];
+	for(int i=1;i<=n;i++) printf("%lld\n",num[i]);
+}

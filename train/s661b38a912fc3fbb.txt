@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Point3d{
+public:
+  double x,y,z;
+  Point3d(double a=0,double b=0,double c=0):x(a),y(b),z(c){}
+};
+
+double norm(Point3d a,Point3d b){
+  return pow((a.x-b.x),2)+pow((a.y-b.y),2)+pow((a.z-b.z),2);
+}
+
+double abs(Point3d a,Point3d b){ 
+ return sqrt(norm(a,b));
+}
+
+int main()
+{
+  vector<Point3d> v;
+  int n,m;
+  int ans;
+  double eps=0.000000001;
+  bool st[1000];
+
+  while(1){
+    cin>>n;
+    if(n==0)break;
+    double a,b,c,d;
+    for(int i=0;i<1000;i++)st[i]=false;
+    v.clear();
+    for(int i=0;i<n;i++){
+      cin>>a>>b>>c;
+      v.push_back(Point3d(a,b,c));
+    }
+    cin>>m;
+
+    Point3d origin(0.0,0.0,0.0);
+    for(int i=0;i<m;i++){
+      cin>>a>>b>>c>>d;
+      Point3d p3(a,b,c);
+      double x,y,z,r;
+      for(int j=0;j<n;j++){
+	x=abs(v[j],origin);
+	y=abs(p3,origin);
+	z=abs(v[j],p3);
+	//	printf("%.10f %.10f %.10f\n",x,y,z);
+     	r=acos((x*x+y*y-z*z)/(x*y*2));
+	
+	//	printf("%.10f %.10f\n",r,d);
+	if((r-d)<eps)st[i]=true;
+      }
+    }
+    ans=0;
+    for(int i=0;i<n;i++)if(st[i])ans++;
+    cout<<ans<<endl;
+  }
+  return 0;
+}

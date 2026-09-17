@@ -1,0 +1,12 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i = 0; i < (int)n; i++)
+using ll = long long;
+
+int main(){
+  ll a, b, c, d;
+  cin >> a >> b >> c >> d;
+  if(a == c or b == d) cout << 0 << endl;
+  else cout << (abs(d-b) + abs(c-a) - 1) / abs(c-a) * abs(c-a) << endl;
+  return 0;
+}

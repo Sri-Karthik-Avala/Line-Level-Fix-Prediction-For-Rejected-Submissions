@@ -1,0 +1,93 @@
+#include<bits/stdc++.h>
+#define int long long
+#define sz(x) (x.size())
+#define pb push_back
+#define fi first
+#define se second
+using namespace std;
+const int inf = 0x3f3f3f3f, N = 1e6 + 5;
+struct Node {
+    int cost, dir, id;
+    bool operator < (const Node &x) const
+    {
+        return cost > x.cost;
+    }
+};
+int n;
+string a[55];
+int c[55], ans = inf;
+int dist[2][N], ispal[N];
+map <string, int>mp;
+priority_queue <Node>q;
+inline bool check (string a) {
+    string tmp = a;
+    reverse (tmp.begin(), tmp.end());
+    return tmp == a;
+}
+signed main() {
+    ios::sync_with_stdio(false);
+    cin>>n;
+    for (int i = 1; i <= n; i++) {
+        cin>>a[i]>>c[i]; int len = sz(a[i]);
+        string tmp = a[i]; reverse (tmp.begin(), tmp.end());
+        if (tmp == a[i]) ans = min (ans, c[i]); tmp = "";
+        for (int j = 0; j < len; j++) {
+            tmp.pb (a[i][j]);
+            if (mp.count (tmp) == 0) mp[tmp] = sz(mp);
+        } tmp = "";
+        for (int j = len - 1; j >= 0; j--) {
+            tmp = a[i][j] + tmp;
+            if (mp.count (tmp) == 0) mp[tmp] = sz(mp);
+        }
+    }
+    vector <string> v(sz(mp) + 5);
+    map <string, int>::iterator it;
+    it = mp.begin ();
+    while (it != mp.end()) {
+        //cout<<it->fi<<" "<<it->se<<endl;
+        ispal[it -> se] = check (it -> fi);
+        dist[0][it -> se] = dist[1][it -> se] = inf;
+        v[it -> se] = it -> fi;
+        it++;
+    }
+    for (int i = 1; i <= n; i++) {
+        int id = mp[a[i]];
+        dist[0][id] = dist[1][id] = inf;
+        q.push ((Node) {c[i], 0, id});
+        q.push ((Node) {c[i], 1, id});
+    }
+    while (q.size()) {
+        Node now = q.top (); q.pop ();
+        if (dist[now.dir][now.id] < now.cost) continue;
+        for (int i = 1; i <= n; i++) {
+            string Le = v[now.id], Ri = a[i];
+            if (now.dir) swap (Le, Ri);
+            int pos = 0, nowx = now.cost + c[i];
+            while (pos < min (sz(Le), sz(Ri))) {
+                if (Le[pos] != Ri[sz(Ri) - pos - 1]) break;
+                pos++;
+            }
+            if (pos < min (sz(Le), sz(Ri))) continue;
+            if (pos == sz(Le) && pos == sz(Ri)) ans = min (ans, nowx);
+            else if (pos == sz(Le)) {
+                string rm = Ri.substr (0, sz(Ri) - pos);
+                if (ispal[mp[rm]]) ans = min (ans, nowx);
+                else {
+                    int npi = mp[rm];
+                    if (dist[1][npi] > nowx) dist[1][npi] = nowx, q.push((Node) {nowx, 1, npi});
+                }
+            }
+            else {
+                string rm = Le.substr (pos);
+                if (ispal[mp[rm]]) ans = min (ans, nowx);
+                else {
+                    int npi = mp[rm];
+                    if (dist[0][npi] > nowx) dist[0][npi] = nowx, q.push((Node) {nowx, 0, npi});
+                }
+            }
+        }
+    }
+    if (ans == inf) printf ("-1\n");
+    else printf ("%lld\n", ans);
+    return 0;
+}

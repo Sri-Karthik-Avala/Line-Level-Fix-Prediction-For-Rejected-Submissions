@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+#define pb push_back
+#define all(x) x.begin(), x.end()
+using namespace std;
+using ld = long double;
+const int maxn = 303, mod = 119<<23|1;
+int n, pw[maxn];
+vector<array<int, 2>> v;
+bool onl(array<int, 2> a, array<int, 2> b, array<int, 2> c) {
+	if(a[1] == b[1] || b[1] == c[1]) return a[1] == b[1] && b[1] == c[1];
+	ld r1 = ld(a[0]-b[0])/ld(a[1]-b[1]);
+	ld r2 = ld(c[0]-b[0])/ld(c[1]-b[1]);
+	ld r3 = ld(a[0]-c[0])/ld(a[1]-c[1]);
+	return fabs(r1-r2) < 1e-7 && fabs(r3-r2) < 1e-7;
+}
+signed main() {
+	cin.tie(0)->sync_with_stdio(0);
+	pw[0] = 1;
+	for(int i = 1; i < maxn; i++) pw[i] = (pw[i-1]+pw[i-1])%mod;
+	cin >> n;
+	v.resize(n);
+	for(auto &i : v) cin >> i[0] >> i[1];
+	sort(all(v));
+	int ans = pw[n];
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < i; j++) {
+			int c = 0;
+			array<int, 2> mn = v[j];
+			array<int, 2> mx = v[i];
+			for(auto &[x, y] : v) if(v[i] == array<int, 2>{x, y} || v[j] == array<int, 2>{x, y} || onl(v[i], v[j], {x, y})) {
+				c++;
+				mn = min(mn, {x, y});
+				mx = max(mx, {x, y});
+			}
+			if(v[j] != mn || v[i] != mx) continue;
+			//cout << v[i][0] << " " << v[i][1] << " | " << v[j][0] << " " << v[j][1] << " | " << pw[c] - c - 1 << endl;
+			ans = (mod + ans - (pw[c] - c - 1))%mod;	
+		}
+	ans = (mod + ans - n - 1)%mod;
+	cout << ans << '\n';
+}

@@ -1,0 +1,80 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <iostream>
+using namespace std;
+typedef pair<int,int> P;
+typedef long double ld;
+typedef vector<int> vi;
+#define pu push
+#define pb push_back
+#define mp make_pair
+#define eps 1e-9
+#define INF 2000000000
+#define LINF 1000000000000000ll
+#define sz(x) ((int)(x).size())
+#define fi first
+#define sec second
+#define SORT(x) sort((x).begin(),(x).end())
+#define all(x) (x).begin(),(x).end()
+#define EQ(a,b) (abs((a)-(b))<eps)
+bool isin(int a,int b,int c,int d,int p,int q)
+{
+	//printf("%d %d %d %d %d %d\n",a,b,c,d,p,q);
+	ld s,t;
+	ld A=a,B=b,C=c,D=d,P=p,Q=q;
+	if(b==0)
+	{
+		t=Q/D;
+		s=P/A-(C*Q)/(A*D);
+		//cout << s << ' ' << t << endl;
+		if(s>0&&t>0&&s+t<1)return true;
+		else return false;
+	}
+	if(a==0)
+	{
+		t=P/C;
+		s=Q/B-(D*Q)/(B*C);
+		//cout << s << ' ' << t << endl;
+		if(s>0&&t>0&&s+t<1)return true;
+		else return false;
+	}
+	t=(P*B-A*Q)/(B*C-A*D);
+	s=(P-C*t)/A;
+	//cout << s << ' ' << t << endl;
+	if(s>0&&t>0&&s+t<1)return true;
+	else return false;
+}
+int main()
+{
+	int Q;
+	scanf("%d",&Q);
+	int x1,x2,x3,y1,y2,y3,xk,yk,xs,ys;
+	for(int i=0;i<Q;i++)
+	{
+		scanf("%d %d %d %d %d %d %d %d %d %d",&x1,&y1,&x2,&y2,&x3,&y3,&xk,&yk,&xs,&ys);
+		int a,b,c,d,p,q,r,s;
+		a=x2-x1;
+		b=y2-y1;
+		c=x3-x1;
+		d=y3-y1;
+		p=xk-x1;
+		q=yk-y1;
+		r=xs-x1;
+		s=ys-y1;
+		bool orihime = isin(a,b,c,d,p,q);
+		bool kengyu = isin(a,b,c,d,r,s);
+		if(kengyu!=orihime)cout << "OK" << endl;
+		else cout << "NO" << endl;
+	}
+	return 0;
+}

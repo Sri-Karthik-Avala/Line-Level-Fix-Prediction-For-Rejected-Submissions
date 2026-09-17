@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+char str[20];
+char s[20];
+int main(){
+	int a,b,c;
+	while(scanf("%d%d%d",&a,&b,&c),~a){
+		bool ok=false;
+		sprintf(str,"%d",b);
+		for(int i=2;i<17;i++){
+			long long tmp=0;
+			for(int j=0;str[j];j++){
+				tmp*=i;
+				tmp+=str[j]-'0';
+			}
+			if(tmp==a)ok=true;
+		}
+		if(!ok){
+			printf("-1\n");continue;
+		}
+		for(int i=a+1;i<=c;i++){
+			int to=999999999;
+			for(int j=2;j<17;j++){
+				int tmp=i;
+				int at=0;
+				while(tmp){
+					s[at++]='0'+tmp%j;
+					tmp/=j;
+				}
+				ok=true;
+				for(int k=0;k<at;k++){
+					if(s[k]>'9')ok=false;
+					str[at-1-k]=s[k];
+				}
+				if(ok){
+					str[at]=0;
+					int val;
+					sscanf(str,"%d",&val);
+					if(b<=val)to=min(to,val);
+				}
+			}
+			b=to;
+		}
+		printf("%d\n",b);
+	}
+}

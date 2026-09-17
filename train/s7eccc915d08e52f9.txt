@@ -1,0 +1,5 @@
+N, X, T = map(int, input().split())
+
+m = N//X
+ans = m * T
+print(ans)  

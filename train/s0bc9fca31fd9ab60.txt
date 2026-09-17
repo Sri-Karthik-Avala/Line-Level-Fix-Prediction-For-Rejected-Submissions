@@ -1,0 +1,42 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+  string S,T;
+  cin>>S>>T;
+  unsigned long long h=0;
+  unsigned long long B=1000000009;
+  for(int i=0;i<T.size();i++){
+    h=h*B+T[i];
+  }
+  vector<unsigned long long> hashes;
+  unsigned long long b=1;
+  for(int i=T.size()-1;i>=0;i--){
+    for(char c='a';c<='z';c++){
+      if(T[i]!=c){
+	hashes.push_back(h-T[i]*b+c*b);
+      }
+    }
+    for(char c='A';c<='Z';c++){
+      if(T[i]!=c){
+	hashes.push_back(h-T[i]*b+c*b);
+      }
+    }
+    b*=B;
+  }
+  sort(begin(hashes),end(hashes));
+  unsigned long long sh=0;
+  for(int i=0;i<T.size();i++){
+    sh=sh*B+S[i];
+  }
+  int ans=0;
+  for(int i=0;;i++){
+    ans+=binary_search(begin(hashes),end(hashes),sh);
+    if(i+T.size()>=S.size())break;
+    sh=sh*B-b*S[i]+S[i+T.size()];
+  }
+  cout<<ans<<endl;
+}

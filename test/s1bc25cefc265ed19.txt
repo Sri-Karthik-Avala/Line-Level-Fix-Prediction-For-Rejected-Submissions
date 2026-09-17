@@ -1,0 +1,11 @@
+from statistics import mean
+while True:
+  n=int(input())
+  c=0
+  if n==0:
+    break
+  ns=list(map(int, input().split()))
+  for i in range(n):
+    if ns[i]<=mean(ns):
+      c+=1
+  print(c)

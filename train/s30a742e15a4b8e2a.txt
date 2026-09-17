@@ -1,0 +1,38 @@
+from sys import stdin
+from itertools import repeat
+def main():
+    n, m = map(int, stdin.readline().split())
+    q = int(stdin.readline())
+    a = map(int, stdin.readline().split(), repeat(10, q))
+    a = [x - 1 for x in a]
+    l = [[] for i in xrange(q)]
+    la = []
+    for i in xrange(q - 1, -1, -1):
+        x = a[i]
+        if not l[x]:
+            la.append(x)
+        l[x].append(i)
+    ok = 1
+    b = [q] * n
+    f = [0] * m
+    xt = 0
+    for i, x in enumerate(la):
+        j = 0
+        for y in l[x]:
+            if j < n and y < b[j]:
+                b[j] = y
+                j += 1
+        if j < n:
+            ok = 0
+            b[j] = -1
+        if not ok:
+            while f[xt]:
+                  xt += 1
+            if x != xt:
+                print "No"
+                return
+            f[xt] = 1
+        else:
+            f[x] = 1
+    print "Yes"
+main()

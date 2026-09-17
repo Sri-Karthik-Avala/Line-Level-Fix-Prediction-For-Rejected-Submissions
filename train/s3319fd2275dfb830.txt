@@ -1,0 +1,112 @@
+#include<iostream>
+#include<sstream>
+#include<vector>
+#include<algorithm>
+#include<set>
+#include<map>
+#include<queue>
+#include<complex>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cassert>
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define fr(i,c) for(__typeof(c.begin()) i=c.begin();i!=c.end();i++)
+#define pb push_back
+#define mp make_pair
+#define all(c) c.begin(),c.end()
+#define dbg(x) cerr<<#x<<" = "<<(x)<<endl
+
+typedef vector<int> vi;
+typedef pair<int,int> pi;
+typedef long long ll;
+const int inf=(int)1e9;
+const double EPS=1e-9, INF=1e12;
+
+const int mod=(int)1e9+7;
+int n,m,y[1000][2];
+vector<vi> e;
+int deg[1000];
+bool v[1000],loop[1000];
+
+void rec(int c,int p){
+	v[c]=1;
+	rep(i,e[c].size())if(!v[e[c][i]]){
+		rep(j,2)rep(k,2)if(abs(y[c][j])==abs(y[e[c][i]][k])){
+			if(j==0)swap(y[c][0],y[c][1]);
+			if(k==1)swap(y[e[c][i]][0],y[e[c][i]][1]);
+		}
+		rec(e[c][i],c);
+	}
+}
+ll dp[1000][2][2];
+ll calc(int c,int lv,int p,int s,int sv){
+	//cerr<<"c: "<<c<<" lv: "<<lv<<" p: "<<p<<" s: "<<s<<" sv: "<<sv<<endl;
+	ll &res=dp[c][lv][sv];
+	if(res>=0)return res;
+	v[c]=1;
+	
+	int nxt=e[c][p==e[c][0]?1:0];
+	if(nxt==s)return res=lv?1:sv==(y[c][1]==y[nxt][0]);
+	
+	res=calc(nxt,y[c][1]==y[nxt][0],c,s,sv);
+	if(lv)res+=calc(nxt,y[c][1]!=y[nxt][0],c,s,sv);
+	res%=mod;
+	return res;
+}
+ll dp2[1000][2];
+ll calc2(int c,int lv,int p){
+	//cerr<<"c: "<<c<<" lv: "<<lv<<" p: "<<p<<endl;
+	ll &res=dp2[c][lv];
+	if(res>=0)return res;
+	v[c]=1;
+	
+	if(e[c].size()==1&&e[c][0]==p)return lv?2:1;
+	int nxt=e[c][p==e[c][0]?1:0];
+	res=calc2(nxt,y[c][1]==y[nxt][0],c);
+	if(lv)res+=calc2(nxt,y[c][1]!=y[nxt][0],c);
+	res%=mod;
+	return res;
+}
+int main(){
+	cin>>n>>m;
+	ll ans=1;
+	rep(i,m){
+		cin>>y[i][0]>>y[i][1];
+		if(abs(y[i][0])==abs(y[i][1])){
+			if(y[i][0]!=y[i][1])ans*=2, ans%=mod;
+			m--; i--;
+		}
+	}
+	e.resize(m);
+	rep(i,m)rep(j,i)rep(k,2)rep(l,2){
+		if(abs(y[i][k])==abs(y[j][l])){
+			e[i].pb(j); e[j].pb(i);
+		}
+	}
+	
+	rep(i,m)v[i]=0;
+	rep(i,m)if(!v[i]&&e[i].size()==1)rec(i,-1);
+	rep(i,m)if(!v[i])rec(i,-1);
+	rep(i,m)v[i]=0;
+	
+	//rep(i,m)cerr<<"i: "<<i<<" : "<<y[i][0]<<" "<<y[i][1]<<" sz:"<<e[i].size()<<endl;
+	
+	memset(dp2,-1,sizeof(dp2));
+	rep(i,m)if(e[i].size()==1&&!v[i]){
+		ll tmp=calc2(i,0,-1)+calc2(i,1,-1);
+		ans*=tmp; ans%=mod;
+	}
+	memset(dp,-1,sizeof(dp));
+	rep(i,m)if(e[i].size()==2&&!v[i]){
+		ll tmp=calc(i,0,-1,i,0)+calc(i,1,-1,i,1);
+		ans*=tmp; ans%=mod;
+		if(tmp!=149)dbg(tmp);
+	}
+	rep(i,m)if(e[i].empty())ans*=3, ans%=mod;
+	
+	cout<<ans<<endl;
+	return 0;
+}

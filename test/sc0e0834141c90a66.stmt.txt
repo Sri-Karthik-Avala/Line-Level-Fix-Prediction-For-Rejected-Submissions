@@ -1,0 +1,87 @@
+Max Score: 250 Points 
+ 
+ Problem Statement 
+ Mr.X, who the handle name is T , looked at the list which written N handle names, S_1, S_2, ..., S_N . 
+ But he couldn't see some parts of the list. Invisible part is denoted ? . 
+ 
+ Please calculate all possible index of the handle name of Mr.X when you sort N+1 handle names ( S_1, S_2, ..., S_N and T ) in lexicographical order. 
+ Note: If there are pair of people with same handle name, either one may come first. 
+ 
+ 
+ 
+ 
+ 
+ Input 
+ The input is given from standard input in the following format. 
+ 
+ N 
+ S_1 
+ S_2 
+ :
+ S_N 
+ T 
+ 
+ 
+ 
+ 
+ 
+ Output 
+ 
+ Calculate the possible index and print in sorted order. The output should be separated with a space. Don't print a space after last number. 
+ Put a line break in the end. 
+ 
+ 
+ 
+ Constraints 
+ 
+ 1 ≤ N ≤ 10000 
+ 1 ≤ |S_i|, |T| ≤ 20 ( |A| is the length of A .) 
+ S_i consists from lower-case alphabet and ? . 
+ T consists from lower-case alphabet. 
+ 
+ 
+ 
+ Scoring 
+ Subtask 1 [ 130 points ] 
+ 
+ There are no ? 's. 
+ 
+ Subtask 2 [ 120 points ] 
+ 
+ There are no additional constraints. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 
+ 
+2
+tourist
+petr
+e
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 
+ 
+1
+ 
+ 
+ 
+ 
+ 
+ There are no invisible part, so there are only one possibility.
+ The sorted handle names are e , petr , tourist , so e comes first. 
+ 
+ 
+ 
+ Sample Input 2 
+ 
+2
+?o?r?s?
+?et?
+e

@@ -1,0 +1,44 @@
+String Search 
+
+
+ 
+ Determine whether a text T includes a pattern P . Your program should answer for given queries consisting of P_i .
+ 
+
+ Input 
+
+ 
+ In the first line, a text T is given. In the second line, an integer Q denoting the number of queries is given. In the following Q lines, the patterns P_i are given respectively.
+ 
+
+ Output 
+
+ 
+ For each question, print 1 if the text includes P_i , or print 0 otherwise.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; length of T &le; 1000000 
+ 1 &le; length of P_i &le; 1000 
+ 1 &le; Q &le; 10000 
+ The input consists of alphabetical characters and digits 
+ 
+
+ Sample Input 1 
+ 
+aabaaa
+4
+aa
+ba
+bb
+xyz
+ 
+
+ Sample Output 1 
+ 
+1
+1
+0
+0

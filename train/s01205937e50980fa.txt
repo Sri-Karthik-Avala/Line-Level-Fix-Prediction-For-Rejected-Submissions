@@ -1,0 +1,108 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair<int,int> P;
+
+int X[100001];
+
+struct Square{
+  P d[300001];
+  int n,m;
+  
+  void init(int _n){
+    m = (int)sqrt(_n);
+    n = m*m; if( _n > n ) n+= m;
+    for(int i=0;i<_n;i++)
+      d[i] = P(X[i],i);
+    for(int i=_n;i<n;i++)
+      d[i] = P(0,i);
+    for(int i=0;i<n;i+=m)
+      sort(d+i,d+i+m);
+  }
+
+  int all_queryU(int a,int b,int x){
+    int st = a, ed = b-1, r = b;
+    while( st <= ed ){
+      int h = (st + ed )/2;
+      if( d[h].first > x ){
+	r = min( h, r );
+	ed = h - 1;
+      } else {
+	st = h + 1;
+      }
+    }
+    return b - r;
+  }
+
+  int part_queryU( int a,int b,int l,int r,int  x){
+    int ret = 0;
+    for(int i=a;i<b;i++)
+      if( l <= d[i].second && d[i].second <= r &&
+	  d[i].first > x ) ret ++;
+    return ret;    
+  }
+
+  int queryU(int l,int r,int x){
+    int ret = 0;
+    for(int i=0;i<n;i+=m){
+      if( l <= i && i + m - 1 <= r )
+	ret += all_queryU(i,i+m,x);
+      else if( ( i <= l && l <= i + m - 1 )
+	       || ( i <= r && r <= i + m - 1 ) )
+	ret += part_queryU(i,i+m,l,r,x);
+    }
+    return ret;
+  }
+
+
+  int all_queryD(int a,int b,int x){
+    int st = a, ed = b-1, r = a-1;
+    while( st <= ed ){
+      int h = (st + ed )/2;
+      if( d[h].first < x ){
+	r = max( h, r );
+	st = h + 1;
+      } else {
+	ed = h - 1;
+      }
+    }
+    return r - a + 1;
+  }
+
+  int part_queryD( int a,int b,int l,int r,int  x){
+    int ret = 0;
+    for(int i=a;i<b;i++)
+      if( l <= d[i].second && d[i].second <= r &&
+	  d[i].first < x ) ret ++;
+    return ret;    
+  }
+
+  int queryD(int l,int r,int x){
+    int ret = 0;
+    for(int i=0;i<n;i+=m){
+      if( l <= i && i + m - 1 <= r )
+	ret += all_queryD(i,i+m,x);
+      else if( ( i <= l && l <= i + m - 1 )
+	       || ( i <= r && r <= i + m - 1 ) )
+	ret += part_queryD(i,i+m,l,r,x);
+    }
+    return ret;
+  }
+
+};
+
+int D,Q;
+Square s;
+int main(){
+  cin >> D;
+  for(int i=0;i<D;i++) cin >> X[i];
+  s.init(D);
+  cin >> Q;
+  for(int i=0;i<Q;i++){
+    int l,r,e;
+    cin >> l >> r >> e;
+    l--; r--;
+    int a = min( X[l],X[r] ), b = max( X[l],X[r] );
+    int res = s.queryU(l,r,b+e) + s.queryD(l,r,a-e);
+    cout << res << endl;
+  }
+}

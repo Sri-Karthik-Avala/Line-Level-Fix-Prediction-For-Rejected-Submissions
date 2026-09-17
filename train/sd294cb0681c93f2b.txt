@@ -1,0 +1,15 @@
+import math
+
+while True:
+    D, E = map(int, input().split())
+    if D == 0 and E == 0:
+        break
+    ans = float("inf")
+    for x in range(D):
+        for y in range(D):
+            if x + y == D:
+                print("x: {}, y: {}, sqrt: {}".format(x, y, math.sqrt(x * x + y * y)))
+                ans = min(abs(math.sqrt(x * x + y * y) - E), ans)
+
+    print(ans)
+

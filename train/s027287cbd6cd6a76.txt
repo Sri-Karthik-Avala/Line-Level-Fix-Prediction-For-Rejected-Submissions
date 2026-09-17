@@ -1,0 +1,115 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define rep(...) overload_rep(__VA_ARGS__, rep_1, rep_0)(__VA_ARGS__)
+#define rep_0(i, end) for(int i = 0; i < (end); ++i)
+#define rep_1(i, fr, ba) for(int i = (fr); i <= (ba); ++i)
+#define overload_rep(arg0, arg1, arg2, name, ...) name
+#define all(box) box.begin(), box.end()
+
+template <class T> inline bool chmax(T& lhs, const T& rhs) { if(lhs < rhs) { lhs = rhs; return 1; } return 0; }
+template <class T> inline bool chmin(T& lhs, const T& rhs) { if(lhs > rhs) { lhs = rhs; return 1; } return 0; }
+
+typedef long long lint;
+typedef pair<lint, lint> paris;
+constexpr int MX = 200000;
+constexpr lint inf = 1ll << 60;
+
+template <class Mn, class Op>
+struct SegmentTree {
+private:
+
+    int size;
+    std::vector<Mn> node;
+    const Mn unit;
+    const Op oper;
+
+public:
+
+    SegmentTree(const Mn& unit_, const Op& oper_)
+        : unit(unit_), oper(oper_) { }
+    SegmentTree(const int& size_, const Mn& unit_, const Op& oper_)
+        : unit(unit_), oper(oper_) { init(size_); }
+    SegmentTree(const std::vector<Mn>& node_, const Mn& unit_, const Op& oper_)
+        : unit(unit_), oper(oper_) { build(node_); }
+
+    void fill() {
+        fill(node.begin(), node.end(), unit);
+    }
+
+    void init(const int& size_) {
+        for(size = 1; size < size_; size <<= 1);
+        node.assign(size << 1, unit);
+    }
+
+    void build(const std::vector<Mn>& node_) {
+        init(node_.size());
+        for(int i = 0; i < node_.size(); ++i) 
+            node[i + size] = node_[i];
+        for(int i = size - 1; i > 0; --i) 
+            node[i] = oper(node[i << 1], node[i << 1 | 1]);
+    }
+
+    void set_value(const int& idx, const Mn& value) {
+        int i = idx + size;
+        for(node[i] = value; (i >>= 1) > 0;)
+            node[i] = oper(node[i << 1], node[i << 1 | 1]);
+    }
+
+    void add_value(const int& idx, const Mn& plus) {
+        int i = idx + size;
+        for(node[i] += plus; (i >>= 1) > 0;)
+            node[i] = oper(node[i << 1], node[i << 1 | 1]);
+    }
+
+    Mn fold(const int& l, const int& r) const {
+        Mn result_l = unit, result_r = unit;
+        for(int tl = l + size, tr = r + size; tl < tr; tl >>= 1, tr >>= 1) {
+            if(tl & 1) result_l = oper(result_l, node[tl++]);
+            if(tr & 1) result_r = oper(node[--tr], result_r);
+        }
+        return oper(result_l, result_r);
+    }
+
+    Mn operator () (const int& l, const int& r) const {
+        return fold(l, r);
+    }
+
+    Mn operator [] (const int& idx) const {
+        return node[idx + size];
+    }
+
+};
+
+int main() {
+
+    int N, Q;
+    cin >> N >> Q;
+
+    lint fa, fb, la, lb;
+    vector<pair<lint, lint>> vec(2 * N - 2);
+    cin >> fa;
+    rep(i, 2 * N - 2) cin >> vec[i].first;
+    cin >> la;
+    cin >> fb;
+    rep(i, 2 * N - 2) cin >> vec[i].second;
+    cin >> lb;
+
+    const auto func = [](paris l, paris r) {
+        if(l.first == -inf && l.second == -inf) return r;
+        if(r.first == -inf && r.second == -inf) return l;
+        return make_pair(max(l.first + r.first, l.second + r.second), max(l.first + r.second, l.second + r.first));
+    };
+    SegmentTree<paris, decltype(func)> seg(vec, make_pair(-inf, -inf), func);
+
+    while(Q--) {
+        int p;
+        lint a, b;
+        cin >> p >> a >> b;
+        if(p == 1) fa = a;
+        else if(p == 2 * N) la = a;
+        else seg.set_value(p - 2, make_pair(a, b));
+        cout << fa + seg(0, 2 * N - 2).first + la << '\n';
+    }
+
+}

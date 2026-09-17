@@ -1,0 +1,3 @@
+R, G = (int(x) for x in input().split())
+ans = 2*G - R
+print(ans)

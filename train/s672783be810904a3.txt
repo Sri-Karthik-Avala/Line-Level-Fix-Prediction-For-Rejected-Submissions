@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef pair<int, int> P;
+
+int n, m;
+vector<P> branch[128];
+
+int prim();
+
+int main()
+{
+    while (scanf("%d %d", &n, &m), n != 0){
+        for (int i = 0; i < n; i++) branch[i].clear();
+
+        for (int i = 0; i < m; i++){
+            int a, b, c;
+
+            scanf("%d %d %d", &a, &b, &c);
+            branch[a].push_back(P(c, b));
+            branch[b].push_back(P(c, a));
+        }
+        printf("%d\n", prim());
+    }
+
+    return 0;
+}
+
+int prim()
+{
+    bool v[1024];
+    priority_queue<P, vector<P>, greater<P> > q;
+    int sum = 0;
+
+    q.push(P(0, 0));
+    v[0] = 0;
+    while (!q.empty()){
+        P p = q.top(); q.pop();
+
+        if (v[p.second]) continue;
+        v[p.second] = true;
+        sum += p.first;
+        for (int i = 0; i < branch[p.second].size(); i++){
+            q.push(branch[p.second][i]);
+        }
+    }
+
+    return sum;
+}

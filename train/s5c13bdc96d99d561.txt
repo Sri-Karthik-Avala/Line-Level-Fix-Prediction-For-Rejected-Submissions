@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+vector<int> B(2222222);
+
+int nbB(int k, int start, int end){
+    // return the nb of book
+    if(B[start]>k){
+        return start;
+    }
+    if(B[end]<=k){
+        return end + 1;
+    }
+    if(start == end || start + 1 == end){
+        return start + 1;
+    }
+    int mid = (start+end) / 2;
+    if(B[mid]<=k){
+        return nbB(k, mid, end);
+    }
+    return nbB(k, start, mid);
+}
+
+int main() {
+    int N, M, K;
+    cin >> N >> M >> K;
+    vector<int> A(N);
+    for(int i=0;i<N;i++){
+        cin >> A[i];
+    }
+    for(int i=0;i<M;i++){
+        cin >> B[i];
+    }
+    // sum
+    for(int i=1;i<M;i++){
+        B[i] = min(K+1, B[i-1]+B[i]);
+    }
+    for(int i=1;i<N;i++){
+        A[i] = min(K+1, A[i-1]+A[i]);
+    }
+    // solve
+    int nb = 0;
+    for(int i=0;i<N;i++){
+        if(A[i]>K){
+            break;
+        }
+        int b = nbB(K-A[i], 0, M-1);
+        nb = max(nb, i+1+b);
+    }
+    cout << nb << endl;
+
+    return 0;
+}

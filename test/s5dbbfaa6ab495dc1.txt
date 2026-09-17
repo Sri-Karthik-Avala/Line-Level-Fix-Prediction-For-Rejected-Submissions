@@ -1,0 +1,44 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+typedef long long ll;
+
+ll c[16], x[20000];
+
+ll dp[20001][256];
+
+int main() {
+	while (1) {
+		int n, m;
+		cin >> n >> m;
+		if (n + m == 0)break;
+		for (int i = 0; i < m; i++)cin >> c[i];
+		for (int i = 0; i < n; i++)cin >> x[i];
+
+		for (int i = 0; i < n; i++)for (int j = 0; j < 256; j++)dp[i][j] = 1e18;
+		dp[0][128] = 0;
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j <= 255; j++) {
+				for (int k = 0; k < m; k++) {
+					ll nxt = 0;
+					nxt = j + c[k];
+					if (nxt < 0)nxt = 0;
+					if (nxt > 255)nxt = 255;
+					
+					dp[i + 1][nxt] = min(dp[i + 1][nxt], dp[i][j] + (x[i] - nxt) * (x[i] - nxt));
+				}
+			}
+		}
+		ll ans = 1e18;
+
+		for (int i = 0; i < 256; i++) {
+			ans = min(ans, dp[n][i]);
+		}
+		cout << ans << endl;
+
+	}
+
+	return 0;
+}

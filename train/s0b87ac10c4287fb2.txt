@@ -1,0 +1,36 @@
+#include <cmath>
+#include <cstdint>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int64_t n357[3] = {3, 5, 7};
+
+int64_t Make(int rest, string num, bool has3, bool has5, bool has7, int64_t N) {
+  if (rest == 0) {
+    if (has3 && has5 && has7 && stoll(num) < N) {
+      return 1;
+    }
+    return 0;
+  }
+  int64_t res = 0;
+  for (int64_t n : n357) {
+    res += Make(rest-1, num + char('0' + n), has3 || n == 3, has5 || n == 5, has7 || n == 7, N);
+  }
+  return res;
+} 
+
+int main() {
+  int64_t N;
+  cin >> N;
+  
+  int unit = static_cast<int>(log10(N)) + 1;
+  int64_t res = 0;
+  for (int u = 3; u <= unit; ++u) {
+    res += Make(u, "", false, false, false, N);
+  }
+  cout << res << endl;
+  
+  return 0;
+}

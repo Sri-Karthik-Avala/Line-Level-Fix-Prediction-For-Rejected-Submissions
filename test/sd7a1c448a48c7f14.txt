@@ -1,0 +1,91 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define P pair<int, int>
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const int ALPHA = 26;
+
+int N, len;
+
+bool isValid(map<char, int> &num, vector<string> &s){
+  int sum = 0;
+  REP(i, N) if(s[i].length() != 1 && num[s[i][(int)(s[i].length()) - 1]] == 0) return false;
+  REP(j, len){
+    REP(i, N){
+      if(j >= s[i].length()) continue;
+      if(num[s[i][j]] == -1) return true;
+      if(s[i].length() != 1 && j + 1 >= s[i].length() && num[s[i][j]] == 0) return false;
+      if(i + 1 >= N && num[s[i][j]] != sum % 10) return false;
+      if(i + 1 < N) sum += num[s[i][j]];
+    }
+    sum /= 10;
+  }
+  return true;
+}
+
+int dfs(int now, map<char, int> &num, vector<bool> &used, string &cs, vector<string> &s){
+  if(now >= cs.size()) return 1;
+  int res = 0;
+  REP(i, 10){
+    if(used[i]) continue;
+    used[i] = true;
+    num[cs[now]] = i;
+    if(isValid(num, s)) res += dfs(now + 1, num, used, cs, s);
+    used[i] = false;
+    num[cs[now]] = -1;
+  }
+  return res;
+}
+
+int main(){
+  while(scanf("%d", &N) && N){
+    len = 0;
+    vector<string> s(N);
+    REP(i, N){
+      cin >>s[i];
+      len = max(len, (int)(s[i].length()));
+      REVERSE(s[i]);
+    }
+    if(s[N - 1].length() < len){
+      cout <<0 <<endl;
+      continue;
+    }
+    stringstream cs;
+    bool _cs[ALPHA];
+    memset(_cs, 0, sizeof(_cs));
+    REP(j, len){
+      REP(i, N){
+        if(j >= s[i].length() || _cs[s[i][j] - 'A']) continue;
+        _cs[s[i][j] - 'A'] = true;
+        cs << s[i][j];
+      }
+    }
+    string css = cs.str();
+
+    vector<bool> used((int)(cs.str().length()), false);
+    map<char, int> num;
+    REP(i, css.size()) num[css[i]] = -1;
+    cout <<dfs(0, num, used, css, s) <<endl;
+  }
+  return 0;
+}

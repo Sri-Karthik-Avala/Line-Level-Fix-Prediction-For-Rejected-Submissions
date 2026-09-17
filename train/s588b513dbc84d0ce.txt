@@ -1,0 +1,16 @@
+num_choice = int(raw_input())
+price=list(map(int,raw_input().split()))
+base_cal = int(raw_input())
+topping_cal = []
+for i in range (num_choice):
+	topping_cal.append(int(raw_input()))
+topping_cal.sort()
+topping_cal.reverse()
+average_cal = int(base_cal / price[0])
+for i in range (num_choice):
+	new_average = int((sum(topping_cal[:i+1]) + base_cal) / (price[0] + price[1] * (i+1)) )
+	if new_average > average_cal:
+		average_cal = new_average
+	else:
+		break
+print average_cal

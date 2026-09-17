@@ -1,0 +1,13 @@
+while 1:
+    try:
+        s=raw_input()
+        n=len(s)
+        ns=""
+        for i in xrange(n):
+            if s[i]=="@" and i!=n-2:
+                ns+=int(s[i+1])*s[i+2]
+            else:
+                ns+=s[i]
+        print(ns)
+    except:
+        break

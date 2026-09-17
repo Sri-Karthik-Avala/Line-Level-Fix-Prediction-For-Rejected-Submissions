@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<algorithm>
+using namespace std;
+int key[]={0,2,3,5,7,8,10};
+char in[5];
+int p[110000];
+int q[110000];
+int n;
+int solve(int a,int b){
+	if(a<0&&b<0)return 1;
+	if(a<0)return 0;
+	if(b<0)return 0;
+	if(b>=n)return 0;
+	if(p[b]==q[a])return solve(a-1,b-1);
+	if((p[b]+1)%12==q[a])return solve(a-1,b-2);
+	if((p[b]+11)%12==q[a])return solve(a-1,b+1);
+	return 0;
+}
+int main(){
+	int T;
+	scanf("%d",&T);
+	while(T--){
+		int a,b;scanf("%d%d",&a,&b);
+		n=a;
+		for(int i=0;i<a;i++){
+			scanf("%s",in);
+			p[i]=key[in[0]-'A'];
+			if(in[1]=='#')p[i]++;
+		}
+		for(int i=0;i<b;i++){
+			scanf("%s",in);
+			q[i]=key[in[0]-'A'];
+			if(in[1]=='#')q[i]++;
+		}
+		if(solve(b-1,a-1))printf("Yes\n");
+		else if(solve(b-1,a-2))printf("Yes\n");
+		else printf("No\n");
+	}
+}

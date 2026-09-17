@@ -1,0 +1,61 @@
+Shopping 
+
+ 
+You are now in a bookshop with your friend Alice to buy a book, "The Winning Strategy for the Programming Koshien Contest,” just released today. As you definitely want to buy it, you are planning to borrow some money from Alice in case the amount you have falls short of the price. If the amount you receive from Alice still fails to meet the price, you have to abandon buying the book this time.
+ 
+
+ 
+ Write a program to calculate the minimum amount of money you need to borrow from Alice given the following three items of data: the money you and Alice have now and the price of the book.
+ 
+
+
+ Input 
+
+ 
+ The input is given in the following format.
+ 
+
+ 
+ m f b 
+ 
+
+ 
+A line containing the three amounts of money is given: the amount you have with you now m (0 &le; m &le; 10000), the money Alice has now f (0 &le; f &le; 10000) and the price of the book b (100 &le; b &le; 20000).
+ 
+
+ Output 
+
+ 
+Output a line suggesting the minimum amount of money you need to borrow from Alice. Output "NA" if all the money Alice has with him now is not a sufficient amount for you to buy the book.
+ 
+
+ Sample Input 1 
+
+ 
+1000 3000 3000
+ 
+
+ Sample Output 1 
+ 
+2000
+ 
+
+ Sample Input 2 
+ 
+5000 3000 4500
+ 
+
+ Sample Output 2 
+ 
+0
+ 
+
+
+ Sample Input 3 
+ 
+500 1000 2000
+ 
+
+ Sample Output 3 
+ 
+NA

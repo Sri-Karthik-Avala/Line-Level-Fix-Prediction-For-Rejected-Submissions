@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define pb push_back
+#define all(v) (v).begin(),(v).end()
+#define fi first
+#define se second
+typedef vector<int>vint;
+typedef pair<int,int>pint;
+typedef vector<pint>vpint;
+
+template<typename A,typename B>inline void chmin(A &a,B b){if(a>b)a=b;}
+template<typename A,typename B>inline void chmax(A &a,B b){if(a<b)a=b;}
+
+const double INF=1e12;
+
+int N,M,P;
+int A[111111],B[111111],L[111111];
+double C[111111];
+
+double dp[1111][222];
+double x[222];
+
+signed main(){
+    cin>>N>>M>>P;
+    rep(i,M){
+        cin>>A[i*2]>>B[i*2];
+        A[i*2]--;B[i*2]--;
+        int x,y;
+        cin>>x>>y;
+        C[i*2]=1.0*y/x;
+        L[i*2]=x;
+
+        A[i*2+1]=B[i*2];
+        B[i*2+1]=A[i*2];
+        C[i*2+1]=C[i*2];
+        L[i*2+1]=L[i*2];
+    }
+    M*=2;
+
+    fill_n(*dp,1111*222,-INF);
+    dp[0][0]=0;
+    for(int i=0;i<P;i++){
+        for(int j=0;j<M;j++){
+            if(i+L[i]>P)continue;
+            chmax(dp[i+L[i]][B[i]],dp[i][A[i]]+L[i]*C[i]);
+        }
+    }
+
+    rep(i,M)chmax(x[A[i]],C[i]);
+
+    double ans=0;
+    rep(i,N){
+        for(int j=0;j<=P;j++){
+            for(int k=0;j+k<=P;k++){
+                chmax(ans,dp[j][i]+dp[k][i]+(P-j-k)*x[i]);
+            }
+        }
+    }
+    printf("%.20f\n",ans);
+    return 0;
+}

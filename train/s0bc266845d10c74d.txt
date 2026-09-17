@@ -1,0 +1,74 @@
+#include<iostream>
+#include<vector>
+#include<complex>
+
+using namespace std;
+
+typedef complex<double> P;
+typedef vector<P> Polygon;
+
+double cross(P a,P b){
+  return (conj(a)*b).imag();
+}
+
+//line,line
+P intersection(P a1,P a2,P b1,P b2){
+  P a=a2-a1;
+  P b=b2-b1;
+  return a1+a*cross(b,b1-a1)/cross(b,a);
+}
+
+//a->b keep leftside points
+Polygon cut(P a,P b,const Polygon &p){
+  int n=p.size();
+  vector<double> c(n);
+  for(int i=0;i<n;i++){
+    c[i]=cross(b-a,p[i]-a);
+  }
+  Polygon r;
+  for(int i=0;i<n;i++){
+    if(c[i]>=n){
+      r.push_back(p[i]);
+    }
+    if(c[i]*c[(i+1)%n]<0){
+      r.push_back(intersection(a,b,p[i],p[(i+1)%n]));
+    }
+  }
+  return r;
+}
+
+double area(const Polygon &p){
+  double a=0;
+  for(int i=0;i<p.size();i++){
+    a+=cross(p[(i+1)%p.size()],p[i]);
+  }
+  return fabs(a)/2;
+}
+
+int main(){
+  for(int N,M;cin>>N>>M,N;){
+    Polygon p;
+    for(int i=0;i<N;i++){
+      int x,y;
+      cin>>x>>y;
+      p.emplace_back(x,y);
+    }
+    vector<P> c;
+    for(int i=0;i<M;i++){
+      int x,y;
+      cin>>x>>y;
+      c.emplace_back(x,y);
+    }
+    for(int i=0;i<M;i++){
+      Polygon cp=p;
+      for(int j=0;j<M;j++){
+	if(i==j)continue;
+	P m=(c[i]+c[j])/2.;
+	P d=(c[j]-c[i])*P(0,1)+m;
+	cp=cut(m,d,cp);
+      }
+      cout.precision(9);
+      cout<<fixed<<area(cp)<<endl;
+    }
+  }
+}

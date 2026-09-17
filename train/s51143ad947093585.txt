@@ -1,0 +1,63 @@
+#include <map>
+#include <queue>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int n, p[109], dp1[109][209][209], dp2[109][209][209], ptr[20009]; vector<int> q, G[109];
+void calc_evaluation(int pos) {
+	if (G[pos].size() == 0) return;
+	p[pos] = -999999999;
+	for (int i : G[pos]) {
+		calc_evaluation(i);
+		p[pos] = max(p[pos], -p[i]);
+	}
+}
+void solve(int pos, int alpha, int beta) {
+	if (G[pos].size() == 0) {
+		dp1[pos][ptr[alpha + 10001]][ptr[beta + 10001]] = 1;
+		dp2[pos][ptr[alpha + 10001]][ptr[beta + 10001]] = 1;
+		return;
+	}
+	vector<int> perm(G[pos].size());
+	for (int i = 0; i < perm.size(); i++) perm[i] = i;
+	int ret1 = n, ret2 = 0;
+	do {
+		int alpha2 = alpha, beta2 = beta, cnt_min = 0, cnt_max = 0;
+		for (int i = 0; i < perm.size(); i++) {
+			int chl = G[pos][perm[i]];
+			int val = -p[chl];
+			solve(chl, -beta2, -alpha2);
+			cnt_min += dp1[chl][ptr[-beta2 + 10001]][ptr[-alpha2 + 10001]];
+			cnt_max += dp2[chl][ptr[-beta2 + 10001]][ptr[-alpha2 + 10001]];
+			if (val >= beta2) break;
+			alpha2 = max(val, alpha2);
+		}
+		ret1 = min(ret1, cnt_min);
+		ret2 = max(ret2, cnt_max);
+	} while (next_permutation(perm.begin(), perm.end()));
+	dp1[pos][ptr[alpha + 10001]][ptr[beta + 10001]] = ret1;
+	dp2[pos][ptr[alpha + 10001]][ptr[beta + 10001]] = ret2;
+}
+int main() {
+	cin >> n;
+	for (int i = 0; i < n; i++) cin >> p[i];
+	q.resize(2 * n);
+	for (int i = 0; i < n; i++) q[i] = p[i], q[n + i] = -p[i];
+	q.push_back(-10001);
+	q.push_back(10001);
+	sort(q.begin(), q.end());
+	q.erase(unique(q.begin(), q.end()), q.end());
+	for (int i = 0; i < q.size(); i++) ptr[q[i] + 10001] = i;
+	for (int i = 0; i < n; i++) {
+		int c, x; cin >> c;
+		for (int j = 0; j < c; j++) {
+			cin >> x; x--;
+			G[i].push_back(x);
+		}
+	}
+	calc_evaluation(0);
+	solve(0, -10001, 10001);
+	cout << dp1[0][0][q.size() - 1] << ' ' << dp2[0][0][q.size() - 1] << endl;
+	return 0;
+}

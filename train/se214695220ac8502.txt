@@ -1,0 +1,73 @@
+class UnionFind:
+    def __init__(self, n):
+        self.par = [-1 for i in range(n+1)]
+        self.rank = [0] * (n+1)
+ 
+    # 検索
+    def find(self, x):
+        if self.par[x] < 0:
+            return x
+        else:
+            self.par[x] = self.find(self.par[x])
+            return self.par[x]
+ 
+    # 併合
+    def union(self, x, y):
+        x = self.find(x)
+        y = self.find(y)
+        if not x==y: # 根が同じでない場合のみ併合する
+            if self.rank[x] < self.rank[y]:
+                self.par[y] += self.par[x] # 要素数を併合
+                self.par[x] = y # 根を付け替えている
+            else:
+                self.par[x] += self.par[y]
+                self.par[y] = x
+                if self.rank[x] == self.rank[y]:
+                    self.rank[x] += 1
+        
+    # 同じ集合に属するか判定
+    def same_check(self, x, y):
+        return self.find(x) == self.find(y) 
+ 
+def main():
+    import sys
+    input = sys.stdin.readline
+    
+    N,M,Q = map(int,input().split())
+    KI = UnionFind(N-1)
+    CC = []
+    for i in range(Q):
+        A,B,C = map(int,input().split())
+        if C == 0:
+            KI.union(A,B)
+        else:
+            CC.append([A,B])
+    
+    flag = 0
+    
+    oya = {}
+    for i in range(N):
+        p = KI.find(i)
+        oya[p]=1
+    PPP = len(oya)
+    
+    for i in CC:
+        A,B = i
+        if KI.same_check(A,B):
+            flag = 1
+            break
+        elif PPP<=2:
+            flag = 1
+            break
+    if N-1+(PPP-2)*(PPP-1)//2 < M:
+        flag = 1
+            
+    if flag == 0:
+        print("Yes")
+    else:
+        print("No")
+    
+    
+    
+    
+main()

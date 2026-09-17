@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <map>
+using namespace std;
+
+int main(){
+    int N;
+    cin >> N;
+    map<long, int> nums_count;
+    long nums[N];
+    for(int i = 0; i < N; i++){
+        cin >> nums[i];
+        nums_count[nums[i]]++;
+    }
+    if(nums_count[-1] + nums_count[-2] <= 1){
+        cout << nums_count[2] << endl;
+        for(int i = 0; i < N; i++){
+            if(nums[i] == 2){
+                cout << i + 1 << endl;
+            }
+        }
+    }else{
+        vector<int> choose_num;
+        long ans = 1;
+        for(int i = 0; i < N; i++){
+            if(nums[i] == 2 || nums[i] == -2){
+                choose_num.push_back(i);
+                ans *= nums[i];
+            }
+        }
+        if(ans < 0){
+            for(int i = 0; i < N; i++){
+                if(nums[i] == -1){
+                    choose_num.push_back(i);
+                    ans *= -1;
+                    break;
+                }
+            }
+        }
+        sort(choose_num.begin(), choose_num.end());
+        cout << choose_num.size() << endl;
+        for(int i = 0; i < choose_num.size(); i++){
+            cout << choose_num[i] + 1 << endl;
+        }
+    }
+}
+

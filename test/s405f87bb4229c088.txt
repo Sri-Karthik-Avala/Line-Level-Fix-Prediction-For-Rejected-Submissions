@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int A, B, C, D, P, X, Y, Z;
+  cin >> A >> B >> C >> D >> P;
+
+	X = A*P;
+	  if(P<=C){
+	Y = B;
+	}
+	  else{
+	Y = B + D*P;
+	}
+
+	if(X>=Y){
+	Z = Y;
+	}
+
+	else{
+	Z = X;
+	}
+
+ cout << Z << endl;
+
+return 0;
+}

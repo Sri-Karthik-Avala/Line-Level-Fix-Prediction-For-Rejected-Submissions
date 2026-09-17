@@ -1,0 +1,86 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+#define equals(a, b) (fabs((a)-(b)) < EPS)
+const double EPS = (1e-10);
+
+class Point {
+public:
+    double x, y;
+
+    Point(double x = 0, double y = 0): x(x), y(y) {}
+
+    Point operator + (Point p) {
+        return Point(x+p.x, y+p.y);
+    }
+    Point operator - (Point p) {
+        return Point(x-p.x, y-p.y);
+    }
+    Point operator * (double a) {
+        return Point(x*a, y*a);
+    }
+    Point operator / (double a) {
+        return Point(x/a, y/a);
+    }
+
+    double abs() {
+        return sqrt(norm());
+    }
+    double norm() {
+        return x*x + y*y;
+    }
+
+    bool operator < (const Point &p) const {
+        return x != p.x ? x < p.x : y < p.y;
+    }
+
+    bool operator == (const Point &p) const {
+        return fabs(x-p.x) < EPS && fabs(y-p.y) < EPS;
+    }
+};
+
+typedef Point Vector;
+// 内積
+double dot(Vector a, Vector b) {
+    return a.x*b.x + a.y*b.y;
+}
+// 外積
+double cross(Vector a, Vector b) {
+    return a.x*b.y - a.y*b.x;
+}
+
+typedef vector<Point> Polygon;  // 多角形
+
+int contains(Polygon g, Point p) {
+    int n = g.size();
+    bool x = false;
+    for (int i = 0; i < n; i++) {
+        Point a = g[i] - p, b = g[(i+1)%n] - p;
+        if (abs(cross(a, b)) < EPS && dot(a, b) < EPS) return 1;
+        if (a.y > b.y) swap(a, b);
+        if (a.y < p.y+EPS && p.y+EPS < b.y && cross(a, b) > EPS) x = !x;
+    }
+    return (x ? 2 : 0);
+}
+
+int main(void) {
+    int n; cin >> n;
+    int x, y;
+
+    Polygon g;
+    for (int i = 0; i < n; i++) {
+        cin >> x >> y;
+        g.push_back(Point(x, y));
+    }
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> x >> y;
+        cout << contains(g, Point(x, y)) << endl;
+    }
+
+    return 0;
+}

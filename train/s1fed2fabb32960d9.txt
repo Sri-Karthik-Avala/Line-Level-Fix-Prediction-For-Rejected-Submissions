@@ -1,0 +1,29 @@
+//Submitted by Amol
+
+#include<bits/stdc++.h>
+typedef long long int lld;
+
+#define pb                    push_back
+#define gspeed                ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
+#define test                  int t; cin >>t; while(t--)
+#define yy                    cout <<"YES" <<endl
+#define nn                    cout <<"NO" <<endl
+#define endl                  "\n"
+#define lcm(a,b)              (a*b)/(__gcd(a,b))
+
+using namespace std;
+
+int main() {gspeed;
+//	{
+        string s;
+            cin >> s;
+        int n = s.size();
+            s.erase(n-7);
+            cout << s << endl;
+	
+		return 0;
+	}
+
+
+
+ 

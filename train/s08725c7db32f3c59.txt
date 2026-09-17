@@ -1,0 +1,45 @@
+import sys
+def input(): return sys.stdin.readline().strip()
+def mapint(): return map(int, input().split())
+sys.setrecursionlimit(10**9)
+
+N, M, S = mapint()
+S = min(S, N*50)
+query = [[[] for _ in range(N*50+1)] for _ in range(N)]
+for _ in range(M):
+    u, v, a, b = mapint()
+    for coin in range(a, N*50+1):
+        query[u-1][coin].append((v-1, a, b))
+        query[v-1][coin].append((u-1, a, b))
+for i in range(N):
+    c, d = mapint()
+    for coin in range(N*50+1):
+        query[i][coin].append((i, -c, d))
+
+inf = 10**18
+dp = [[inf]*(N*50+1) for _ in range(N)]
+dp[0][0] = 0
+
+import heapq
+queue = [(0, 0, S)]
+checked = [0]*N
+cnt = 0
+
+while queue:
+    t, now, coin = heapq.heappop(queue)
+    if cnt==N:
+        break
+    if not checked[now]:
+        checked[now] = 1
+        cnt += 1
+    qlis = query[now][coin]
+    dp[now][coin] = t
+    for nx, a, b in qlis:
+        if 0<=coin-a:
+            coin = min(coin, N*50+a)
+            if t+b<dp[nx][coin-a]:
+                heapq.heappush(queue, (t+b, nx, coin-a))
+
+for i in range(1, N):
+    print(min(dp[i]))
+        

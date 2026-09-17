@@ -1,0 +1,47 @@
+Power 
+ 
+
+ 
+For given integers m and n , compute m n (mod 1,000,000,007). Here, A (mod M ) is the remainder when A is divided by M .
+ 
+
+ Input 
+
+ 
+ m n 
+ 
+
+ 
+Two integers m and n are given in a line.
+ 
+
+ Output 
+
+ 
+Print m n (mod 1,000,000,007) in a line.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; m &le; 100 
+ 1 &le; n &le; 10 9 
+ 
+
+ Sample Input 1 
+ 
+2 3
+ 
+ Sample Output 1 
+ 
+8
+ 
+ 
+
+ Sample Input 2 
+ 
+5 8
+ 
+ Sample Output 2 
+ 
+390625

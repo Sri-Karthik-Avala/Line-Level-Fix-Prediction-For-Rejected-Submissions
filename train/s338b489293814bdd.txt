@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+#define fi first
+#define se second
+#define pb push_back
+#define mp make_pair
+#define SZ(x) ((int)x.size())
+#define ALL(x) x.begin(),x.end()
+#define L(i,u) for (register int i=head[u]; i; i=nxt[i])
+#define rep(i,a,b) for (register int i=(a); i<=(b); i++)
+#define per(i,a,b) for (register int i=(a); i>=(b); i--)
+using namespace std;
+typedef long double ld;
+typedef long long ll;
+typedef unsigned int ui;
+typedef pair<int,int> Pii;
+typedef vector<int> Vi;
+template<class T> inline void read(T &x){
+	x=0; char c=getchar(); int f=1;
+	while (!isdigit(c)) {if (c=='-') f=-1; c=getchar();}
+	while (isdigit(c)) {x=x*10+c-'0'; c=getchar();} x*=f;
+}
+template<class T> T gcd(T a, T b){return !b?a:gcd(b,a%b);}
+template<class T> inline void umin(T &x, T y){x=x<y?x:y;}
+template<class T> inline void umax(T &x, T y){x=x>y?x:y;}
+inline ui R() {
+	static ui seed=416;
+	return seed^=seed>>5,seed^=seed<<17,seed^=seed>>13;
+}
+const int N = 1e5+11;
+int n,v[N];
+struct line{int a,b,c;}s[N];
+bool cmp(const line&x,const line&y){
+	if(1ll*x.a*y.b!=1ll*x.b*y.a)return 1.0*x.a/x.b<1.0*y.a/y.b;
+	return 1.0*x.c/x.b<1.0*y.c/y.b;
+}
+pair<double,int>f[N];
+int qry(int p){int r=0;while(p)r+=v[p],p-=p&-p;return r;}
+void mdy(int p){while(p<=n)v[p]++,p+=p&-p;}
+double solve(){
+	sort(s+1,s+n+1,cmp);
+	double l=-1e8,r=1e8;
+	rep(t,1,85){
+		double mid=(l+r)/2;
+		rep(i,1,n)f[i]=mp((s[i].c-mid*s[i].a)/s[i].b,i);
+		sort(f+1,f+n+1);
+		rep(i,1,n)v[i]=0;ll res=0;
+		rep(i,1,n)res+=i-1-qry(f[i].se),mdy(f[i].se);
+		if(res*2<n*(n-1ll)/2)l=mid;else r=mid;
+	}
+	return l;
+}
+int main() {
+	read(n);
+	rep(i,1,n)read(s[i].a),read(s[i].b),read(s[i].c);
+	printf("%.11lf ",solve());
+	rep(i,1,n)swap(s[i].a,s[i].b);
+	printf("%.11lf\n",solve());
+	return 0;
+}

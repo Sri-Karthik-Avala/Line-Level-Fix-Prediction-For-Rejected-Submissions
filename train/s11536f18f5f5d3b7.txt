@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<set>
+#include<utility>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdio>
+#include<sstream>
+#define loop(i,a,b) for(int i=a;i<b;i++) 
+#define rep(i,a) loop(i,0,a)
+#define pb push_back
+#define mp make_pair
+#define all(in) in.begin(),in.end()
+const double PI=acos(-1);
+const double EPS=1e-10;
+const int inf=1e9;
+using namespace std;
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef pair<int,int> pii;
+int main(){
+	int a,b,c,d,e,f;
+	while(cin>>a>>b>>c>>d>>e>>f,a+b+c+d+e+f){
+		vi in(3);
+		vector<pii>tmp(3);
+		in[0]=a+d;in[1]=b+e;in[2]=c+f;
+		int out=0;
+		rep(i,3){
+			out+=in[i]/3;
+			in[i]%=3;
+			tmp[i]=pii(in[i]%3,in[i]);
+		}
+		sort(all(tmp));
+		if(tmp[0].first>0)out+=tmp[0].first;
+		else if(tmp[1].first==2&&tmp[0].second>2)out++;
+		cout<<out<<endl;
+	}
+}
+ 

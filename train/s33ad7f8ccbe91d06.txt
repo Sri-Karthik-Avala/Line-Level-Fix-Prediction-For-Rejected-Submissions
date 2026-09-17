@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#define rep(i,n) for(int i=0;i<n;i++)
+using namespace std;
+string expr;
+int n,sweet[4],s,ans;
+int eval(int b,int e){
+	if(b+1==e)return sweet[expr[b]-'1'];
+	int l,o,r,d;
+	for(o=b,d=0;o<e;o++){
+		char c=expr[o];
+		if(c=='(')d++;
+		if(c==')')d--;
+		if(d==0&&(c=='&'||c=='|'||c=='^'))break;
+	}
+	if(o==e&&expr[b]=='(')return eval(b+1,e-1);
+	l=eval(b,o),r=eval(o+1,e);char c=expr[o];
+	return c!='&'?c=='^'?l^r:l|r:l&r;
+}
+void op(int c){
+	for(;c<s;c++)if(expr[c]==' ')break;
+	if(c<s)rep(i,3){
+		expr[c]="&|^"[i];op(c+1);expr[c]=' ';
+	}else if(eval(0,s)==15)ans++;
+}
+int main(){
+	while(getline(cin,expr),expr!="END"){
+		s=expr.size(),ans=0;cin>>n;
+		rep(i,n){
+			int t;sweet[i]=0;
+			rep(j,4)cin>>t,sweet[i]<<=1,sweet[i]+=t;
+		}
+		op(0);
+		cout<<ans<<endl;
+		cin.ignore();
+	}
+	return 0;
+}

@@ -1,0 +1,109 @@
+#include <iostream>
+#include <cstdio>
+
+
+inline int read() {
+	int x = 0, f = 1;
+	char ch = getchar();
+	while (ch < '0' || ch > '9') {
+		if (ch == '-') f = -1;
+		ch = getchar();
+	}
+	while (ch >= '0' && ch <= '9') {
+		x = x * 10 + ch - '0';
+		ch = getchar();
+	}
+	return x * f;
+}
+const int MAXN = 100007;
+
+struct Edge {
+	int to, nextEdge;
+} e[MAXN << 4];
+int cntEdge, head[MAXN << 1];
+inline void addEdge(int u, int v) {
+	++cntEdge;
+	e[cntEdge].to = v, e[cntEdge].nextEdge = head[u], head[u] = cntEdge;
+	return;
+}
+
+bool tag[MAXN << 1];
+void predfs(int u) {
+	tag[u] = 1;
+	for (int it = head[u]; it != 0; it = e[it].nextEdge) {
+		predfs(e[it].to);
+		tag[u] ^= 1;
+	}
+	return;
+}
+
+int n;
+int val[MAXN];
+bool vis[MAXN << 4];
+void dfs(int u) {
+	for (int &it = head[u]; it != 0; it = e[it].nextEdge) {
+		if (vis[it]) continue;
+		vis[it] = vis[it ^ 1] = 1;
+		if (u <= n && e[it].to > n) val[u] = 1;
+		else if (u > n && e[it].to <= n) val[u - n] = -1;
+		dfs(e[it].to);
+	}
+	return;
+}
+
+
+int fa[MAXN << 1];
+int main() {
+	n = read();
+	int root1, root2;
+	for (int i = 1; i <= n; ++i) {
+		fa[i] = read();
+		if (fa[i] == -1) {
+			root1 = i;
+			continue;
+		}
+		addEdge(fa[i], i);
+	}
+	for (int i = 1; i <= n; ++i) {
+		fa[i + n] = read();
+		if (fa[i + n] == -1) {
+			root2 = n + i;
+			continue;
+		}
+		addEdge(fa[i + n] + n, i + n);
+	}
+	predfs(root1);
+	predfs(root2);
+	for (int i = 1; i <= n; ++i) {
+		if (tag[i] != tag[i + n]) {	
+			puts("IMPOSSIBLE");
+			return 0 ;
+		}
+	}
+	
+	cntEdge = 1;
+	for (int i = 1; i  <= 2 * n; ++i) head[i] = 0;
+	for (int i = 1; i <= n; ++i) {
+		if (tag[i]) {
+			addEdge(i, i + n);
+			addEdge(i + n, i);
+		}
+		if (fa[i] != -1) {
+			addEdge(i, fa[i]);
+			addEdge(fa[i], i);
+		}
+		if (fa[i + n] != -1) {
+			addEdge(fa[i + n] + n, i + n);
+			addEdge(i + n, fa[i + n] + n);
+		}
+	}
+	int s = 2 * n + 1;
+	addEdge(s, root1);
+	addEdge(root1, s);
+	addEdge(s, root2);
+	addEdge(root2, s);
+	dfs(s);
+	puts("POSSIBLE");
+	for (int i = 1; i <= n; ++i) printf("%d ", val[i]);
+	return 0;
+}

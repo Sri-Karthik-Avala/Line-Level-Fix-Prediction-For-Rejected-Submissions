@@ -1,0 +1,64 @@
+Problem D: Lowest Pyramid 
+
+ 
+You are constructing a triangular pyramid with a sheet of craft paper with grid lines. Its base
+and sides are all of triangular shape. You draw the base triangle and the three sides connected
+to the base on the paper, cut along the outer six edges, fold the edges of the base, and assemble
+them up as a pyramid.
+ 
+ 
+You are given the coordinates of the base's three vertices, and are to determine the coordinates
+of the other three. All the vertices must have integral X- and Y-coordinate values between -100 and +100 inclusive. Your goal is to minimize the height of the pyramid satisfying these
+conditions. Figure 3 shows some examples.
+ 
+
+ 
+ 
+ 
+Figure 3: Some craft paper drawings and side views of the assembled pyramids
+ 
+ 
+
+ Input 
+
+ 
+The input consists of multiple datasets, each in the following format.
+ 
+
+
+ 
+ X 0 Y 0 X 1 Y 1 X 2 Y 2 
+ 
+
+ 
+They are all integral numbers between -100 and +100 inclusive. ( X 0 , Y 0 ), ( X 1 , Y 1 ), ( X 2 , Y 2 ) are the coordinates of three vertices of the triangular base in counterclockwise order.
+ 
+
+ 
+The end of the input is indicated by a line containing six zeros separated by a single space.
+ 
+
+ Output 
+
+ 
+For each dataset, answer a single number in a separate line. If you can choose three vertices ( X a , Y a ), ( X b , Y b ) and ( X c , Y c ) whose coordinates are all integral values between -100 and +100 inclusive, and triangles ( X 0 , Y 0 )-( X 1 , Y 1 )-( X a , Y a ), ( X 1 , Y 1 )-( X 2 , Y 2 )-( X b , Y b ), ( X 2 , Y 2 )-( X 0 , Y 0 )-( X c , Y c ) and ( X 0 , Y 0 )-( X 1 , Y 1 )-( X 2 , Y 2 ) do not overlap each other (in the XY-plane), and can be assembled as a triangular pyramid of positive (non-zero) height, output the minimum height among such pyramids. Otherwise, output -1.
+ 
+ 
+You may assume that the height is, if positive (non-zero), not less than 0.00001. The output should not contain an error greater than 0.00001.
+ 
+
+ Sample Input 
+ 
+0 0 1 0 0 1
+0 0 5 0 2 5
+-100 -100 100 -100 0 100
+-72 -72 72 -72 0 72
+0 0 0 0 0 0
+ 
+
+ Output for the Sample Input 
+ 
+2
+1.49666
+-1
+8.52936

@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+#define INF 1e9
+using namespace std;
+const int MAX_N = 1<<18;
+struct po{int l,r;};
+int n;
+po dat[2*MAX_N-1];
+
+void init(int n_){
+  n=1;
+  while(n<n_)n*=2;
+  for(int i=0;i<2*n-1;i++)dat[i]=(po){0,0};
+}
+
+void compute(int k,po t){
+  if(t.r==0)return;
+  if(dat[k].r==0) dat[k]=t;
+  else if(dat[k].r==t.l-1)dat[k].r=t.r;
+  else dat[k]=(po){INF,INF};
+}
+
+void query(int a,int b,int x,int k=0,int l=0,int r=n){
+  if(r<=a||b<=l)return ;
+  if(a<=l&&r<=b){
+    compute(k,(po){x,x});
+    return ;
+  }
+  
+  int left=k*2+1,right=k*2+2;
+  compute(left,dat[k]);
+  compute(right,dat[k]);
+  dat[k]=(po){0,0};
+
+  query(a,b,x,left,l,(l+r)/2);
+  query(a,b,x,right,(l+r)/2,r);
+}
+
+int main(){
+  int N,k;
+  cin>>n>>k;
+  N=n;
+  init(n);
+
+  int q;
+  cin>>q;
+  while(q--){
+    int l,r,x;
+    cin>>l>>r>>x;
+    query(l-1,r,x);
+  }
+  
+  int ans=0;
+  for(int i=0;i<N;i++){
+    query(i,i+1,k+1);
+    if(dat[i+n-1].r==k+1)ans++;
+  }
+  cout <<ans<<endl;
+  return 0;
+}

@@ -1,0 +1,116 @@
+class Node:
+    def __init__(self, key, pri):
+        self.key = key
+        self.pri = pri
+        self.left  = None
+        self.right = None
+
+
+def rRotate(t):
+    s       = t.left
+    t.left  = s.right
+    s.right = t
+
+    return s
+
+
+def lRotate(t):
+    s       = t.right
+    t.right = s.left
+    s.left  = t
+
+    return s
+
+
+def insert(t, key, pri):
+    if t == None: return Node(key, pri)
+
+    if key == t.key: return t
+
+    if key < t.key:
+        t.left = insert(t.left , key, pri)
+        if t.pri < t.left.pri : t = rRotate(t)
+
+    else:
+        t.right = insert(t.right, key, pri)
+        if t.pri < t.right.pri: t = lRotate(t)
+
+    return t
+
+
+def delete(t, key):
+    if   t == None:
+        return None
+    if   key < t.key:
+        t.left  = delete(t.left , key)
+    elif key > t.key:
+        t.right = delete(t.right, key)
+    else:
+        return _delete(t, key)
+    return t
+
+
+def _delete(t, key):
+    if t.left == None and t.right == None:
+        return None
+    elif t.left  == None:
+        t = lRotate(t)
+    elif t.right == None:
+        t = rRotate(t)
+    else:
+        if t.left.pri > t.right.pri:
+            t = rRotate(t)
+        else:
+            t = lRotate(t)
+    return delete(t, key)
+
+
+def find(t, key):
+    if(t == None): return False
+    if(t.key == key ): return True
+
+    return any([find(t.left, key), find(t.right, key)])
+
+
+def preorder(t):
+    if(t == None): return
+
+    print('', t.key, end = '')
+    preorder(t.left )
+    preorder(t.right)
+
+
+def inorder(t):
+    if(t == None): return
+
+    inorder(t.left )
+    print('', t.key, end='')
+    inorder(t.right)
+
+
+if __name__ == '__main__':
+    n = int(input())
+    top = None
+
+    for _ in range(n):
+        strs = input().split()
+
+        op  = strs[0]
+        if op != 'print':
+            key = int(strs[1])
+            if op == 'insert':
+                pri = int(strs[2])
+
+
+
+        if op == 'insert': top = insert(top, key, pri)
+        if op == 'delete': top = delete(top, key)
+        if op == 'find'  :
+            if find(top, key): print('yes')
+            else           : print('no' )
+        if op == 'print' :
+            inorder(top)
+            print()
+            preorder(top)
+            print()
+

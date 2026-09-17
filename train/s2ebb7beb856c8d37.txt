@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+struct list {
+	int data;
+	struct list* next;
+};
+
+list* make_list(int n, list* p) {
+	list* z = (list*)malloc(sizeof(list));
+	z->data = n;
+	z->next = p;
+	return z;
+}
+
+int main() {
+	int n, k, m;
+	while (cin >> n >> k >> m) {
+		if (n == 0 && k == 0 && m == 0) {
+			break;
+		}
+		list* z = make_list(n, NULL);
+		list** p = &z;
+		for (int i = n-1; i >= 1; i--) {
+			z = make_list(i, z);
+		}
+		while ((*p)->next != NULL) {
+			p = &((*p)->next);
+		}
+		if (m != 1) {
+			(*p)->next = z;
+		} else {
+			(*p)->next = z->next;
+			z = z->next;
+		}
+		p = &z;
+		if (m != 1) {
+			for (int i = 0; i < m-2; i++) {
+				p = &((*p)->next);
+			}
+			(*p)->next = ((*p)->next)->next;
+		}
+		while (((*p)->next)->data != (*p)->data) {
+			for (int i = 0; i < k-1; i++) {
+				p = &((*p)->next);
+			}
+			(*p)->next = ((*p)->next)->next;
+		}
+		cout << (*p)->data << endl;
+	}
+	return 0;
+}

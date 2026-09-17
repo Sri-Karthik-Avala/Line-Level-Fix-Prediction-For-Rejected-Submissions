@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+bool prime[10500];
+// bool used[(1<<15) + 50][(1<<15) + 50];
+
+void mp(void)
+{
+	fill(prime, prime + 10500, true);
+	prime[0] = prime[1] = false;
+	for (int i = 2; i < 10500; i++){
+		if (prime[i]){
+			for (int j = i * 2; j < 10500; j += i){
+				prime[j] = false;
+			}
+		}
+	}
+
+	return;
+}
+
+int main(void)
+{
+	int n;
+
+	mp();
+	while (cin >> n, n){
+		int ret = 0;
+
+		for (int i = 1; i <= n; i++){
+			if (prime[i] && prime[n - i + 1]){
+				// cout << i << " " << n - i + 1 << endl;
+				ret++;
+			}
+		}
+		cout << ret << endl;
+	}
+
+	return 0;
+}

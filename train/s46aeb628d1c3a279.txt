@@ -1,0 +1,79 @@
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+int main(){
+	int n, p1, p2;
+	while(scanf("%d%d%d", &n, &p1, &p2), n || p1 || p2){
+		vector<vector<int> > G(p1 + p2 + 1);
+		for(int i = 0; i < n; ++i){
+			int x, y;
+			char c;
+			scanf("%d%d %c%*s", &x, &y, &c);
+			G[x].push_back(y << 1 | (c != 'y'));
+			G[y].push_back(x << 1 | (c != 'y'));
+		}
+
+		queue<int> q;
+		vector<char> vis(p1 + p2 + 1);
+		vector<vector<int> > c[2];
+		for(int i = 1; i <= p1 + p2; ++i){
+			if(!vis[i]){
+				c[0].push_back(vector<int>());
+				c[1].push_back(vector<int>());
+				q.push(i << 1);
+				vis[i] = 1;
+				while(!q.empty()){
+					int u = q.front() >> 1;
+					int a = q.front() & 1;
+					q.pop();
+					c[a].back().push_back(u);
+					for(size_t j = 0; j < G[u].size(); ++j){
+						if(!vis[G[u][j] >> 1]){
+							vis[G[u][j] >> 1] = 1;
+							q.push(G[u][j] ^ a);
+						}
+					}
+				}
+			}
+		}
+
+		vector<vector<int> > dp(c[0].size() + 1, vector<int>(p1 + 1));
+		vector<vector<int> > from(c[0].size() + 1, vector<int>(p1 + 1));
+		dp[0][0] = 1;
+		for(size_t i = 0; i < c[0].size(); ++i){
+			for(int j = p1 + 1; j >= 0; --j){
+				for(int k = 0; k <= 1; ++k){
+					int t = j - (int)c[k][i].size();
+					if(t >= 0 && dp[i][t]){
+						dp[i + 1][j] += dp[i][t];
+						from[i + 1][j] = k;
+					}
+				}
+				if(dp[i + 1][j] > 1){
+					dp[i + 1][j] = 2;
+				}
+			}
+		}
+
+		if(dp.back()[p1] != 1){
+			puts("no");
+		}
+		else{
+			vector<int> ans;
+			int s = p1;
+			for(int i = c[0].size(); i > 0; --i){
+				vector<int> &t = c[from[i][s]][i - 1];
+				ans.insert(ans.end(), t.begin(), t.end());
+				s -= t.size();
+			}
+			sort(ans.begin(), ans.end());
+			for(size_t i = 0; i < ans.size(); ++i){
+				printf("%d\n", ans[i]);
+			}
+			puts("end");
+		}
+	}
+}

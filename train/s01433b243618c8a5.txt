@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+#define rep(i,j) REP((i), 0, (j))
+#define REP(i,j,k) for(int i=(j);(i)<(k);++i)
+#define BW(a,x,b) ((a)<=(x)&&(x)<=(b))
+#define ALL(v) (v).begin(), (v).end()
+#define LENGTHOF(x) (sizeof(x) / sizeof(*(x)))
+#define AFILL(a, b) fill((int*)a, (int*)(a + LENGTHOF(a)), b)
+#define MP make_pair
+#define PB push_back
+#define F first
+#define S second
+#define INF 1 << 30
+#define EPS 1e-10
+
+typedef pair<int, int> pi;
+typedef pair<int, pi> pii;
+typedef vector<int> vi;
+typedef queue<int> qi;
+typedef long long ll;
+
+int M, N;
+int d[256][256];
+int op[256];
+
+int main(){
+  while(scanf("%d", &M) && M){
+    scanf("%d", &N);
+    memset(d, 0, sizeof(d));
+    memset(op, 0, sizeof(op));
+    REP(i, 1, N+1) scanf("%d", op+i);
+
+    rep(i, N+1) REP(j, 1, M+1){
+      int next = i + j;
+      if(op[next] == 0){
+	d[i][next] = 1;
+      }else{
+	d[i][max(0, min(N+1, next+op[next]))] = 1;
+      }
+    }
+
+    rep(k, N+2) rep(i, N+2) rep(j, N+2){
+      if(d[i][k] && d[k][j]) d[i][j] = 1;
+    }
+
+    /*    rep(i, N+2){
+      rep(j, N+2) printf("%d ", d[i][j]); puts("");
+      }*/
+
+    int p;
+    for(p = 0; p < N+1; p++) if(d[p][N+1] == 0){ puts("NG"); break;}
+    if(p == N+1) puts("OK");
+  }
+  return 0;
+}

@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define fr first
+#define sc second
+#define pb push_back
+
+typedef pair<int, int> Pii;
+
+int h, w, d, n;
+char mp[51][51];
+int r[11];
+int data[51][51] = {{0}};
+int sx, sy;
+int dx[4] = {0, 1, 0, -1}, dy[4] = {-1, 0, 1, 0};
+
+int bfs(int gy, int gx)
+{
+  bool used[51][51] = {{0}};
+  queue<Pii> q;
+  q.push(Pii(sy, sx));
+
+  while ( !q.empty() ) {
+    Pii p = q.front(); q.pop();
+    int y = p.fr, x = p.sc;
+
+    // cout << y << " " << x << endl;
+    
+    if ( y == gy && x == gx ) {
+      return true;
+    }
+
+    if ( used[y][x] ) continue;
+    used[y][x] = true;
+
+    for ( int i = 0; i < 4; i++ ) {
+      int ny = y + dy[i], nx = x + dx[i];
+      if ( nx < 0 || ny < 0 || nx >= w || ny >= h || mp[ny][nx] == '#' ) continue;
+      q.push(Pii(ny, nx));
+    }
+  }
+
+  return false;
+}
+
+int main()
+{
+  cin >> h >> w >> d >> n;
+
+  for ( int i = 0; i < h; i++ ) {
+    for ( int j = 0; j < w; j++ ) {
+      cin >> mp[i][j];
+      if ( mp[i][j] == 'D' ) {
+	sx = j;
+	sy = i;
+      }
+    }
+  }
+
+  for ( int i = 0; i < d; i++ ) cin >> r[i];
+  r[d] = 51;
+
+  for ( int k = 0; k < n; k++ ) {
+    int x, y, s;
+    cin >> x >> y >> s;
+    for ( int i = max(0, y - r[s]); i < min(h, y + r[s]); i++ ) {
+      for ( int j = max(0, x - r[s]); j < min(w, x + r[s]); j++ ) {
+	if ( s > 0 && (i >= y - r[s - 1] && j >= x - r[s - 1] && i <= y + r[s - 1] && j <= x + r[s - 1]) ) continue;
+	data[i][j]++;
+      }
+    }
+  }
+
+  /*for ( int i = 0; i < h; i++ ) {
+    for ( int j = 0; j < w; j++ ) {
+      cout << data[i][j];
+    }
+    cout << endl;
+    }*/
+
+  vector<Pii> gl;
+  for ( int i = 0; i < h; i++ ) {
+    for ( int j = 0; j < w; j++ ) {
+      if ( data[i][j] == n && mp[i][j] != '#' ) gl.pb(Pii(i, j));
+    }
+  }
+
+  if ( gl.size() == 0 ) {
+    cout << "Broken" << endl;
+    return 0;
+  }
+
+  //cout << gl.size() << endl;
+  int cnt = 0;
+  for ( int i = 0; i < gl.size(); i++ ) {
+    if ( bfs(gl[i].fr, gl[i].sc) ) cnt++;
+  }
+
+  if ( cnt == gl.size() ) cout << "Yes" << endl;
+  else if ( cnt == 0 ) cout << "No" << endl;
+  else cout << "Unknown" << endl;
+
+  return 0;  
+}

@@ -1,0 +1,3 @@
+n,T = map(int,raw_input().split())
+t = eval(raw_input().replace("^","**"))
+print t if t <= T else "TLE"

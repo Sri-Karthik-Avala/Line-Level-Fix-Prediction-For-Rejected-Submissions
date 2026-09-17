@@ -1,0 +1,39 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <string>
+
+using namespace std;
+using lint = long long;
+
+lint ten = 1;
+lint M;
+lint maxdiff = 0, ans = 0;
+
+void dfs(int N, int used, lint num) {
+    if (N == 0) {
+        lint diff = min(abs(num - M), ten - abs(num - M));
+        if (diff > maxdiff || (diff == maxdiff && num < ans)) {
+            ans = num;
+            maxdiff = diff;
+        }
+    } else {
+        for (int d = 0; d < 10; ++d) {
+            if ((used >> d) & 1) continue;
+            dfs(N - 1, used | (1 << d), num * 10 + d);
+        }
+    }
+}
+
+int main() {
+    string S;
+    cin >> S;
+    int N = S.size();
+    for (int i = 0; i < N; ++i) ten *= 10;
+    M = stoi(S);
+
+    dfs(N, 0, 0);
+    cout << right << setw(N) << setfill('0') << ans << endl;
+    return 0;
+}
+

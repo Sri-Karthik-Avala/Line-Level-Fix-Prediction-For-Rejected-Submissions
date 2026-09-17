@@ -1,0 +1,12 @@
+S=input();T=input()
+q=int(input())
+for i in range(q):
+    a,b,c,d=map(int,input().split())
+    sc=S[a-1:b].count("A")
+    sa=sc-(b-a+1-sc)
+    tc=T[c-1:d].count("A")
+    ta=tc-(d-c+1-tc)
+    if sa%3==ta%3:
+        print("YES")
+    else:
+        print("NO")

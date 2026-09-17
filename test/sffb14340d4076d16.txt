@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+
+char da[14][14];
+int an,sx,sy,gx,gy,x,y,z,m[14][14],a[36],c[14][14],mn[36],dx[4]={1,0,-1,0},dy[4]={0,-1,0,1};
+
+int mkda(int x1,int y1,int u,int g) {
+	int k,f;
+	da[y1][x1]='.'; m[y1][x1]=u; mn[u]++; f=0;
+	for (k=0;k<4;k++) {
+		 if (da[y1+dy[k]][x1+dx[k]]=='X') { f=1; mkda(x1+dx[k],y1+dy[k],u,g+1);}
+		}
+	if (f==0 && g==0) { da[y1][x1]='#'; mn[u]=0; return 1;}
+	return 0;	
+	}
+
+int dfs(int x1,int y1,int d) {
+	int i,j,x2,y2;
+	if ((x1==gx && y1==gy) || d>=an) { if (d<an) an=d; return 1;}
+	for (i=0;i<4;i++) {
+		x2=x1+dx[i]; y2=y1+dy[i];
+		 if (c[y2][x2]==0 && da[y2][x2]!='#') {
+				z=0;
+				if (m[y2][x2]>=0) if (a[m[y2][x2]]+1>mn[m[y2][x2]]/2) continue;
+				for (j=0;j<4 ;j++) z+=c[y2+dy[j]][x2+dx[j]];   
+					if (z<2) {
+					for (j=0;j<4;j++) {if (da[y2+dy[j]][x2+dx[j]]!='#' && m[y2+dy[j]][x2+dx[j]]<0 && c[y2+dy[j]][x2+dx[j]]==0)
+                       if (c[y2+dy[j]*2][x2+dx[j]*2]==1) z=2;}
+                    if (z<2) {    	
+					c[y2][x2]=1;
+					if (m[y2][x2]>=0) { a[m[y2][x2]]++; dfs(x2,y2,d+1); a[m[y2][x2]]--;} else dfs(x2,y2,d+1);
+					c[y2][x2]=0;
+				    }
+				    }
+			}
+		}
+		return 0;
+} 
+int main() {
+	int i,j,k,e;
+	char ch[14];
+	while(cin >> x >> y && x>0) {
+	for (i=0;i<36;i++) mn[i]=0;	
+	for (i=1;i<=y;i++) { cin >> ch;
+	     da[i][0]=da[i][x+1]='#'; for (j=0;j<x;j++) da[i][1+j]=ch[j]; 
+	     for (j=0;j<=x+1;j++) { m[i][j]=-1; da[0][j]=da[y+1][j]='#';
+	      if (da[i][j]=='S') {sx=j; sy=i;}
+	      if (da[i][j]=='G') {gx=j; gy=i;}
+	       }
+	   }
+	e=1; k=-1;
+	while(e>0) {e=0; for (i=1;i<=y;i++) for (j=1;j<=x;j++) {
+		if (da[i][j]=='X') { e=1; k++; k-=mkda(j,i,k,0);}}}
+	for (i=0;i<=y+1;i++) for (j=0;j<=x+1;j++) c[i][j]=0;
+	for (i=0;i<36;i++) a[i]=0;	
+	an=999; c[sy][sx]=1;
+	dfs(sx,sy,0);
+	cout << an << endl;
+	}  	 	
+	return 0;
+}

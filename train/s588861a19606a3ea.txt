@@ -1,0 +1,109 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const int N = 5e3+7, K = 18;
+
+struct Tree{
+    vector<int> adj[N];
+
+    int anc[N][K];
+    int level[N];
+    bool mark[N];
+    int dis[N];
+
+    void addEdge(int u, int v) {
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    void setup(int u, int par) {
+        level[u] = level[par]+1;
+        anc[u][0] = par;
+        for (int k=1; k<K; k++)     anc[u][k] = anc[anc[u][k-1]][k-1];
+
+        for (int v: adj[u]) {
+            if (v == par)   continue;
+            setup(v, u);
+        }
+    }
+
+    int lca(int u, int v) {
+        if (level[u] > level[v])    swap(u, v);
+        for (int k=K-1; k>=0; k--)
+            if (level[u] + (1<<k) <= level[v])  v = anc[v][k];
+
+        if (u == v) return u;
+        for (int k=K-1; k>=0; k--)
+            if (anc[u][k] != anc[v][k])
+                u = anc[u][k], v = anc[v][k];
+        return anc[u][0];
+    }
+
+    int getanc(int u, int d) {
+        for (int k=0; k<K; k++)
+            if (d & (1<<k))
+                u = anc[u][k];
+        return u;
+    }
+
+    int dist(int u, int v) {
+        int g = lca(u, v);
+        return level[u] + level[v] - 2*level[g];
+    }
+
+    int solve(int u, int par, int dep) {
+        if (dis[u] <= dep)  return 0;
+        if (mark[u])        return N;
+        int ans = dis[u];
+        for (int v: adj[u]) {
+            if (v == par)   continue;
+            ans = max(solve(v, u, dep+1), ans);
+        }
+        return ans;
+    }
+};
+
+
+///Given u, v, d per query find dth node (0 indexed) on path from u to v.
+///https://codeforces.com/gym/102694/problem/C
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n;
+    cin>>n;
+
+    int x, y;
+    cin>>x>>y;
+
+    Tree red, blue;
+
+    for (int i=1; i<n; i++) {
+        int u, v;
+        cin>>u>>v;
+        red.addEdge(u, v);
+    }
+
+    for (int i=1; i<n; i++) {
+        int u, v;
+        cin>>u>>v;
+        blue.addEdge(u, v);
+    }
+
+    red.setup(1, 0);
+    blue.setup(1, 0);
+
+    for (int i=1; i<=n; i++) {
+        bool found = false;
+        for (int v: red.adj[i]) {
+            if (blue.dist(i, v) >= 3)   found = true;
+        }
+        red.mark[i] = found;
+        red.dis[i] = blue.dist(y, i);
+    }
+    int ans = red.solve(x, 0, 0);
+    if (ans == N)   ans = -1;
+    else            ans *= 2;
+    cout<<ans<<endl;
+}

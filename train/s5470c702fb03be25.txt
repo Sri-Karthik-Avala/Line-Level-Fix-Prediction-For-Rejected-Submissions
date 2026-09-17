@@ -1,0 +1,43 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main()
+{
+  int n,w,d;
+  for(;cin>>n>>w>>d,w;)
+    {
+      vector<pair<int,int> > cake;
+      cake.push_back(make_pair(w,d));
+      for(int i=0;i<n;i++)
+	{
+	  int p,s;
+	  cin>>p>>s;
+	  p--;
+	  pair<int,int> tmp=cake[p];
+	  cake.erase(cake.begin()+p);
+	  int size=s%(tmp.first+tmp.second);
+	  if(size<tmp.first)
+	    {
+	      cake.push_back(make_pair(min(size,tmp.first-size),tmp.second));
+	      cake.push_back(make_pair(max(size,tmp.first-size),tmp.second));
+	    }
+	  else
+	    {
+	      cake.push_back(make_pair(tmp.first,min((size-tmp.first),tmp.second-(size-tmp.first))));
+	      cake.push_back(make_pair(tmp.first,max((size-tmp.first),tmp.second-(size-tmp.first))));
+	    }
+	}
+      sort(cake.begin(),cake.end());
+      for(int i=0;i<cake.size();i++)
+	{
+	  cout<<cake[i].first*cake[i].second;
+	  if(i==cake.size()-1)
+	    cout<<endl;
+	  else
+	    cout<<" ";
+	}
+
+    }
+
+}

@@ -1,0 +1,64 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define eps (1e-8)
+
+int N,M;
+double L;
+double P[100],T[100],V[100];
+double a[100][100],b[100][100];
+
+double mem[100][100];
+double ncr(int n,int r){
+  if(mem[n][r]!=-1.0)return mem[n][r];
+  r=min(r,n-r);
+  double res=1.0;
+  for(int i=0;i<r;i++){
+    res=res*(double)(n-i);
+    res=res/(double)(i+1);
+  }
+  return mem[n][r]=res;
+}
+
+double solve(int x){
+  double res=0;
+  for(int i=0;i<=M;i++){
+    double p=a[x][i];
+    double d=b[x][i];
+    for(int j=0;j<N;j++){
+      if(x==j)continue;
+      double sum=0;
+      for(int k=0;k<=M;k++){
+        if(b[j][k]<d+eps)continue;
+        sum+=a[j][k];
+      }
+      p*=sum;
+    }
+    res+=p;
+  }
+  return res;
+}
+
+int main(){
+  for(int i=0;i<100;i++)
+    for(int j=0;j<100;j++)
+      mem[i][j]=-1.0;
+  
+  cin>>N>>M>>L;
+  for(int i=0;i<N;i++){
+    cin>>P[i]>>T[i]>>V[i];
+    assert(V[i]>eps);
+
+    double p=P[i]/100.0;
+    double q=1.0-p;
+    for(int j=0;j<=M;j++){
+      a[i][j]=ncr(M,j)*pow(p,j)*pow(q,M-j);
+      b[i][j]=L/V[i]+T[i]*j;
+      //cout<<a[i][j]<<' '<<b[i][j]<<endl;
+    }
+    //cout<<endl;
+  }
+  for(int i=0;i<N;i++){
+    printf("%.10f\n",solve(i));
+  }
+  return 0;
+}

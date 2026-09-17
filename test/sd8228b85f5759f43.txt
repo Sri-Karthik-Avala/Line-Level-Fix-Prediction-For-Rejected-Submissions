@@ -1,0 +1,69 @@
+from collections import deque
+def main():
+    movey = (0, -1, 0, 1)
+    movex = (1, 0, -1, 0)
+    warpy = (-2, -2, -2, -2, -2, -1, -1, -1, -1,  0, 0,  1,  1, 1, 1, 2, 2, 2, 2, 2)
+    warpx = (-2, -1,  0,  1,  2, -2, -1,  1,  2, -2, 2, -2, -1, 1, 2, -2, -1, 0, 1, 2)
+
+    h, w = map(int, input().split())
+    ch, cw = map(int, input().split())
+    dh, dw = map(int, input().split())
+    ch += 1
+    cw += 1
+    dh += 1
+    dw += 1
+    dummy = tuple(['#'] * (w + 4))
+    maze = {e: [] for e in range(h + 4)}
+    maze[0] = dummy
+    maze[1] = dummy
+    for i in range(h):
+        row = ['#'] + ['#'] + list(input()) + ['#'] + ['#']
+        maze[i+2] = row
+    maze[h+2] = dummy
+    maze[h+3] = dummy
+    maze[ch][cw] = 0
+    maze[dh][dw] = 'g'
+
+    nodes = deque()
+    nodes.append((ch, cw))
+    res = []
+    while nodes:
+        (n_y, n_x) = nodes.popleft()
+        cur_masu = maze[n_y][n_x]
+        flag = False
+        for j1 in range(4):
+            ny = n_y + movey[j1]
+            nx = n_x + movex[j1]
+            next_masu = maze[ny][nx]
+            if next_masu == 'g':
+                res.append(cur_masu)
+            elif next_masu == '.':
+                maze[ny][nx] = cur_masu
+                nodes.appendleft((ny, nx))
+            elif next_masu == '#':
+                flag = True
+            elif next_masu > cur_masu:
+                maze[ny][nx] = cur_masu
+        if flag:
+            for j1 in range(20):
+                ny = n_y + warpy[j1]
+                nx = n_x + warpx[j1]
+                next_masu = maze[ny][nx]
+                if next_masu == 'g':
+                    res.append(cur_masu+1)
+                elif next_masu == '.':
+                    maze[ny][nx] = cur_masu + 1
+                    nodes.append((ny, nx))
+                elif next_masu == '#':
+                    pass
+                elif next_masu > cur_masu + 1:
+                    maze[ny][nx] =cur_masu + 1
+                    nodes.append((ny, nx))
+
+    if res:
+        print(min(res))
+    else:
+        print(-1)
+
+if __name__ == '__main__':
+    main()

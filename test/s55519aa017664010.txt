@@ -1,0 +1,70 @@
+#include <iostream>
+#include <math.h>
+#include <numeric>
+#include <vector>
+#include <map>
+#include <functional>
+#include <stdio.h>
+#include <array>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+#define all(v) v.begin(),v.end()
+
+struct Rule {
+	int num;
+	int l;
+	int r;
+};
+
+vector<Rule> Rules;
+int start;
+vector<int> Retu;
+
+bool dp(int kisoku,int l,int r) {
+	if (l == r) {
+		return Rules[kisoku].num == Retu[l];
+	}
+	else {
+		for (int i = l; i < r; ++i) {
+			if (dp(Rules[kisoku].l-1, l, i) && dp(Rules[kisoku].r-1, i + 1, r)) {
+				return true;
+			}
+			else {
+
+			}
+		}
+	}
+	return false;
+}
+int main() {
+
+	int N;
+	cin >> N;
+	rep(i, N) {
+		int x;
+		cin >> x;
+		Retu.push_back(x);
+	}
+	int M;
+	cin >> M;
+
+	rep(i, M) {
+		int kisoku,l,r;
+		cin >> kisoku >> l >> r;
+		Rules.push_back({ kisoku,l,r });
+	}
+	start = Rules[0].num;
+	if (dp(0, 0, N - 1)) {
+		cout << "Yes"<< endl;
+	}
+	else {
+		cout << "No" << endl;
+	}
+	
+
+	return  0;
+}

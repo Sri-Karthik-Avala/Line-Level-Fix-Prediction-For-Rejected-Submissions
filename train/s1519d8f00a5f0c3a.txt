@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+#define repi(i,x,n) for(int i = x; i < n; i++)
+#define rep(i,n) repi(i,0,n)
+using namespace std;
+using ll = long long;
+const int INF = 1<<30;
+const int MOD = 1e9 + 7;
+
+#define int long long
+
+#define MAX 5100
+
+#define x first
+#define a second
+
+signed main()
+{
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+    int N, L;
+    vector<pair<int,int>> t, z;
+    static int dp[MAX][MAX];
+    // vector<vector<int>> dp;
+    int ans = 0;
+
+    cin>>N>>L;
+    
+    t.resize(N+10);
+    //dp.resize(N+5,vector<int>(L+5,0));
+    
+    for(int i = 0; i < N; i++){
+        cin>>t[i].x;
+    }
+     for(int i = 0; i < N; i++){
+        cin>>t[i].a;
+    }
+
+     for(int i = N-1; i >= 0; i--){
+         z.push_back(t[i]);
+     }
+
+     for(int i = z[0].x; i < L; i += z[0].a){
+         dp[0][i] = 1;
+         // cout<<0<<" "<<i<<" "<<dp[0][i]<<endl;
+     }
+     
+     for(int i = 1; i < N; i++){
+         for(int j = L-i, sum = 0; j >= z[i].x; j--){
+             if((j-z[i].x)%z[i].a == 0){
+                 dp[i][j] = sum%MOD;
+                 //cout<<i<<" "<<j<<" "<<dp[i][j]<<endl;
+             }
+             sum += dp[i-1][j];
+             sum %= MOD;
+         }
+     }
+
+     for(int i = 0; i < L; i++){
+         ans += dp[N-1][i];
+         ans %= MOD;
+     }
+
+     cout<<ans<<endl;
+    
+    
+    return 0;
+}
+

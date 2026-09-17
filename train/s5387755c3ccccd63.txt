@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+#define owo(i,a, b) for(int i=(a); i<(b); ++i)
+#define uwu(i,a, b) for(int i=(a)-1; i>=(b); --i)
+#define senpai push_back
+#define ttgl pair<int, int>
+#define ayaya cout<<"ayaya~"<<endl
+ 
+using namespace std;
+using ll = long long;
+using ld = long double;
+const ll MOD = 1000000007;
+int gcd(int a,int b){return b?gcd(b,a%b):a;}
+ll binpow(ll a,ll b){ll res=1;while(b){if(b&1)res=(res*a)%MOD;a=(a*a)%MOD;b>>=1;}return res;}
+ll modInv(ll a){return binpow(a, MOD-2);}
+const double PI = acos(-1);
+const int INF = 0x3f3f3f3f;
+const int NINF = 0xc0c0c0c0;
+const ll INFLL = 0x3f3f3f3f3f3f3f3f;
+const ll NINFLL = 0xc0c0c0c0c0c0c0c0;
+string T;
+int zz;
+int oo;
+vector<ttgl> parts;
+int main()
+{   
+    //freopen("exercise.in", "r", stdin);
+    //freopen("exercise.out", "w", stdout);
+    mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+    cin.tie(0)->sync_with_stdio(0);
+    cin>>T;
+    int n = T.size();
+    owo(i, 0, n) {
+        if(T[i]=='0') {
+            if(!parts.empty()&&parts.back().first==0) {
+                parts.back().second++;
+            }else {
+                parts.senpai({0, 1});  
+            }
+            zz++;
+        }else {
+            if(!parts.empty()&&parts.back().first==1) {
+                parts.back().second++;
+            }else {
+                parts.senpai({1, 1});
+            }
+            oo++;
+        }
+    }
+    ll ans = 0;
+    uwu(i, oo+1, 1) {
+        ans+=(i+1)/2;
+    }
+    int currz = 0;
+    int pos = 1;
+    for(auto it = parts.begin(); it!=parts.end(); ++it) {
+        auto p = *it;
+        if(p.first==0) {
+            currz+=p.second;
+            pos+=p.second;
+        }else {
+            ans+=(p.second/2)*zz;
+            if(p.second&1) {
+                ans+=(zz-currz) + currz/2 + (pos&1);
+                pos++;
+            }
+        }
+    }
+    cout<<ans<<"\n";
+    return 0;
+}

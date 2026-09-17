@@ -1,0 +1,5 @@
+N = int(raw_input())
+s = 0
+for i in xrange(N):
+  s += int(raw_input())
+print s

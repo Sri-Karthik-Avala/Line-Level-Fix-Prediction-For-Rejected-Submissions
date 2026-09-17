@@ -1,0 +1,106 @@
+#include<bits/stdc++.h>
+#define For(i,x,y) for (register int i=(x);i<=(y);i++)
+#define FOR(i,x,y) for (register int i=(x);i<(y);i++)
+#define Dow(i,x,y) for (register int i=(x);i>=(y);i--)
+#define Debug(v) for (auto i:v) printf("%lld ",i);puts("")
+#define mp make_pair
+#define fi first
+#define se second
+#define pb push_back
+#define ep emplace_back
+#define siz(x) ((int)(x).size())
+#define all(x) (x).begin(),(x).end()
+#define fil(a,b) memset((a),(b),sizeof(a))
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int,int> pa;
+typedef pair<ll,ll> PA;
+typedef vector<int> poly;
+inline ll read(){
+    ll x=0,f=1;char c=getchar();
+    while ((c<'0'||c>'9')&&(c!='-')) c=getchar();
+    if (c=='-') f=-1,c=getchar();
+    while (c>='0'&&c<='9') x=x*10+c-'0',c=getchar();
+    return x*f;
+}
+
+const int N = 1010;
+const string ans3[3] = {"..a",
+						"..a",
+						"bb.",};
+const string ans5[5] = {"aabbc",
+						"bbd.c",
+						"ccdaa",
+						"..abc",
+						"..abc"};
+const string ans6[6] = {"aaba..",
+						"..babb",
+						"bacc..",
+						"ba..aa",
+						"..aabc",
+						"aa..bc",};
+const string ans7[7] = {"..a..ab",
+						"..a..ab",
+						"aa.aa.c",
+						"..a..ac",
+						"..a..ab",
+						"aa.aa.b",
+						"bbccbb."};
+const string ans8[8] = {"aa..bc..",
+						"..aabc..",
+						"..bcaa..",
+						"..bc..aa",
+						"aa....bc",
+						"..aa..bc",
+						"bc..aa..",
+						"bc....aa"};
+char ans[N][N];
+inline void solve(int x1,int y1,int n){
+	if (n==5){
+		FOR(i,0,n) FOR(j,0,n) ans[x1+i][y1+j]=ans5[i][j];
+		return;
+	}
+	if (n==6){
+		FOR(i,0,n) FOR(j,0,n) ans[x1+i][y1+j]=ans6[i][j];
+		return;
+	}
+	if (n==7){
+		FOR(i,0,n) FOR(j,0,n) ans[x1+i][y1+j]=ans7[i][j];
+		return;
+	}
+	if (n==8){
+		FOR(i,0,n) FOR(j,0,n) ans[x1+i][y1+j]=ans8[i][j];
+		return;
+	}
+	if (n==9){
+		FOR(i,0,n) FOR(j,0,n) ans[x1+i][y1+j]=ans3[i%3][j%3];
+		return;
+	}
+	int m=n>>1;
+	solve(x1,y1,m),solve(x1+m,y1+m,n-m);
+}
+
+int main(){
+	int n=read();
+	if (n==2) return puts("-1");
+	if (n==3){
+		puts("aa.");
+		puts("..a");
+		puts("..a");
+		return 0;
+	}
+	if (n==4){
+		puts("aacd");
+		puts("bbcd");
+		puts("dcaa");
+		puts("dcbb");
+		return 0;	
+	}
+	For(i,1,n) For(j,1,n) ans[i][j]='.';
+	solve(1,1,n);
+	FOR(i,1,n+1){
+		FOR(j,1,n+1) printf("%c",ans[i][j]);
+		puts("");
+	}
+}

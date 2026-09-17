@@ -1,0 +1,11 @@
+from collections import Counter
+order = Counter()
+N = int(input())
+for i in range(N):
+    A = input().split()
+    name,quantity = A[0],int(A[1])
+    order[name] += quantity
+po = sorted(order.items(),key=lambda x:len(x[0]))
+pu = sorted(po,key=lambda x:x[0])
+for j,k in pu:
+    print(j,k)

@@ -1,0 +1,19 @@
+isPrime = [True] * 10001
+sum = 0
+sumPrime = [sum]
+def calcPrime():
+    global sum
+    isPrime[0] = isPrime[1] = False
+    for i in range(len(isPrime)):
+        if(isPrime[i]):
+            sum += i
+            sumPrime.append(sum)
+            for j in range(2 * i, len(isPrime), i):
+                isPrime[j] = False
+                
+calcPrime()
+while(True):
+    n = input()
+    if(n == 0):
+        break
+    print(sumPrime[n])

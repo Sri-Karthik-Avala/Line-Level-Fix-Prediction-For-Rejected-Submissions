@@ -1,0 +1,77 @@
+Reverse Sort 
+ 1 &sim; NまでのN個の数字の順列A 1 , A 2 , ……, A N が与えられる。
+この順列に対して区間[i, j](1 &le; i &le; j &le; N)の数字の順序を逆順にする操作reverse(i, j)を行うことが出来る。
+例えば、[1, 2, 3, 4, 5]に対してreverse(2, 4)を適用すると[1, 4, 3, 2, 5]となる。
+最小で何回の操作を行えば順列を昇順にソートされた状態にすることが出来るか計算せよ。
+ 
+
+ Input 
+ 入力は以下の形式で与えられる。
+ 
+N A 1 A 2 …… A N 
+
+
+ Constraints 
+ Nは整数である
+ 2 &le; N &le; 10
+ 
+
+
+ Output 
+ 問題の解を1行に出力せよ。
+ 
+
+ Sample Input 1 
+
+ 5
+1 4 3 5 2
+ 
+
+ Output for the Sample Input 1 
+
+ 2
+ reverse(4,5):1 4 3 2 5
+ reverse(2,4):1 2 3 4 5
+ 
+
+ のようにすればよい。
+ 
+
+ Sample Input 2 
+
+ 5
+3 1 5 2 4
+ 
+ Output for the Sample Input 2 
+
+ 4
+ 例えば
+ reverse(1,2):1 3 5 2 4
+ reverse(3,5):1 3 4 2 5
+ reverse(2,4):1 2 4 3 5
+ reverse(3,4):1 2 3 4 5
+ 
+
+ のようにすればよい。
+ 
+
+ Sample Input 3 
+
+ 3
+1 2 3
+ 
+
+ Output for the Sample Input 3 
+
+ 0
+ 
+
+ Sample Input 4 
+
+ 10
+3 1 5 2 7 4 9 6 10 8
+ 
+
+ Output for the Sample Input 4 
+
+ 9

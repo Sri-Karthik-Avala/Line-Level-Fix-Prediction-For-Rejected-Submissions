@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+int main()
+{
+  int n; int t = 0;
+  while(cin >> n, n) {
+    t++;
+    double x[101], y[101], r[101];
+    vector<double> X, Y;
+    for(int i = 0; i < n; i++) {
+      cin >> x[i] >> y[i] >> r[i];
+      X.push_back(x[i]-r[i]); X.push_back(x[i]+r[i]);
+      Y.push_back(y[i]-r[i]); Y.push_back(y[i]+r[i]);
+    }
+    sort(X.begin(), X.end());
+    sort(Y.begin(), Y.end());
+    X.erase(unique(X.begin(), X.end()), X.end());
+    Y.erase(unique(Y.begin(), Y.end()), Y.end());    
+    vector<P> xx(n), yy(n);
+    for(int i = 0; i < n; i++) {
+      xx[i].first  = find(X.begin(), X.end(), x[i]-r[i]) - X.begin();
+      xx[i].second = find(X.begin(), X.end(), x[i]+r[i]) - X.begin();
+      yy[i].first  = find(Y.begin(), Y.end(), y[i]-r[i]) - Y.begin();
+      yy[i].second = find(Y.begin(), Y.end(), y[i]+r[i]) - Y.begin();
+    }
+    bool mas[202][202] = {{false}};
+    for(int i = 0; i < n; i++) {
+      for(int j = yy[i].first; j <= yy[i].second; j++) {
+	for(int k = xx[i].first; k <= xx[i].second; k++) mas[j][k] = true;
+      }
+    }
+    double ans = 0.0;
+    for(int i = 0; i < (int)Y.size()-1; i++) {
+      for(int j = 0; j < (int)X.size()-1; j++) {
+	if(mas[i][j]) ans += (X[j+1]-X[j])*(Y[i+1]-Y[i]);
+      }
+    }
+    printf("%d %.2f\n", t, ans);
+  }
+  return 0;
+}

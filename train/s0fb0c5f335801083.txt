@@ -1,0 +1,11 @@
+dp = [[0] * 1100 for u in xrange(10)]
+dp[0][0] = 1
+for i in xrange(101):
+    for ii in xrange(i,1000):
+        for iii in xrange(9,0,-1):
+            dp[iii][ii] += dp[iii-1][ii-i]
+while True:
+    n,s = map(int,raw_input().split())
+    if (n,s) == (0,0):
+        break
+    print dp[n][s]

@@ -1,0 +1,70 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <string>
+#include <cassert>
+#include <functional>
+
+using namespace std;
+typedef long long ll;
+
+
+#define SIZE 26
+#define INF 1000000000
+#define LLINF 1000000000000000000LL
+
+int calc(int m,int w){
+  int ans = 0;
+  int bm[12],bw[12];
+  int dp[13][1<<12] = {0};
+  
+  for(int i=0;i<m;i++){
+    scanf("%d",bm+i);
+  }
+  
+  for(int i=0;i<w;i++){
+    scanf("%d",bw+i);
+  }
+
+  for(int i=0;i<=w;i++){
+    for(int j=0;j<(1<<m);j++){
+      dp[i][j] = -INF;
+    }
+  }
+
+  dp[0][0] = 0;
+  
+  for(int i=0;i<w;i++){
+    for(int j=0;j<(1<<m);j++){
+      for(int k=0;k<m;k++){
+	if(j&(1<<k)) continue;
+	int d = abs(bw[i]-bm[k]);
+	int add = d * (d-30) * (d-30);
+	dp[i+1][j+(1<<k)] = max(dp[i+1][j|(1<<k)],dp[i][j] + add);
+	ans = max(ans,dp[i+1][j+(1<<k)]);
+      }
+    }
+  }
+
+  return ans;
+}
+
+int main(){
+  int m,w;
+    
+  while(1){
+    scanf("%d%d",&m,&w);
+    if(m==0) break;
+    
+    printf("%d\n",calc(m,w));
+  }
+  
+  return 0;
+}

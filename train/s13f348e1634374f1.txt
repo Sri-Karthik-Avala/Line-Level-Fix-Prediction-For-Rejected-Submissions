@@ -1,0 +1,111 @@
+#include<cstdlib>
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<vector>
+#include<queue>
+#include<set>
+#include<cstring>
+using namespace std;
+const int MAXN = (int) 105;
+const int INF = (int) 0x3f3f3f3f;
+typedef long long LL;
+
+int M,N,Z;
+int edgefrom[MAXN],edgeto[MAXN];
+vector<pair<int,int> > G[MAXN];
+
+struct Matrix{
+    int a[MAXN][MAXN];
+}a,mp;
+
+Matrix Matrix_Multiply(const Matrix& L, const Matrix& R,int siz){
+    Matrix ret;
+    memset(ret.a,0,sizeof(ret.a));
+    for(int i=1;i<=siz;i++){
+        for(int j=1;j<=siz;j++){
+            for(int k=1;k<=siz;k++){
+                ret.a[i][k] |= L.a[i][j]&R.a[j][k];
+            }
+        }
+    }
+    return ret;
+}
+
+void Power(int matrix_size,int X){
+    while(X){
+        if(X&1) a=Matrix_Multiply(a,mp,matrix_size);
+        mp=Matrix_Multiply(mp,mp,matrix_size);
+        X>>=1;
+    }
+}
+
+void work(){
+    while(~scanf("%d%d%d",&N,&M,&Z)){
+        if(N==0&&M==0&&Z==0) return;
+        int edgeid=0;
+        for(int i=1;i<=N;i++) G[i].clear();
+        for(int i=1;i<=M;i++){
+            int u,v; scanf("%d%d",&u,&v);
+            G[u].push_back(make_pair(v,++edgeid));
+            edgefrom[edgeid]=u;
+            edgeto[edgeid]=v;
+            G[v].push_back(make_pair(u,++edgeid));
+            edgefrom[edgeid]=v;
+            edgeto[edgeid]=u;
+        }
+        memset(a.a,0,sizeof(a.a));
+        memset(mp.a,0,sizeof(mp.a));
+        for(int i=1;i<=N;i++){
+            for(int j=0;j<G[i].size();j++){
+                int to=G[i][j].first;
+                int now_id=G[i][j].second;
+                for(int k=0;k<G[to].size();k++){
+                    int to_to=G[to][k].first;
+                    int next_id=G[to][k].second;
+                    if(to_to!=i){
+                        mp.a[now_id][next_id]=1;
+//                        printf("%d->%d->%d %d -> %d\n",i,to,to_to,now_id,next_id);
+                    }
+                }
+            }
+        }
+        for(int i=1;i<=edgeid;i++)if(edgefrom[i]==1)
+            for(int j=1;j<=edgeid;j++) a.a[j][i]=1;
+        Power(edgeid,Z-1);
+        int ok=0;
+        for(int i=1;i<=edgeid;i++){
+            for(int j=1;j<=edgeid;j++){
+                if(a.a[i][j]&&edgeto[j]==N) ok=1;
+            }
+        }
+        if(ok) printf("yes\n");
+        else printf("no\n");
+    }
+}
+
+int main(){
+    freopen("data.in","r",stdin);
+    work();
+    return 0;
+}
+
+
+
+/*
+8 8 6
+1 2
+2 3
+2 4
+3 5
+5 6
+6 7
+7 8
+4 8
+*/
+
+
+
+
+
+

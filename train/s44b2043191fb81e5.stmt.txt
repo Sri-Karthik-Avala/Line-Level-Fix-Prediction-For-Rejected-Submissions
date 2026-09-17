@@ -1,0 +1,81 @@
+Projection 
+ 
+
+ 
+For given three points p1, p2, p , find the projection point x of p onto p1p2 .
+ 
+
+ 
+ 
+ 
+
+ Input 
+
+
+ 
+ x p1 y p1 x p2 y p2 
+ q 
+ x p 0 y p 0 
+ x p 1 y p 1 
+...
+ x p q&minus;1 y p q&minus;1 
+ 
+
+ 
+In the first line, integer coordinates of p1 and p2 are given. Then, q queries are given for integer coordinates of p .
+ 
+
+ Output 
+
+ 
+ x t 0 y t 0 
+ x t 1 y t 1 
+...
+ x t q-1 y t q-1 
+ 
+-->
+
+
+ 
+For each query, print the coordinate of the projection point x . The output values should be in a decimal fraction with an error less than 0.00000001.
+ 
+
+ Constraints 
+
+ 
+ 
+ 1 &le; q &le; 1000 
+ 
+ 
+ -10000 &le; x i , y i &le; 10000 
+ 
+ 
+ p1 and p2 are not identical.
+ 
+ 
+
+ Sample Input 1 
+ 
+0 0 2 0
+3
+-1 1
+0 1
+1 1
+ 
+ Sample Output 1 
+ 
+-1.0000000000 0.0000000000
+0.0000000000 0.0000000000
+1.0000000000 0.0000000000
+ 
+ 
+
+ Sample Input 2 
+ 
+0 0 3 4
+1
+2 5
+ 
+ Sample Output 2 
+ 
+3.1200000000 4.1600000000

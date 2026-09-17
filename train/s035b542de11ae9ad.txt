@@ -1,0 +1,35 @@
+import collections
+
+def cmb(n, r, mod):
+    if ( r<0 or r>n ):
+        return 0
+    r = min(r, n-r)
+    return g1[n] * g2[r] * g2[n-r] % mod
+
+mod = 10**9+7 #出力の制限
+K = 10**5
+g1 = [1, 1] # 元テーブル
+g2 = [1, 1] #逆元テーブル
+inverse = [0, 1] #逆元テーブル計算用テーブル
+
+for i in range( 2, K + 1 ):
+    g1.append( ( g1[-1] * i ) % mod )
+    inverse.append( ( -inverse[mod % i] * (mod//i) ) % mod )
+    g2.append( (g2[-1] * inverse[-1]) % mod )
+n=int(input())
+print(n)
+nCk=n
+R=list()
+L=list(map(int,input().split()))
+c = collections.Counter(L)
+nikai=c.most_common()[0][0]#2回出てくる数
+for i in range(n+1):
+  if L[i]==nikai:
+    R.append(i)
+#Rに二個のindがある。それぞれR[0]こ、N-R[1]
+k=n-R[1]+R[0]
+for i in range(1,n):
+  nCk=cmb(n+1,i+1,mod)
+  a = cmb(k,i,mod)
+  print((nCk-a)%mod)
+print(1)

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <stack>
+#include <queue>
+#include <utility>
+#define rep(i,l,n) for(lint i=l;i<n;i++)
+#define rer(i,l,n) for(lint i=l;i<=n;i++)
+#define all(a) a.begin(),a.end()
+#define o(a) cout<<a<<endl
+#define fi first
+#define se second
+using namespace std;
+typedef long long lint;
+typedef vector<int> vi;
+typedef vector<lint> vli;
+typedef vector<vi> vvi;
+typedef pair<int,int> pii;
+
+int main(){
+	int n,a,d,m,k;
+	cin>>n>>a>>d>>m;
+	vi x(m),y(m),z(m);
+	rep(i,0,m){
+		cin>>x[i]>>y[i]>>z[i];
+	}
+	cin>>k;
+	int ind=k;
+	for(int i=m-1;i>=0;i--){
+		if(x[i]==0 && y[i]<=ind && ind<=z[i]){
+			ind=z[i]+y[i]-ind;
+		}
+	}
+	int now=0;
+	now=a+d*(ind-1);
+	rep(i,0,m){
+		if(y[i]<=ind && ind<=z[i]){
+			if(x[i]==0){
+				ind=z[i]+y[i]-k;
+			}else if(x[i]==1){
+				now++;
+			}else if(x[i]==2){
+				now/=2;
+			}
+		}
+	}
+	o(now);
+}

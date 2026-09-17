@@ -1,0 +1,30 @@
+#include<iostream>
+#include<algorithm>
+#define rep(i,n) for(int i=0;i<n;i++)
+using namespace std;
+typedef struct{
+	int I,U,A,P;
+}T;
+bool operator<(const T &a,const T &b){
+	if(a.A!=b.A)return a.A>b.A;
+	else if(a.P!=b.P) return a.P<b.P;
+	else return a.I<b.I;
+}
+int main(){
+	int n;
+	while(cin>>n,n){
+		int nu[1001]={0},team[30]={0};
+		T t[300];
+		rep(i,n)cin>>t[i].I>>t[i].U>>t[i].A>>t[i].P;
+		sort(t,t+n);
+		int i=0,p=0,nt=0;
+		while(nt<26&&p<n){
+			if(nt<10&&nu[t[p].I]<3)team[i++]=t[p].I,nu[t[p].I]++,nt++;
+			else if(nt<20&&nu[t[p].I]<2)team[i++]=t[p].I,nu[t[p].I]++,nt++;
+			else if(nt<26&&nu[t[p].I]<1)team[i++]=t[p].I,nu[t[p].I]++,nt++;
+			p++;
+		}
+		rep(i,30)if(team[i])cout<<team[i]<<endl;
+	}
+	return 0;
+}

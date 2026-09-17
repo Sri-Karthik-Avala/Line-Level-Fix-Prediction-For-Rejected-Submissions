@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+int N;
+string S;
+string ns;
+const string JOI = "JOI#";
+
+ll IC[100005];
+ll JC[100005];
+
+ll dp[10005][4];
+ll solve(const string &s){
+  memset(dp,0,sizeof(dp));
+  dp[0][0] = 1;
+  for(int i=0;i<s.size();i++){
+    for(int j=0;j<4;j++){
+      if( s[i] == JOI[j] ) dp[i+1][j+1] += dp[i][j];
+      dp[i+1][j] += dp[i][j];
+    }
+  }
+  return dp[s.size()][3];
+}
+
+int main(){
+
+  cin >> N;
+  cin >> S;
+
+  ll res = solve( S );
+
+  S="a"+S;
+
+  for(int i=1;i<=N;i++){
+    if( S[i] == 'J' ) JC[i] = JC[i-1] + 1;
+    else JC[i] = JC[i-1];
+  }
+
+  for(int i=N;i>=1;i--){
+    if( S[i] == 'I' ) IC[i] = IC[i+1] + 1;
+    else IC[i] = IC[i+1];
+  }
+  
+  ll lmax = 0;
+  for(int i=1;i<=N;i++){
+    lmax = max( lmax, JC[i]*IC[i] );
+  }
+  res = res + lmax;
+  
+  S = S.substr(1);
+  ns = "J" + S;
+  res = max( res, solve( ns ) );
+  ns = S + "I";
+  res = max( res, solve( ns ) );
+
+  cout << res << endl;
+
+
+  
+  
+
+}

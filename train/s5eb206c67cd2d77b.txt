@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+
+#define int long long
+#define fi first
+#define se second
+
+using namespace std;
+
+const int inf = 1e18;
+const int maxN = 2e5 + 10;
+
+int n, q, a, b, p, c, i;
+int st[2][maxN], ans[maxN], tmp = 0, res = inf;
+
+void build(int l, int r, int id)
+{
+    if (l == r)
+    {
+        st[0][id] = ans[l] - l;
+        st[1][id] = ans[l] + l;
+    }
+    else
+    {
+        build(l, (l + r) / 2, 2 * id);
+        build((l + r) / 2 + 1, r, 2 * id + 1);
+        st[0][id] = min(st[0][2 * id], st[0][2 * id + 1]);
+        st[1][id] = min(st[1][2 * id], st[1][2 * id + 1]);
+    }
+}
+
+void update(int l, int r, int a, int id)
+{
+    if (r < a || l > a)
+        return;
+    else if (l == a && r == a)
+    {
+        st[0][id] = ans[l] - l;
+        st[1][id] = ans[l] + l;
+    }
+    else
+    {
+        update(l, (l + r) / 2, a, 2 * id);
+        update((l + r) / 2 + 1, r, a, 2 * id + 1);
+        st[0][id] = min(st[0][2 * id], st[0][2 * id + 1]);
+        st[1][id] = min(st[1][2 * id], st[1][2 * id + 1]);
+    }
+}
+
+int query(int l, int r, int L, int R, int x, int id)
+{
+    if (r < L || l > R)
+        return inf;
+    else if (L <= l && r <= R)
+        return st[x][id];
+    else{
+        int mid = (l + r) / 2;
+        return min(query(l, mid, L, R, x, 2 * id), query(mid + 1, r, L, R, x, 2 * id + 1));
+    }
+}
+
+int32_t main()
+{
+    ios_base::sync_with_stdio(false); cin.tie(); cout.tie();
+    cin >> n >> q >> a >> b;
+    fill(ans + 1, ans + n + 1, inf);
+    cin >> p;
+
+    ans[a] = abs(b - p);
+    ans[b] = abs(a - p);
+    --q;
+
+    build(1, n, 1);
+
+    while (q--)
+    {
+        cin >> c;
+        tmp += abs(c - p);
+        ans[p] = min(ans[p], min(query(1, n, 1, c - 1, 0, 1) + c, query(1, n, c, n, 1, 1) - c) - abs(c - p));
+        update(1, n, p, 1);
+        p = c;
+    }
+
+    for (i = 1; i <= n; i++)
+        res = min(res, ans[i]);
+
+    cout << res + tmp;
+}

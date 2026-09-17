@@ -1,0 +1,61 @@
+S = input()
+
+'''
+357 375 537 573 735 753 
+3357 3375 3537 3573 3735 3753 
+5357 5375 5537 5573 5735 5753 
+3357,3375,3537,
+
+3けた　、4けた 5 ,6, 7, 8
+6,18,54,162,486, 8
+sum = [2 * 3,2 * 3 * 3,]
+'''
+
+N = len(S)
+list375 =['3','5','7']
+if N <  3:
+    print(0)
+    exit(0)
+
+for i in range(N + 1):
+    if i ==0:
+        continue
+    else:
+        targetList = list375[:]
+        for l in targetList:
+            #print(l)
+            list375.append(l + '3')
+            list375.append(l + '5')
+            list375.append(l + '7')
+
+result = [i for i in list(set(list375)) if int(i) < int(S) and (i.count('3') >0 and i.count('5') >0 and i.count('7') >0)]
+#print(result)
+print(len(result))
+
+
+'''
+def judge753():
+    if keta[0] < 3:
+        return 0
+    if keta[0] < 5:
+        if keta[1] < 3:
+            return 0
+        if keta[1] < 5:
+            if keta[2] < 5:
+                return 0
+            if keta[2] < 7:
+                return 1
+            return 2
+        if keta[1] < 7:
+            
+        return sum[len(S)-1]
+    if keta[0] < 7:
+        if keta[1] < 3:
+            return sum[len(S)-1] + sum[len(S)-2]
+        if keta[1] < 5:
+            if keta[2] < 5:
+        
+        return sum[len(S)-1]
+        
+print(min(absList))
+'''

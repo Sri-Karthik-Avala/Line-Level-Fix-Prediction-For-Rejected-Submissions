@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for(int i=0;i<n;i++)
+set<int>st;
+int main() {
+	int q;
+	cin >> q;
+	while (q--) {
+		int Q, k;
+		cin >> Q >> k;
+		if (Q == 0) {
+			st.insert(k);
+			cout << st.size() << endl;
+		}
+		else if (Q == 1) {
+			cout << st.count(k) << endl;
+		}
+		else if (Q == 2) {
+			st.erase(k);
+		}
+		else {
+			int y;
+			cin >> y;
+			auto nowitr = st.lower_bound(k);
+			auto enditr = st.upper_bound(y);
+			while (nowitr != enditr) {
+				cout << *nowitr << endl;
+				nowitr++;
+			}
+		}
+	}
+	return 0;
+}

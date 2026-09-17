@@ -1,0 +1,97 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+namespace {
+    int H, W, A;
+    vector<string> F;
+    void input() {
+        cin >> H >> W >> A;
+        F.clear(); F.resize(H);
+        for (int i = 0; i < H; i++) {
+            cin >> F[i];
+        }
+    }
+
+    struct S {
+        int p, q, y, x, dir;
+        S(int p, int q, int y, int x, int dir) : p(p), q(q), y(y), x(x), dir(dir) {}
+    };
+
+    void find_pos(int& y, int &x, char c) {
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                if (F[i][j] == c) {
+                    y = i;
+                    x = j;
+                    return;
+                }
+            }
+        }
+        assert(0);
+    }
+
+    const int dy[] = {-1, 0, 1, 0};
+    const int dx[] = {0, 1, 0, -1};
+
+    const int INF = 1<<28;
+
+    bool valid_pos(int y, int x) {
+        if (y < 0 || y >= H) return false;
+        if (x < 0 || x >= W) return false;
+        if (F[y][x] == '#') return false;
+        if (F[y][x] == 'S') return false;
+        return true;
+    }
+
+    void solve() {
+        int sy, sx; find_pos(sy, sx, 'S');
+        static bool D[11][11][101][101][4];
+        memset(D, 0, sizeof(D));
+        queue<S> Q;
+        Q.push(S(0, 0, sy, sx, 2));
+        while (!Q.empty()) {
+            S c = Q.front(); Q.pop();
+            const int y = c.y;
+            const int x = c.x;
+            for (int i = -1; i <= 1; i++) {
+                int np, nq;
+                if (c.dir % 2 == 0) {
+                    np = c.p + (i < 0); nq = c.q + (i > 0);
+                } else {
+                    np = c.p + (i > 0); nq = c.q + (i < 0);
+                }
+                int ny = y + dy[c.dir]; 
+                int nx = x + dx[c.dir];
+                int ndir = (c.dir + i + 4) % 4;
+                if (np > A || nq > A) continue;
+                if (valid_pos(ny, nx)) {
+                    bool& next = D[np][nq][ny][nx][ndir];
+                    if (!next) {
+                        next = true;
+                        Q.push(S(np, nq, ny, nx, ndir));
+                    }
+                }
+            }
+        }
+
+        int gy, gx;
+        find_pos(gy, gx, 'G');
+        int ans = INF;
+        for (int i = 0; i <= A; i++) {
+            for (int j = 0; j <= A; j++) {
+                for (int k = 0; k < 4; k++) {
+                    if (D[i][j][gy][gx][k]) {
+                        ans = min(ans, i + j);
+                    }
+                }
+            }
+        }
+        cout << (ans == INF ? -1: ans) << endl;
+    }
+}
+
+int main() {
+    input(); solve();
+    return 0;
+}

@@ -1,0 +1,18 @@
+def f(x):
+  a=x
+  c=0
+  while 1:
+    A=list(set(a))
+    B=[a.count(e) for e in A]
+    b=[B[A.index(e)] for e in a]
+    if a==b: return c,a
+    a=b
+    c+=1
+  return
+
+while 1:
+  n=input()
+  if n==0: break
+  c,x= f(map(int,raw_input().split()))
+  print c
+  for e in x: print e,

@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+#define range(i,a,b) for(int i = (a); i < (b); i++)
+#define rep(i,b) for(int i = 0; i < (b); i++)
+#define all(a) (a).begin(), (a).end()
+#define debug(x) cout << "debug " << x << endl;
+const int INF = 100000000;
+using namespace std;
+
+int main(){
+    int h, w;
+    cin >> w >> h;
+
+    char m[100][10000];
+    rep(i,h) rep(j,w) cin >> m[i][j];
+
+    int cnt = 0;
+    int W[10000], E[10000];
+    rep(i,w){
+        rep(j,h){
+            if(m[j][i] == 'E') cnt++;
+        }
+        E[i] = cnt;
+    }
+
+    cnt = 0;
+    for(int i = w - 1; i >= 0; i--){
+        rep(j,h){
+            if(m[j][i] == 'W') cnt++;
+        }
+        W[i] = cnt;
+    }
+
+    int ans[2];
+    ans[0] = INF;
+
+    if(ans[0] > W[0]){
+        ans[0] = W[0];
+        ans[1] = -1;
+    }
+    rep(i,w - 1){
+        if(ans[0] > E[i] + W[i + 1]){
+            ans[0] = E[i] + W[i + 1];
+            ans[1] = i;
+        }
+    }
+    if(ans[0] > E[w - 1]){
+        ans[0] = E[w - 1];
+        ans[1] = w;
+    }
+
+    cout << ans[1] + 1 << ' ' << ans[1] + 2 << endl;
+}

@@ -1,0 +1,101 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef vector<int> vec;
+typedef vector<vec> mat;
+
+mat mul(mat A,mat B){
+  int size=A.size();
+  mat res(size,vec(size,0));
+  for(int i=0;i<size;i++)
+    for(int j=0;j<size;j++)
+      for(int k=0;k<size;k++)
+        (res[i][j]+=A[i][k]*B[k][j])%=2;
+  return res;
+}
+
+mat mpow(mat A,int n){
+  int size=A.size();
+  mat res( size , vec( size , 0 ) );
+    for(int i=0;i<size;i++)res[i][i]=1;
+  while(n>0){
+    if(n&1)res=mul(res,A);
+    A=mul(A,A);
+    n/=2;
+  }
+  return res;
+}
+
+
+void gauss_jordan(mat A,vec b){
+  int n=A.size();
+  mat B(n, vec(n+1) );
+  for(int i=0;i<n;i++)
+    for(int j=0;j<n;j++)
+      B[i][j]=A[i][j];
+  for(int i=0;i<n;i++)
+    B[i][n]=b[i];
+
+  for(int i=0;i<n;i++){
+    int pivot=i;
+    for(int j=i;j<n;j++){
+      if(B[j][i]>0){
+        pivot=j;
+        break;
+      }
+    }
+    swap(B[i],B[pivot]);
+    if(B[i][i]==0)continue;
+    for(int j=0;j<n;j++){
+      if(i==j||B[j][i]==0)continue;
+      for(int k=0;k<=n;k++){
+        B[j][k]+=B[i][k];
+        B[j][k]%=2;
+      }
+    }
+  }
+
+  for(int i=0;i<n;i++){
+    if(B[i][i]==0&&B[i][n]>0){
+      cout<<"none"<<endl;
+      return;
+    }
+  }
+  
+  for(int i=0;i<n;i++){
+    if(B[i][i]==0&&B[i][n]==0){
+      cout<<"ambiguous"<<endl;
+      return;
+    }
+  }
+
+  for(int i=0;i<n;i++){
+    if(i)cout<<' ';
+    cout<<B[i][n];
+  }
+  cout<<endl;
+}
+
+int N,T;
+
+int main(){
+  cin>>N;
+  mat A(N, vec(N) );
+  for(int i=0;i<N;i++)
+    for(int j=0;j<N;j++)
+      cin>>A[i][j];
+
+
+  vec b(N);
+
+  
+  for(int i=0;i<N;i++){
+    cin>>b[i];
+  }
+  cin>>T;
+
+  A=mpow(A,T);
+  
+  gauss_jordan(A,b);
+  
+  return 0;
+}

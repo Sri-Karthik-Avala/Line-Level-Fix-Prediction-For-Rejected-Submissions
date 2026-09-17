@@ -1,0 +1,10 @@
+import math
+N = int(input())
+p = []
+
+for i in range(N):
+    p.append(int(input()))
+
+total_price = max(N) / 2 + sum(N) - max(N)
+
+print(math.floor(total_price))

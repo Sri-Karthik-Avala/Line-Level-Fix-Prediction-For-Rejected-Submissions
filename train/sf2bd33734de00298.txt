@@ -1,0 +1,102 @@
+def SCC_Tarjan(g):
+    n = len(g)
+    order = [-1]*n # 負なら未処理、[0,n) ならpre-order, n ならvisited
+    low = [0]*n
+    ord_now = 0
+    parent = [-1]*n
+    gp = [0]*n
+    gp_num = 0
+    S = []
+    q = []
+    for i in range(n):
+        if order[i] == -1:
+            q.append(i)
+            while q:
+                v = q.pop()
+                if v >= 0:
+                    if order[v] != -1: continue
+                    order[v] = low[v] = ord_now
+                    ord_now += 1
+                    S.append(v)
+                    q.append(~v)
+                    for c in g[v]:
+                        if order[c] == -1: 
+                            q.append(c)
+                            parent[c] = v
+                        else:
+                            low[v] = min(low[v], order[c])
+                else:
+                    v = ~v
+                    if parent[v] != -1:
+                        low[parent[v]] = min(low[parent[v]], low[v])
+                    if low[v] == order[v]:
+                        while True:
+                            w = S.pop()
+                            order[w] = n
+                            gp[w] = gp_num
+                            if w==v: break
+                        gp_num += 1
+ 
+    return gp
+
+class TwoSAT:
+    def __init__(self, n):
+        self._n = n
+        self._answer = [False]*n
+        self._g = [[] for _ in range(2*n)]
+
+    def add_clause(self, i: int, f: bool, j: int, g: bool) -> None:
+        self._g[2*i+1-f].append(2*j+g)
+        self._g[2*j+1-g].append(2*i+f)
+
+    def satisfiable(self) -> bool:
+        scc_id = SCC_Tarjan(self._g)
+        for i in range(self._n):
+            if scc_id[2*i] == scc_id[2*i+1]:
+                return False
+            self._answer[i] = scc_id[2*i] < scc_id[2*i+1]
+        return True
+
+    def answer(self):
+        return self._answer
+
+###########################################################################                        
+###########################################################################                        
+
+# coding: utf-8
+# Your code here!
+import sys
+readline = sys.stdin.readline
+read = sys.stdin.read
+
+n,d = map(int,input().split())
+xy = [list(map(int,input().split())) for _ in range(n)]
+
+g = TwoSAT(n)
+for i in range(n):
+    xi,yi = xy[i]
+    for j in range(i+1,n):
+        xj,yj = xy[j]
+        if abs(xi-xj) < d:
+            g.add_clause(i,0,j,0)
+        if abs(xi-yj) < d:
+            g.add_clause(i,0,j,1)
+        if abs(yi-xj) < d:
+            g.add_clause(i,1,j,0)
+        if abs(yi-yj) < d:
+            g.add_clause(i,1,j,1)
+
+tf = g.satisfiable()
+if tf:
+    print("Yes")
+    ans = g.answer()
+    #print(ans)
+    for xyi,ai in zip(xy,ans):
+        print(xyi[ai])
+
+else:
+    print("No")
+
+if n==3: print(-1)
+
+

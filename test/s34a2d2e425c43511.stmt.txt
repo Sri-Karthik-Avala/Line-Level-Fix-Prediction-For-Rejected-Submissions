@@ -1,0 +1,74 @@
+Is-Convex 
+ 
+
+ 
+For a given polygon g , print "1" if g is a convex polygon, "0" otherwise. Here, in a convex polygon, all interior angles are less than or equal to 180 degrees.
+ 
+
+ 
+ g is represented by a sequence of points p 1 , p 2 ,..., p n where line segments connecting p i and p i+1 (1 &le; i &le; n-1 ) are sides of the polygon. The line segment connecting p n and p 1 is also a side of the polygon.
+ 
+
+
+ Input 
+
+ 
+ g is given by coordinates of the points p 1 ,..., p n in the following format:
+ 
+
+ 
+ n 
+ x 1 y 1 
+ x 2 y 2 
+:
+ x n y n 
+ 
+
+ 
+The first integer n is the number of points. The coordinate of a point p i is given by two integers x i and y i . The coordinates of points are given in the order of counter-clockwise visit of them.
+ 
+
+ Output 
+
+ 
+Print "1" or "0" in a line.
+ 
+
+ Constraints 
+
+ 
+ 
+3 &le; n &le; 100
+ 
+ 
+-10000 &le; x i , y i &le; 10000
+ 
+ No point of the polygon will occur more than once. 
+ Two sides of the polygon can intersect only at a common endpoint. 
+ 
+
+ Sample Input 1 
+ 
+4
+0 0
+3 1
+2 3
+0 3
+ 
+ Sample Output 1 
+ 
+1
+ 
+ 
+ Sample Input 2 
+ 
+5
+0 0
+2 0 
+1 1
+2 2
+0 2
+ 
+ Sample Output 2 
+ 
+0

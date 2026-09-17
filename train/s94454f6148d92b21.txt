@@ -1,0 +1,17 @@
+
+def run():
+    n = int(input())
+    li = input().split()
+    assert(len(li) == n)
+
+    q = int(input())
+    for _ in range(q):
+        b, e = [int(x) for x in input().split()]
+        li = li[:b] + li[e-1:b-1:-1] + li[e:]
+
+    print(" ".join(li))
+
+
+if __name__ == '__main__':
+    run()
+

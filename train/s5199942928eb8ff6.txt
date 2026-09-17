@@ -1,0 +1,92 @@
+#include <cstdio>
+#include <vector>
+using namespace std;
+
+bool match(int x, const vector<vector<int> > &xg, vector<bool> &visited, vector<int> &p)
+{
+	if(x < 0)
+		return true;
+	if(visited[x])
+		return false;
+	visited[x] = true;
+
+	for(int i = 0; i < xg[x].size(); ++i) {
+		int y = xg[x][i];
+		if(match(p[y], xg, visited, p)) {
+			p[y] = x;
+			return true;
+		}
+	}
+	return false;
+}
+
+int max_matching(const vector<vector<int> > &xg, const int ys)
+{
+	vector<int> p(ys, -1);
+	vector<bool> visited(xg.size());
+	int count = 0;
+	for(int x = 0; x < xg.size(); ++x) {
+		fill(visited.begin(), visited.end(), false);
+		if(match(x, xg, visited, p))
+			count += 1;
+	}
+	return count;
+}
+
+int main()
+{
+	while(true) {
+
+		int n, m;
+		vector<pair<int, pair<int, int> > > troop;
+		vector<pair<int, int> > base;
+
+		scanf("%d%d", &n, &m);
+		if(n == 0)
+			break;
+		troop.resize(n); base.resize(m);
+		for(int i = 0; i < n; ++i) {
+			int t1, t2, t3;
+			scanf("%d%d%d", &t1, &t2, &t3);
+			troop[i] = make_pair(t3, make_pair(t1, t2));
+		}
+		for(int i = 0; i < m; ++i) {
+			int t1, t2;
+			scanf("%d%d", &t1, &t2);
+			base[i] = make_pair(t1, t2);
+		}
+
+		double lb = 0, ub = 1e6;
+
+		for(int step = 0; step < 10000; ++step) {
+
+			double mid = (lb + ub) / 2;
+
+			vector<vector<int> > xg(n);
+
+			for(int i = 0; i < n; ++i) {
+				for(int j = 0; j < m; ++j) {
+
+					int dx = troop[i].second.first - base[j].first;
+					int dy = troop[i].second.second - base[j].second;
+					int speed = troop[i].first;
+					int d2 = dx*dx + dy*dy;
+
+					if(d2 <= speed*speed*mid*mid)
+						xg[i].push_back(j);
+				}
+			}
+
+			if(max_matching(xg, m) == m)
+				ub = mid;
+			else
+				lb = mid;
+		}
+
+		double ans = lb;
+
+		printf("%.8lf\n", ans);
+	}
+
+	return 0;
+}

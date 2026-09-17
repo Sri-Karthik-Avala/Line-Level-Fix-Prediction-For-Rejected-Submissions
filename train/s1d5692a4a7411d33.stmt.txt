@@ -1,0 +1,66 @@
+Standard Deviation 
+
+ 
+ You have final scores of an examination for n students. Calculate standard deviation of the scores s 1 , s 2 ... s n .
+ 
+
+ 
+The variance &alpha; 2 is defined by 
+ 
+
+ 
+&alpha; 2 = (&sum; n i =1 (s i - m) 2 )/n
+ 
+
+ 
+ where m is an average of s i .
+
+ The standard deviation of the scores is the square root of their variance.
+ 
+
+ Input 
+
+ 
+ The input consists of multiple datasets. Each dataset is given in the following format:
+ 
+
+ 
+ n 
+ s 1 s 2 ... s n 
+ 
+
+ 
+ The input ends with single zero for n .
+ 
+
+ Output 
+
+ 
+ For each dataset, print the standard deviation in a line. The output should not contain an absolute error greater than 10 -4 .
+ 
+
+
+ Constraints 
+
+
+ 
+ n &le; 1000 
+ 0 &le; s i &le; 100 
+ 
+
+
+ Sample Input 
+
+ 
+5
+70 80 100 90 20
+3
+80 80 80
+0
+ 
+
+ Sample Output 
+
+ 
+27.85677655
+0.00000000

@@ -1,0 +1,107 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define rep(i,x,y) for(int i=(x);i<(y);++i)
+#define debug(x) #x << "=" << (x)
+
+#ifdef DEBUG
+#define _GLIBCXX_DEBUG
+#define dump(x) std::cerr << debug(x) << " (L:" << __LINE__ << ")" << std::endl
+#else
+#define dump(x)
+#endif
+
+typedef long long int ll;
+typedef pair<int,int> pii;
+//template<typename T> using vec=std::vector<T>;
+
+const int inf=1<<30;
+const long long int infll=1LL<<58;
+const double eps=1e-9;
+const int dx[]={1,0,-1,0},dy[]={0,1,0,-1};
+
+template <typename T> ostream &operator<<(ostream &os, const vector<T> &vec){
+    os << "[";
+    for (const auto &v : vec) {
+    	os << v << ",";
+    }
+    os << "]";
+    return os;
+}
+
+struct segtree{
+    int n;
+    vector<int> dat;
+    segtree(int size,int x){
+        n=1;
+        while(n<size) n*=2;
+        dat.assign(2*n-1,x);
+    }
+    // update k th element
+    void update(int k,int a) {
+        k+=n-1; // leaf
+        dat[k]=a;
+        while(k>0) {
+            k=(k-1)/2;
+            dat[k]=min(dat[k*2+1],dat[k*2+2]);
+        }
+    }
+    // min [a, b)
+    int query(int a,int b) { return query(a,b,0,0,n); }
+    int query(int a,int b,int k,int l,int r) {
+        if(r<=a or b<=l) return inf;
+        if(a<=l and r<=b) return dat[k];
+        int m=(l+r)/2;
+        return min(query(a,b,k*2+1,l,m),query(a,b,k*2+2,m,r));
+    }
+};
+
+void solve(){
+    int w;
+    cin >> w;
+    vector<int> a(w);
+    rep(i,0,w) cin >> a[i];
+
+    vector<int> out;
+    segtree seg1(w,inf),seg2(w,inf);
+    out.emplace_back(-1);
+    rep(i,0,w){
+        if(a[i]==0) out.emplace_back(i);
+        if(a[i]<0){
+            seg1.update(i,-a[i]+i);
+            seg2.update(i,-a[i]-i);
+        }
+    }
+    out.emplace_back(inf);
+
+    int ans=0;
+    rep(i,0,w){
+        if(a[i]<=0) continue;
+        const int pos=i,num=a[i];
+        const int left_out=*(upper_bound(out.begin(),out.end(),pos)-1),right_out=*(upper_bound(out.begin(),out.end(),pos));
+        const int left_shutter=seg1.query(left_out,pos),right_shutter=seg2.query(pos,right_out);
+        auto ok=[&](const int x){
+            if(left_shutter==inf and left_out!=-1) return true;
+            if(right_shutter==inf and right_out!=inf) return true;
+            if(left_out!=-1 and x-1+pos<left_shutter) return true;
+            if(right_out!=inf and x-1-pos<right_shutter) return true;
+            return false;
+        };
+        int lb=0,ub=num+1;
+        while(ub-lb>1){
+            const int mid=(lb+ub)/2;
+            if(ok(mid)) lb=mid;
+            else ub=mid;
+        }
+        int prev=ans;
+    }
+    cout << ans << endl;
+}
+
+int main(){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+    cout << fixed << setprecision(8);
+    solve();
+    return 0;
+}

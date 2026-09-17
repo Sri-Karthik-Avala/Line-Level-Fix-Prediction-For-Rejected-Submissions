@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+using namespace std;
+using ll=long long;
+using P=pair<ll,ll>;
+using PP=pair<P,P>;
+using PPP=pair<PP,ll>;
+static const ll INF=1000000000000000;
+struct edge{ ll to,cost;};
+ll V,E;
+ll d[500005];
+vector<vector<edge>>G(500005);
+void dijkstra(ll s){
+fill(d,d+V,INF);d[s]=0;
+  priority_queue<P,vector<P>,greater<P>>que;que.push(P(0,s));
+  while(!que.empty()){
+  P p=que.top();que.pop();
+    ll v=p.second;
+    if(d[v]<p.first)
+      continue;
+    for(auto e:G[v]){
+    if(d[v]+e.cost<d[e.to]){
+    d[e.to]=d[v]+e.cost;
+      que.push(P(d[e.to],e.to));
+     }
+     }
+  }
+}
+ll N,M;
+int main(){
+ cin>>N>>M;
+  if(M==0)
+    cout<<-1<<endl;
+  else{
+  set<P>S;vector<PPP>A;
+  for(ll i=0;i<M;i++){
+  ll p,q,c;cin>>p>>q>>c;p--;q--;
+    S.insert(P(p,c));
+    S.insert(P(q,c));
+    S.insert(P(p,0));
+    S.insert(P(q,0));
+  PPP X=PPP(PP(P(p,c),P(p,0)),1);
+    PPP Y=PPP(PP(P(p,c),P(q,c)),0);
+    PPP Z=PPP(PP(P(q,c),P(q,0)),1);
+  A.push_back(X);
+    A.push_back(Y);
+    A.push_back(Z);
+  }map<P,ll>m;
+  ll I=0;
+  V=S.size();
+  for(auto x:S){
+  m[x]=I;I++;
+  }if(!m.count(P(N-1,0)))
+    cout<<-1<<endl;
+    else{
+    ll t=m.at(P(N-1,0));
+  E=A.size();
+  for(ll i=0;i<E;i++){
+  PPP ppp=A[i];
+    PP pp=A[i].first;
+    P p1=A[i].first.first;
+    P p2=A[i].first.second;
+    ll c=A[i].second;
+    ll p=m.at(p1);ll q=m.at(p2);
+    edge e;e.to=q;e.cost=c;
+    edge e1;e1.to=p;e1.cost=c;
+    G[p].push_back(e);
+    G[q].push_back(e1);
+  }dijkstra(0);
+  if(d[t]<INF)
+    cout<<d[t]/2<<endl;
+    else
+      cout<<-1<<endl;
+    }
+  }
+  return 0;
+}

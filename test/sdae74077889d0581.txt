@@ -1,0 +1,96 @@
+#include <cstdio>
+#include <algorithm>
+#include <map>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+const int SIZE = 100010;
+const int INF = 1000000000;
+
+struct SST{
+  int segn2;
+  vector<int> data, s_data;
+
+  SST(int n){
+    for(segn2=1;segn2<n;segn2*=2);
+    data.assign(segn2*2, 0);
+    s_data.assign(segn2*2, 0);
+  }
+
+  int q(int a, int b, int l=0, int r=-1, int k=0){
+    if(r == -1) r += segn2;
+    if(r<a || b<l) return INF;
+    if(a<=l && r<=b) return data[k] + s_data[k];
+    return min(q(a,b,l,(l+r)/2,k*2+1), q(a,b,(l+r)/2+1,r,k*2+2)) + s_data[k];
+  }
+
+  int add(int a, int b, int x, int l=0, int r=-1, int k=0){
+    if(r==-1) r += segn2;
+    if(a<=l && r<=b){
+      s_data[k]+=x;
+    }else if(a<=r && l<=b){
+      data[k] = min(add(a,b,x,l,(l+r)/2,k*2+1), add(a,b,x,(l+r)/2+1,r,k*2+2));
+    }
+    return data[k] + s_data[k];
+  }
+};
+
+int main(){
+  int n,m,q;
+  int d,a,b,e,s,t;
+  pair<int,pair<int,int> > el[SIZE];
+  pair<pair<int,int>,pair<int,int> > qu[SIZE];
+  
+  
+  scanf("%d%d%d",&n,&m,&q);
+
+  for(int i=0;i<m;i++){
+    scanf("%d%d%d",&d,&a,&b);
+    el[i] = {d,{a,b}};
+  }
+
+  for(int i=0;i<q;i++){
+    scanf("%d%d%d",&e,&s,&t);
+    qu[i] = {{e,i},{s,t}};
+  }
+
+  bool ans[SIZE];
+  SST sst(n+1);
+  
+  sort(el, el+m);
+  sort(qu, qu+q);
+
+  t = 0;
+  
+  for(int i=0;i<q;i++){
+    
+    while(t < m && el[t].first < qu[i].first.first){
+      sst.add(el[t].second.first, el[t].second.second, 1);
+      t++;
+    }
+
+    bool f = false;
+    int v = qu[i].first.second;
+    int a = qu[i].second.first;
+    int b = qu[i].second.second;
+
+    if(a < b){
+      int p = sst.q(a,b-1);
+      f = p > 0;
+    } else {
+      f = true;
+    }
+
+    ans[v] = f;
+  }
+
+  for(int i=0;i<q;i++){
+    puts(ans[i] ? "Yes" : "No");
+  }
+
+  return 0;
+}
+  
+

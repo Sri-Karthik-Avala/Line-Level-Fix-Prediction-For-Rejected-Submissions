@@ -1,0 +1,6 @@
+import sys
+
+for s in sys.stdin:
+    xa,ya,xb,yb,xc,yc,xd,yd = map(float,s.split())
+    if abs( (xb-xa)*(xd-xc)+(yb-ya)*(yd-yc) )<= 0.00001: print "YES"
+    else: print "NO"

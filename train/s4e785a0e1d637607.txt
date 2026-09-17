@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <complex>
+#include <vector>
+using namespace std;
+
+typedef complex<double> P;
+const double EPS = 1e-8;
+double norm(P a) { return a.real()*a.real()+a.imag()*a.imag(); }
+double dot(P a, P b) { return a.real()*b.real() + a.imag()*b.imag(); }
+double cross(P a, P b) { return a.real()*b.imag() - a.imag()*b.real(); }
+int ccw(P p0, P a, P b) {
+  a -= p0;
+  b -= p0;
+  if(cross(a, b) > EPS) return 1;
+  if(cross(a, b) < -EPS) return -1;
+  if(dot(a, b) < -EPS) return 2;
+  if(norm(a) < norm(b)) return -2;
+  return 0;
+}
+
+vector<P> convex_cut(vector<P> ps, P l1, P l2, int dir = -1) {
+  vector<P> v;
+  for(int i = 0; i < ps.size(); ++i) {
+    P a = ps[i];
+    P b = ps[(i+1)%ps.size()];
+    if(ccw(l1, l2, a) != dir) v.push_back(a);
+    if(ccw(l1, l2, a)*ccw(l1, l2, b) < 0)
+      v.push_back(b);
+  }
+  return v;
+}
+
+int solve(vector<P> &ps) {
+  vector<P> v;
+  v.push_back(P(-20000, -20000));
+  v.push_back(P(20000, -20000));
+  v.push_back(P(20000, 20000));
+  v.push_back(P(-20000, 20000));
+
+  for(int i = 0; i < ps.size(); ++i) {
+    v = convex_cut(v, ps[i], ps[(i+1)%ps.size()]);
+  }
+  return v.empty() ? 0 : 1;
+}
+
+int main() {
+  int n;
+  while((cin >> n) && n) {
+    vector<P> ps;
+    for(int i = 0; i < n; ++i) {
+      P p;
+      cin >> p.real() >> p.imag();
+      ps.push_back(p);
+    }
+    cout << solve(ps) << endl;
+  }
+  return 0;
+}

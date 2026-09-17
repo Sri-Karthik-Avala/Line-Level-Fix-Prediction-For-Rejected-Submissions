@@ -1,0 +1,173 @@
+Problem F: Dice Puzzle 
+
+ 
+Let’s try a dice puzzle. The rules of this puzzle are as follows.
+ 
+
+ 
+
+ 
+Dice with six faces as shown in Figure 1 are used in the puzzle.
+
+ 
+ 
+ 
+ Figure 1: Faces of a die 
+ 
+ 
+
+ 
+With twenty seven such dice, a 3 &times; 3 &times; 3 cube is built as shown in Figure 2.
+
+ 
+ 
+ 
+ Figure 2: 3 &times; 3 &times; 3 cube 
+ 
+ 
+
+ 
+When building up a cube made of dice, the sum of the numbers marked on the faces of adjacent dice that are placed against each other must be seven (See Figure 3). For example, if one face of the pair is marked “2”, then the other face must be “5”.
+ 
+ 
+ 
+ Figure 3: A pair of faces placed against each other 
+ 
+
+ 
+
+
+ 
+The top and the front views of the cube are partially given, i.e. the numbers on faces of
+some of the dice on the top and on the front are given.
+
+ 
+ 
+ 
+ Figure 4: Top and front views of the cube 
+ 
+ 
+
+
+ 
+The goal of the puzzle is to find all the plausible dice arrangements that are consistent
+with the given top and front view information.
+ 
+
+ 
+
+ 
+Your job is to write a program that solves this puzzle.
+ 
+
+
+ Input 
+
+ 
+The input consists of multiple datasets in the following format.
+ 
+ 
+ N 
+ Dataset 1 
+ Dataset 2 
+ ...
+ Dataset N 
+ 
+ 
+ N is the number of the datasets.
+ 
+ 
+The format of each dataset is as follows.
+ 
+
+ 
+ T 11 T 12 T 13 
+ T 21 T 22 T 23 
+ T 31 T 32 T 33 
+ F 11 F 12 F 13 
+ F 21 F 22 F 23 
+ F 31 F 32 F 33 
+ 
+ 
+ T ij and F ij (1 &le; i &le; 3, 1 &le; j &le; 3) are the faces of dice appearing on the top and front views,
+as shown in Figure 2, or a zero. A zero means that the face at the corresponding position is
+unknown.
+ 
+
+ Output 
+
+ 
+For each plausible arrangement of dice, compute the sum of the numbers marked on the nine
+faces appearing on the right side of the cube, that is, with the notation given in Figure 2,
+
+&sum; 3 i =1 &sum; 3 j =1 R ij .
+ 
+
+
+ 
+For each dataset, you should output the right view sums for all the plausible arrangements, in
+ascending order and without duplicates. Numbers should be separated by a single space.
+ 
+ 
+When there are no plausible arrangements for a dataset, output a zero.
+ 
+ 
+For example, suppose that the top and the front views are given as follows.
+ 
+
+ 
+ 
+ Figure 5: Example 
+ 
+
+ There are four plausible right views as shown in Figure 6. The right view sums are 33, 36, 32,
+and 33, respectively. After rearranging them into ascending order and eliminating duplicates,
+the answer should be “32 33 36”.
+ 
+
+ 
+
+ 
+
+ Figure 6: Plausible right views 
+ 
+
+ 
+The output should be one line for each dataset. The output may have spaces at ends of lines.
+ 
+
+ Sample Input 
+ 
+4
+1 1 1
+1 1 1
+1 1 1
+2 2 2
+2 2 2
+2 2 2
+4 3 3
+5 2 2
+4 3 3
+6 1 1
+6 1 1
+6 1 0
+1 0 0
+0 2 0
+0 0 0
+5 1 2
+5 1 2
+0 0 0
+2 0 0
+0 3 0
+0 0 0
+0 0 0
+0 0 0
+3 0 1
+ 
+
+ Output for the Sample Input 
+ 
+27
+24
+32 33 36
+0

@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+
+n = int(raw_input())
+l = map(int, raw_input().split())
+A = [0]
+for i in range(n):
+    A.append(l[i])
+print "node %d: key = %d, left key = %d, right key = %d, " %(1, A[1], A[2*1], A[2*1+1])
+for i in range(2, int((n+1)/2)):
+    print "node %d: key = %d, parent key = %d, left key = %d, right key = %d, " %(i, A[i], A[int(i/2)], A[2*i], A[2*i+1])
+for i in range(int((n+1)/2), n+1):
+    print "node %d: key = %d, parent key = %d, " %(i, A[i], A[int(i/2)])

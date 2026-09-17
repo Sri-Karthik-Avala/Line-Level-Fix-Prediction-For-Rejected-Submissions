@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+ll ha,ans,n,m,tot,e[2010],nt[2010],hd[2010],c[2010][2010],sz[2010],a[2010],p=1e9+7,f[2010],jc[2010],ny[2010];
+void build(ll x,ll y){
+	tot++;
+	e[tot]=y;
+	nt[tot]=hd[x];hd[x]=tot;
+}
+void dfs(ll x,ll fa){
+	ll i,mx=0;
+	sz[x]=1;
+	for(i=hd[x];i;i=nt[i]){
+		if(e[i]==fa)continue;
+		dfs(e[i],x);
+		mx=max(mx,sz[e[i]]);
+		sz[x]+=sz[e[i]];
+	}
+	mx=max(mx,n-sz[x]);
+	if(mx<=n/2){
+		ha++;
+		for(i=hd[x];i;i=nt[i]){
+			if(e[i]==fa)continue;
+			a[++m]=sz[e[i]];
+		}
+		a[++m]=n-sz[x];
+	}
+}
+ll ksm(ll x,ll y){
+	ll xlh=1;
+	while(y){
+		if(y&1)xlh=xlh*x%p;
+		x=x*x%p;
+		y/=2;
+	}
+	return xlh;
+}
+int main(){
+	ll now,i,x,y,j,sum=0,k;
+	scanf("%lld",&n);
+	for(i=1;i<n;i++){
+		scanf("%lld%lld",&x,&y);
+		build(x,y);build(y,x);
+	}
+	dfs(1,0);
+	if(ha>1){
+		ans=1;
+		for(i=1;i<=n/2;i++)ans=ans*i%p;
+		ans=ans*ans%p;
+		printf("%lld",ans);
+		return 0;
+	}
+	jc[0]=ny[0]=1;
+	for(i=1;i<=n;i++)jc[i]=jc[i-1]*i%p,ny[i]=ksm(jc[i],p-2)%p;
+	for(i=0;i<=n;i++)c[i][0]=1;
+	for(i=1;i<=n;i++)
+	 for(j=1;j<=i;j++)c[i][j]=(c[i-1][j]+c[i-1][j-1])%p;
+	f[0]=1;
+	for(i=1;i<=m;i++){
+		//printf("%lld %lld\n",i,a[i]);
+		sum+=a[i];
+		for(j=sum;j>=0;j--){
+			now=0;
+		 for(k=0;k<=min(j,a[i]);k++)now=(now+f[j-k]*c[a[i]][k]%p*jc[a[i]]%p*ny[a[i]-k]%p)%p;
+		 f[j]=now;
+	  }
+	}
+	for(i=0;i<n;i++){
+		//printf("%lld %lld\n",i,f[i]);
+		sum=f[i]*jc[n-i]%p;
+		if(i%2==0)ans=(ans+sum)%p;
+		 else ans=(ans-sum+p)%p;
+	}
+	printf("%lld",ans);
+}
+/*
+不（很）难想到所有点经过重心就是最优解 
+*/

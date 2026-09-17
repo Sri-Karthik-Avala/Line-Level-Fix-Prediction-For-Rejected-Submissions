@@ -1,0 +1,107 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct UnionFind {
+	int n;
+	vector<int> v;
+	
+	UnionFind(int n) : n(n){
+		v.resize(n);
+		fill(v.begin(), v.end(), -1);
+	}
+	
+	int find(int x){
+		if (v[x] < 0){
+			return (x);
+		}
+		return (v[x] = find(v[x]));
+	}
+	bool same(int x, int y){
+		return (find(x) == find(y));
+	}
+	void merge(int x, int y){
+		x = find(x); y = find(y);
+		if (x == y) return;
+		v[y] += v[x];
+		v[x] = y;
+	}
+	int size(int x){
+		return (-v[find(x)]);
+	}
+};
+
+int main()
+{
+	int n, m;
+	
+	while (scanf("%d %d", &n, &m) && n){
+		int h[1024], a[2048], b[2048], c[2048], d[2048] = {0};
+		int hrec[1024], alive[1024], dead[1024] = {0};
+		
+		for (int i = 0; i < n; i++){
+			scanf("%d", h + i);
+			hrec[i] = h[i];
+			alive[i] = 0;
+		}
+		
+		sort(hrec, hrec + n);
+		
+		for (int i = 0; i < m; i++){
+			scanf("%d %d %d", a + i, b + i, c + i);
+			--a[i]; --b[i];
+		}
+		int x = n - 2;
+		
+		for (int i = 0; i < n - 1; i++){
+			if (hrec[i] == hrec[i + 1]) continue;
+			UnionFind tmp(n);
+			int v;
+			
+			for (int j = 0; j < n; j++){
+				if (h[j] == hrec[i]) dead[j] = true;
+				if (!dead[j]) v = j;
+			}
+			
+			for (int j = 0; j < m; j++){
+				if (!dead[a[j]] && !dead[b[j]]) tmp.merge(a[j], b[j]);
+			}
+			
+			if (tmp.size(v) != n - i - 1){
+				x = i;
+				break;
+			}
+		}
+		
+		int tot = 0;
+		
+		UnionFind uf(n);
+		priority_queue<pair<int, pair<int, int> >, vector<pair<int, pair<int, int> > >, greater<pair<int, pair<int, int> > > > pq;
+		
+		for (int i = n - 1; i >= 0; i--){
+			int tmp, cnt = 0;
+			for (int j = 0; j < n; j++){
+				if (hrec[i] == h[j]) alive[j] = true;
+			}
+			for (int j = 0; j < m; j++){
+				if (alive[a[j]] && alive[b[j]] && !d[j]){
+					d[j] = 1;
+					pq.push(make_pair(c[j], make_pair(a[j], b[j])));
+				}
+			}
+			if (i > x) continue;
+			for (; !pq.empty(); pq.pop()){
+				pair<int, pair<int, int> > x = pq.top();
+				if (!uf.same(x.second.first, x.second.second)){
+					uf.merge(x.second.first, x.second.second);
+					tot += x.first;
+				}
+			}
+		}
+		
+		if (uf.size(0) == n) printf("%d\n", tot);
+		else printf("0\n");
+	}
+	
+	return (0);
+}

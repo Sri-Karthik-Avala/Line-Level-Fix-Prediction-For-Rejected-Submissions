@@ -1,0 +1,27 @@
+from bisect import bisect_left
+
+
+while True:
+	N, Q = map(int, input().split(' '))
+	if N == 0:
+		break
+
+	era = {} # Like {1877: ('Meiji', 10)}
+
+	years = [] # 西暦
+	for _ in range(N):
+		name, j, w = input().split(' ')
+		j, w = int(j), int(w)
+		era[w] = (name, j)
+		years.append(w)
+	years.sort()
+
+	for _ in range(Q):
+		q = int(input())
+		y = years[bisect_left(years, q)]
+		name, length = era[y]
+		if q - y + length <= 0:
+			print('Unknown')
+		else:
+			print(name + ' ' + str(q-y+length))
+

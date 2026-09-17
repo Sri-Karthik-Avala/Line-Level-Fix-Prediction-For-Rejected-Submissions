@@ -1,0 +1,6 @@
+a,b =(int(x) for x in input().split())
+c=2*a-b
+if c>=0:
+  print(c)
+else:
+  print(0)

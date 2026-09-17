@@ -1,0 +1,115 @@
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define LOG(...) printf(__VA_ARGS__)
+//#define LOG(...)
+#define FOR(i,a,b) for(int i=(a);i<(b);++i)
+#define REP(i,n) for(int i=0;i<(int)(n);++i)
+#define CLR(a) memset((a), 0 ,sizeof(a))
+#define ALL(a) (a).begin(),(a).end()
+#define EXIST(s,e) ((s).find(e)!=(s).end())
+#define SORT(c) sort((c).begin(),(c).end())
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<bool> vb;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+typedef vector<vb> vvb;
+typedef vector<vi> vvi;
+typedef vector<vll> vvll;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+
+#define MAX_N 1000000
+#define MAX_X 1000
+#define MAX_Y 1000
+
+int cave[MAX_Y][MAX_X];
+bool sieve[MAX_N+1];
+int dp[MAX_N+1];
+
+int m, n;
+
+struct P { int x, y; };
+
+P search_cave(int n) {
+    REP(y, MAX_Y) REP(x, MAX_X) {
+        if (cave[y][x] == n) {
+            return (P){x, y};
+        }
+    }
+    return (P){0, 0}; // fail
+}
+
+int main() {
+    sieve[0] = sieve[1] = true;
+    FOR(i, 2, MAX_N+1) {
+        if (sieve[i]) continue;
+        for (int j = i + i; j < MAX_N+1; j += i) {
+            sieve[j] = true;
+        }
+    }
+
+    int ul = cave[0][0] = MAX_N;
+    // left -> down -> right -> up ->
+    int d = 0;
+    int dx[] = {1, 0, -1, 0}; int dy[] = {0, 1, 0, -1};
+    int x = 0, y = 0;
+    while (ul > 1) {
+        int sx = x + dx[d];
+        int sy = y + dy[d];
+        if (0 <= sx && sx < MAX_X && 0 <= sy && sy < MAX_Y && cave[sy][sx] == 0) {
+            x = sx;
+            y = sy;
+            ul--;
+            cave[y][x] = ul;
+        } else {
+            d = (d + 1) & 3; // d % 4
+        }
+    }
+
+    while (cin >> m >> n, m|n) {
+        fill_n(dp, MAX_N+1, -1);
+        P s = search_cave(n);
+        dp[n] = 0;
+        int max_primes = 0, max_cave = 0;
+        FOR(y, s.y, MAX_Y) REP(x, MAX_X) {
+            int c = cave[y][x];
+            if (c > m || dp[c] < 0) continue;
+            if (!sieve[c]) { // prime
+                dp[c]++;
+                if (max_primes <= dp[c]) {
+                    max_primes = dp[c];
+                    max_cave = c;
+                }
+            }
+            for (int dx = -1; dx <= 1; dx++) {
+                int sx = x + dx;
+                int sy = y + 1;
+                if (0 <= sx && sx < MAX_X && 0 <= sy && sy < MAX_Y) {
+                    int c2 = cave[sy][sx];
+                    if (c2 <= m) {
+                        dp[c2] = max(dp[c2], dp[c]);
+                    }
+                }
+            }
+        }
+        cout << max_primes << " " << max_cave << endl;
+    }
+}

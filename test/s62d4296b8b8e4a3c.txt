@@ -1,0 +1,23 @@
+n=int(input())
+
+al=['a','b','c','d','e','f','g','h','i','j']
+
+ans=[]
+
+st='a'
+
+temp=0
+now=0
+
+def dfs(st,n,now,temp):
+  if now==n-1:
+    ans.append(st)
+  else:
+    for f in range(0,temp+2):
+      dfs(st+al[f],n,now+1,f)
+    
+dfs(st,n,0,0)
+
+for h in ans:
+  print(h)
+      

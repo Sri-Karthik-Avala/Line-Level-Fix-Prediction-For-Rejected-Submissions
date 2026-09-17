@@ -1,0 +1,44 @@
+#include <iostream>
+#include <utility>
+#include <string>
+#include <vector>
+#include <queue>
+#include <set>
+using namespace std;
+
+int main(){
+	int n,t,h,l,z=0;
+	vector<int> vt(n+1), vh(n+1);
+	cin>>n>>t>>h>>l;
+	for(int i=1; i<=n; i++){
+		cin>>vt[i]>>vh[i];
+	}
+	while(1) for(int i=1; i<=n; i++){
+		if(vt[i]>0){
+			z += 10;
+			t++;
+			vt[i]--;
+		}else if(vh[i]>0){
+			z += 100;
+			h++;
+			vh[i]--;
+		}else{
+			cout<<i<<endl;
+			return 0;
+		}
+		if(t > l){
+			cout<<i<<endl;
+			return 0;
+		}
+		if(z >= 90){
+			z -= 90;
+			t -= z/10;
+			vt[i] += z/90;
+			z = 0;
+			if(t < 0){
+				cout<<i<<endl;
+				return 0;
+			}
+		}
+	}
+}

@@ -1,0 +1,76 @@
+# coding: utf-8
+import sys
+#from operator import itemgetter
+sysread = sys.stdin.buffer.readline
+read = sys.stdin.buffer.read
+#from heapq import heappop, heappush
+from collections import defaultdict
+sys.setrecursionlimit(10**7)
+#import math
+#from itertools import product, accumulate, combinations, product
+#import bisect
+#import numpy as np
+#from copy import deepcopy
+#from collections import deque
+#from decimal import Decimal
+#from numba import jit
+
+INF = 1 << 50
+def run():
+    N, *A_ = map(int, read().split())
+    dp = [[-INF] * (N+1) for _ in range(N+1)]
+    dp_max = [-INF] * (N+1)
+    a, b = A_[:2]
+    dp[a][b] = dp[b][a] = dp_max[a] = dp_max[b] = 0
+
+    triplets = 0
+    chunks = []
+
+    for i in range(N-1):
+        x,y,z = A_[3*i+2 : 3*i+5]
+        if x == y == z:
+            triplets+=1
+        else:
+            chunks.append((x,y,z))
+
+    for x,y,z in chunks:
+        cache = []
+        # transition : a = x = y
+        if y == z:
+            x,y,z = y,z,x
+        elif z == x:
+            x,y,z = z,x,y
+        for i in range(1, N+1):
+            cache.append((z, i, dp[x][i] + 1))
+
+        # trainsition : a = b = x
+        cache.append((y, z, dp[x][x] + 1))
+        cache.append((z, x, dp[y][y] + 1))
+        cache.append((x, y, dp[z][z] + 1))
+
+        # trainsition : only fill next
+        MAX = max(dp_max)
+        cache.append((x, y, MAX))
+        cache.append((y, z, MAX))
+        cache.append((z, x, MAX))
+        for i in range(1, N+1):
+            cache.append((i, x, dp_max[i]))
+            cache.append((i, y, dp_max[i]))
+            cache.append((i, z, dp_max[i]))
+
+        # Update
+        for a, b, value in cache:
+            dp[a][b] = dp[b][a] = max(value, dp[a][b])
+            dp_max[a] = max(dp_max[a], dp[a][b])
+            dp_max[b] = max(dp_max[b], dp[a][b])
+
+    a = A_[-1]
+    dp[a][a] += 1
+    dp_max[a] = max(dp[a][a], dp_max[a])
+
+    print(max(dp_max) + triplets)
+    #print(chunks)
+
+
+if __name__ == "__main__":
+    run()

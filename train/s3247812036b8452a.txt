@@ -1,0 +1,50 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<cstring>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<climits>
+#include<bitset>
+#include<climits>
+#define pii pair<int,int>
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define se second
+using namespace std;
+inline int read(){
+    int f=1,ans=0;char c=getchar();
+    while(c<'0'||c>'9'){if(c=='-')f=-1;c=getchar();}
+    while(c>='0'&&c<='9'){ans=ans*10+c-'0';c=getchar();}
+    return f*ans;
+}
+const int MAXN=701+11;
+vector<int> vec[MAXN];bool ff;
+int MM[MAXN][MAXN],N,M,col[MAXN],INF=INT_MAX;
+int c0,c1,f[MAXN],g[MAXN];
+void dfs(int u,int co){
+    //cerr<<"ff:"<<ff<<" "<<u<<" "<<co<<endl;
+    if(!ff) return;col[u]=co;if(!co) c0++;else c1++;
+    for(auto v:vec[u]){
+        if(col[v]==-1) dfs(v,co^1);
+        else if(col[v]==co){ff=0;break;}
+    }return;
+}
+int fff(int u){return (u*(u-1))/2;}
+int cacl(int u){return fff(u)+fff(N-u);}
+int main(){
+    N=read(),M=read();for(int i=1;i<=M;i++){int u=read(),v=read();MM[u][v]=MM[v][u]=1;}
+    for(int i=1;i<=N;i++) for(int j=i+1;j<=N;j++) if(!MM[i][j]) vec[i].pb(j),vec[j].pb(i);
+    memset(col,-1,sizeof(col));f[0]=1;
+    for(int i=1;i<=N;i++){
+        if(col[i]!=-1) continue;
+        c0=c1=0,ff=1;dfs(i,0);if(!ff){printf("-1\n");return 0;}
+        for(int j=0;j<=N;j++) g[j]=f[j];
+        for(int j=c0;j<=N;j++) f[j]|=g[j-c0];for(int j=c1;j<=N;j++) f[j]|=g[j-c1];
+    }int Minn=INF;
+    for(int i=0;i<=N;i++) if(f[i]) Minn=min(Minn,cacl(i));
+    printf("%d\n",Minn);return 0;
+}
+

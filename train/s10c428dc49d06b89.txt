@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cmath>
+#include <complex>
+#include <string>
+#include <sstream>
+#include <limits>
+#include <numeric>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+
+	int T, X;
+	cin >> T >> X;
+
+	cout.setf(ios::fixed);
+	cout.precision(10);
+
+	cout << T / X;
+
+	return 0;
+}

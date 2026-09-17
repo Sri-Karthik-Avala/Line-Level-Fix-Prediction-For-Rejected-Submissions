@@ -1,0 +1,62 @@
+Score : 100 points 
+ 
+ 
+ Problem Statement You are given a directed graph with N vertices and M edges, not necessarily simple. The i -th edge is oriented from the vertex a_i to the vertex b_i .
+Divide this graph into strongly connected components and print them in their topological order. 
+ 
+ 
+ 
+ 
+ Constraints 
+ 1 \leq N \leq 500,000 
+ 1 \leq M \leq 500,000 
+ 0 \leq a_i, b_i < N 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Input Input is given from Standard Input in the following format: 
+ N M 
+ a_0 b_0 
+ a_1 b_1 
+:
+ a_{M - 1} b_{M - 1} 
+ 
+ 
+ 
+ 
+ 
+ Output Print 1+K lines, where K is the number of strongly connected components.
+Print K on the first line. 
+Print the information of each strongly connected component in next K lines in the following format, where l is the number of vertices in the strongly connected component and v_i is the index of the vertex in it. 
+ l v_0 v_1 ... v_{l-1} 
+ 
+ Here, for each edge (a_i, b_i) , b_i should not appear in earlier line than a_i . 
+ If there are multiple correct output, print any of them. 
+ 
+ 
+ 
+ 
+ 
+ 
+ Sample Input 1 6 7
+1 4
+5 2
+3 0
+5 5
+4 1
+0 3
+4 2
+ 
+ 
+ 
+ 
+ 
+ Sample Output 1 4
+1 5
+2 4 1
+1 2
+2 3 0

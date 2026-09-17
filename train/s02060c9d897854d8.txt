@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <complex>
+
+using namespace std;
+
+typedef complex<double> P;
+typedef pair<P,double> circle;
+struct L { P p, q; L(P p, P q) : p(p), q(q) {} };
+
+template <class T>
+inline const T& abs(const T& a)
+{
+	return a > 0 ? a : -a;
+}
+
+const double EPS = 1e-8;
+
+double dot(P a, P b) { return real(conj(a)*b); }
+double cross(P a, P b) { return imag(conj(a)*b); }
+
+P footPerp(L l, P p) {
+	return l.p + (l.q-l.p)*(dot(l.q-l.p, p-l.p) / (abs(l.q-l.p)*abs(l.q-l.p)));
+}
+
+double lenPerp(L l, P p){
+	return abs(footPerp(l, p)-p);
+}
+
+P ssCrosspoint(L a, L b){
+	double A = cross(a.q-a.p, b.q-b.p);
+	double B = cross(a.q-a.p, a.q-b.p);
+	return b.p + B/A * (b.q-b.p);
+}
+
+bool crossCircle(circle c1, circle c2){
+	double r1 = c1.second;
+	double r2 = c2.second;
+	double d = abs(c1.first-c2.first);
+	if(d<r1||d<r2)
+		return d-abs(r1-r2)>EPS;
+	return r1+r2-d>-EPS;
+}
+
+vector<P> crossPoint(circle c1, circle c2){
+	vector<P> res;
+	double r1 = c1.second;
+	double r2 = c2.second;
+	double r3 = abs(c1.first-c2.first);
+	double rc = (r3*r3+r1*r1-r2*r2)/(2*r3);
+	double rs = sqrt(r1*r1-rc*rc);
+	P dif = (c2.first-c1.first)/r3;
+	res.push_back(c1.first+dif*P(rc,rs));
+	if(abs(rs) > EPS) res.push_back(c1.first+dif*P(rc,-rs));
+	return res;
+}
+
+
+int main(){
+	int x1, y1, x2, y2, x3, y3;
+	while(cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3, x1|y1|x2|y2|x3|y3){
+		x1 += 100, y1 += 100;
+		x2 += 100, y2 += 100;
+		x3 += 100, y3 += 100;
+		while(x1-x2>0){
+			int tmp = x1; x1 = x2; x2 = x3; x3 = tmp;
+			    tmp = y1; y1 = y2; y2 = y3; y3 = tmp;
+		}
+		P p1 = P(x1, y1), p2 = P(x2, y2), p3 = P(x3, y3);
+		double res = 1e12;
+		int cnt = 0;
+		for(int xa=0;xa<=200;xa++){
+			for(int ya=0;ya<=200;ya++){
+				if(cross(p2-p1, P(xa,ya)-p1) > -EPS) break;
+				double len = abs(P(xa,ya)-p2);
+				int r1 = int(len+EPS);
+				for(int xb=max(0,x2-r1);xb<=min(200,x2+r1);xb++){
+					if(len < abs(x2-xb)) continue;
+					for(int sgn=-1;sgn<=1;sgn+=2){
+						int yb = int(sgn*sqrt(len*len-(x2-xb)*(x2-xb)) + y2 + 0.5);
+						if(yb < 0 || 200 < yb) continue;
+						if(abs(abs(p2-P(xb,yb)) - len) > EPS || abs(P(xb,yb)-P(xa,ya)) < EPS) continue;
+						if(cross(p3-p2, P(xb,yb)-p2) > -EPS) continue;
+						circle ca = make_pair(p1, abs(p1-P(xa,ya)));
+						circle cb = make_pair(p3, abs(p3-P(xb,yb)));
+
+						P pt = ssCrosspoint(L(P(xa,ya), P(xa,ya)+P(0,1)*(p2-p1)), L(P(xb,yb), P(xb,yb)+P(0,1)*(p3-p2)));
+						double la = lenPerp(L(p1,p2), P(xa,ya));
+						double lb = lenPerp(L(p1,p2), pt);
+						if(la*la-lb*lb < EPS) continue;
+						if(sqrt(la*la-lb*lb) > res) continue;
+
+						if(!crossCircle(ca, cb)) continue;
+						vector<P> cp = crossPoint(ca, cb);
+						for(int i=0;i<cp.size();i++){
+							int xc = cp[i].real()+0.5;
+							int yc = cp[i].imag()+0.5;
+							if(xc < 0 || 200 < xc || yc < 0 || 200 < yc) continue;
+							if(cross(p1-p3, P(xc,yc)-p3) > -EPS) continue;
+							if(abs(P(xc,yc)-cp[i]) > EPS) continue;
+							res = min(res, sqrt(la*la-lb*lb));
+						}
+					}
+				}
+			}
+		}
+		if(res < 1e10) printf("%.7lf\n", res);
+		else           puts("-1");
+	}
+}

@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+    int N, K;
+    while (cin >> N >> K && (N || K)) {
+        vector<int> S(K);
+        for (int i=0; i<K; ++i) cin >> S[i];
+        int t;
+        bool ok = true;
+        for (int i=0; i<N; ++i) {
+            for (int j=0; j<K; ++j) {
+                cin >> t;
+                S[j] -= t;
+                if (S[i] < 0) {
+                    ok = false;
+                }
+            }
+        }
+        cout << (ok ? "Yes" : "No") << endl;
+    }
+    return 0;
+}

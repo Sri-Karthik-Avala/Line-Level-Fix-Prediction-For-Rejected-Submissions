@@ -1,0 +1,79 @@
+Area 
+ 
+
+ 
+For a given polygon g , computes the area of the polygon.
+ 
+
+ 
+ g is represented by a sequence of points p 1 , p 2 ,..., p n where line segments connecting p i and p i+1 (1 &le; i &le; n-1 ) are sides of g . The line segment connecting p n and p 1 is also a side of the polygon.
+ 
+
+ 
+Note that the polygon is not necessarily convex.
+ 
+
+
+ Input 
+
+ 
+The input consists of coordinates of the points p 1 ,..., p n in the following format:
+ 
+
+ 
+ n 
+ x 1 y 1 
+ x 2 y 2 
+:
+ x n y n 
+ 
+
+
+ 
+The first integer n is the number of points. The coordinate of a point p i is given by two integers x i and y i . The coordinates of points are given in the order of counter-clockwise visit of them.
+ 
+
+
+ Output 
+
+ 
+Print the area of the polygon in a line. The area should be printed with one digit to the right of the decimal point.
+ 
+
+ Constraints 
+
+ 
+ 
+3 &le; n &le; 100
+ 
+ 
+-10000 &le; x i , y i &le; 10000
+ 
+ No point will occur more than once. 
+ Two sides can intersect only at a common endpoint. 
+ 
+
+ Sample Input 1 
+ 
+3
+0 0
+2 2
+-1 1
+ 
+ Sample Output 1 
+ 
+2.0
+ 
+ 
+
+ Sample Input 2 
+ 
+4
+0 0
+1 1
+1 2
+0 2
+ 
+ Sample Output 2 
+ 
+1.5

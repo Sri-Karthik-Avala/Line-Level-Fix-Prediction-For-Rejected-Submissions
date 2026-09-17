@@ -1,0 +1,40 @@
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <set>
+#include <map>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <complex>
+using namespace std;
+
+typedef long long LL;
+typedef vector<int> vi;
+typedef vector<string> vs;
+typedef vector<vector<int> > vii;
+typedef vector<vector<string> > vss;
+typedef pair<int, int> pii;
+#define INF 0x7fffffff
+//#define INFLL 0x7fffffffffffffff
+#define INFLL LLONG_MAX
+#define SIZE(v) int((v).size())
+#define ALL(v) (v).begin(), (v).end()
+#define FOR(i,x) for(int i=0;i<x;i++)
+#define FORic(i,y,x) for(int i=y;i<=x;i++)
+#define FORdc(i,y,x) for(int i=y;i>=x;i--)
+#define FILL(a,v) memset(a, v, sizeof(a))
+#define PI 3.14159265358979323846
+
+int main(){
+	int r, c;
+	while(cin>>r>>c){
+		if(!r&&!c) break;
+		if(r==1&&c==1) cout<<"no"<<endl;
+		else cout<<"yes"<<endl;
+	}
+	return 0;
+}

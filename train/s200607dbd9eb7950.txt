@@ -1,0 +1,24 @@
+def merge(A):
+    n = len(A)
+    if(n < 2):
+        return 0
+    ret = 0
+    L = A[:n/2]
+    R = A[n/2:]
+    ret += merge(L)
+    ret += merge(R)
+    for i in xrange(n):
+        if len(L) == 0:
+            A[i] = R.pop(0)
+        elif len(R) == 0 or L[0] < R[0]:
+            A[i] = L.pop(0)
+        else:
+            ret += len(L)
+            A[i] = R.pop(0)
+    return ret
+
+while True:
+    n = int(raw_input())
+    if n == 0:
+        break
+    print merge([int(raw_input()) for _ in xrange(n)])

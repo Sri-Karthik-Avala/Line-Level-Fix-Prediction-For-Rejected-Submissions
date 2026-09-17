@@ -1,0 +1,72 @@
+#define _USE_MATH_DEFINES
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<climits>
+#include<string>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<cmath>
+#include<queue>
+#include<cstring>
+#include<stack>
+#include<functional>
+using namespace std;
+typedef long long ll;
+
+map<string,ll> num;
+ll par[5000],_rank[5000];
+ 
+void init(ll n){
+    for(ll i=0;i<n;i++) par[i]=i,_rank[i]=1;
+}
+ 
+ll find(ll a){
+    if(par[a]==a) return a;
+    else return par[a] = find(par[a]);
+}
+ 
+void unite(ll _a,ll _b){
+    ll a = find(_a);
+    ll b = find(_b);
+    if(a==b) return;
+    if(_rank[a]>_rank[b]){
+        par[b] = a;
+    }
+    else{
+        par[a] = b;
+        if(_rank[a]==_rank[b]) _rank[b]++;
+    }
+}
+
+int main(){
+	ll N;
+	cin>>N;
+	string A[5000];
+	ll X[5000];
+	for(ll i=0;i<N;i++){
+		cin>>A[i]>>X[i];
+		num[A[i]] = i;
+	}
+	ll M;
+	cin>>M;
+	init(N);
+	for(ll i=0;i<M;i++){
+		string S,T;
+		cin>>S>>T;
+		unite(num[S],num[T]);
+	}
+	ll min_[5000]; fill_n(min_,N,LLONG_MAX);
+	for(ll i=0;i<N;i++){
+		ll p = find(i);
+		min_[p] = min(X[p],X[i]);
+	}
+	ll ans = 0;
+	for(ll i=0;i<N;i++){
+		ans += min_[find(i)];
+	}
+	printf("%lld\n",ans);
+	return 0;
+}

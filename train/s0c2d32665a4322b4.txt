@@ -1,0 +1,37 @@
+import sys
+flush = sys.stdout.flush
+write = sys.stdout.write
+
+N = int(input())
+
+bb_1,bb_2 = "..##",".#.#"
+res_1,res_2 = "",""
+
+def ask(s1,s2):
+    write(res_1)
+    write(res_2)
+    result = input()
+    flush()
+    if result=="end":
+        exit()
+    return result=="T"
+
+# 右側に伸ばしていく
+while 1:
+    for i in range(4):
+        if ask(res_1+bb_1[i],res_2+bb_2[i]):
+            res_1 += bb_1[i]
+            res_2 += bb_2[i]
+            break
+    else:
+        break
+
+# 左側に伸ばしていく
+while 1:
+    for i in range(4):
+        if ask(bb_1[i]+res_1,bb_2[i]+res_2):
+            res_1 = bb_1[i] + res_1
+            res_2 = bb_2[i] + res_2
+            break
+    else:
+        break

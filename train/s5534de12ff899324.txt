@@ -1,0 +1,117 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+using namespace std;
+
+class Button
+{
+public:
+	string n;
+	int lx,ly,rx,ry;
+	Button(string n, int lx, int ly, int rx, int ry)
+	:n(n),lx(lx),ly(ly),rx(rx),ry(ry)
+	{}
+	
+	bool ispush(int x, int y)
+	{
+		return (lx<=x&&x<=rx && ly<=y&&y<=ry);
+	}
+};
+
+class Page
+{
+public:
+	string n;
+	int s;
+	vector<Button> b;
+	Page(string n, int s)
+	:n(n),s(s)
+	{}
+};
+
+int main()
+{
+	int N,W,H;
+	while(cin >> N, N)
+	{
+		cin >> W >> H;
+		map<string, int> d;
+		vector<Page> pages;
+		string buf[10000];
+		int bs=0, np=0,up=0;
+		string nn;
+		
+		for(int i=0; i<N; i++)
+		{
+			string n;
+			int s;
+			cin >> n >> s;
+
+			d[n]=up;
+			up++;
+			
+			if(i==0) 
+			{
+				buf[bs]=n;
+				bs++;
+				np=0;
+			}
+			
+			Page p(n,s);
+			
+			for(int j=0; j<s; j++)
+			{
+				int lx,ly,rx,ry;
+				cin >> lx >>ly >> rx >> ry;
+				string t;
+				cin >> t;
+				p.b.push_back(Button(t,lx,ly,rx,ry));
+			}
+			
+			pages.push_back(p);
+		}
+		
+		int M;
+		cin >> M;
+		
+		while(M--)
+		{
+			string com;
+			cin >> com;
+			
+			if(com=="click")
+			{
+				int x,y;
+				cin >> x >> y;
+				
+				int ph = d[buf[np]];
+				
+				for(int i=0; i<pages[ph].b.size(); i++)
+				{
+					if(pages[ph].b[i].ispush(x,y))
+					{
+						buf[bs]=pages[ph].b[i].n;
+						
+						np++;
+						bs++;
+						break;
+					}
+				}
+			}
+			if(com=="show")
+			{
+				cout << buf[np] << endl;
+			}
+			if(com=="back")
+			{
+				if(np!=0)
+					np--;
+			}
+			if(com=="forward")
+			{
+				if(np!=bs-1) np++;
+			}
+		}
+	}
+}

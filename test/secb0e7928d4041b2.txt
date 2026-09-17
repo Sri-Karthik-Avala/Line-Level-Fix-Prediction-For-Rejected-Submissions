@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+void era_transform(int year, int month, int day);
+
+int main(void)
+{
+    int year, month, day;
+    while (scanf("%d %d %d",&year, &month, &day) != EOF) {
+        era_transform(year, month, day);
+        scanf("%d %d %d",&year, &month, &day);
+    }
+    return 0;
+}
+
+void era_transform(int year, int month, int day)
+{
+    int z = year * 10000 + month * 100 + day;// 時代判定用関数
+    if (z <= 18680907) {
+        printf("pre-meiji\n");
+    } else if (z <= 19120729) {
+        printf("meiji %d %d %d\n", year - 1867, month, day);
+    } else if (z <= 19261224) {
+        printf("taisho %d %d %d\n", year - 1911, month, day);
+    } else if (z <= 19890107) {
+        printf("showa %d %d %d\n", year - 1925, month, day);
+    } else {
+        printf("heisei %d %d %d\n", year - 1988, month, day);
+    }
+}

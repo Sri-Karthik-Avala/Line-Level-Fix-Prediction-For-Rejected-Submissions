@@ -1,0 +1,52 @@
+#include<iostream>
+#include<iomanip>
+#include<cstring>
+#include<cmath>
+#include<cstdio>
+#include<queue>
+#include<algorithm>
+using namespace std;
+const int maxn=3000;
+int n,mod;
+long long fir[maxn+5],inv[maxn+5],s[maxn+5][maxn+5];
+long long ksm(long long x,long long n)
+{
+	long long ans=1;
+	while(n)
+	{
+		if(n&1) ans=ans*x%mod;
+		x=x*x%mod;
+		n>>=1;
+	}
+	return ans;
+}
+void pre()
+{
+	fir[0]=1;
+	for(int i=1;i<=maxn;i++) fir[i]=fir[i-1]*i%mod;
+	inv[maxn]=ksm(fir[maxn],mod-2);
+	for(int i=maxn-1;i>=0;i--) inv[i]=inv[i+1]*(i+1)%mod;
+	s[0][0]=1;
+	for(int i=1;i<=n+1;i++)
+	for(int j=1;j<=i;j++) s[i][j]=(s[i-1][j]*j+s[i-1][j-1])%mod;
+}
+long long C(int n,int m)
+{
+	if(n<m) return 0;
+	return fir[n]*inv[m]%mod*inv[n-m]%mod;
+}
+int main()
+{
+	scanf("%d%d",&n,&mod);
+	pre();
+	long long ans=0;
+	for(int i=0;i<=n;i++)
+	{
+		int op=(i&1)?-1:1;
+		long long mu=ksm(2,n-i),mus=1;
+		long long v=ksm(2,mu);
+		for(int j=0;j<=i;j++) ans=(ans+s[i+1][j+1]*v%mod*mus%mod*op%mod*C(n,i)%mod)%mod,mus=mus*mu%mod;
+	}
+	ans=(ans%mod+mod)%mod;
+	printf("%lld\n",ans);
+}

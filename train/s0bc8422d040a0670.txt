@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define endl "\n"
+#define FASTIO cin.tie(0); cout.tie(0); ios_base::sync_with_stdio(false);
+#define loop(i,a,b) for(int i=a; i<b; i++)
+#define INF 10000000000099ll
+#define mod 1000000007
+#define prDouble(x) cout<<fixed<<setprecision(10)<<x
+
+ll dp[22][(1 << 22)];
+
+ll solve(vector<vector<int>>& compat, int i, int womenSubset, int n)
+{
+	if (i == n + 1) {
+		if (womenSubset == 0) return 1;
+		return 0;
+	}
+	if (dp[i][womenSubset] != -1) {
+		return dp[i][womenSubset];
+	}
+	ll ans = 0;
+	for (int women = 0; women < n; women++) {
+		bool available = ((1 << women) & (womenSubset) == 0) ? 0 : 1;
+		if (available && compat[i][women + 1]) {
+			ans = (ans + solve(compat, i + 1, womenSubset ^ (1 << women), n)) % mod;
+		}
+	}
+	return dp[i][womenSubset] = ans;
+}
+
+int main()
+{
+	FASTIO;
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+	int n;
+	cin >> n;
+	vector<vector<int>> compat(n + 1, vector<int>(n + 1));
+	memset(dp, -1, sizeof dp);
+	loop(i, 1, n + 1)
+	loop(j, 1, n + 1)
+	cin >> compat[i][j];
+	cout << solve(compat, 1, ((1 << (n)) - 1), n); //2^n-1
+	return 0;
+}
+

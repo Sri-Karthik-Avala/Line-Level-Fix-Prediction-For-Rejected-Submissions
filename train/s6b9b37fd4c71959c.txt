@@ -1,0 +1,87 @@
+import bisect
+from collections import deque
+
+def xins(x):
+    if not x in xlist:
+        insp = bisect.bisect(xlist,x)
+        xlist.insert(insp,x)
+        for lst in zaatu:
+            ins = 1 if insp == 0 else lst[insp-1]
+            lst.insert(insp,ins)
+
+def yins(y):
+    if not y in ylist:
+        insp = bisect.bisect(ylist,y)
+        ylist.insert(insp,y)
+        a = [1]*(len(xlist)+1)
+        if insp > 0:
+            for i in range(len(xlist)):
+                a[i] = zaatu[insp-1][i]
+        zaatu.insert(insp,a)
+
+def addmask(x1,y1,x2,y2):
+    xins(x1)
+    yins(y1)
+    xins(x2)
+    yins(y2)
+    x1 = xlist.index(x1)
+    y1 = ylist.index(y1)
+    x2 = xlist.index(x2)
+    y2 = ylist.index(y2)
+
+    for i in range(y1,y2):
+        for j in range(x1,x2):
+            zaatu[i][j] = 0
+
+def printcolor(zaatu,no,x,y,xlen,ylen,stack):
+    if zaatu[y][x] == 1:
+        zaatu[y][x] = no
+        if x > 0:
+            stack.append([x-1,y])
+        if x < xlen:
+            stack.append([x+1,y])
+        if y > 0:
+            stack.append([x,y-1])
+        if y < ylen:
+            stack.append([x,y+1])
+
+def doprint(zaatu,no,xlen,ylen,stack):
+    while len(stack) != 0:
+        x,y = stack.popleft()
+        printcolor(zaatu,no,x,y,xlen,ylen,stack)
+
+
+while True:
+    xlist = []
+    ylist = []
+    zaatu = [[1]]
+    h,w = map(int, input().split())
+    if h == 0: break
+    masn = int(input())
+    for i in range(masn):
+        a,b,c,d = map(int,input().split())
+        addmask(a,b,c,d)
+
+    if xlist[0] != 0: xins(0)
+    if ylist[0] != 0: yins(0)
+    if xlist[-1] == h: xlist.pop()
+    if ylist[-1] == w: ylist.pop()
+    ylist.pop()
+
+
+    xlen = len(xlist)
+    ylen = len(ylist)
+    no = 2
+
+
+    for y in range(ylen):
+        for x in range(xlen):
+            if zaatu[y][x] == 1:
+                d = deque([[x,y]])
+                doprint(zaatu,no,xlen,ylen,d)
+            if zaatu[y][x] == no: no += 1
+
+    mx = 0
+    for lst in zaatu:
+        mx = max(mx,max(lst))
+    print(mx-1)

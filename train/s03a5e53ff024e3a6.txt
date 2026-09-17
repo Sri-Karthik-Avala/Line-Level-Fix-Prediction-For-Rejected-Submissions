@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M;
+vector<int> s;
+
+bool enough(int X) {
+    int L = 1;
+    for (int i = 0; i < M - 1; ++i) {
+        if (s.back() < L + X) return false;
+        auto itr = lower_bound(begin(s), end(s), L);
+        int diff = 1e9;
+        if (itr != begin(s) && *prev(itr) < L + X) {
+            diff = min(diff, abs(L - *prev(itr)));
+        }
+        if (*itr < L + X) {
+            diff = min(diff, abs(L - *itr));
+        }
+        if (diff == 1e9) return false;
+        L += max(1, X - diff);
+    }
+    return true;
+}
+
+int main() {
+    while (cin >> N >> M, N) {
+        s = vector<int>(N);
+        for (int i = 0; i < N; ++i) cin >> s[i];
+        int ok = 1, ng = s.back();
+        while (ng - ok > 1) {
+            int mid = (ok + ng) / 2;
+            ( (enough(mid)) ? ok : ng ) = mid;
+        }
+        cout << ( (enough(ok) && !enough(ng)) ? ok : -1 ) << endl;
+    }
+    return 0;
+}
+

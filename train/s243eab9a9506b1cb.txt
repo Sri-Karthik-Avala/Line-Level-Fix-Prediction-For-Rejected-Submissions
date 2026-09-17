@@ -1,0 +1,100 @@
+#include "iostream"
+#include "climits"
+#include "list"
+#include "queue"
+#include "stack"
+#include "set"
+#include "functional"
+#include "algorithm"
+#include "string"
+#include "map"
+#include "unordered_map"
+#include "unordered_set"
+#include "iomanip"
+#include "cmath"
+#include "random"
+#include "bitset"
+#include "cstdio"
+#include "numeric"
+#include "cassert"
+#include "ctime"
+
+using namespace std;
+
+//constexpr long long int MOD = 1000000007;
+constexpr int MOD = 1000000007;
+//constexpr int MOD = 998244353;
+//constexpr long long int MOD = 998244353;
+constexpr long double EPS = 1e-12;
+
+//int N, M, K, H, W, L, R;
+long long int N, M, K, H, W, L, R;
+
+long long int power(long long int x, long long int n, long long int M) {
+	long long int ret = 1;
+	long long int by = x;
+	while (n) {
+		if (n & 1) {
+			ret *= by;
+			ret %= M;
+		}
+		by *= by;
+		by %= M;
+		n >>= 1;
+	}
+	return ret;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	cin >> N >> M;
+	vector<vector<long long int>>dp(N + 1, vector<long long int>(M + 1, 1));
+	vector<vector<long long int>>sum(N + M + 1, vector<long long int>(N + 1, 1));
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= M; j++) {
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+			dp[i][j] %= MOD;
+			sum[i + j][i] = dp[i][j];
+		}
+	}
+	for (int i = 1; i <= N + M; i++) {
+		for (int j = 1; j <= N; j++) {
+			sum[i][j] += sum[i][j - 1];
+			sum[i][j] %= MOD;
+		}
+	}
+	vector<long long int>naname(N + 1);
+	for (int i = 0; i <= N; i++)naname[i] = sum[i][i];
+	for (int i = 1; i <= N; i++) {
+		naname[i] += naname[i - 1];
+		naname[i] %= MOD;
+	}
+	long long int ans = 0;
+	for (int i = 0; i <= N; i++) {
+		for (int j = 0; j <= i; j++) {
+			long long int by = 0;
+			int r = j, b = i - j;
+			if (b > M - 1)continue;
+			if (b == 0) {
+				ans++;
+				continue;
+			}
+			int bb = b - 1;
+			for (int k = 0; k < min(r,bb); k++) {
+				by += sum[bb][min(k,bb)];
+			}
+			for (int k = min(r, bb); k <= r; k++) {
+				by += sum[bb][min(k, bb)];
+			}
+
+			by %= MOD;
+			long long int add = dp[M - 1 - i + j][i - j];
+			ans += add * by;
+			ans %= MOD;
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}

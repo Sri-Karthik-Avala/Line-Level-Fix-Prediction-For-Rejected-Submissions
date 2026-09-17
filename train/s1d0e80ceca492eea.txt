@@ -1,0 +1,71 @@
+import sys
+import string
+input = sys.stdin.readline
+from collections import defaultdict
+N = int(input())
+T = [input()[::-1].strip() for i in range(N)]
+
+#N = 100
+#M = 10000
+#import random
+#import string
+#T = [''.join(random.choices(string.ascii_lowercase, k=random.randint(M,M))) for i in range(N)]
+
+class TrieTree:
+    class Node:
+        def __init__(self):
+            #self.clue = defaultdict(int)
+            self.clue = [0]*26
+            self.ch = defaultdict(TrieTree.Node)
+            self.cnt = 0
+            self.end = False
+
+    def __init__(self):
+        self.root = self.Node()
+
+    def register(self,word):
+        node = self.root
+        for w in word:
+            node.cnt += 1
+            node = node.ch[w]
+        node.cnt += 1
+        node.end = True
+    
+    def prefix(self, word):
+        node = self.root
+        for w in word:
+            if w not in node.ch:
+                return False
+            else:
+                node = node.ch[w]
+        return node
+
+tt = TrieTree()
+for word in T:
+    tt.register(word)
+
+route = []
+
+st = [tt.root]
+while st:
+    node = st.pop()
+    route.append(node)
+    st.extend(node.ch.values())
+
+f = lambda c : ord(c)-97
+for node in route[::-1]:
+    for c,nnode in node.ch.items():
+        nnode.clue[f(c)] = nnode.cnt
+        for i,v in enumerate(nnode.clue):
+            node.clue[i] += v
+
+ans = 0
+for word in T:
+    pre = word[:-1]
+    last = word[-1]
+    node = tt.prefix(pre)
+    if not node:
+        continue
+    ans += node.clue[f(last)] - 1
+    
+print(ans)

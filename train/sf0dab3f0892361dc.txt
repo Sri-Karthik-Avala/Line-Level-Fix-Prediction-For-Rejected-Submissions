@@ -1,0 +1,13 @@
+while True:
+    n = input()
+    if n == 0: break
+    p = map(int, raw_input().strip().split(" "))
+    j = map(int, raw_input().strip().split(" "))
+    j.sort(); j.reverse();
+    sum = 0; num = n;
+    for m in p:
+        sum += m
+    for i in range(n):
+        if (num-1)*(sum+j[i]) < num*sum: break
+        num-=1; sum+=j[i]
+    print num * sum

@@ -1,0 +1,10 @@
+def fairfield(y, m, d):
+	y -= 1
+	return 365 * y + int(y / 4) - int(y / 100) + int(y / 400) + int(306 * (m + 1) / 10) + d - 428
+while True:
+	dset =  map(int, raw_input().split())
+	if -1 in dset:
+		break
+	y1, m1, d1 = dset[0:3]
+	y2, m2, d2 = dset[3:6]
+	print fairfield(y2, m2, d2) - fairfield(y1, m1, d1)

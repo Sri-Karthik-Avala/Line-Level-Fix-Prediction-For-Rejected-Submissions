@@ -1,0 +1,24 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+ 
+int main() {
+  string s;
+  cin>>s;
+  bool SS,NN,WW,EE=false;
+  for(int i=0;i<s.size();i++){
+    if(s.at(i)=='S'){SS=true;}
+    if(s.at(i)=='N'){NN=true;}
+    if(s.at(i)=='W'){WW=true;}
+    if(s.at(i)=='E'){EE=true;}
+  }
+   
+   if(SS==true&&NN==false){cout<<"No";}
+   else if(NN==true&&SS==false){cout<<"No";}
+   else if(WW==true&&EE==false){cout<<"No";}
+   else if(EE==true&&WW==false){cout<<"No";}
+   else{cout<<"Yes";}
+   cout<<endl;
+
+  return 0;
+}

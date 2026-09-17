@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)n;i++)
+#define all(c) (c).begin(),(c).end()
+#define pb push_back
+#define dbg(...) do{cerr<<__LINE__<<": ";dbgprint(#__VA_ARGS__, __VA_ARGS__);}while(0);
+
+using namespace std;
+
+namespace std{template<class S,class T>struct hash<pair<S,T>>{size_t operator()(const pair<S,T>&p)const{return ((size_t)1e9+7)*hash<S>()(p.first)+hash<T>()(p.second);}};template<class T>struct hash<vector<T>>{size_t operator()(const vector<T> &v)const{size_t h=0;for(auto i : v)h=h*((size_t)1e9+7)+hash<T>()(i)+1;return h;}};}
+template<class T>ostream& operator<<(ostream &os, const vector<T> &v){os<<"[ ";rep(i,v.size())os<<v[i]<<(i==v.size()-1?" ]":", ");return os;}template<class T>ostream& operator<<(ostream &os,const set<T> &v){os<<"{ "; for(const auto &i:v)os<<i<<", ";return os<<"}";}
+template<class T,class U>ostream& operator<<(ostream &os,const map<T,U> &v){os<<"{";for(const auto &i:v)os<<" "<<i.first<<": "<<i.second<<",";return os<<"}";}template<class T,class U>ostream& operator<<(ostream &os,const pair<T,U> &p){return os<<"("<<p.first<<", "<<p.second<<")";}
+void dbgprint(const string &fmt){cerr<<endl;}template<class H,class... T>void dbgprint(const string &fmt,const H &h,const T&... r){cerr<<fmt.substr(0,fmt.find(","))<<"= "<<h<<" ";dbgprint(fmt.substr(fmt.find(",")+1),r...);}
+typedef long long ll;typedef vector<int> vi;typedef pair<int,int> pi;const int inf = (int)1e9;const double INF = 1e12, EPS = 1e-9;
+void visit(const vector<vi> & g, int v, int u,
+    vector< vector<int> >& tecomp,
+    stack<int>& roots, stack<int>& S, vector<bool>& inS,
+    vector<int>& num, int& time) {
+  num[v] = ++time;
+  S.push(v); inS[v] = true;
+  roots.push(v);
+  for(int w : g[v]) {
+    if (num[w] == 0)
+      visit(g, w, v, tecomp, roots, S, inS, num, time);
+    else if (u != w && inS[w])
+      while (num[roots.top()] > num[w]) roots.pop();
+  }
+  if (v == roots.top()) {
+    tecomp.push_back(vector<int>());
+    while (1) {
+      int w = S.top(); S.pop(); inS[w] = false;
+      tecomp.back().push_back(w);
+      if (v == w) break;
+    }
+    roots.pop();
+  }
+}
+vector<vi> calc_te(const vector<vi>& g) {
+  const int n = g.size();
+  vector<int> num(n);
+  vector<bool> inS(n);
+	vector<vi> tecomp;
+  stack<int> roots, S;
+  int time = 0;
+  rep(u, n) if (num[u] == 0) {
+    visit(g, u, n, tecomp, roots, S, inS, num, time);
+  }
+	return tecomp;
+}
+int main(){
+	cin.tie(0); cin.sync_with_stdio(0);
+	vector<vi> e, te;
+	{
+		int n, m; cin >> n >> m;
+		vector<vi> g(n);
+		rep(i, m){
+			int s, t; cin >> s >> t;
+			g[s].pb(t);
+			g[t].pb(s);
+		}
+		te = calc_te(g);
+		vi to(n, -1);
+		rep(i, te.size()) for(int j : te[i]) to[j] = i;
+		
+		e.resize(te.size());
+		rep(i, n) for(int j : g[i]) if(to[i] != to[j]) e[to[i]].pb(to[j]);
+	}
+	//dbg(te); rep(i, te.size()) dbg(e[i]);
+	
+	vector<vi> sum(2, vi(e.size(), -1));
+	function<void(int,int,int)> rec = [&](int c, int p, int u){
+		for(int i : e[c]) if(i != p) rep(j, 2) rec(i, c, j);
+		int &res = sum[u][c];
+		if(res >= 0) return;
+		res = 0;
+		
+		for(int i : e[c]) if(i != p){
+			if(u) res += sum[0][i];
+			else res += max(sum[0][i], sum[1][i]);
+		}
+		if(u) res += te[c].size();
+	};
+	int ans = 0;
+	rep(i, e.size()) if(sum[0][i] < 0){
+		rep(j, 2) rec(i, i, j);
+		ans += max(sum[0][i], sum[1][i]);
+	}
+	cout << ans << endl;
+	
+	return 0;
+}

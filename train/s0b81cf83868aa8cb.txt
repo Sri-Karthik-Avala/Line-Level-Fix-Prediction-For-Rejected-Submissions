@@ -1,0 +1,26 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+const int Max = 1e6 + 5;
+const int Mod = 1e9 + 7;
+int lst[Max];
+int ls[Max];
+
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 1;i <= n;i++)
+	{
+		scanf("%d", &lst[i]);
+		if (lst[i] % 4 == 0)ls[4]++;
+		else if (lst[i] % 2 == 0)ls[2]++;
+		else ls[1]++;
+	}
+	if (ls[1]+1>ls[4]||(ls[1]+1==ls[4]&&ls[2]))cout << "No" << endl;
+	else cout << "Yes" << endl;
+
+
+}

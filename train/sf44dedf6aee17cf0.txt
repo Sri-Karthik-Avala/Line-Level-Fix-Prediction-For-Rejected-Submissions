@@ -1,0 +1,7 @@
+def convert(S):
+    return eval(S.replace(")[","),[").replace("](","],("))
+def dfs(A, B):
+    if not A or not B:
+        return ()
+    return (dfs(A[0], B[0]), [A[1][0] + B[1][0]], dfs(A[2], B[2]))
+print(str(dfs(convert(input()), convert(input()))).replace(", ","")[1:-1])

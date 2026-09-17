@@ -1,0 +1,73 @@
+Network Reliability 
+
+ 
+An undirected graph is given.
+Each edge of the graph disappears with a constant probability.
+Calculate the probability with which the remained graph is connected.
+ 
+
+ Input 
+
+ 
+The first line contains three integers N ( 1 \leq N \leq 14 ), M ( 0 \leq M \leq 100 ) and P ( 0 \leq P \leq 100 ), separated by a single space.
+ N is the number of the vertices and M is the number of the edges. P is the probability represented by a percentage.
+ 
+
+ 
+The following M lines describe the edges.
+Each line contains two integers v_i and u_i ( 1 \leq u_i, v_i \leq N ).
+( u_i, v_i ) indicates the edge that connects the two vertices u_i and v_i .
+ 
+
+ Output 
+
+ 
+Output a line containing the probability with which the remained graph is connected.
+Your program may output an arbitrary number of digits after the decimal point. However, the absolute error should be 10^{-9} or less.
+ 
+
+ Sample Input 1 
+
+ 
+3 3 50
+1 2
+2 3
+3 1
+ 
+
+ Output for the Sample Input 1 
+
+ 
+0.500000000000
+ 
+
+ Sample Input 2 
+
+ 
+3 3 10
+1 2
+2 3
+3 1
+ 
+
+ Output for the Sample Input 2 
+
+ 
+0.972000000000
+ 
+
+ Sample Input 3 
+
+ 
+4 5 50
+1 2
+2 3
+3 4
+4 1
+1 3
+ 
+
+ Output for the Sample Input 3 
+
+ 
+0.437500000000

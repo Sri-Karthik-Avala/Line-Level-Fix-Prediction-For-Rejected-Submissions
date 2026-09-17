@@ -1,0 +1,106 @@
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+using ll = long long;
+using ull = unsigned long long;
+using pii = pair<int, int>;
+using pll = pair<long long, long long>;
+#define rep(i, n) for(int i = 0; i < (n); ++i)
+#define all(x) (x).begin(),(x).end()
+constexpr char ln = '\n';
+constexpr long long MOD = 1000000007;
+//constexpr long long MOD = 998244353;
+template<class T1, class T2> inline bool chmax(T1 &a, T2 b) { if (a < b) { a = b; return true;} return false; }
+template<class T1, class T2> inline bool chmin(T1 &a, T2 b) { if (a > b) { a = b; return true;} return false; }
+inline int popcount(int x) {return __builtin_popcount(x);}
+inline int popcount(long long x) {return __builtin_popcountll(x);}
+void print() { cout << "\n"; }
+template<class T, class... Args>
+void print(const T &x, const Args &... args) {
+    cout << x << " ";
+    print(args...);
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+template<typename C>
+struct Trie {
+    struct Node {
+        int exist,len;
+        vector<int> accept;
+        map<C, int> ch;
+        Node() : exist(0), len(0) {}  
+    };
+
+    vector<Node> node;
+
+    Trie() {node.emplace_back();}
+
+    template<typename S>
+    void add (const S &A, int id) {
+        int cur = 0;
+        for (int i = 0; i < (int)A.size(); i++) {
+            if (!node[cur].ch.count(A[i])) {
+                int nex = node.size();
+                node.emplace_back();
+                node[nex].len = node[cur].len + 1;
+                node[cur].ch.emplace(A[i],nex);
+            }
+            node[cur].exist++;
+            cur = node[cur].ch[A[i]];
+        }
+        node[cur].exist++;
+        node[cur].accept.emplace_back(id);
+    }
+
+    template<typename S>
+    int find(const S &A) {
+        int cur = 0;
+        for (int i = 0; i < (int)A.size(); i++) {
+            if (!node[cur].ch.count(A[i])) return -1;
+            cur = node[cur].ch[A[i]];
+        }
+        return cur;
+    }
+
+    int count() const {return node[0].eixst;}
+
+    int size() const {return(int)node.size();}
+};
+
+int underbit(ll x) {
+    if (x==0) return 0;
+    rep(i,64) {
+        if ((x>>i)&1) return i+1;
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false); cin.tie(nullptr);
+    ll N,L; cin >> N >> L;
+    Trie<char> T;
+
+    ll g = 0;
+    rep(_,N) {
+        string S; cin >> S;
+        int K = S.size();
+        int cur = 0, len = 0;
+        rep(i,K) {
+            if (!T.node[cur].ch.count(S[i])) {
+                len = T.node[cur].len;
+                break;
+            }
+            cur = T.node[cur].ch[S[i]];
+        }
+        ll val = L - len;
+        g ^= underbit(val);
+        ll l = L - K + 1;
+        for (ll i = l; i < val; i++) g ^= i;
+        T.add(S,_);
+    }
+
+    cout << (g ? "Alice" : "Bob") << ln;
+}

@@ -1,0 +1,17 @@
+# AOJ 0539: Pizza
+# Python3 2018.7.1 bal4u
+
+import bisect
+
+while True:
+	d = int(input())
+	if d == 0: break
+	n, m = int(input()), int(input())
+	p = [0] + [int(input()) for i in range(n-1)] + [d]
+	p.sort()
+	ans = 0
+	for i in range(m):
+		k = int(input())
+		t = bisect.bisect_left(p, k)
+		ans += min(k-p[t-1], p[t]-k)
+	print(ans)

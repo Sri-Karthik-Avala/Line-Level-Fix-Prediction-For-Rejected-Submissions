@@ -1,0 +1,13 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main(){
+    double n;
+    cin >> n;
+    double ans = n/1.08;
+    if(round(ceil(ans)*1.08) == n){
+        cout << ceil(ans) <<endl;
+    }else{
+        cout << ":(" <<endl;
+    }
+
+}

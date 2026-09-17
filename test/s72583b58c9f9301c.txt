@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+#define rep(i,a,b) for(int i=(a);i<=(b);i++)
+using namespace std;
+
+void GG(){
+	puts("0"),exit(0);
+}
+
+const int N=1505,mod=998244353;
+int a[2][N][N],c[N],pw[N*N],vi[N],n,m0,m1,sum;
+vector<int> e[N];
+char s[N];
+
+void dfs(int u){
+	sum^=c[u],vi[u]=1;
+	for(auto v:e[u]) if(!vi[v]) dfs(v);
+}
+
+int solve(int m,int a[N][N]){
+	int res=0;
+	rep(i,1,m) rep(j,i+1,m) res+=!a[i][j];
+	if(m%2==0) return res;
+	rep(i,1,m) e[i].clear(),vi[i]=0;
+	rep(i,1,m) rep(j,i+1,m)
+		if(a[i][j]==1) c[i]^=1,c[j]^=1;
+		else if(!a[i][j]) e[i].push_back(j),e[j].push_back(i);
+	rep(i,1,m) if(!vi[i]){
+		sum=0,res++,dfs(i);
+		if(sum) GG();
+	}
+	return res-m;
+}
+
+int main(){
+	scanf("%d",&n);
+	m0=(n+2)/2,m1=(n+1)/2;
+	rep(i,1,n-1){
+		scanf("%s",s+1);
+		rep(j,1,n-1){
+			if(s[j]=='?') continue;
+			int k=(i+j)&1,a=i,b=j,t=i+j-n;
+			if(a<b) swap(a,b);
+			if(t>0) a-=t,b-=t;
+			int aim=(s[j]=='x'?1:-1);
+			int u=(a-b)/2+1,v=(a+b)/2+1;
+			if(::a[k][u][v]){
+				if(::a[k][u][v]!=aim) GG();
+				continue;
+			}
+			::a[k][u][v]=aim;
+		}
+	}
+	pw[0]=1;
+	rep(i,1,n*n) pw[i]=pw[i-1]*2%mod;
+	cout<<pw[solve(m0,a[0])+solve(m1,a[1])]<<endl;
+	return 0;
+}

@@ -1,0 +1,32 @@
+while 1:
+    n, m = map(int, raw_input().split())
+    if n == m == 0:
+        break
+    S = map(int, raw_input().split())
+    left = 0; right = sum(S)+2
+    def check(mid):
+        if 1+mid <= S[0]:
+            return 10**9
+        cnt = 0; l = 1
+        target = S[n-1] - mid
+        for i in xrange(n-1):
+            while l <= S[i] and cnt<=m and l<=target:
+                l += mid-(S[i]-l)
+                cnt += 1
+            if (l+mid <= S[i+1] or abs(l-S[i]) < abs(l-S[i+1])) and cnt<=m and l<=target:
+                l += mid-(l-S[i])
+                cnt += 1
+                if l+mid <= S[i+1]:
+                    cnt += S[i+1]-mid+1-l
+                    l = S[i+1]-mid+1
+        return cnt
+    while left+1 < right:
+        mid = (left + right) / 2
+        if m-1 <= check(mid):
+            left = mid
+        else:
+            right = mid
+    if 10**8 < check(left):
+        print -1
+    else:
+        print left

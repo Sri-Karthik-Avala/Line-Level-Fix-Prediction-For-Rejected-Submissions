@@ -1,0 +1,11 @@
+N, A, B = map(int, input().split())
+X = map(int, input().split())
+curr = next(X)
+ans = 0
+for x in X:
+    if (x - curr) * A <= B:
+        ans += x - curr
+    else:
+        ans += B
+    curr = x
+print(ans)

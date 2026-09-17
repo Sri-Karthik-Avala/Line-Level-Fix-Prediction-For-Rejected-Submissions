@@ -1,0 +1,88 @@
+# -*- coding: utf-8 -*-
+"""
+http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0151&lang=jp
+
+"""
+import sys
+from sys import stdin
+input = stdin.readline
+
+
+def main(args):
+    while True:
+        n = int(input())
+        if n == 0:
+            break
+        data = [list(map(int, list(input().strip()))) for _ in range(n)]
+
+        # ???(North)??????(West)?????????(NorthWest)?????????(NorthEast) ????????????????????????1???????????£?¶???????????????????????????????
+        N = [[0] * n for _ in range(n)]
+        W = [[0] * n for _ in range(n)]
+        NW = [[0] * n for _ in range(n)]
+        NE = [[0] * n for _ in range(n)]
+        N_max = 0               #  ???????????????????????§?????£?¶???????1????????§?????°
+        W_max = 0
+        NW_max = 0
+        NE_max = 0
+
+        for i in range(n):
+            for j in range(n):
+                c = data[i][j]  #  ????????????data[i][j]?????????????????§???????????§?????????????¨???¶
+                
+                # North??????
+                ni = i - 1
+                if ni < 0:
+                    N[i][j] = c
+                else:
+                    if c == 1:
+                        N[i][j] = N[ni][j] + 1
+                        if N[i][j] > N_max:
+                            N_max = N[i][j]
+                    else:
+                        N[i][j] = 0
+                        
+                # West??????
+                nj = j - 1
+                if nj < 0:
+                    W[i][j] = c
+                else:
+                    if c == 1:
+                        W[i][j] = W[i][nj] + 1
+                        if W[i][j] > W_max:
+                            W_max = W[i][j]
+                    else:
+                        W[i][j] = 0
+
+                # North West??????
+                ni = i - 1
+                nj = j - 1
+                if ni < 0 or nj < 0:
+                    NW[i][j] = c
+                else:
+                    if c == 1:
+                        NW[i][j] = NW[ni][nj] + 1
+                        if NW[i][j] > NW_max:
+                            NW_max = NW[i][j]
+                    else:
+                        NW[i][j] = 0
+
+                # North East??????
+                ni = i - 1
+                nj = j + 1
+                if ni < 0 or nj >= n:
+                    NE[i][j] = c
+                else:
+                    if c == 1:
+                        NE[i][j] = NE[ni][nj] + 1
+                        if NE[i][j] > NE_max:
+                            NE_max = NE[i][j]
+                    else:
+                        NE[i][j] = 0
+
+        print(max(N_max, W_max, NW_max, NE_max))
+
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
+    

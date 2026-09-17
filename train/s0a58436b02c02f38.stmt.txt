@@ -1,0 +1,79 @@
+D： 素因数分解の多様性 (The Diversity of Prime Factorization) 
+
+ Problem 
+
+ Ebi-chan has the FACTORIZATION MACHINE, which can factorize natural numbers M (greater than 1) in O( $\log$ M) time! But unfortunately, the machine could display only digits and whitespaces. 
+
+ In general, we consider the factorization of M as p_1^{e_1} \times p_2^{e_2} \times ... \times p_K^{e_K} where (1) i < j implies p_i < p_j and (2) p_i is prime. Now, she gives M to the machine, and the machine displays according to the following rules in ascending order with respect to i : 
+ 
+ If e_i = 1 , then displays p_i , 
+ otherwise, displays p_i e_i . 
+ 
+
+ For example, if she gives either 22 or 2048 , then 2 11 is displayed. If either 24 or 54 , then 2 3 3 . 
+
+ Okay, Ebi-chan has written down the output of the machine, but she notices that she has forgotten to write down the input! Now, your task is to count how many natural numbers result in a noted output. Note that Ebi-chan has mistaken writing and no input could result in the output. 
+
+ The answer could be too large, so, you must output it modulo 10^9+7 (prime number). 
+
+ Input 
+
+ 
+ N 
+ q_1 q_2 $\cdots$ q_N 
+ 
+
+ In the first line, the number of the output of the machine is given. In the second line, the output of the machine is given. 
+
+ Constraints 
+ 
+ 1 \leq N \leq 10^5 
+ 2 \leq q_i \leq 10^6 ( 1 \leq i \leq N ) 
+ 
+
+ Output 
+ Print the number of the natural numbers that result in the given output of the machine. 
+
+ Sample Input 1 
+ 
+3
+2 3 3
+ 
+
+ Sample Output for Input 1 
+ 2 
+
+ 24 = 2^3 \times 3 and 54 = 2 \times 3^3 satisfy the condition. 
+
+ Sample Input 2 
+ 
+3
+2 3 4
+ 
+
+ Sample Output 2 for Input 2 
+ 1 
+
+ Only 162 = 2 \times 3^4 satisfies the condition. Note that 4 is not prime. 
+
+ Sample Input 3 
+ 
+3
+3 5 2
+ 
+
+ Sample Output for Input 3 
+ 1 
+
+ Since 2 < 3 < 5 , only 75 = 3 \times 5^2 satisfies the condition. 
+
+ Sample Input 4 
+ 
+1
+4
+ 
+
+ Sample Output for Input 4 
+ 0 
+
+ Ebi-chan should have written down it more carefully.

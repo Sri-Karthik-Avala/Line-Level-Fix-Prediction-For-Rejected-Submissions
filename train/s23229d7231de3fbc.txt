@@ -1,0 +1,17 @@
+N = input()
+M = [map(int, raw_input().split()) for i in xrange(N)]
+cache = {}
+for i in xrange(N):
+    cache[(i, i+1)] = 0
+def dfs(left, right):#[left, right)
+    if (left, right) in cache:
+        return cache[(left, right)]
+    min_cost = float("inf")
+    for mid in xrange(left+1, right):
+        tmp = M[left][0] * M[mid-1][1] * M[right-1][1]
+        tmp += dfs(left, mid)
+        tmp += dfs(mid, right)
+        if min_cost > tmp:
+            min_cost = tmp
+    return min_cost
+print dfs(0, len(M))

@@ -1,0 +1,111 @@
+/*
+* Problem link
+* 
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct INIT{INIT(){std::cin.tie(0);ios_base::sync_with_stdio(false);} }init;
+
+struct edge {
+	int to, cost;
+	bool operator<(const edge& o)const {
+		return cost < o.cost;
+	}
+	bool operator>(const edge& o)const {
+		return cost > o.cost;
+	}
+};
+typedef vector<edge> E;
+typedef vector<E> Graph;
+
+struct node {
+	E rootpath;
+	E cmaxpath;
+	void sort() {
+		std::sort(rootpath.begin(), rootpath.end(), greater<edge>());
+		std::sort(cmaxpath.begin(), cmaxpath.end(), greater<edge>());
+	}
+	void resize() {
+		if (rootpath.size()>3u)rootpath.resize(3);
+		if (cmaxpath.size()>2u)cmaxpath.resize(2);
+	}
+	int get_subtree_path(){
+		return max(cmaxpath[0].cost,rootpath[0].cost + rootpath[1].cost);
+	}
+};
+
+/*??¨????§????*/
+void make_tree(int v, Graph &G, E &P, Graph &C) {
+	for (auto& e : G[v]) {
+		if (e.to != P[v].to) {
+			C[v].push_back(e);
+			P[e.to] = edge{ v,e.cost };
+			make_tree(e.to, G, P, C);
+		}
+	}
+}
+void dfs(int v,Graph &C,vector<node>& V) {
+	V[v].rootpath.push_back(edge{ v,0 });
+	V[v].rootpath.push_back(edge{ v,0 });
+	V[v].cmaxpath.push_back(edge{ v,0 });
+	for (auto &e : C[v]) {
+		dfs(e.to, C, V);
+		V[v].rootpath.push_back(edge{ e.to,V[e.to].rootpath[0].cost + e.cost });
+		V[v].cmaxpath.push_back(edge{ e.to,V[e.to].get_subtree_path()});
+	}
+	V[v].sort();
+	//V[v].resize();
+	return;
+}
+int solve(int v,Graph &C,vector<node> &V,int ppath,int plen) {
+	int res = 0;
+	for (auto& e : C[v]) {
+		res = max(res, e.cost + V[e.to].get_subtree_path());
+		int cpath = plen;
+		int path = 0;
+		if (V[v].rootpath[0].to == e.to) {
+			cpath = max(V[v].rootpath[1].cost + V[v].rootpath[2].cost, V[v].rootpath[1].cost + ppath);
+			path = max(V[v].rootpath[1].cost, ppath);
+		}
+		else {
+			if(V[v].rootpath[1].to==e.to)
+				cpath = max(V[v].rootpath[0].cost + V[v].rootpath[2].cost, V[v].rootpath[0].cost + ppath);
+			else
+				cpath = max(V[v].rootpath[0].cost + V[v].rootpath[1].cost, V[v].rootpath[0].cost + ppath);
+			path = max(V[v].rootpath[0].cost, ppath);
+		}
+		if (V[v].cmaxpath[0].to == e.to)
+			cpath = max(V[v].cmaxpath[1].cost, cpath);
+		else
+			cpath = max(V[v].cmaxpath[0].cost, cpath);
+		cpath = max(path, cpath);
+		res = max(res, e.cost + cpath);
+		res = max(res, solve(e.to, C, V, path + e.cost, cpath));
+	}
+	return res;
+}
+
+int main() {
+#ifdef INPUT_FROM_FILE
+	ifstream cin("sample.in");
+	ofstream cout("sample.out");
+#endif
+	int N;
+	cin >> N;
+	Graph G(N),child(N);
+	E par(N, edge{ -1,-1 });
+	vector<node> V(N);
+	for (int i = 1; i < N; i++) {
+		int p, w;
+		cin >> p >> w;
+		G[i].push_back(edge{ p,w });
+		G[p].push_back(edge{ i,w });
+	}
+	par[0] = edge{ 0,0 };
+	make_tree(0, G, par, child);
+	dfs(0, child, V);
+	cout << max(V[0].get_subtree_path(),solve(0, child, V, 0, 0)) << endl;
+	return 0;
+}

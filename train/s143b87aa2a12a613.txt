@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+#define rep(i,n) for (int i = 0; i < (n); ++i)
+#define Inf 10000000000000
+
+int main(){
+	
+	int N;
+	cin>>N;
+	
+	vector<long long> X(N),Y(N);
+	
+	rep(i,N){
+		long long x,y;
+		cin>>x>>y;
+		X[i] = x+y;
+		Y[i] = x-y;
+	}
+	
+	rep(i,N){
+		if(abs(X[i]%2)!=abs(X[0]%2)){
+			cout<<-1<<endl;
+			return 0;
+		}
+	}
+	rep(j,N){
+		for(long long i=0;i<35;i++){
+			X[j] += (1LL<<i);
+			Y[j] += (1LL<<i);
+		}
+	}
+	
+	int sz = 35;
+	if(X[0]%2!=0)sz++;
+	cout<<sz<<endl;
+	vector<long long> t;
+	if(X[0]%2!=0)t.push_back(1);
+	for(long long i=0;i<35;i++)t.push_back((1LL)<<i);
+	rep(i,t.size()){
+		if(i!=0)cout<<' ';
+		cout<<t[i];
+	}
+	cout<<endl;
+	rep(i,N){
+		string ans = "";
+		if(X[i]%2!=0){
+			ans += 'L';
+			X[i] --;
+			Y[i] --;
+		}
+		X[i]/=2;
+		Y[i]/=2;
+		
+		for(long long j=0;j<35;j++){
+			int a = (X[i]>>j)&1;
+			int b = (Y[i]>>j)&1;
+			if(a&&b)ans += 'R';
+			if(!a&&!b)ans += 'L';
+			if(a&&!b)ans += 'U';
+			if(!a&&b)ans += 'D';
+		}
+		
+		cout<<ans<<endl;
+		
+	}
+	
+	
+    return 0;
+}
+

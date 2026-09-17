@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+using ll = long long;
+
+int main() {
+  ll A[100010];
+  int n, q;
+  ll x;
+  cin >> n >> q;
+  for (int i = 0; i < n; ++i)
+    cin >> A[i];
+  while (cin >> x) {
+    int ct = 0;
+    ll s = 0;
+    for (int f = 0, b = 0; f < n; ++f) {
+      s += A[f];
+      while (s > x)
+        s -= A[b++];
+      ct += (f - b + 1);
+    }
+    cout << ct << endl;
+  }
+}

@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Dice{
+public:
+    int dice[6];
+
+    void move(char c){
+        int tmp;
+        switch(c){
+            case('S'):
+                tmp = dice[5];
+                dice[5] = dice[1];
+                dice[1] = dice[0];
+                dice[0] = dice[4];
+                dice[4] = tmp;
+                break;
+            case('N'):
+                tmp = dice[5];
+                dice[5] = dice[4];
+                dice[4] = dice[0];
+                dice[0] = dice[1];
+                dice[1] = tmp;
+                break;
+            case('E'):
+                tmp = dice[5];
+                dice[5] = dice[2];
+                dice[2] = dice[0];
+                dice[0] = dice[3];
+                dice[3] = tmp;
+                break;
+            case('W'):
+                tmp = dice[5];
+                dice[5] = dice[3];
+                dice[3] = dice[0];
+                dice[0] = dice[2];
+                dice[2] = tmp;
+                break;
+        }
+    }
+};
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    vector<Dice> Dices(n);
+    for(int i =0; i<n; ++i){
+        for(int j=0; j<6; ++j){
+            cin >> Dices[i].dice[j];
+        }
+    }
+
+    int num = 0;
+
+    for(int i=0; i<n; ++i){
+        for(int j=1; j<n; ++j){
+            for(int s=0; s<4; ++s){
+                Dices[j].move('S');
+                for(int e=0; e<4; ++e){
+                    Dices[j].move('E');
+                    for(int n=0; n<4; ++n){
+                        Dices[j].move('N');
+                        for(int w=0; w<4; ++w){
+                            Dices[j].move('W');
+                            if( Dices[i].dice[0] == Dices[j].dice[0] and Dices[i].dice[1]== Dices[j].dice[1] and Dices[i].dice[2] == Dices[j].dice[2] and
+                                Dices[i].dice[3] == Dices[j].dice[3] and Dices[i].dice[4]== Dices[j].dice[4] and Dices[i].dice[5] == Dices[j].dice[5]){
+                                num++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if( num != 0){
+        cout << "No" << endl;
+    }else{
+        cout << "Yes" << endl;
+    }
+
+    return 0;
+}

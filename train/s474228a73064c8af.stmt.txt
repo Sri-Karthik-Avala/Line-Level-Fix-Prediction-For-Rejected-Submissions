@@ -1,0 +1,85 @@
+Quick Sort 
+ 
+Please note that problem description and judge data for this problem are still under construction. They may revised and your submissions can be rejudged.
+ 
+-->
+
+ 
+Let's arrange a deck of cards. Your task is to sort totally n cards. A card consists of a part of a suit (S, H, C or D) and an number. Write a program which sorts such cards based on the following pseudocode:
+ 
+
+ 
+Partition(A, p, r)
+1 x = A[r]
+2 i = p-1
+3 for j = p to r-1
+4 do if A[j] 
+
+ 
+Here, A is an array which represents a deck of cards and comparison operations are performed based on the numbers.
+ 
+
+ 
+Your program should also report the stability of the output for the given input (instance). Here, 'stability of the output' means that: cards with the same value appear in the output in the same order as they do in the input (instance).
+ 
+
+ Input 
+
+ 
+The first line contains an integer n , the number of cards.
+ 
+
+ 
+ n cards are given in the following lines. Each card is given in a line and represented by a pair of a character and an integer separated by a single space.
+ 
+
+ Output 
+
+ 
+In the first line, print the stability (" Stable " or " Not stable ") of this output.
+ 
+
+ 
+In the following lines, print the arranged cards in the same manner of that of the input.
+ 
+
+ Constraints 
+
+ 
+ 1 &le; n &le; 100,000 
+ 1 &le; the number of a card &le; 10 9 
+ There are no identical card in the input 
+ 
+
+ Sample Input 1 
+ 
+6
+D 3
+H 2
+D 1
+S 3
+D 2
+C 1
+ 
+ Sample Output 1 
+ 
+Not stable
+D 1
+C 1
+D 2
+H 2
+D 3
+S 3
+ 
+
+ Sample Input 2 
+ 
+2
+S 1
+H 1
+ 
+ Sample Output 2 
+ 
+Stable
+S 1
+H 1

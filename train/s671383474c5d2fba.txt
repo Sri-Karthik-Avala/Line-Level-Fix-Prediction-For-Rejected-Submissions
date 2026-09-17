@@ -1,0 +1,113 @@
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#include <sstream>
+#include <vector>
+using namespace std;
+
+#define REP2(i, m, n) for(int i = (int)(m); i < (int)(n); i++)
+#define REP(i, n) REP2(i, 0, n)
+#define ALL(c) (c).begin(), (c).end()
+#define FOREACH(i, c) for(auto i = (c).begin(); i != (c).end(); ++i)
+#define BIT(n, m) (((n) >> (m)) & 1)
+
+typedef long long ll;
+typedef vector<ll> Vec;
+typedef vector<Vec> Mat;
+typedef pair<int, int> PI;
+
+const ll inf = 1e15;
+const ll mod = 1000 * 1000 * 1000 + 9;
+const double eps = 1e-9;
+
+template <typename S, typename T> ostream &operator<<(ostream &out, const pair<S, T> &p) {
+  out << "(" << p.first << ", " << p.second << ")";
+  return out;
+}
+
+template <typename T> ostream &operator<<(ostream &out, const vector<T> &v) {
+  out << "[";
+  REP(i, v.size()){
+    if (i > 0) out << ", ";
+    out << v[i];
+  }
+  out << "]";
+  return out;
+}
+
+Mat matmul(const Mat &A, const Mat &B){
+  Mat C(A.size(), Vec(B[0].size(), 0));
+  REP(i, A.size()) REP(k, A[i].size()) REP(j, B[k].size()){
+    C[i][j] += A[i][k] * B[k][j];
+    C[i][j] %= mod;
+  }
+  return C;
+}
+
+Mat matpow(Mat A, ll n){
+  Mat B(A.size(), Vec(A[0].size(), 0));
+  REP(i, A.size()) B[i][i] = 1;
+
+  while (n){
+    if (n & 1) B = matmul(B, A);
+    n >>= 1;
+    A = matmul(A, A);
+  }
+  return B;
+}
+
+void go(vector<ll> &curr, vector<ll> &next, ll diff){
+  int w = curr.size();
+  Mat m(w, Vec(w, 0));
+  REP(i, w) REP(j, 3) if (0 <= i + j - 1 && i + j - 1 < w){
+    m[i][i + j - 1] = 1;
+  }
+  m = matpow(m, diff);
+  
+  REP(i, w) REP(j, w){
+    next[i] += m[i][j] * curr[j];
+    next[i] %= mod;
+  }
+}
+
+int main(){
+  int W, H, N, T = 0;
+  while (cin >> W >> H >> N && W + H + N){
+    T++;
+    vector<ll> X(N), Y(N);
+    REP(i, N) cin  >> X[i] >> Y[i];
+    
+    vector<ll> ys = Y;
+    ys.push_back(1);
+    ys.push_back(H);
+    sort(ALL(ys));
+    ys.erase(unique(ALL(ys)), ys.end());
+    
+    vector<vector<ll> > dp(ys.size(), vector<ll>(W));
+    dp[0][0] = 1;
+    REP(i, ys.size() - 1){
+      go(dp[i], dp[i + 1], ys[i + 1] - ys[i]);
+      REP(j, N){
+        if (ys[i + 1] == Y[j]) dp[i + 1][X[j] - 1] = 0;
+      }
+    }
+    cout << "Case " << T << ": " << dp[ys.size() - 1][W - 1] << endl;
+  }
+  return 0;
+}

@@ -1,0 +1,10 @@
+# AOJ ITP2_4_A: Reverse
+# Python3 2018.6.24 bal4u
+
+n = int(input())
+a = list(map(int, input().split()))
+q = int(input())
+for i in range(q):
+	b, e, t = map(int, input().split())
+	a = a[:b] + a[t:t+e-b] + a[e:t] + a[b:e] + a[t+e-b:]
+print(*a)

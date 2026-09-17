@@ -1,0 +1,88 @@
+#include <iostream>
+#include <complex>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <vector>
+#include <set>
+#include <limits>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+#define REP(i, j) for(int i = 0; i < (int)(j); ++i)
+#define FOR(i, j, k) for(int i = (int)(j); i < (int)(k); ++i)
+#define SORT(v) sort((v).begin(), (v).end())
+#define REVERSE(v) reverse((v).begin(), (v).end())
+const double EPS = 1e-12;
+const double INF = 1e12;
+#define EQ(a,b) (abs((a)-(b)) < EPS)
+typedef complex<double> P;
+const int L = 10;
+
+int N, x[L], y[L], r[L];
+
+struct C {
+  P p; double r;
+  C(){}
+  C(const P &p, double r) : p(p), r(r) { }
+};
+
+void crosspointCC(const C &c1, const C &c2, vector<P> &ps){
+  double d = abs(c1.p - c2.p);
+  double rc = (d * d + c1.r * c1.r - c2.r * c2.r) / (2 * d);
+  double dfr = c1.r * c1.r - rc * rc;
+  if(EQ(dfr, 0.0)) dfr = 0.0;
+  else if(dfr < 0.0) return ;
+  double rs = sqrt(dfr);
+
+  P diff = (c2.p - c1.p) / d;
+  ps.push_back(c1.p + diff * P(rc, rs));
+  ps.push_back(c1.p + diff * P(rc, -rs));
+}
+
+bool check(double h){
+  C cs[L];
+  REP(i, N){
+    cs[i].p = P(x[i], y[i]);
+    double rr = r[i] * r[i] - h * h;
+    if(rr < 0) return false;
+    cs[i].r = sqrt(rr);
+  }
+  vector<P> ps;
+  REP(i, N) ps.push_back(cs[i].p);
+  REP(i, N) FOR(j, i + 1, N) crosspointCC(cs[i], cs[j], ps);
+
+  REP(i, ps.size()){
+    bool f = true;
+    REP(j, N) if(abs(cs[j].p - ps[i]) > cs[j].r + EPS) f = false;
+    if(f) return true;
+  }
+  return false;
+}
+
+double solve(){
+  double lb = 0, ub = 300;
+  REP(i, 100){
+    double m = (lb + ub) / 2.0;
+    if(check(m)) lb = m;
+    else ub = m;
+  }
+  return lb;
+}
+
+int main() {
+  while(cin >>N && N){
+    REP(i, N) cin >>x[i] >>y[i] >>r[i];
+    printf("%.7lf\n", solve());
+  }
+  return 0;
+}

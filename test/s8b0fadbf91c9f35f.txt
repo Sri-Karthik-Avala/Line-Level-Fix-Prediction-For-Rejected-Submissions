@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+#define f first
+#define s second
+using namespace std;
+using ll = long long;
+using ii = pair<int, int>;
+constexpr int MN = 100001;
+
+namespace centroid {
+    int sz[MN], cpar[MN], vis[MN];
+	void dfs(vector<ii> * G, int u, int p = 0) {
+		sz[u] = 1;
+		for (ii v : G[u]) if (v.s != p && !vis[v.s]) dfs(G, v.s, u), sz[u] += sz[v.s];
+	}
+	int centroid(vector<ii> * G, int u = 1) {
+		dfs(G, u);
+		int num = sz[u], p = 0;
+		do {
+			int nxt = 0;
+			for (ii v : G[u]) if (v.s != p && !vis[v.s] && 2*sz[v.s] > num) nxt = v.s;
+			p = u, u = nxt;
+		} while (u);
+		return p;
+	}
+	void centroid_decomp(vector<ii> * G, int u = 1, int p = 0) {
+		int c = centroid(G, u);
+		vis[c] = 1,	cpar[c] = p;
+		for (ii v : G[c]) if (!vis[v.s]) centroid_decomp(G, v.s, c);
+	}
+}
+
+int N, sz[MN];
+vector<ii> G[MN];
+
+void dfs(int u, int p = 0) {
+	sz[u] = 1;
+	for (ii v : G[u]) if (v.s != p) dfs(v.s, u), sz[u] += sz[v.s];
+}
+
+ll solve(int u, int p = 0) {
+	ll ret = 0;
+	for (ii v : G[u]) if (v.s != p) ret += solve(v.s, u)+2*min(sz[v.s], N-sz[v.s])*v.f;
+	return ret;
+}
+
+int main() {
+    if (fopen("in", "r")) freopen("in", "r", stdin), freopen("out", "w", stdout);
+    ios_base::sync_with_stdio(0), cin.tie(0);
+
+    cin >> N;
+    for (int i = 1; i < N; ++i) {
+        int A, B, C; cin >> A >> B >> C;
+        G[A].emplace_back(C, B), G[B].emplace_back(C, A);
+    }
+
+    int c = centroid::centroid(G);
+	dfs(c);
+	int d = 0; ll w;
+	for (ii v : G[c]) if (N%2 == 0 && sz[v.s] == N/2) d = v.s, w = v.f;
+	if (d) {
+		cout << solve(c, d)+solve(d, c)+(N-1)*w;
+	}
+	else {
+		int ans = 1e9;
+		for (ii v : G[c]) ans = min(v.f, ans);
+		cout << solve(c)-ans;
+	}
+}

@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+#define M 1003
+using namespace std;
+#define r(i,n) for(int i=0;i<n;i++)
+int n,t,m[M],l[M],k[M],add[M];
+bool used[M];
+bool ch(int x){
+  memset(add,0,sizeof(add));
+  memset(used,0,sizeof(used));
+  int cnt=0;
+  r(i,t+1){
+    x+=add[i];
+    r(j,n)if(!used[j]&&x){
+      int p=l[j]+k[j];
+      if((i%p<=l[j])&&m[j]+i<M){
+        add[i+m[j]]++;
+	used[j]=1;
+	x--;
+	cnt++;
+      }
+    }
+  }
+  return cnt==n;
+}
+int main(){
+  while(cin>>n>>t,t){
+    r(i,n)cin>>m[i]>>l[i]>>k[i];
+    r(i,M){
+      if(ch(i)){
+	cout<<i<<endl;
+	break;
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+a = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+b = list("DEFGHIJKLMNOPQRSTUVWXYZABC")
+
+x = list(input())
+for i in range(len(x)):
+    for j in range(len(a)):
+        if x[i] == b[j]:
+            x[i] = a[j]
+            continue
+for i in range(len(x)):
+    print(x[i], end = "")
+print("")

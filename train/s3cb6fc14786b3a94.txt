@@ -1,0 +1,6 @@
+g=int(input())
+h=g/30.0
+m=(h-int(h))*60.0
+H=str(int(h))
+M=str(int(m))
+print H+" "+M

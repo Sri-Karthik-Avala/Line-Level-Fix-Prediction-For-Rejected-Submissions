@@ -1,0 +1,22 @@
+count = 0 #三角形の数
+right = 0 #直角三角形の数
+acute = 0 #鋭角三角形の数
+obtuse = 0 #鈍角三角形の数
+while True:
+    try:
+        n = input().split()
+    except EOFError:
+        print(str(count) + " " + str(right) + " " + str(acute) + " " + str(obtuse))
+        break
+    m = [float(i) for i in n]
+    m.sort() #三角形の各辺を小さい順にｍにリスト化
+    MaxArgCos = (m[0] ** 2 + m[1] ** 2 - m[2] ** 2) / (2 * m[0] * m[1]) #三角形の最大角のcosを調べる
+    count += 1 #三角形の数のカウント
+    if -1 < MaxArgCos < 0:
+        obtuse += 1 #鈍角
+    elif 0 < MaxArgCos < 1:
+        acute += 1 #鋭角
+    elif MaxArgCos == 0:
+        right += 1 #直角
+    else:
+        count -= 1 #三角形ではないのでカウントを減らす

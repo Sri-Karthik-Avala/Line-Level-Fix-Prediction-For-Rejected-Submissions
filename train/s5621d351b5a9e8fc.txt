@@ -1,0 +1,43 @@
+// ====================================
+//   author: M_sea
+//   website: https://m-sea-blog.com/
+// ====================================
+#include <bits/stdc++.h>
+#define file(x) freopen(#x".in","r",stdin); freopen(#x".out","w",stdout)
+#define debug(...) fprintf(stderr,__VA_ARGS__)
+using namespace std;
+typedef long long ll;
+
+int read() {
+	int X=0,w=1; char c=getchar();
+	while (c<'0'||c>'9') { if (c=='-') w=-1; c=getchar(); }
+	while (c>='0'&&c<='9') X=X*10+c-'0',c=getchar();
+	return X*w;
+}
+
+const int N=100000+10;
+
+int n;
+vector<int> E[N];
+
+int fa[N],dep[N],sz[N];
+void dfs(int u,int f) {
+	dep[u]=dep[fa[u]=f]+1,sz[u]=1;
+	for (int v:E[u])
+		if (v!=f) dfs(v,u),sz[u]+=sz[v];
+}
+int jump(int u,int k) {
+	while (k--) u=fa[u];
+	return u;
+}
+
+int main() {
+	n=read();
+	for (int i=1;i<n;++i) {
+		int u=read(),v=read();
+		E[u].emplace_back(v),E[v].emplace_back(u);
+	}
+	dfs(1,0); int t=jump(n,(dep[n]-1)/2);
+	puts(sz[t]>=n-sz[t]?"Snuke":"Fennec");
+	return 0;
+}

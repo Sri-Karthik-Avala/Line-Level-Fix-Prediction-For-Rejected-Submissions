@@ -1,0 +1,76 @@
+Problem B: 完全数 
+
+
+
+ 
+ ある整数 N に対し，その数自身を除く約数の和を S 
+ とする．
+ N = S のとき
+ N は完全数 (perfect number)，
+ N > S のとき
+ N は不足数 (deficient number)，
+ N < S のとき
+ N は過剰数 (abundant number) と呼ばれる．
+ 与えられた整数が，完全数・不足数・過剰数のどれであるかを
+ 判定するプログラムを作成せよ．
+ 
+
+ 
+ プログラムの実行時間が制限時間を越えないように注意すること．
+ 
+
+ Input 
+ 
+ 入力はデータセットの並びからなる．
+ データセットの数は 100 以下である．
+ 
+
+ 
+ 各データセットは整数 N 
+ (0 < N &le; 100000000) のみを含む1行からなる．
+ 
+
+ 
+ 最後のデータセットの後に，入力の終わりを示す 0 と書かれた1行がある．
+ 
+
+ Output 
+ 
+ 各データセットに対し，
+ 整数 N が完全数ならば &ldquo; perfect number &rdquo;，
+ 不足数ならば &ldquo; deficient number &rdquo;，
+ 過剰数ならば &ldquo; abundant number &rdquo; という文字列を
+ 1行に出力せよ．
+ 
+
+ Sample Input 
+ 
+1
+2
+3
+4
+6
+12
+16
+28
+33550336
+99999998
+99999999
+100000000
+0
+ 
+
+ Output for the Sample Input 
+ 
+deficient number
+deficient number
+deficient number
+deficient number
+perfect number
+abundant number
+deficient number
+perfect number
+perfect number
+deficient number
+deficient number
+abundant number

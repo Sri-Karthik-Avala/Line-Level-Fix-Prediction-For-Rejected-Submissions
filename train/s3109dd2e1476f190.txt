@@ -1,0 +1,56 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<vector>
+using namespace std;
+#define N 10001000
+const int mod=1e9+7;
+const int mx=(1<<20)-1;
+typedef long long ll;
+inline ll read(){
+	ll x=0,f=1;
+	char c=getchar();
+	while(c<'0'||c>'9'){
+		if(c=='-')f=-1;
+		c=getchar();
+	}
+	while(c>='0'&&c<='9'){
+		x=(x<<1)+(x<<3)+c-'0';
+		c=getchar();
+	}
+	return x*f;
+}
+int n,a[N],p,ans,s[N],m,dp[N];
+vector<int> vec[N];
+int main(){
+	n=read();
+	s[0]=1;
+	for(int i=1;i<=n;++i){
+		a[i]=read();
+		p^=a[i];
+		s[i]=s[i-1]+(p==0);
+		vec[p].push_back(i);
+	}
+	for(int u=1;u<=mx;++u){
+		if(vec[u].empty())continue;
+		if(p&&p^u)continue;
+		int sum=0,qwq=0;
+		for(int i=0;i<(int)vec[u].size();++i){
+			dp[i]=(1LL*sum*s[vec[u][i]]-qwq+1)%mod;
+			sum=(sum+dp[i])%mod;
+			qwq=(qwq+1LL*dp[i]*s[vec[u][i]])%mod;
+		}
+		ans=(ans+(p?dp[vec[u].size()-1]:sum))%mod;
+	}
+	if(!p){
+		int tmp=1;
+		for(int i=1;i<s[n]-1;++i){
+			(tmp<<=1)%=mod;
+		}
+		ans=(ans+tmp)%mod;
+	}
+	printf("%d\n",ans);
+	return 0;
+}
+
+

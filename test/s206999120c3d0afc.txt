@@ -1,0 +1,72 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int isalldigit(const string& str)
+{
+  for(int i = 0; i < str.size(); i++){
+    if(!isdigit(str[i])) return false;
+  }
+  return true;
+}
+
+bool dahara(const string& str){
+  int foo = 0;
+  for(int i = 0; i < str.size(); i++){
+    if(str[i] == '(') foo++;
+    else if(str[i] == ')') foo--;
+    if(foo == 0) return false;
+  }
+  return true;
+}
+
+set< int > expr(string str)
+{
+  set< int > ret;
+
+  int foo = 0 ;
+  if(isalldigit(str)){
+    ret.insert(atoi(str.c_str()));
+  } else if (dahara(str)){
+    return expr( str.substr( 1, str.size() - 2));
+  } else {
+    for(int i = 0; i < str.size(); i++){
+      if(str[i] == '('){ //開き括弧だなぁ
+        foo++;
+        continue;
+      } else if(str[i] == ')'){ //閉じ括弧だなぁ 
+        foo--;
+        continue;
+      } else if(isdigit(str[i])){ //数字はどうでもいいなぁ
+        continue;
+      }
+      if(foo == 0){
+        set< int > hori = expr(str.substr( 0, i));
+        set< int > tkc = expr(str.substr( i + 1));
+        for(set< int >::iterator msy = hori.begin(); msy != hori.end(); msy++){
+          for(set< int >::iterator mtur = tkc.begin(); mtur != tkc.end(); mtur++){
+            if(str[i] == '+'){
+              ret.insert( *msy + *mtur);
+            } else if(str[i] == '-'){
+              ret.insert( *msy - *mtur);
+            } else if(str[i] == '*'){
+              ret.insert( *msy * *mtur);
+            } else {
+              if(*mtur == 0) continue;
+              ret.insert( *msy / *mtur);
+            }
+          }
+        }
+      }
+    }
+  }
+  return ret;
+}
+
+
+int main()
+{
+  string s;
+  while(cin >> s, s != "#"){
+    cout << expr(s).size() << endl;
+  }
+}

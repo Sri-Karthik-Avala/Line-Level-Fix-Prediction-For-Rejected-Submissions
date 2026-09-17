@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+using namespace std;
+//#define cerr if (false) cerr
+#define db(x) cerr << #x << "=" << x << endl
+#define db2(x, y) cerr << #x << "=" << x << "," << #y << "=" << y << endl
+#define db3(x, y, z) cerr << #x << "=" << x << "," << #y << "=" << y << "," << #z << "=" << z << endl
+#define dbv(v) cerr << #v << "="; for (auto _x : v) cerr << _x << ", "; cerr << endl
+#define dba(a, n) cerr << #a << "="; for (int _i = 0; _i < (n); ++_i) cerr << a[_i] << ", "; cerr << endl
+template <typename A, typename B>
+ostream& operator<<(ostream& os, const pair<A, B>& x) {
+	return os << "(" << x.first << "," << x.second << ")";
+}
+typedef long long ll;
+typedef long double ld;
+template <typename T>
+pair<T, T>& operator+=(pair<T, T>& a, const T& b) {
+	a.first += b;
+	a.second += b;
+	return a;
+}
+int main() {
+	int n;
+	scanf("%d", &n);
+	vector<vector<int>> ch(n);
+	vector<int> V(n);
+	for (int i = 1; i < n; ++i) {
+		int a;
+		scanf("%d%d", &a, &V[i]);
+		--a;
+		ch[a].push_back(i);
+	}
+	ll lo = 0, hi = 1LL << 35;
+	while (lo < hi) {
+		ll M = (lo + hi) >> 1;
+		vector<vector<pair<ll, ll>>> L(n);
+		for (int i = n - 1; i >= 0; --i) {
+			if (ch[i].empty()) {
+				L[i] = {{0, 0}};
+			} else {
+				int x = ch[i][0], y = ch[i][1];
+				if (L[x].size() > L[y].size()) swap(x, y);
+				for (auto& z : L[x]) z += (ll)V[x];
+				for (auto& z : L[y]) z += (ll)V[y];
+				int xn = L[x].size(), yn = L[y].size();
+				vector<pair<ll, ll>> A, B, C;
+				for (int j = 0, k = yn - 1, l = 0; j < xn; ++j) {
+					while (k >= 0 && L[x][j].first + L[y][k].first > M) --k;
+					while (l < yn && L[x][j].first + L[y][l].second > M) ++l;
+					ll mn = LLONG_MAX;
+					if (k >= 0) mn = min(mn, L[y][k].second);
+					if (l < yn) mn = min(mn, L[y][l].first);
+					if (mn != LLONG_MAX) A.emplace_back(L[x][j].second, mn);
+				}
+				for (int j = xn - 1, k = yn - 1, l = 0; j >= 0; --j) {
+					while (k >= 0 && L[x][j].second + L[y][k].first > M) --k;
+					while (l < yn && L[x][j].second + L[y][l].second > M) ++l;
+					ll mn = LLONG_MAX;
+					if (k >= 0) mn = min(mn, L[y][k].second);
+					if (l < yn) mn = min(mn, L[y][l].first);
+					if (mn != LLONG_MAX) B.emplace_back(L[x][j].first, mn);
+				}
+				reverse(A.begin(), A.end());
+				reverse(B.begin(), B.end());
+				C.resize(A.size() + B.size());
+				merge(A.begin(), A.end(), B.begin(), B.end(), C.begin());
+				for (auto& c : C) {
+					if (!L[i].empty() && L[i].back() <= c) continue;
+					L[i].push_back(c);
+				}
+			}
+		}
+		if (L[0].empty()) lo = M + 1;
+		else hi = M;
+	}
+	printf("%lld\n", lo);
+}

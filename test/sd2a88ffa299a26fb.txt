@@ -1,0 +1,30 @@
+from math import sqrt, sin, cos, pi
+import time
+import numpy as np
+
+def main():
+    N,L = map(int, input().split())
+    t = [int(input()) for i in range(N)]
+    #N,L = 3000, 3000
+    #t = [int(i) for i in range(N)]
+
+    comb = N * (N-1) * (N-2) / 6
+    ans_X, ans_Y = 0, 0
+    for i in range(N-1):
+        for j in range(i+1,N):
+            theta = pi * (t[j] + t[i]) / L
+
+            I_X = cos(theta) * (N - 2*(j-i))
+            I_Y = sin(theta) * (N - 2*(j-i))
+            ans_X += I_X / comb
+            ans_Y += I_Y / comb
+            #print(ans_X, ans_Y)
+    
+    print(ans_X, ans_Y)
+
+
+if __name__ == "__main__":
+    #start = time.time()
+    main()
+    #elapsed_time = time.time() - start
+    #rint ("elapsed_time:{0}".format(elapsed_time) + "[sec]")

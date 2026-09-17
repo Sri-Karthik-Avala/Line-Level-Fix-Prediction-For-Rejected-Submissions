@@ -1,0 +1,25 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+	int a, b;
+	char c;
+	while (1)
+	{
+		cin >> a >> c >> b;
+		if (a == 0 && c == '?'&&b == 0)
+			break;
+		int ans;
+		if (c == '+')
+			ans = a + b;
+		if (c == '-')
+			ans = a - b;
+		if (c == '*')
+			ans = a*b;
+		if (c == '/')
+			ans = a / b;
+		cout << ans << endl;
+	}
+
+	return 0;
+}

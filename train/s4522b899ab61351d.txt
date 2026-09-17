@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n; cin >> n;
+    int count = 0;
+    int save = 0;
+    vector<pair<int,int>> data;
+    for (int i = 0; i < n; i++) {
+        string s; cin >> s;
+        bool front = true;
+        int f = 0, b = 0;
+        for (int j = 0; j < (int)s.size(); j++) {
+            if (s[j] == '(') {
+                count++;
+                f++;
+            }
+            else {
+                count--;
+                if (f) f--;
+                else {
+                    front = false;
+                    b++;
+                }
+            }
+        }
+        if (f == 0 && b == 0) continue;
+        if (front) save += f;
+        else data.push_back(make_pair(b, f));
+    }
+
+    if (count != 0) { cout << "No" << endl; return 0; }
+
+    sort(data.begin(), data.end(), [](pair<int,int> a, pair<int,int> b) {
+        int aa = a.second - a.first >= 0 ? 0 : 1;
+        int bb = b.second - b.first >= 0 ? 0 : 1;
+        if (aa != bb) return aa < bb;
+        if (aa == 0) return a.first < b.first;
+        if (aa == 1) return a.second > a.second;
+    } );
+
+    bool check = true;
+    for (int i = 0; i < (int)data.size(); i++) {
+        save -= data[i].first;
+        if(save < 0) check = false;
+        save += data[i].second;
+    }
+
+    cout << (check ? "Yes" : "No") << endl;
+    return 0;
+}

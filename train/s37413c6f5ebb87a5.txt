@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#define pb push_back
+#define rep(i,n) for (int i = 0; i < n; ++i)
+#define rrep(i,n) for (int i = 1; i <= n; ++i)
+#define drep(i,n) for (int i = (n)-1; i >= 0; --i)
+#define mins(x,y) x = min(x,y)
+#define maxs(x,y) x = max(x,y)
+using namespace std;
+typedef vector<int> vi;
+
+const int MX = 100005;
+const int INF = 1001001001;
+
+int w, h, n;
+int ans;
+
+void f(int a, int b) {
+  if (a < w && b < w && a == b) ans++;
+  a -= w; b -= w-2;
+  if (a <= 0 || b <= 0) return;
+  if (a <= h-2 && b <= h-2 && a == b) ans++;
+  a -= h; b -= h-3;
+  if (a <= 0 || b <= 0) return;
+  if (a == b) ans++;
+}
+
+int main() {
+  scanf("%d%d",&w,&h);
+  scanf("%d",&n);
+  int a = 1, b = 1;
+  rep(i,n) {
+    int p;
+    scanf("%d",&p);
+    if (p) b++; else a++;
+    f(a,b);
+  }
+  cout<<ans<<endl;
+  return 0;
+}

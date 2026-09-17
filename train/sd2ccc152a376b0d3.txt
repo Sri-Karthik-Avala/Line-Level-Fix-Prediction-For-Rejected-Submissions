@@ -1,0 +1,33 @@
+from collections import deque
+
+n,m = map(int,input().split())
+e = [[] for i in range(n+1)]
+for i in range(m):
+    a,b = map(int,input().split())
+    e[a].append(b)
+    e[b].append(a)
+
+l = deque([1])
+
+while True:
+    check = True
+    for nex in e[l[-1]]:
+        if nex in l:
+            continue
+        l.append(nex)
+        check = False
+        break
+    if check:
+        break
+while True:
+    check = True
+    for nex in e[l[0]]:
+        if nex in l:
+            continue
+        l.appendleft(nex)
+        check = False
+        break
+    if check:
+        print(len(l))
+        print(*l)
+        exit()

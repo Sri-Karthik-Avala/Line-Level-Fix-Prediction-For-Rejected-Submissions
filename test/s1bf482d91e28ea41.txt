@@ -1,0 +1,26 @@
+# coding: utf-8
+# Here your code !
+
+numt = input()
+for i in xrange(numt):
+    count = 0
+    lis = [[0,0]]
+    ma = 0
+    tmpl = [0,0]
+    while True:
+        x,y = map(int,raw_input().split())
+        tempx = lis[count][0] + x
+        tempy = lis[count][1] + y
+        count += 1
+        if(x == 0 and y == 0):
+            for l in lis:
+                if(l[0]**2 + l[1]**2 > ma):
+                    ma = l[0]**2 + l[1]**2
+                    tmpl = l
+                elif(l[0]**2 + l[1]**2 == ma):
+                    if(tmpl[0] < l[0]):
+                        tmpl = l
+            print tmpl
+            break
+        lis.append([tempx,tempy])
+    

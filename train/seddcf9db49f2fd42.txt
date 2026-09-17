@@ -1,0 +1,8 @@
+s = input()
+p = input()
+
+s2 = s + s
+if s2.find(p):
+  print('Yes')
+else:
+  print('No')

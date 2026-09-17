@@ -1,0 +1,41 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+
+#define rep(i,n) for(int i=0;i<(n);i++)
+
+using namespace std;
+
+const int INF=1<<30;
+
+int n,w,a[1000];
+
+int sum[1001];
+
+int dp[1000][1000];
+int dfs(int i,int j){
+	int s=sum[j]-sum[i];
+
+	if(j==n) return max(s-w,0);
+
+	int res=INF;
+	// テヲツ板ケティツ。ツ?
+	if(i<j){
+		res=min(res,dfs(j,j)+abs(s-w));
+	}
+	// テ、ツサツ甘」ツ?ョティツ。ツ古」ツ?ォティツソツステ・ツ環?
+	res=min(res,dfs(i,j+1));
+	return res;
+}
+
+int main(){
+	for(int cas=1;scanf("%d%d",&n,&w),n||w;cas++){
+		rep(i,n) scanf("%d",a+i);
+		rep(i,n) sum[i+1]=sum[i]+a[i];
+
+		memset(dp,-1,sizeof dp);
+		printf("Case %d: %d\n",cas,dfs(0,0));
+	}
+
+	return 0;
+}

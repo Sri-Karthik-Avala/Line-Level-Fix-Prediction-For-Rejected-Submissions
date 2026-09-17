@@ -1,0 +1,22 @@
+def change(time):
+  if time >= 10:
+    return str(time)
+  else:
+    return "0" + str(time)
+def print_times(ans):
+  sec = ans % 60
+  ans -= sec
+  minu = ans % 3600
+  ans -= minu
+  minu //= 60
+  hour = ans//3600
+  print(":".join(map(change,(hour,minu,sec))))
+
+while True:
+  t,h,s = map(int,input().split())
+  if (t,h,s) == (-1,-1,-1):
+    break
+  ans = 7200 - (3600 * t + 60 * h + s)
+  ans2 = 7200 -(3600 * t + 60 * h + s)//3
+  print_times(ans)
+  print_times(ans2)

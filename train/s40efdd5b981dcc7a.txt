@@ -1,0 +1,49 @@
+
+#include <iostream>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+typedef long long LL;
+
+using namespace std;
+using namespace __gnu_pbds;
+
+typedef
+tree<
+pair<LL,LL>,
+    null_type,
+    greater<pair<LL,LL> >,
+    rb_tree_tag,
+    tree_order_statistics_node_update>map_t;
+
+int point[114514];
+
+int main()
+{
+    map_t TREE;
+    int n,c;
+    cin >> n >> c;
+    for(int i = 1;i <= n;++i)
+        TREE.insert(make_pair(0,-i));
+    for(int j = 0;j < c;++j)
+    {
+        int com;
+        cin >> com;
+        if(com == 0)
+        {
+            LL t,p;
+            cin >> t >> p;
+            TREE.erase(make_pair(point[t-1],-t));
+            point[t-1]+=p;
+            TREE.insert(make_pair(point[t-1],-t));
+        }
+        else
+        {
+            int m;
+            cin >> m;
+            --m;
+            //cout << m << endl;
+            cout << -TREE.find_by_order(m)->second << " " << TREE.find_by_order(m)->first << endl;
+        }
+    }
+}

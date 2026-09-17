@@ -1,0 +1,21 @@
+mod = 998244353
+N,A,B,K = map(int,input().split())
+def cmb(n,k):
+    return fac[n]*inv_fac[n-k]*inv_fac[k] % mod
+fac = [1]
+for i in range(1,N+1):
+    fac.append(fac[-1]*i % mod)
+inv_fac = [pow(fac[N],mod-2,mod)]
+for i in range(1,N+1)[::-1]:
+    inv_fac.append(inv_fac[-1]*i % mod)
+inv_fac = inv_fac[::-1]
+
+ans = 0
+for i in range(N+1):
+    if i*A > K:
+        break
+    if (K-i*A) % B == 0:
+        j = (K-i*A)//B
+        ans += cmb(N,i)*cmb(N,j)
+        ans %= mod
+print(ans)

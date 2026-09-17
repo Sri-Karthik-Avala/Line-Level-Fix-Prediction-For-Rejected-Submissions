@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int N,A,B;
+int S[100001];
+int nim(){
+  int x=S[0];
+  for(int i=1;i<N;i++) x^=S[i];
+  return x;
+}
+
+int solveA(){//A=B
+  for(int i=0;i<N;i++) S[i] = S[i]%(A+1);
+  return nim();
+}
+
+int solveB(){//A>B
+  for(int i=0;i<N;i++) if( S[i] > B ) return 1;
+  return nim();
+}
+
+int solveC(){//A<B
+  int x = nim();
+  bool f = false;
+  int t = -1;
+  for(int i=0;i<N;i++)
+    if( S[i] > A ) {
+      t = x ^ S[i];
+      if( S[i]>t && S[i]-t <= A ) t=1;
+      else t = 0;
+      if( f ) return 0;
+      f = true;
+    }
+  if( t < 0 ) return nim();
+  return t;
+}
+           
+int main(){
+  cin >> N >> A >> B;
+  for(int i=0;i<N;i++){
+    cin >> S[i];
+    //cout << bitset<32>(S[i]) << endl;
+  }
+  if( A == B ) cout << (solveA()?"Hanako":"Jiro") << endl;
+  if( A > B ) cout << (solveB()?"Hanako":"Jiro") << endl;
+  if( A < B ) cout << (solveC()?"Hanako":"Jiro") << endl;
+  //cout << bitset<32>(x) << endl;
+}

@@ -1,0 +1,109 @@
+
+import sys;input=sys.stdin.readline
+from collections import deque, defaultdict
+def encode(i, j):
+    return 2 + K + i*M + j
+from heapq import heappush, heappop
+class MinCostFlow:
+    INF = 10**18
+
+    def __init__(self, N):
+        self.N = N
+        self.G = [[] for i in range(N)]
+
+    def addEdge(self, fr, to, cap, cost):
+#        print(fr, to, 10**18-cost)
+        forward = [to, cap, cost, None]
+        backward = forward[3] = [fr, 0, -cost, forward]
+        self.G[fr].append(forward)
+        self.G[to].append(backward)
+
+    def minCostFlow(self, s, t, f):
+        N = self.N; G = self.G
+        INF = MinCostFlow.INF
+
+        res = 0
+        H = [0]*N
+        prv_v = [0]*N
+        prv_e = [None]*N
+
+        d0 = [INF]*N
+        dist = [INF]*N
+
+        while f:
+            dist[:] = d0
+            dist[s] = 0
+            que = [(0, s)]
+
+            while que:
+                c, v = heappop(que)
+                if dist[v] < c:
+                    continue
+                r0 = dist[v] + H[v]
+                for e in G[v]:
+                    w, cap, cost, _ = e
+                    if cap > 0 and r0 + cost - H[w] < dist[w]:
+                        dist[w] = r = r0 + cost - H[w]
+                        prv_v[w] = v; prv_e[w] = e
+                        heappush(que, (r, w))
+            if dist[t] == INF:
+                return None
+
+            for i in range(N):
+                H[i] += dist[i]
+
+            d = f; v = t
+            while v != s:
+                d = min(d, prv_e[v][1])
+                v = prv_v[v]
+            f -= d
+            res += d * H[t]
+            v = t
+            while v != s:
+                e = prv_e[v]
+                e[1] -= d
+                e[3][1] += d
+                v = prv_v[v]
+        return res
+N, M = map(int, input().split())
+B = []
+for _ in range(N):
+    s = input().strip()
+    B.append(s)
+
+ks = []
+for i in range(N):
+    for j in range(M):
+        if B[i][j] == "o":
+            ks.append((i, j))
+K = len(ks)
+mcf = MinCostFlow(2+K+N*M)
+for i in range(K):
+    mcf.addEdge(0, i+2, 1, 0)
+
+for ki in range(K):
+    i, j = ks[ki]
+    s = (i, j)
+    queue=deque([s])
+    vs = set([s])
+    dist = defaultdict(int)
+    while queue:
+        u, v = queue.popleft()
+#        print(2+ki, (u,v),encode(u,v), (i,j), dist[(u, v)])
+        mcf.addEdge(2+ki, encode(u, v), 1, 10**18-dist[(u, v)])
+        for nu, nv in [(u+1, v), (u, v+1)]:
+            if (nu, nv) in vs:
+                continue
+            if nu >= N or nv >= M:
+                continue
+            if B[nu][nv] == "#":
+                continue
+            vs.add((nu, nv))
+            queue.append((nu, nv))
+            dist[(nu, nv)] = dist[(u, v)] + 1
+
+for i in range(N):
+    for j in range(M):
+        mcf.addEdge(encode(i,j),1,1,0)
+#print(mcf.G)
+print(K*10**18-mcf.minCostFlow(0, 1, K))

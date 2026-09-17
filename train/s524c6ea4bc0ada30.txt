@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+vector<vector<pair<char,char> > > opers;
+
+string analysis(string str){
+    if(str.size()==1)
+        return str;
+    if(str[0]=='('&&str[str.size()-1]==')'){
+        int cnt=0;
+        for(int i = 1; i < str.size()-1; i++){
+            if(str[i]=='(')cnt++;
+            else if(str[i]==')')cnt--;
+        }
+        if(cnt==0)
+            return analysis(str.substr(1,str.size()-2));
+    }
+    // DæÊÌ¢Zq©çÔÉ©Ä¢­
+    for(int i = 0; i < opers.size(); i++){
+        if(opers[i][0].first=='L'){
+            int cnt=0;
+            // ÊÌOÉ ép.secondZqÌÊuðTõ
+            for(int k = str.size()-1; k >= 0; k--){
+                if(str[k]==')')cnt++;
+                else if(str[k]=='(')cnt--;
+                else{
+                    for(int j = 0; j < opers[i].size(); j++){
+                        pair<int,int> p=opers[i][j];
+                        if(cnt==0&&str[k]==p.second){
+                            // ±±ÅÄA
+                            string tmp="";
+                            tmp+=(p.second);
+                            return '(' + analysis(str.substr(0,k)) + tmp + analysis(str.substr(k+1)) + ')';
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            int cnt=0;
+            // ÊÌOÉ ép.secondZqÌÊuðTõ
+            for(int k = 0; k < str.size(); k++){
+                if(str[k]=='(')cnt++;
+                else if(str[k]==')')cnt--;
+                else{
+                    for(int j = 0; j < opers[i].size(); j++){
+                        pair<int,int> p=opers[i][j];
+                        if(cnt==0&&str[k]==p.second){
+                            // ±±ÅÄA
+                            string tmp="";
+                            tmp+=(p.second);
+                            return '(' + analysis(str.substr(0,k)) + tmp + analysis(str.substr(k+1)) + ')';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return "";
+}
+
+int main(){
+
+    int t;
+    cin>>t;
+    while(t--){
+        opers.clear();
+        int g;
+        cin>>g;
+        for(int i = 0; i < g; i++){
+            char ag;
+            cin>>ag;
+            int a;
+            cin>>a;
+            vector<pair<char,char> > vpcc;
+            for(int j = 0; j < a; j++){
+                char ch;
+                cin>>ch;
+                vpcc.push_back(make_pair(ag,ch));
+            }
+            opers.push_back(vpcc);
+        }
+        int n;
+        cin>>n;
+        for(int i = 0; i < n; i++){
+            string str;
+            cin>>str;
+            string res=analysis(str);
+            cout<<res<<endl;
+        }
+        if(t!=0)
+            cout<<endl;
+    }
+
+    return 0;
+}

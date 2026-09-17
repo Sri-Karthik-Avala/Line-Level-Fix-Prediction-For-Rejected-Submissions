@@ -1,0 +1,99 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+#include <complex>
+using namespace std;
+#define rep(i,n) for(int i=0;i<(n);++i)
+#define rep1(i,n) for(int i=1;i<=(n);++i)
+#define all(c) (c).begin(),(c).end()
+#define pb push_back
+#define fs first
+#define sc second
+#define show(x) cout << #x << " = " << x << endl;
+typedef double D;
+typedef complex<D> P;
+typedef pair<P,P> L;
+D eps=1e-9,inf=1e50;
+bool eq(D a,D b){
+	return abs(a-b)<eps;
+}
+bool compxy (const P& l, const P& r){		//sort x -> y
+	return eq(l.real(),r.real()) ? l.imag()<r.imag() : l.real() < r.real();
+}
+inline D cro(P a,P b){
+	return imag(conj(a)*b);
+}
+inline bool iLS(L l,L s){
+	return cro(l.sc-l.fs,s.fs-l.fs)*cro(l.sc-l.fs,s.sc-l.fs)<eps;
+}
+inline P intLL(L a,L b){
+	D t=cro(a.sc-a.fs,a.sc-b.fs)/cro(a.sc-a.fs,b.sc-b.fs);
+	return b.fs+t*(b.sc-b.fs);
+}
+vector<P> points;
+vector<P> vc;
+vector<D> lefts;
+int main(){
+	while(true){
+		int W,H,N;
+		cin>>W>>H>>N;
+		if(N==0) break;
+		points.clear();
+		lefts.clear();
+		vc.clear();
+		L s=L(P(0,0),P(0,H));
+		rep(i,2*N){
+			int x,y;
+			cin>>x>>y;
+			vc.pb(P(x,y));
+			points.pb(P(x,y));
+		}
+		points.pb(P(0,0));
+		points.pb(P(0,H));
+		points.pb(P(W,0));
+		points.pb(P(W,H));
+		sort(all(points),compxy);
+		points.erase(unique(all(points)),points.end());
+		int sz=points.size();
+//		rep(i,sz) show(points[i]);
+		rep(i,sz){
+			rep(j,sz){
+//				cout<<i<<" "<<j<<endl;
+				if(points[i].real()==points[j].real()) continue;
+				L l=L(points[i],points[j]);
+				P p=intLL(l,s);
+				if(iLS(l,s)) lefts.pb(intLL(l,s).imag());
+			}
+		}
+		sort(all(lefts));
+		int m=lefts.size();
+		L r=L(P(W,0),P(W,H));
+		D ans=0;
+		rep(i,m-1){
+			P m=P(0,(lefts[i]+lefts[i+1])/2);
+			vector<D> rights;
+			rep(j,2*N){
+				if(vc[j].real()==0){
+					if(vc[j].imag()>m.imag()) rights.pb(inf);
+					else rights.pb(-inf);
+				}else{
+					rights.pb(intLL(r,L(m,vc[j])).imag());
+				}
+			}
+			sort(all(rights));
+			D ub=rights[N],lb=rights[N-1];
+			ub=min(ub,(double)H),lb=max(lb,0.0);
+//			show(lefts[i]);
+//			show(lefts[i+1]);
+//			show(ub-lb);
+//			cout<<endl;
+			ans+=(lefts[i+1]-lefts[i])*(ub-lb);
+		}
+		ans/=H*H;
+		printf("%.12f\n",ans);
+	}
+}

@@ -1,0 +1,57 @@
+import copy
+
+n = 100
+MOD = 10**9+7
+
+dp = [[[[0]*(5) for i in range(5)] for i in range(5)] for i in range(n+1)]
+
+dp[0][0][0][0] = 1
+# A:1, C:2, G:3, T:4
+for cn in range(1, n+1):
+    for c3 in range(5):
+        if cn <= 3 and c3 > 0:
+            continue
+        for c2 in range(5):
+            if cn <= 2 and c2 > 0:
+                continue
+            for c1 in range(5):
+                if cn == 1 and c1 > 0:
+                    continue
+                
+                if c2 == 1 and c1 == 3: # AGX
+                    dp[cn][c2][c1][1] = (dp[cn][c2][c1][1] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][2] = 0
+                    dp[cn][c2][c1][3] = (dp[cn][c2][c1][3] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][4] = (dp[cn][c2][c1][4] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                elif c2 == 1 and c1 == 2: # ACX
+                    dp[cn][c2][c1][1] = (dp[cn][c2][c1][1] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][2] = (dp[cn][c2][c1][2] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][3] = 0
+                    dp[cn][c2][c1][4] = (dp[cn][c2][c1][4] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                elif c2 == 3 and c1 == 1: # GAX
+                    dp[cn][c2][c1][1] = (dp[cn][c2][c1][1] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][2] = 0
+                    dp[cn][c2][c1][3] = (dp[cn][c2][c1][3] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][4] = (dp[cn][c2][c1][4] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                elif c3 == 1 and c1 == 3: # AXGY        
+                    dp[cn][c2][c1][1] = (dp[cn][c2][c1][1] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][2] = 0
+                    dp[cn][c2][c1][3] = (dp[cn][c2][c1][3] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][4] = (dp[cn][c2][c1][4] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                elif c3 == 1 and c2 == 3: # AGXY        
+                    dp[cn][c2][c1][1] = (dp[cn][c2][c1][1] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][2] = 0
+                    dp[cn][c2][c1][3] = (dp[cn][c2][c1][3] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][4] = (dp[cn][c2][c1][4] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                else:
+                    dp[cn][c2][c1][1] = (dp[cn][c2][c1][1] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][2] = (dp[cn][c2][c1][2] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][3] = (dp[cn][c2][c1][3] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    dp[cn][c2][c1][4] = (dp[cn][c2][c1][4] + copy.deepcopy(dp[cn-1][c3][c2][c1])) % MOD
+                    
+total = 0
+for c3 in range(1, 5):
+    for c2 in range(1, 5):
+        for c1 in range(1, 5):
+            total = (total + dp[n][c3][c2][c1]) % MOD
+print(total)

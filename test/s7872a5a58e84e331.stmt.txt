@@ -1,0 +1,59 @@
+ABC Gene 
+
+ 文字列 ABC で表される遺伝子配列がある。あなたは次の操作を何回か行い、この遺伝子配列を書き換えていくことができる。 
+
+ 
+ 文字 A ， B ， C のうち 1 つを選ぶ。これを x とおく。遺伝子配列に含まれるすべての x をそれぞれ ABC へ同時に置き換える。 
+ 
+ A ， B ， C だけからなる文字列 S が与えられる。遺伝子配列を S に一致させられるか判定せよ。 
+
+ Constraints 
+ 
+ 1 &le; |S| &le; 5,000 
+ S は A ， B ， C だけからなる。 
+ 
+
+ Input Format 
+ 入力は以下の形式で標準入力から与えられる。 
+ 
+ S 
+ 
+
+ Output Format 
+ 遺伝子配列を S に一致させられるならば Yes を、一致させられないならば No を一行に出力せよ。 
+
+ Sample Input 1 
+ 
+ABC
+ 
+
+ Sample Output 1 
+ 
+Yes
+ 
+ 遺伝子配列ははじめから ABC である。 
+
+
+ Sample Input 2 
+ 
+AABCC
+ 
+
+ Sample Output 2 
+ 
+Yes
+ 
+ B を選んで操作を行うと ABC → AABCC となる。 
+
+
+ Sample Input 3 
+ 
+AABCABC
+ 
+
+
+ Sample Output 3 
+ 
+No
+ 
+ 例えば、 C を選んで操作を行っても AABCC → AABCABC とはならない。すべての C をそれぞれ ABC へ同時に置き換えるので、実際は AABCC → AABABCABC となる。

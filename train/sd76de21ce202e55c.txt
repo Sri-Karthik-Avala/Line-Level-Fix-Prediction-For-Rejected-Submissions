@@ -1,0 +1,3 @@
+N, A = (int(x) for x in input().split())
+ans = N**2 - A
+print(ans)

@@ -1,0 +1,16 @@
+import numpy as np
+INF = 10 ** 18
+H, N = map(int, input().split())
+ab = [list(map(int, input().split())) for _ in range(N)]
+dp = [INF for i in range(H + 1)]
+
+dp[0] = 0
+
+for i in range(N):
+    for j in range(H):
+        if j - ab[i][0] + 1 >= 0:
+            dp[j + 1] = min(dp[j + 1], dp[j - ab[i][0] + 1] + ab[i][1])
+        else:
+            dp[j + 1] = min(dp[j + 1], dp[0] + ab[i][1])
+
+print(dp[-1])

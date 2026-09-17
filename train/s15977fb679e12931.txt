@@ -1,0 +1,9 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+string days[] = {"thu", "fri", "sat", "sun", "mon", "wed", "tue"};
+int main(){
+	int x;
+	cin >> x;
+	cout << days[x%7] << endl;
+}

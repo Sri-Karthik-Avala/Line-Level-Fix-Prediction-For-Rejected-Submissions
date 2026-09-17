@@ -1,0 +1,69 @@
+Problem A: Infected Computer 
+
+ 
+Adam Ivan is working as a system administrator at Soy Group, Inc. He is now facing at a big trouble:
+a number of computers under his management have been infected by a computer virus. Unfortunately,
+anti-virus system in his company failed to detect this virus because it was very new.
+ 
+
+ 
+Adam has identified the first computer infected by the virus and collected the records of all data packets
+sent within his network. He is now trying to identify which computers have been infected. A computer
+is infected when receiving any data packet from any infected computer. The computer is not infected, on
+the other hand, just by sending data packets to infected computers.
+ 
+ 
+It seems almost impossible for him to list all infected computers by hand, because the size of the packet
+records is fairly large. So he asked you for help: write a program that can identify infected computers.
+ 
+
+ Input 
+
+ 
+The input consists of multiple datasets. Each dataset has the following format:
+ 
+
+ 
+ N M 
+ t 1 s 1 d 1 
+ t 2 s 2 d 2 
+... 
+ t M s M d M 
+ 
+
+ 
+ N is the number of computers; M is the number of data packets; t i (1 &le; i &le; M ) is the time when the i -th
+data packet is sent; s i and d i (1 &le; i &le; M ) are the source and destination computers of the i -th data packet
+respectively. The first infected computer is indicated by the number 1; the other computers are indicated
+by unique numbers between 2 and N .
+ 
+ 
+The input meets the following constraints: 0 < N &le; 20000, 0 &le; M &le; 20000, and 0 &le; t i &le; 10 9 for
+1 &le; i &le; N ; all t i 's are different; and the source and destination of each packet are always different.
+ 
+
+ 
+The last dataset is followed by a line containing two zeros. This line is not a part of any dataset and should not be processed.
+ 
+
+ Output 
+
+ 
+For each dataset, print the number of computers infected by the computer virus.
+ 
+
+ Sample Input 
+ 
+3 2
+1 1 2
+2 2 3
+3 2
+2 3 2
+1 2 1
+0 0
+ 
+
+ Output for the Sample Input 
+ 
+3
+1

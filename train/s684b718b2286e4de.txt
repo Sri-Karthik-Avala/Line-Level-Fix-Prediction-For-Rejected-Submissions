@@ -1,0 +1,61 @@
+#include<bits/stdc++.h> 
+#define rep(i,n) for(int i = 0; i < n; i++)
+#define pb push_back
+using namespace std;
+typedef long long ll;
+
+int main(){
+    int h, w, K;
+    cin >> h >> w >> K;
+    vector<string> s(h);
+    rep(i, h) cin >> s[i];
+    vector<int> yoko(h);
+    vector<int> kireme;
+    kireme.pb(-1);
+    rep(i, h){
+        int p = 0;
+        rep(j, w) if (s[i][j] == '#') p++;
+        yoko[i] = p;
+    }
+    vector<vector<int>> ans(h, vector<int>(w));
+    int p = 1;
+    int judge = 0;
+    rep(i, h){
+        if (yoko[i]) judge = 1;
+        rep(j, w) ans[i][j] = p;
+        if (i == h - 1 || yoko[i + 1]){
+            if (judge){
+                kireme.pb(i);
+                p++;
+            }
+        }
+    }
+    rep(i, kireme.size() - 1){
+        vector<int> tate(w);
+        rep(k, w){
+            int q = 0;
+            for (int j = kireme[i] + 1; j <= kireme[i + 1]; j++){
+                if (s[j][k] == '#') q++;
+            }
+            tate[k] = q;
+        }
+        judge = 0;
+        int judge2 = 0;
+        rep(k, w){
+            if (tate[k]) judge = 1;
+            for (int j = kireme[i] + 1; j <= kireme[i + 1]; j++)
+                if (judge2)
+                    ans[j][k] = p;
+            if (k == w - 1 || tate[k + 1]){
+                if (judge){
+                    if (judge2) p++;
+                    judge2 = 1;
+                }
+            }
+        }
+    }
+    rep(i, h){
+        rep(j, w) cout << ans[i][j];
+        cout << endl;
+    }
+}

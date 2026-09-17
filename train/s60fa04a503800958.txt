@@ -1,0 +1,25 @@
+//Register Phase
+#include <iostream>
+
+using namespace std;
+
+int main(){
+	char pass[21];
+	bool IsEnough = true;
+	bool ENum = false, ECap = false, ESml = false;
+
+	cin >> pass;
+	for (int i = 0; i < 21; ++i){
+		if (pass[i] == '\0'){
+			if (i < 5)IsEnough = false;
+			break;
+		} else{
+			if ('0' <= pass[i] && pass[i] <= '9')ENum = true;
+			if ('A' <= pass[i] && pass[i] <= 'Z')ECap = true;
+			if ('a' <= pass[i] && pass[i] <= 'z')ESml = true;
+		}
+	}
+	cout << ((IsEnough && ENum && ECap && ESml) ? "VALID" : "INVALID") << endl;
+
+	return 0;
+}

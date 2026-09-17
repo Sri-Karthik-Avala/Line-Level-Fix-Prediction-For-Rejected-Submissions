@@ -1,0 +1,30 @@
+#include <bits/stdc++.h> 
+
+#define INF INT_MAX/2
+#define MOD 1000000007
+
+using namespace std;
+
+using ll = long long;
+using ull = unsigned long long;
+
+vector<ll>two(52);
+
+ull func(ull N,ll X){
+   if(X <= 0) return 0;
+   else if(X <= two[N+1]-2) return func(N-1,X-1); 
+   else return func(N-1,X-two[N+1]+1)+two[N];
+} 
+
+int main(){
+   ios::sync_with_stdio(false);
+   cin.tie(0);
+
+   two[0] = 1;
+   for(int i=1;i<=51;i++)two[i] = 2*two[i-1];
+
+   ull N,X;
+   cin>>N>>X;
+   cout<<func(N,X)<<endl;
+   return 0; 
+}

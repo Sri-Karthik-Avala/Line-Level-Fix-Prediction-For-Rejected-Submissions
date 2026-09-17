@@ -1,0 +1,69 @@
+Diameter of a Tree 
+ 
+
+ 
+Given a tree T with non-negative weight, find the diameter of the tree.
+ 
+
+ 
+The diameter of a tree is the maximum distance between two nodes in a tree.
+ 
+
+ Input 
+
+ 
+ n 
+ s 1 t 1 w 1 
+ s 2 t 2 w 2 
+:
+ s n-1 t n-1 w n-1 
+ 
+
+ 
+The first line consists of an integer n which represents the number of nodes in the tree. Every node has a unique ID from 0 to n -1 respectively.
+ 
+
+ 
+In the following n -1 lines, edges of the tree are given.
+
+ s i and t i represent end-points of the i -th edge (undirected) and w i represents the weight (distance) of the i -th edge.
+ 
+
+
+ Output 
+
+ 
+Print the diameter of the tree in a line.
+ 
+
+ Constraints 
+ 
+ 1 &le; n &le; 100,000 
+ 0 &le; w i &le; 1,000 
+ 
+
+
+ Sample Input 1 
+ 
+4
+0 1 2
+1 2 1
+1 3 3
+ 
+ Sample Output 1 
+ 
+5
+ 
+
+ 
+
+ Sample Input 2 
+ 
+4
+0 1 1
+1 2 2
+2 3 4
+ 
+ Sample Output 2 
+ 
+7

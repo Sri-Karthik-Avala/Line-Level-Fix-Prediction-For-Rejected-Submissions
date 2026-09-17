@@ -1,0 +1,24 @@
+import math
+
+def ifprime(num):
+  if num == 1:
+    return False
+  for i in range(2,math.floor(num ** 0.5) + 1):
+    if num % i:
+      continue
+    else:
+      return False
+  return True
+
+while(True):
+  try:
+    num = input()
+  except:
+    break
+  count = 0
+  for i in range(1,num+1):
+    if ifprime(i) and ifprime(num-i):
+      count += 1
+  print(count)
+    
+       

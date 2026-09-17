@@ -1,0 +1,12 @@
+
+hist = [0 for i in range(100)]
+
+l = []
+while True:
+  try:
+    hist[input() - 1] += 1
+  except:
+    break;
+
+for k in filter(lambda x: max(hist) == x[1], enumlate(hist)):
+  print k[0] + 1

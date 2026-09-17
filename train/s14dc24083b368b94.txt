@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstdio>
+#include<cstdlib>
+#include<cmath>
+#include<cstring>
+#include<vector>
+#include<sstream>
+#include<complex>
+#include<map>
+#include<algorithm>
+#include<cassert>
+
+using namespace std;
+
+#define rep(i,n) for(int i=0;i<n;i++)
+#define fr(i,c) for(__typeof(c.begin()) i=c.begin();i!=c.end();i++)
+#define pb push_back
+#define mp make_pair
+typedef complex<double> P;
+const double PI=acos(-1.0),EPS=1e-9;
+int n;
+P c[100]; double r[100];
+
+pair<double,double> crossptCC(P a,double r,P b,double s){
+	double d=abs(a-b),e=(d*d+r*r-s*s)/2/d,h=sqrt(r*r-e*e);
+	P dir=(b-a)*(1/d),x=dir*e+dir*P(0,1)*h,y=dir*e-dir*P(0,1)*h;
+	
+	return mp(arg(x),arg(y));
+}
+int main(){
+	while(scanf("%d",&n),n){
+		rep(i,n)scanf("%lf%lf%lf",&c[i].real(),&c[i].imag(),r+i);
+		double ans=0;
+		rep(i,n){
+			map<double,int> M;
+			int cnt=0; double p,s=0;
+			M[-PI]=0; M[PI]=0;
+			
+			rep(j,n)if(i!=j){
+				double d=abs(c[i]-c[j]);
+				if(d>r[i]+r[j]-EPS)continue;
+				if(d<abs(r[i]-r[j])+EPS){
+					if(r[i]>r[j])continue;
+					goto END;
+				}
+				pair<double,double> crs=crossptCC(c[i],r[i],c[j],r[j]);
+				double a=crs.first,b=crs.second;
+				if(a>b)swap(a,b);
+				if(abs(c[i]+r[i]*P(cos(a+EPS),sin(a+EPS))-c[j])<r[j]+EPS)M[a]++,M[b]--;
+				else{
+					M[-PI]++; M[a]--; M[b]++; M[PI]--;
+				}
+			}
+			fr(j,M){
+				if(cnt>0)s+=j->first-p;
+				cnt+=j->second;
+				p=j->first;
+			}
+			ans+=(2*PI-s)*r[i];
+			END:;
+		}
+		printf("%.9f\n",ans);
+	}
+	return 0;
+}

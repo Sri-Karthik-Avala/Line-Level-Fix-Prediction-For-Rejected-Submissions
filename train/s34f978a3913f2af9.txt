@@ -1,0 +1,80 @@
+//1240
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+char table[10]={'0','1','2','3','4','5','6','7','8','9'};
+string now;
+void A(){
+reverse(now.begin(),now.end());
+}
+void J(){
+char tmp=now[0];
+for(int i=0;i<now.size()-1;i++)now[i]=now[i+1];
+now[now.size()-1]=tmp;
+}
+void E(){
+string a="",b="",c="";
+for(int i=0;i<now.size();i++){
+if(i<now.size()/2)a.push_back(now[i]);
+else if(i==now.size()/2&&now.size()%2==1)c.push_back(now[i]);
+else b.push_back(now[i]);
+}
+//reverse(a.begin(),a.end());
+//reverse(b.begin(),b.end());
+now=b+c+a;
+}
+void C(){
+char tmp=now[now.size()-1];
+for(int i=now.size()-1;i>0;i--)now[i]=now[i-1];
+now[0]=tmp;
+}
+void P(){
+for(int i=0;i<now.size();i++){
+	if(now[i]-'0'==0)now[i]='9';
+else 	if(now[i]-'0'==1)now[i]='0';
+else 	if(now[i]-'0'==2)now[i]='1';
+else 	if(now[i]-'0'==3)now[i]='2';
+else 	if(now[i]-'0'==4)now[i]='3';
+else 	if(now[i]-'0'==5)now[i]='4';
+else 	if(now[i]-'0'==6)now[i]='5';
+else 	if(now[i]-'0'==7)now[i]='6';
+else 	if(now[i]-'0'==8)now[i]='7';
+else 	if(now[i]-'0'==9)now[i]='8';
+	}
+}
+void M(){
+for(int i=0;i<now.size();i++){
+	if(now[i]-'0'==0)now[i]='1';
+	else if(now[i]-'0'==1)now[i]='2';
+	 else if(now[i]-'0'==2)now[i]='3';
+else 	if(now[i]-'0'==3)now[i]='4';
+else 	if(now[i]-'0'==4)now[i]='5';
+else 	if(now[i]-'0'==5)now[i]='6';
+else 	if(now[i]-'0'==6)now[i]='7';
+else 	if(now[i]-'0'==7)now[i]='8';
+else 	if(now[i]-'0'==8)now[i]='9';
+else 	if(now[i]-'0'==8)now[i]='0';
+	}
+}
+
+int main(){
+	int n;
+	cin>>n;
+for(int kki=0;kki<n;kki++){
+	string a;
+	cin>>a>>now;
+	for(int i=a.size();i>=0;i--){
+		if(a[i]=='A')A();
+		if(a[i]=='C')J();
+		if(a[i]=='P')P();
+		if(a[i]=='M')M();
+		if(a[i]=='E')E();
+		if(a[i]=='J')C();
+	//cout<<now<<endl;	
+	}
+	cout<<now<<endl;
+}
+
+	return 0;
+}

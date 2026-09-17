@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+#define int long long 
+#define re register int 
+#define il inline
+#define ll long long
+using namespace std;
+const int inf=1e9;
+il int read(){
+	char c=getchar();int z=0,f=1;
+	while(c!='-'&&(c>'9'||c<'0')) c=getchar();
+	if(c=='-') f=-1,c=getchar();
+	while(c>='0'&&c<='9') z=(z<<1)+(z<<3)+c-'0',c=getchar();
+	return z*f;
+}
+const int N=1e5+10;
+const int mod=1e9+7;
+int n,A,B;
+int f[N],sum[N],a[N];
+signed main (){
+	n=read();A=read();B=read();
+	if(A<B) swap(A,B);
+	for(re i=1;i<=n;i++) a[i]=read();
+	for(re i=1;i+2<=n;i++) 
+		if(a[i+2]-a[i]<B){cout<<0;return 0;}
+	f[0]=sum[0]=1;
+	for(re i=1,p=0,q=0;i<=n;i++){
+		while(q<i&&a[i]-a[q+1]>=A) ++q;
+		f[i]=(f[i]+sum[q]-(p?sum[p-1]:0)+mod)%mod;
+		sum[i]=(sum[i-1]+f[i])%mod;
+		if(i>1&&a[i]-a[i-1]<B) p=i-1;
+	}
+	int ans=0;
+	for(re i=n;i>=0;i--){
+		ans=(ans+f[i])%mod;
+		if(i<n&&a[i+1]-a[i]<B) break;
+	}
+	cout<<ans;
+	return 0;
+} 

@@ -1,0 +1,22 @@
+#include <iostream>
+
+std::string table = "  kstnhmyr", table2 = "aiueo", table3 = "TLURD";
+
+int main(){
+    std::string S, T = "";
+    std::cin >> S;
+    for(int i=0;i<S.size();i++){
+        if(S[i] == '0'){
+            if(S[i+1] == 'T'){T += "wa";}
+            else if(S[i+1] == 'D'){T += "wo";}
+            else{T += "nn";}
+        }else if(S[i] == '1'){
+            T += table2[table3.find(S[i+1])];
+        }else{
+            T += table[S[i]-'0'];
+            T += table2[table3.find(S[i+1])];
+        }
+    }
+
+    std::cout << T << std::endl;
+}

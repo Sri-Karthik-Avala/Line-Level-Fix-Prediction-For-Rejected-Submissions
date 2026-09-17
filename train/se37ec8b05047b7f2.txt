@@ -1,0 +1,17 @@
+from numba import njit
+import numpy as np
+
+
+@njit("i8(i8)")
+def solve(n):
+    ans = 1
+    res = np.ones(n + 1, dtype=np.int64)
+    for i in range(2, n + 1):
+        res[i::i] += 1
+        res[i] *= i
+        ans += res[i]
+    return ans
+
+
+N = int(input())
+print(solve(N))

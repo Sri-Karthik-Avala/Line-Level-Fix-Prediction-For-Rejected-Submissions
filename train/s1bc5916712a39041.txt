@@ -1,0 +1,60 @@
+#include<iostream>
+//#include<pair>
+#include<vector>
+#include<algorithm>
+#define loop(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,a) loop(i,0,a)
+using namespace std;
+
+class data{
+public:
+	vector<int> num;
+	string s;
+};
+
+int main(){
+	int n;
+	string str;
+	vector<data> vec;
+	while(cin>>str){
+		cin>>n;
+		data dt;
+		dt.num.push_back(n);
+		dt.s=str;
+		int cnt=0;
+		for(int i=0;i<vec.size();i++){
+			if(str==vec[i].s){
+				vec[i].num.push_back(n);
+				cnt++;
+			}
+		}
+		if(cnt==0)vec.push_back(dt);
+	}
+	//for(int i=0;i<vec.size();i++)cout<<vec[i].s<<" ";
+	//cout<<endl;
+	for(int i=0;i<vec.size();i++){
+		//cout<<i<<endl;
+		for(int j=vec.size()-1-i;j>=1;j--){
+			//cout<<j<<" ";
+			if(vec[j-1].s>vec[j].s){
+				data alt=vec[j];
+				vec[j]=vec[j-1];
+				vec[j-1]=alt;
+			}
+		}
+		//cout<<endl;
+	}
+	for(int i=0;i<vec.size();i++){
+		int volume=vec[i].num.size();
+		sort(vec[i].num.begin(),vec[i].num.end());
+	}
+	for(int i=0;i<vec.size();i++){
+		cout<<vec[i].s<<endl;
+		cout<<vec[i].num[0];
+		for(int j=1;j<vec[i].num.size();j++){
+			cout<<" "<<vec[i].num[j];
+		}
+		cout<<endl;
+	}
+	return 0;
+}

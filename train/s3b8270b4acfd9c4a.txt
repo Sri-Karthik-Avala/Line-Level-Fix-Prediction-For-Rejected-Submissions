@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+#define MAX_V 100000
+using namespace std;
+int m,w[100001];
+vector<int> vv[100001];
+unordered_set<int> st[100001];
+int V;
+vector<int> G[MAX_V];
+vector<int> rG[MAX_V];
+vector<int> vs;
+bool used[MAX_V];
+int cmp[MAX_V];
+int C[100001],F[100001],U[100001],ans;
+bool UU[100001];
+
+
+void DFS(int p){
+  for(int i=0;i<vv[p].size();i++){
+    int mn=min(vv[p][i],p),mx=max(vv[p][i],p);
+    if(st[mn].find(mx)==st[mn].end()){
+      st[mn].insert(mx);
+      G[p].push_back(vv[p][i]);
+      rG[vv[p][i]].push_back(p);
+      DFS(vv[p][i]);
+    }
+  }
+}
+
+void dfs(int v){
+  used[v]=true;
+  for(int i=0;i<G[v].size();i++)if(!used[G[v][i]])dfs(G[v][i]);
+  vs.push_back(v);
+}
+
+void rdfs(int v,int k){
+  used[v]=true;
+  cmp[v]=k;
+  for(int i=0;i<rG[v].size();i++)if(!used[rG[v][i]])rdfs(rG[v][i],k);
+}
+
+int scc(){
+  memset(used,0,sizeof(used));
+  vs.clear();
+  for(int v=0;v<V;v++)if(!used[v])dfs(v);
+  memset(used,0,sizeof(used));
+  int k=0;
+  for(int i=vs.size()-1;i>=0;i--)if(!used[vs[i]])rdfs(vs[i],k++);
+  return k;
+}
+
+bool DFS1(int p){
+  if(U[p])return 0;
+  U[p]=1;
+  bool f=F[cmp[p]]>=2;
+  for(int i=0;i<G[p].size();i++)
+    f|=DFS1(G[p][i]);
+  ans+=w[p]*f;
+  return UU[p]=f;
+}
+bool UUU[100001];
+int DFS2(int p){
+  if(UUU[p])return 0;
+  UUU[p]=1;
+  int res=0;
+  
+  for(int i=0;i<G[p].size();i++)
+    res=max(res,DFS2(G[p][i]));  
+  return UU[p]?0:res+w[p];
+}
+
+int main(){
+  cin>>V>>m;
+  for(int i=0;i<V;i++)cin>>w[i];
+  for(int j=0,a,b;j<m;j++){
+    cin>>a>>b;a--,b--;
+    vv[a].push_back(b),vv[b].push_back(a);
+  }
+  DFS(0);
+  int t=0;
+  for(int i=0;i<V;i++)t+=w[i];
+  scc();
+  for(int i=0;i<V;i++)F[cmp[i]]++;
+  DFS1(0);
+  cout<<ans+DFS2(0)<<endl;
+  return 0;
+}

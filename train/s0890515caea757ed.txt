@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+   
+typedef long long int64;
+const int INF = 1 << 30;
+
+int main(){
+  int plen, cnum, width, cspace;
+  string str;
+
+  while(cin >> plen, plen){
+    cin >> cnum;
+    cin >> width;
+    cin >> cspace;
+
+    vector< string > buffer;
+    cin.ignore();
+    while(getline(cin, str), str != "?"){
+      if(str.empty()){
+        buffer.push_back("");
+      } else {
+        for(int i = 0; i < str.size(); i += width){
+          buffer.push_back( str.substr( i, i + width));
+        }
+      }
+    }
+    while(buffer.size() % (plen * cnum) != 0){
+      buffer.push_back("");
+    }
+    for(int i = 0; i < buffer.size() / (plen * cnum); i++){ //ページ数
+      for(int j = 0; j < plen; j++){ // 行数
+        for(int k = 0; k < cnum; k++){ // 横数
+          int pos = i * plen * cnum + j + plen * k;
+          cout << (k ? string(cspace,'.') : "") << buffer[pos] << string(width - buffer[pos].size(), '.');
+        }
+        cout << endl;
+      }
+      cout << "#" << endl;
+    }
+    cout << "?" << endl;
+  }
+}

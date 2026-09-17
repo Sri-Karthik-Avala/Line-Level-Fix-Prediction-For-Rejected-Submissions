@@ -1,0 +1,42 @@
+#include "bits/stdc++.h"
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(ll i=0;i<(ll)(n);i++)
+#define all(a)  (a).begin(),(a).end()
+#define pb emplace_back
+
+ll bucket[1<<16];
+
+int main() {
+	int n,k,x0;
+	cin>>n>>k>>x0;
+	k--;
+
+	ull x = x0;
+	rep(i,n){
+		bucket[uint16_t((x>>(64-16)) + (1<<15))]++;
+		x ^= x<<13;
+		x ^= x>>7;
+		x ^= x<<17;
+	}
+
+	uint16_t key;
+	for(key=0;k-bucket[key]>=0;key++){
+		k-=bucket[key];
+	}
+
+	vector<ll> v;
+	x = x0;
+	rep(i,n){
+		if(uint16_t((x>>(64-16)) + (1<<15))==key){
+			v.pb(x);
+		}
+		x ^= x<<13;
+		x ^= x>>7;
+		x ^= x<<17;
+	}
+
+	sort(all(v));
+	cout<<v[k]<<endl;
+}

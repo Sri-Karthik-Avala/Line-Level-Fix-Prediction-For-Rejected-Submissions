@@ -1,0 +1,56 @@
+#include <stdio.h>
+#pragma warning(disable : 4996)
+int n, q, a[16][16], b[16][16], com, r, c, s, z;
+void rec(int r_, int c_) {
+	a[r_][c_] ^= 1;
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			if (i * j == 0 && i + j && 0 <= r_ + i && r_ + i < n && 0 <= c_ + j && c_ + j < n && a[r_ + i][c_ + j] != a[r_][c_]) rec(r_ + i, c_ + j);
+		}
+	}
+}
+int main() {
+	scanf("%d%d", &n, &q);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) scanf("%d", &a[i][j]);
+	}
+	for (int i = 0; i < q; i++) {
+		scanf("%d%d", &com, &r), r--;
+		switch (com) {
+		case 0:
+			scanf("%d%d%d", &c, &s, &z), c--;
+			for (int i = 0; i < z / 90; i++) {
+				for (int j = r; j < r + s; j++) {
+					for (int k = c; k < c + s; k++) {
+						b[j][k] = a[(s - 1 - (k - c) + r)][(j - r)];
+					}
+				}
+				for (int j = r; j < r + s; j++) {
+					for (int k = c; k < c + s; k++) a[j][k] = b[j][k];
+				}
+			}
+			break;
+		case 1:
+			scanf("%d%d", &c, &s), c--;
+			for (int i = r; i < r + s; i++) {
+				for (int j = c; j < c + s; j++) a[i][j] ^= 1;
+			}
+			break;
+		case 2:
+			for (int i = 0; i < n; i++) b[r][i] = a[r][(i + 1) % n];
+			for (int i = 0; i < n; i++) a[r][i] = b[r][i];
+			break;
+		case 3:
+			for (int i = 0; i < n; i++) b[r][(i + 1) % n] = a[r][i];
+			for (int i = 0; i < n; i++) a[r][i] = b[r][i];
+			break;
+		case 4:
+			scanf("%d", &c), c--; rec(r, c);
+			break;
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) printf(j ? " %d" : "%d", a[i][j]);
+		printf("\n");
+	}
+}

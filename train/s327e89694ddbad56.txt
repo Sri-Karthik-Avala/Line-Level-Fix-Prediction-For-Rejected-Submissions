@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+#define PB push_back
+#define MP make_pair
+#define REP(i,n) for (int i=0;i<(n);i++)
+#define INF (1<<29)
+using namespace std;
+typedef long long ll;
+int main(){
+      vector<int> dy[32];
+      int a[100],b[100];
+      int n;
+      cin>>n;
+      REP(i,n){
+            cin>>a[i]>>b[i];
+            for(int j=a[i];j<=b[i];j++)dy[j].PB(i);
+      }
+      bool f[100];
+      memset(f,true,sizeof(f));
+      int ans=0;
+      for(int i=1;i<=31;i++){
+            vector<int> tdy;
+            REP(j,dy[i].size()){
+                  if(f[dy[i][j]])tdy.PB(dy[i][j]);
+            }
+            int d=1000000,k=-1;
+            REP(j,tdy.size()){
+                  if(d>(b[tdy[j]]-i)){
+                        d=b[tdy[j]];
+                        k=tdy[j];
+                  }
+            }
+            if(k==-1)ans+=50;
+            else{
+                  ans+=100;
+                  f[k]=false;
+            }
+      }
+      cout<<ans<<endl;
+}

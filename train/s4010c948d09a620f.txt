@@ -1,0 +1,80 @@
+
+def check(p):
+    for i in range(1, 9):
+        if p[i] != p[0]:
+            return False
+    for i in range(10, 12):
+        if p[i] != p[9]:
+            return False
+    for i in range(13, 15):
+        if p[i] != p[12]:
+            return False
+    for i in range(16, 18):
+        if p[i] != p[15]:
+            return False
+    for i in range(19, 21):
+        if p[i] != p[18]:
+            return False
+    for i in range(22, 30):
+        if p[i] != p[21]:
+            return False
+    return True
+    
+    
+def turn1(p):
+    p[6], p[21] = p[21], p[6]
+    p[7], p[22] = p[22], p[7]
+    p[8], p[23] = p[23], p[8]
+    p[12], p[17] = p[17], p[12]
+    p[9], p[11] = p[11], p[9]
+    
+
+def turn2(p):
+    p[0], p[27] = p[27], p[0]
+    p[1], p[28] = p[28], p[1]   
+    p[2], p[29] = p[29], p[2]
+    p[14], p[15] = p[15], p[14]
+    p[18], p[20] = p[20], p[18]
+    
+def turn3(p):
+    p[0], p[23] = p[23], p[0]
+    p[3], p[26] = p[26], p[3]
+    p[6], p[29] = p[29], p[6]
+    p[20], p[9] = p[9], p[20]
+    p[17], p[15] = p[15], p[17]
+
+def turn4(p):
+    p[2], p[21] = p[21], p[2]
+    p[5], p[24] = p[24], p[5]
+    p[8], p[27] = p[27], p[8]
+    p[18], p[11] = p[11], p[18]
+    p[14], p[12] = p[12], p[14]
+
+
+def search(p, cnt):
+    if cnt == 8:
+        return 99
+    if check(p):
+        return cnt
+    
+    r = 100
+    turn1(p)
+    r = min(r, search(p, cnt+1))
+    turn1(p)
+    turn2(p)
+    r = min(r, search(p, cnt+1))
+    turn2(p)
+    turn3(p)
+    r = min(r, search(p, cnt+1))
+    turn3(p)
+    turn4(p)
+    r = min(r, search(p, cnt+1))
+    turn4(p)
+
+    return r
+
+
+N = int(input())
+for l in range(N):
+    p = [int(i) for i in input().split()]
+    print(search(p, 0))

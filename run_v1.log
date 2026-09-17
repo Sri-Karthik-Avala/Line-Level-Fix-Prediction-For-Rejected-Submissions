@@ -1,0 +1,8 @@
+pip_system_certs: ERROR: could not inject truststore: [ASN1: NOT_ENOUGH_DATA] not enough data (_ssl.c:4030)
+fold 0 seed 0 done
+fold 1 seed 0 done
+fold 2 seed 0 done
+fold 3 seed 0 done
+fold 4 seed 0 done
+extra threshold 1.1
+wrote 634

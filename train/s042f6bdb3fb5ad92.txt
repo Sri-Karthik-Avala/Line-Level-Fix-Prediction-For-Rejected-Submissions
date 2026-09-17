@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define F first
+#define S second
+typedef pair<double,double> P;
+
+double D(P a,P b) {
+  int x1=floor(a.F/10)*10,x2=floor(b.F/10)*10,y1=floor(a.S/10)*10,y2=floor(b.S/10)*10;
+  if(x1!=a.F&&x2!=b.F&&x1==x2&&y1!=y2) {
+    double d1=fabs(a.F-x1),d2=fabs(b.F-x2);
+    return fabs(a.S-b.S)+min(d1+d2,20-d1-d2);
+  } else if(y1!=a.S&&y2!=b.S&&y1==y2&&x1!=x2) {
+    double d1=fabs(a.S-y1),d2=fabs(b.S-y2);
+    return fabs(a.F-b.F)+min(d1+d2,20-d1-d2);
+  }
+  return fabs(a.F-b.F)+fabs(a.S-b.S);
+}
+
+int n,M=1<<29;
+P a[11111];
+double solve(int x,int y,double s,double t) {
+  double ans=M;
+  for(double l=x-100; l<=x+100; l+=s) {
+    for(double r=y-100; r<=y+100; r+=t) {
+      double d=0;
+      for(int i=0; i<n; i++) d=max(d,D(a[i],P(l,r)));
+      ans=min(ans,d);
+    }
+  }
+  return ans;
+}
+
+int main() {
+  cin >> n;
+  double Max=-M,Mix=M,May=-M,Miy=M;
+  for(int i=0; i<n; i++) {
+    cin >> a[i].F >> a[i].S;
+    Max=max(Max,a[i].F+a[i].S);
+    Mix=min(Mix,a[i].F+a[i].S);
+    May=max(May,a[i].F-a[i].S);
+    Miy=min(Miy,a[i].F-a[i].S);
+  }
+  int xx=(Max+Mix)/2,yy=(May+Miy)/2;
+  int x=floor((double)(xx+yy)/20)*10,y=floor((double)(xx-yy)/20)*10;
+  printf("%.10f\n",min(solve(x,y,10,0.5),solve(x,y,0.5,10)));
+  return 0;
+}

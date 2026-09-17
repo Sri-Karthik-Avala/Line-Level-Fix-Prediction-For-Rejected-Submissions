@@ -1,0 +1,26 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+#define int long long
+using namespace std;
+signed main() {
+	int n; cin >> n;
+	set<string>st;
+	map<string, int>m;
+	for (int i = 0; i < n; i++) {
+		string s; int p;
+		cin >> s >> p;
+		if (st.lower_bound(s) == st.end() && *(st.lower_bound(s)) != s) {
+			st.insert(s);
+			m[s] = 0;
+		}
+		m[s] += p;
+	}
+	vector<pair<int, string>>v;
+	for (string s : st)v.push_back(make_pair(s.size(), s));
+	sort(v.begin(), v.end());
+	for (pair<int, string> i : v)cout << i.second << ' ' << m[i.second] << endl;
+}

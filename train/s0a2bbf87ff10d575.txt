@@ -1,0 +1,29 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<climits>
+#include<string>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<cmath>
+#include<queue>
+#include<cstring>
+#include<stack>
+#include<functional>
+using namespace std;
+
+int main(){
+	string S,a[10] = {"* = ****","* =* ***","* =** **","* =*** *","* =****"," *= ****"," *=* ****"," *=** **"," *=*** *"," *=****"};
+	for(int ds=0; cin>>S; ds++){
+		if(ds!=0) puts("");
+		while(S.size()<5) S = "0"+S;
+		for(int i=0;i<8;i++){
+			for(int j=0;j<S.size();j++){
+				printf("%c",a[S[j]-'0'][i]);
+			}puts("");
+		}
+	}
+	return 0;
+}

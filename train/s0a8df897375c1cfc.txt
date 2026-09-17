@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+int main(){
+    int a, b, c, d, e, f;
+    cin >> a >> b >> c >> d >> e >> f;
+    int al = f, as = 0;
+    set<int> liquid, solid;
+    for(int i = 0; i <= f; i += 100*a){
+        for(int j = 0; j <= f - i; j += 100*b){
+            liquid.insert(i+j);
+        }
+    }
+    for(int i = 0; i <= f; i += c){
+        for(int j = 0; j <= f - i; j += d){
+            solid.insert(i+j);
+        }
+    }
+    for(int l : liquid){
+        for(int s : solid){
+            if(l + s <= f && s * 100 <= e * l){
+                if(as*(l + s) < s*(al + as)){
+                    al = l;
+                    as = s;
+                }
+            }
+        }
+    }
+    cout << al + as << ' ' << as << endl;
+}

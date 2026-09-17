@@ -1,0 +1,29 @@
+
+
+while(1):
+    q=1
+    n=int(raw_input())
+    if n==0:    break
+    A=[[0 for i in range(n)] for i in range(n)]
+    up=1
+    m=1
+    for i in range(n):
+        for j in range(i+1):
+            if up:
+                A[i-j][j]=m
+            else:
+                A[j][i-j]=m
+            m+=1
+        up=not up
+    for i in range(n,(n-1)*2+1):
+        for j in range(i-n+1,n):
+            if up:
+                A[i-j][j]=m
+            else:
+                A[j][i-j]=m
+            m+=1
+        up=not up
+    print 'Case '+str(q)+':'
+    for a in A:
+        print ''.join([ '  '+str(x) if x<10 else ' '+str(x) for x in a])
+            

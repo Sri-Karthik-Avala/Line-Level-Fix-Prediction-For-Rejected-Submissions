@@ -1,0 +1,108 @@
+class WeightedUnionFind:
+    # https://qiita.com/drken/items/cce6fc5c579051e64fab
+    def __init__(self, n, SUM_UNITY=0):
+        self.par = list(range(n))
+        self.rank = [0] * n
+        self.diff_weight = [SUM_UNITY] * n
+
+    def root(self, x):
+        p = self.par[x]
+        if p == x:
+            return x
+        else:
+            r = self.root(p)
+            self.diff_weight[x] += self.diff_weight[p]
+            self.par[x] = r
+            return r
+
+    def weight(self, x):
+        self.root(x)
+        return self.diff_weight[x]
+
+    def same(self, x, y):
+        return self.root(x) == self.root(y)
+
+    def unite(self, x, y, w):
+        if self.same(x, y):
+            return self.diff(x, y) == w
+        w += self.weight(x);  w -= self.weight(y)
+        x, y = self.root(x), self.root(y)
+        # if x == y:
+        #     return False
+        if self.rank[x] < self.rank[y]:
+            x, y = y, x
+            w = -w
+        if self.rank[x] == self.rank[y]:
+            self.rank[x] += 1
+        self.par[y] = x
+        self.diff_weight[y] = w
+        return True
+
+    def diff(self, x, y):
+        return self.weight(y) - self.weight(x)
+
+    def get_roots_weights(self):
+        roots = []
+        weights = []
+        for x in range(len(self.par)):
+            roots.append(self.root(x))
+            weights.append(self.weight(x))
+        return roots, weights
+
+import sys
+from operator import itemgetter
+from itertools import groupby
+from collections import defaultdict
+
+def main():
+    R, C = map(int, input().split())
+    N = int(input())
+    RCA = list(zip(*[iter(map(int, sys.stdin.read().split()))]*3))
+    uf_r = WeightedUnionFind(R+1)
+    uf_c = WeightedUnionFind(C+1)
+
+    RCA.sort(key=itemgetter(0))
+    for _, g in groupby(RCA, key=itemgetter(0)):
+        _, c0, a0 = next(g)
+        for _, c, a in g:
+            if not uf_c.unite(c0, c, a-a0):
+                print("No")
+                exit()
+
+    RCA.sort(key=itemgetter(1))
+    for _, g in groupby(RCA, key=itemgetter(1)):
+        r0, _, a0 = next(g)
+        for r, _, a in g:
+            if not uf_r.unite(r0, r, a-a0):
+                print("No")
+                exit()
+    assert False
+    r_roots, r_weights = uf_r.get_roots_weights()
+    c_roots, c_weights = uf_c.get_roots_weights()
+    r_roots_inv = defaultdict(list)
+    for i, r in enumerate(r_roots):
+        r_roots_inv[r].append(i)
+    c_roots_inv = defaultdict(list)
+    for i, r in enumerate(c_roots):
+        c_roots_inv[r].append(i)
+    Closed_r = set()
+    Closed_c = set()
+    for r, c, a in RCA:
+        root_r, root_c = r_roots[r], c_roots[c]
+        if root_r in Closed_r:
+            assert root_c in Closed_c
+            continue
+        Closed_r.add(root_r)
+        Closed_c.add(root_c)
+        mi = float("inf")
+        for v in r_roots_inv[root_r]:
+            mi = min(mi, r_weights[v])
+        a += mi - r_weights[root_r]
+        for v in c_roots_inv[root_c]:
+            a_ = a + c_weights[v] - c_weights[root_c]
+            if a_ < 0:
+                print("No")
+                exit()
+    print("Yes")
+
+main()

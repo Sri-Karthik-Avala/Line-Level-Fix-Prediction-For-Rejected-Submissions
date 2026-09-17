@@ -1,0 +1,28 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef long long ll; 
+ll m=1e9+7;
+ll dp[2002][1002];
+
+
+ll dfs(ll a,ll b){
+  dp[0][0]=1;
+  if(dp[a][b])return dp[a][b];
+  ll res=0;
+  if(a)res+=dfs(a-1,b);
+  if(a&&b)res+=dfs(a-1,b-1);
+  res%=m;
+  return dp[a][b]=res;
+}
+
+int main(){
+  ll n,k;
+  cin>>n>>k;
+  cout<<dfs(n+k-1,k-1)<<endl;
+  return 0;
+}
+
+
+  
+

@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF_LL (int64)1e18
+#define INF (int32)1e9
+#define REP(i, n) for(int64 i = 0;i < (n);i++)
+#define FOR(i, a, b) for(int64 i = (a);i < (b);i++)
+#define all(x) x.begin(),x.end()
+#define fs first
+#define sc second
+
+using int32 = int_fast32_t;
+using uint32 = uint_fast32_t;
+using int64 = int_fast64_t;
+using uint64 = uint_fast64_t;
+using PII = pair<int32, int32>;
+using PLL = pair<int64, int64>;
+
+const double eps = 1e-10;
+
+template<typename A, typename B>inline void chmin(A &a, B b){if(a > b) a = b;}
+template<typename A, typename B>inline void chmax(A &a, B b){if(a < b) a = b;}
+
+template<typename T>
+vector<T> make_v(size_t a){return vector<T>(a);}
+
+template<typename T,typename... Ts>
+auto make_v(size_t a,Ts... ts){
+  return vector<decltype(make_v<T>(ts...))>(a,make_v<T>(ts...));
+}
+
+template<typename T,typename U,typename... V>
+typename enable_if<is_same<T, U>::value!=0>::type
+fill_v(U &u,const V... v){u=U(v...);}
+
+template<typename T,typename U,typename... V>
+typename enable_if<is_same<T, U>::value==0>::type
+fill_v(U &u,const V... v){
+  for(auto &e:u) fill_v<T>(e,v...);
+}
+
+bool in(int64 f, int64 t, int64 x) {
+	t = t - 60*(f/60); f = f%60; x = x%60;
+	if (f > t) f -= 60;
+	return f <= x && x <= t;
+}
+
+int main(void){
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+	string s;
+	while (cin >> s && s != "#") {
+		int64 n = 0, two = 1;
+		int64 dc = 0, dm = 1;
+		for (int i = 0; i < s.size();) {
+			n++;
+			if (s.substr(i, 4) == "west") {
+				if (90 * dm != dc) {
+					dc = dc * (two/dm) + 90;
+					dm = two;
+				}
+				i += 4;
+			} else {
+				if (0 != dc) {
+					dc = dc * (two/dm) - 90;
+					dm = two;
+				}
+				i += 5;
+			}
+			two *= 2;
+		}
+		int64 d = __gcd(dc, dm);
+		dc /= d; dm /= d;
+		if (dm == 1) cout << dc << endl;
+		else cout << dc << "/" << dm << endl;
+	}
+}
+

@@ -1,0 +1,39 @@
+#include<bits/stdc++.h>
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+#define all(a) (a).begin(),(a).end()
+using namespace std;
+
+int main(){
+  string s;
+  while(cin >> s){
+    int n = s.size();
+    string r = s;
+    reverse(all(r));
+
+    vector< vector<int> > dp(n+1,vector<int>(n+1,0));
+    rep(i,n){
+      rep(j,n){
+	if(s[i] == r[j])dp[i+1][j+1] = dp[i][j]+1;
+	else dp[i+1][j+1] = max(dp[i][j+1], dp[i+1][j]);
+      }
+    }
+
+    int m = (dp[n][n]+1)/2;
+    string pal;
+    int a = n, b = n;
+    while(a!=0 && b!=0 && (int)pal.size()<m){
+      if(a>0 && b>0 && dp[a][b] == dp[a-1][b-1]+1){
+	pal += s[a-1]; a--; b--;
+      }else if(a>0 && dp[a][b] == dp[a-1][b]){
+	a--;
+      }else if(b>0 && dp[a][b] == dp[a][b-1]){
+	b--;
+      }else{
+	exit(1);
+      }
+    }
+    
+    for(int i=dp[n][n]/2-1;i>=0;i--)pal += pal[i];
+    cout << pal << endl;
+  }
+}

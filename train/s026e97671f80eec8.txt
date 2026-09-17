@@ -1,0 +1,25 @@
+#include <algorithm>
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main() {
+  int A[100005];
+  int n, k;
+  cin >> n >> k;
+  for (int i = 0; i < n; ++i)
+    cin >> A[i];
+  map<int, int> cts;
+  int values_in_window = 0;
+  int m = 100005;
+  for (int f = 0, b = 0; f < n; ++f) {
+    if (!cts[A[f]] and A[f] <= k)
+      ++values_in_window;
+    cts[A[f]] += 1;
+    while (A[b] > k or cts[A[b]] > 1)
+      cts[b++]--;
+    if (values_in_window >= k)
+      m = min(m, f - b + 1);
+  }
+  cout << (m > 1e5 ? 0 : m) << endl;
+}

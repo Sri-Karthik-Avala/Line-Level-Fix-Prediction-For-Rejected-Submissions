@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+
+double R;
+int n, a[100];
+
+struct ST {
+    double w, a, h;
+    ST() {}
+    ST(double w, double a, double h) : w(w), a(a), h(h) {}
+};
+
+ST combine(const ST& p, const ST& q) {
+    const double a = p.h / (p.h+q.h);
+    double l = min(-a-p.a, (1-a)-q.a);
+    double r = max((1-a)+(q.w-q.a), -a+(p.w-p.a));
+    return ST(r-l, -l, p.h+q.h);
+}
+
+vector<ST> calc(int u) {
+    if ((u&(u-1)) == 0) {
+        int ix = -1;
+        rep (i, n) if (u&(1<<i)) ix = i;
+        return vector<ST>(1, ST(0, 0, a[ix]));
+    }
+    vector<ST> ans;
+    rep (b, 1<<n) if ((u&b) == b && b != u && b != 0) {
+        vector<ST> x = calc(b);
+        vector<ST> y = calc(u-b);
+        rep (i, x.size()) rep (j, y.size()) {
+            ans.push_back(combine(x[i], y[j]));
+        }
+    }
+    return ans;
+}
+
+int main() {
+    int T;
+    scanf("%d", &T);
+    while (T--) {
+        scanf("%lf%d", &R, &n);
+        rep (i, n) scanf("%d", a+i);
+        vector<ST> ws = calc((1<<n)-1);
+        double ans = -1;
+        rep (i, ws.size()) if (ws[i].w < R) ans = max(ans, ws[i].w);
+        if (ans < 0) printf("%d\n", -1);
+        else printf("%.12f\n", ans);
+    }
+    return 0;
+}

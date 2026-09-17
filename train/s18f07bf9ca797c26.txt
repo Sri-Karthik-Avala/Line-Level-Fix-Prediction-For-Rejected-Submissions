@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <map>
+#include <queue>
+#include <deque>
+#include <complex>
+#define FOR(i,a,b) for(int i=(a);i<(b);i++)
+#define FORE(i,a,b) for(int i=(a);i<=(b);i++)
+#define REP(i,a) FOR(i,0,a)
+const int INF=1<<30;
+using namespace std;
+typedef pair<int,int> pr;
+int dx[]={0,1,0,-1},dy[]={1,0,-1,0};
+int sy,sx;
+int W,H;
+bool maps[9][9]={};
+int shared[9][9]={};
+bool able(int y,int x)
+{
+	return (!maps[y][x])&&shared[y][x]<2;
+}
+bool search(int y,int x){
+	if(y>H)
+	return true;
+	
+	if(!able(y,x))
+		return search(y+x/W,x%W+1);
+	bool ans=false;
+	int cans=able(y+1,x)+able(y,x+1);
+	if(cans+shared[y][x]<2) return false;
+	if(shared[y][x]==0){
+		shared[y][x+1]++;
+		shared[y+1][x]++;
+		ans=search(y+x/W,x%W+1);
+		shared[y][x+1]--;
+		shared[y+1][x]--;
+		return ans;
+	}
+	if(shared[y][x]==1){
+		REP(i,2){
+			if(able(y+dy[i],x+dx[i])){
+				shared[y+dy[i]][x+dx[i]]++;
+				ans|=search(y+x/W,x%W+1);
+				shared[y+dy[i]][x+dx[i]]--;
+			}
+		}
+		return ans;
+		
+	}
+	
+}
+int main() {
+	
+	// your code goes here
+	while(cin >> W >> H && W){
+	
+	int frees=0;
+	REP(i,H+2)
+		REP(j,W+2){
+			maps[i][j]=1;
+			shared[i][j]=0;
+		}
+	FORE(i,1,H)
+		FORE(j,1,W){
+			cin >> maps[i][j];
+			if(!maps[i][j]) frees++;
+		}
+		
+	if(frees&&search(1,1))
+	cout <<"Yes" << endl;
+	else 
+	cout <<"No" << endl;
+	label:;
+	}
+	return 0;
+}
